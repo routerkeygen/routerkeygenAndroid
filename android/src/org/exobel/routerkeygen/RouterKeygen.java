@@ -26,7 +26,26 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.WifiNetwork.TYPE;
+import org.exobel.routerkeygen.algorithms.AliceKeygen;
+import org.exobel.routerkeygen.algorithms.DiscusKeygen;
+import org.exobel.routerkeygen.algorithms.DlinkKeygen;
+import org.exobel.routerkeygen.algorithms.EircomKeygen;
+import org.exobel.routerkeygen.algorithms.HuaweiKeygen;
+import org.exobel.routerkeygen.algorithms.InfostradaKeygen;
+import org.exobel.routerkeygen.algorithms.KeygenThread;
+import org.exobel.routerkeygen.algorithms.NativeThomson;
+import org.exobel.routerkeygen.algorithms.OnoKeygen;
+import org.exobel.routerkeygen.algorithms.PirelliKeygen;
+import org.exobel.routerkeygen.algorithms.SkyV1Keygen;
+import org.exobel.routerkeygen.algorithms.TecomKeygen;
+import org.exobel.routerkeygen.algorithms.TelseyKeygen;
+import org.exobel.routerkeygen.algorithms.ThomsonKeygen;
+import org.exobel.routerkeygen.algorithms.VerizonKeygen;
+import org.exobel.routerkeygen.algorithms.Wlan2Keygen;
+import org.exobel.routerkeygen.algorithms.Wlan4Keygen;
+import org.exobel.routerkeygen.algorithms.Wlan6Keygen;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -73,14 +92,14 @@ import java.lang.Runnable;
 @SuppressWarnings("deprecation")
 public class RouterKeygen extends Activity {
 
-	WifiManager wifi;
+	private WifiManager wifi;
 	boolean wifi_state;
-	ListView scanResuls;
+	private ListView scanResuls;
 	KeygenThread calculator;
 	ArrayList<String> list_key = null;
 	BroadcastReceiver scanFinished;
 	BroadcastReceiver stateChanged;
-	ArrayList<WifiNetwork> vulnerable;
+	private ArrayList<WifiNetwork> vulnerable;
 	WifiNetwork router;
 	long begin;
 	static final String TAG = "RouterKeygen";
@@ -92,9 +111,9 @@ public class RouterKeygen extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		wifi = (WifiManager) getBaseContext().getSystemService(Context.WIFI_SERVICE);
-		wifi_state = wifi.getWifiState() == WifiManager.WIFI_STATE_ENABLED ||  
-		wifi.getWifiState() == WifiManager.WIFI_STATE_ENABLING;
+		setWifi((WifiManager) getBaseContext().getSystemService(Context.WIFI_SERVICE));
+		wifi_state = getWifi().getWifiState() == WifiManager.WIFI_STATE_ENABLED ||  
+		getWifi().getWifiState() == WifiManager.WIFI_STATE_ENABLING;
 		SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 		Boolean welcomeScreenShown = mPrefs.getBoolean( welcomeScreenShownPref, false);
 
@@ -114,11 +133,11 @@ public class RouterKeygen extends Activity {
 		}
 
 
-		scanResuls = (ListView) findViewById(R.id.ListWifi);
-		scanResuls.setOnItemClickListener(new OnItemClickListener() {
+		setScanResuls((ListView) findViewById(R.id.ListWifi));
+		getScanResuls().setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				router = vulnerable.get(position);
+				router = getVulnerable().get(position);
 				if (router.newThomson)
 				{
 					Toast.makeText( RouterKeygen.this , getString(R.string.msg_newthomson) ,
@@ -128,7 +147,7 @@ public class RouterKeygen extends Activity {
 				calcKeys(router);
 			}
 		});
-		stateChanged = new WifiStateReceiver(wifi);
+		stateChanged = new WifiStateReceiver(getWifi());
 		scanFinished = new WiFiScanReceiver(this);
 		if ( savedInstanceState == null  )
 			return;
@@ -137,13 +156,13 @@ public class RouterKeygen extends Activity {
 		{
 			removeDialog(DIALOG_NATIVE_CALC);
 			if ( calculator != null )
-				calculator.stopRequested = true;
+				calculator.setStopRequested(true);
 		}
 		ArrayList<WifiNetwork> list_networks =(ArrayList<WifiNetwork>) savedInstanceState.getSerializable("networks");
 		if ( list_networks != null )
 		{
-			vulnerable = list_networks;
-			scanResuls.setAdapter(new WifiListAdapter(vulnerable, this));
+			setVulnerable(list_networks);
+			getScanResuls().setAdapter(new WifiListAdapter(getVulnerable(), this));
 		}
 		WifiNetwork r = (WifiNetwork) savedInstanceState.getSerializable("router");
 		if ( r != null )
@@ -167,7 +186,7 @@ public class RouterKeygen extends Activity {
 			}
 			outState.putSerializable("router", router);
 			outState.putSerializable("keys", list_key );
-			outState.putSerializable("networks", vulnerable );
+			outState.putSerializable("networks", getVulnerable() );
 		}
 		catch(Exception e){}
 	}
@@ -179,7 +198,7 @@ public class RouterKeygen extends Activity {
 			getPrefs();
 			if ( wifiOn )
 			{
-				if ( !wifi.setWifiEnabled(true))
+				if ( !getWifi().setWifiEnabled(true))
 					Toast.makeText( RouterKeygen.this , getString(R.string.msg_wifibroken),
 							Toast.LENGTH_SHORT).show();
 				else
@@ -219,7 +238,7 @@ public class RouterKeygen extends Activity {
 						new DialogInterface.OnClickListener(){
 					public void onClick(DialogInterface dialog, int which) {
 						if ( RouterKeygen.this.calculator != null )
-							RouterKeygen.this.calculator.stopRequested = true;
+							RouterKeygen.this.calculator.setStopRequested(true);
 						removeDialog(DIALOG_THOMSON3G);
 					}
 				});
@@ -228,7 +247,7 @@ public class RouterKeygen extends Activity {
 			}
 			case DIALOG_KEY_LIST: {
 				AlertDialog.Builder builder = new Builder(this);
-				builder.setTitle(router.ssid);
+				builder.setTitle(router.getSsid());
 			    LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
 			    View layout = inflater.inflate(R.layout.results,
 			                                   (ViewGroup) findViewById(R.id.layout_root));
@@ -271,9 +290,9 @@ public class RouterKeygen extends Activity {
 									{
 										Intent i = new Intent(Intent.ACTION_SEND);
 										i.setType("text/plain");
-										i.putExtra(Intent.EXTRA_SUBJECT, router.ssid + getString(R.string.share_msg_begin));
+										i.putExtra(Intent.EXTRA_SUBJECT, router.getSsid() + getString(R.string.share_msg_begin));
 										Iterator<String> it = list_key.iterator();
-										String message = router.ssid + getString(R.string.share_msg_begin) + ":\n";
+										String message = router.getSsid() + getString(R.string.share_msg_begin) + ":\n";
 										while ( it.hasNext() )
 											message += it.next() + "\n";
 										
@@ -301,8 +320,8 @@ public class RouterKeygen extends Activity {
 						}
 						try {
 							BufferedWriter out = new BufferedWriter(
-									new FileWriter(folderSelect + File.separator + router.ssid + ".txt"));
-							out.write(router.ssid + " KEYS");
+									new FileWriter(folderSelect + File.separator + router.getSsid() + ".txt"));
+							out.write(router.getSsid() + " KEYS");
 							out.newLine();
 							for ( String s : list_key )
 							{
@@ -317,7 +336,7 @@ public class RouterKeygen extends Activity {
 									Toast.LENGTH_SHORT).show();
 							return ;
 						}
-						Toast.makeText( RouterKeygen.this , router.ssid + ".txt " + getString(R.string.msg_saved_key_file),
+						Toast.makeText( RouterKeygen.this , router.getSsid() + ".txt " + getString(R.string.msg_saved_key_file),
 								Toast.LENGTH_SHORT).show();
 					}
 				});
@@ -451,7 +470,7 @@ public class RouterKeygen extends Activity {
 						new DialogInterface.OnClickListener(){
 					public void onClick(DialogInterface dialog, int which) {
 						if ( RouterKeygen.this.calculator != null )
-							RouterKeygen.this.calculator.stopRequested = true;
+							RouterKeygen.this.calculator.setStopRequested(true);
 						removeDialog(DIALOG_THOMSON3G);
 					}
 				});
@@ -494,7 +513,7 @@ public class RouterKeygen extends Activity {
 					Toast.LENGTH_SHORT).show();
 			return;
 		}
-		if ( wifi.getWifiState() == WifiManager.WIFI_STATE_ENABLING )
+		if ( getWifi().getWifiState() == WifiManager.WIFI_STATE_ENABLING )
 		{
 			registerReceiver(stateChanged, new IntentFilter(
 					WifiManager.WIFI_STATE_CHANGED_ACTION));
@@ -506,7 +525,7 @@ public class RouterKeygen extends Activity {
 			Thread run = new Thread (new Runnable() {
 				
 				public void run() {
-					if ( wifi.startScan() )
+					if ( getWifi().startScan() )
 						handler.sendMessage(Message.obtain(handler, KeygenThread.ERROR_MSG , 
 								getResources().getString(R.string.msg_scanstarted)));
 					else
@@ -601,7 +620,7 @@ public class RouterKeygen extends Activity {
 			return;
 		}
 
-		RouterKeygen.this.calculator.router = wifi;
+		RouterKeygen.this.calculator.setRouter(wifi);
 		RouterKeygen.this.calculator.setPriority(Thread.MAX_PRIORITY);
 		begin =  System.currentTimeMillis();//debugging
 		RouterKeygen.this.calculator.start();
@@ -634,7 +653,28 @@ public class RouterKeygen extends Activity {
 				Environment.getExternalStorageDirectory().getAbsolutePath());
 	}
 
-	Handler handler = new Handler() {
+	public ArrayList<WifiNetwork> getVulnerable() {
+        return vulnerable;
+    }
+
+    public void setVulnerable(ArrayList<WifiNetwork> vulnerable) {
+        this.vulnerable = vulnerable;
+    }
+    public ListView getScanResuls() {
+        return scanResuls;
+    }
+
+    public void setScanResuls(ListView scanResuls) {
+        this.scanResuls = scanResuls;
+    }
+    public WifiManager getWifi() {
+        return wifi;
+    }
+
+    public void setWifi(WifiManager wifi) {
+        this.wifi = wifi;
+    }
+    Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			if ( thomson3g)
 				removeDialog(DIALOG_THOMSON3G);
@@ -653,12 +693,12 @@ public class RouterKeygen extends Activity {
 			{
 				if ( nativeCalc && ( calculator instanceof ThomsonKeygen ) )
 				{
-					if ( ((ThomsonKeygen)calculator).errorDict )
+					if ( ((ThomsonKeygen)calculator).isErrorDict() )
 					{
 						Toast.makeText( RouterKeygen.this , getString(R.string.msg_startingnativecalc) , 
 								Toast.LENGTH_SHORT).show();
 						
-						WifiNetwork tmp = RouterKeygen.this.calculator.router;
+						WifiNetwork tmp = RouterKeygen.this.calculator.getRouter();
 						try{
 							RouterKeygen.this.calculator = new NativeThomson(this ,RouterKeygen.this.getResources() );
 						}catch(LinkageError e){
@@ -668,7 +708,7 @@ public class RouterKeygen extends Activity {
 						}
 						if (isFinishing())
 							return;
-						RouterKeygen.this.calculator.router = tmp;
+						RouterKeygen.this.calculator.setRouter(tmp);
 						RouterKeygen.this.calculator.setPriority(Thread.MAX_PRIORITY);
 						RouterKeygen.this.calculator.start();
 						showDialog(DIALOG_NATIVE_CALC);

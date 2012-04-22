@@ -16,7 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exobel.routerkeygen;
+package org.exobel.routerkeygen.algorithms;
+
+import org.exobel.routerkeygen.R;
 
 import android.content.res.Resources;
 import android.os.Handler;
@@ -33,14 +35,14 @@ public class DlinkKeygen extends KeygenThread {
 				 			'p', 'd', 'S', 'Y', 'w', 
 				 			'8', '6', '2', '1', '5'};
 		 
-		if ( router.mac.equals("") ) 
+		if ( getRouter().getMac().equals("") ) 
 		{
 			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
 					resources.getString(R.string.msg_nomac)));
 			return;
 		}
 		char[] key = new char[20];
-		String mac = router.getMac();
+		String mac = getRouter().getMac();
 		key[0]=mac.charAt(11);
 		key[1]=mac.charAt(0);
 		 

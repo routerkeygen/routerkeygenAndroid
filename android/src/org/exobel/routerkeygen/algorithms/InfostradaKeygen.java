@@ -16,39 +16,37 @@
  * You should have received a copy of the GNU General Public License
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exobel.routerkeygen;
+package org.exobel.routerkeygen.algorithms;
 
-import java.security.MessageDigest;
-import java.util.ArrayList;
+import org.exobel.routerkeygen.R;
 
 import android.content.res.Resources;
 import android.os.Handler;
+import android.os.Message;
 
+/*
+ * This is not actual an algorithm
+ * as the key is calculated from the MAC 
+ * address adding a '2' as the first character
+ */
+public class InfostradaKeygen extends KeygenThread {
 
-public class KeygenThread extends Thread {
-	
-	MessageDigest md;
-	WifiNetwork router;
-	boolean stopRequested = false;
-	ArrayList<String> pwList;
-	static final int RESULTS_READY = 1000;
-	static final int ERROR_MSG = 1001;
-	Handler handler;
-	Resources resources;
-	
-
-	public KeygenThread( Handler h , Resources res)
-	{
-		this.handler = h;
-		this.resources = res;
-		this.pwList = new ArrayList<String>();
-
+	public InfostradaKeygen(Handler h, Resources res) {
+		super(h, res);
 	}
-
-
-	public ArrayList<String> getResults() {
-		return pwList;
+	
+	public void run(){
+		if ( getRouter() == null)
+			return;
+		if ( getRouter().getMac().length() != 12 ) 
+		{
+			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+					resources.getString(R.string.msg_errpirelli)));
+			return;
+		}
+		pwList.add("2"+getRouter().getMac().toUpperCase());
+		handler.sendEmptyMessage(RESULTS_READY);
+		return;
 	}
-
 	
 }

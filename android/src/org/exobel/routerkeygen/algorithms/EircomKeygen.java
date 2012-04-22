@@ -16,31 +16,27 @@
  * You should have received a copy of the GNU General Public License
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exobel.routerkeygen;
+package org.exobel.routerkeygen.algorithms;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
+import org.exobel.routerkeygen.R;
+import org.exobel.routerkeygen.StringUtils;
+
 import android.content.res.Resources;
 import android.os.Handler;
 import android.os.Message;
 
-/*
- * This is the algorithm to generate the WPA passphrase 
- * for the Hitachi (TECOM) AH-4021 and Hitachi (TECOM) AH-4222.
- * The key is the 26 first characters from the SSID SHA1 hash.
- *  Link : http://rafale.org/~mattoufoutu/ebooks/Rafale-Mag/Rafale12/Rafale12.08.HTML
- */
-public class TecomKeygen extends KeygenThread {
+public class EircomKeygen extends KeygenThread  {
 
-	public TecomKeygen(Handler h, Resources res) {
+	public EircomKeygen(Handler h, Resources res) {
 		super(h, res);
 	}
-	
-	
+
 	public void run(){
-		if ( router == null)
-			return;
+		String mac=  getRouter().getMacEnd();
 		try {
 			md = MessageDigest.getInstance("SHA1");
 		} catch (NoSuchAlgorithmException e1) {
@@ -48,8 +44,16 @@ public class TecomKeygen extends KeygenThread {
 					resources.getString(R.string.msg_nosha1)));
 			return;
 		}
+		byte [] routerMAC = new byte[4];
+		routerMAC[0] = 1;
+		for (int i = 0; i < 6; i += 2)
+			routerMAC[i / 2 + 1] = (byte) ((Character.digit(mac.charAt(i), 16) << 4)
+					+ Character.digit(mac.charAt(i + 1), 16));
+		int macDec = ( (0xFF & routerMAC[0]) << 24 ) | ( (0xFF & routerMAC[1])  << 16 ) |
+					 ( (0xFF & routerMAC[2])  << 8 ) | (0xFF & routerMAC[3]);
+		mac = StringUtils.dectoString(macDec) + "Although your world wonders me, ";
 		md.reset();
-		md.update(router.ssid.getBytes());
+		md.update(mac.getBytes());
 		byte [] hash = md.digest();
 		try {
 			pwList.add(StringUtils.getHexString(hash).substring(0,26));
@@ -59,4 +63,5 @@ public class TecomKeygen extends KeygenThread {
 		handler.sendEmptyMessage(RESULTS_READY);
 		return;
 	}
+	
 }

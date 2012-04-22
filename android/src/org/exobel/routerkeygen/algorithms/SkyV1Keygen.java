@@ -16,10 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exobel.routerkeygen;
+package org.exobel.routerkeygen.algorithms;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
+import org.exobel.routerkeygen.R;
 
 import android.content.res.Resources;
 import android.os.Handler;
@@ -44,9 +46,9 @@ public class SkyV1Keygen extends KeygenThread{
 	final static String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 	public void run(){
-		if ( router == null)
+		if ( getRouter() == null)
 			return;
-		if ( router.getMac().length() != 12 ) 
+		if ( getRouter().getMac().length() != 12 ) 
 		{
 			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
 					resources.getString(R.string.msg_nomac)));
@@ -60,7 +62,7 @@ public class SkyV1Keygen extends KeygenThread{
 			return;
 		}
 		md.reset();
-		md.update(router.getMac().getBytes());
+		md.update(getRouter().getMac().getBytes());
 		byte [] hash = md.digest();
 		String key ="";
 		for ( int i = 1 ; i <= 15 ; i += 2 )

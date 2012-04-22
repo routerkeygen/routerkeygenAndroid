@@ -16,7 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exobel.routerkeygen;
+package org.exobel.routerkeygen.algorithms;
+
+import org.exobel.routerkeygen.R;
 
 import android.content.res.Resources;
 import android.os.Handler;
@@ -91,9 +93,9 @@ public class HuaweiKeygen extends KeygenThread {
 	final char [] ssid= {'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'};
 
 	public void  run(){
-		if ( router == null)
+		if ( getRouter() == null)
 			return;
-		if ( router.getMac().length() != 12 ) 
+		if ( getRouter().getMac().length() != 12 ) 
 		{
 			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
 					resources.getString(R.string.msg_errpirelli)));
@@ -102,7 +104,7 @@ public class HuaweiKeygen extends KeygenThread {
 		int [] mac = new int [12];
 		for ( int i = 0 ; i < 12 ; ++i)
 		{
-			mac[i] =  Integer.parseInt(router.getMac().substring(i, i+1), 16);
+			mac[i] =  Integer.parseInt(getRouter().getMac().substring(i, i+1), 16);
 		}
 		int s1=(n1[mac[0]])^(a4[mac[1]])^(a6[mac[2]])^(a1[mac[3]])^(a11[mac[4]])^
 				(n20[mac[5]])^(a10[mac[6]])^(a4[mac[7]])^(a8[mac[8]])^(a2[mac[9]])^
@@ -137,8 +139,8 @@ public class HuaweiKeygen extends KeygenThread {
 				Integer.toString(key[yc]) + Integer.toString(key[yd]) + 
 				Integer.toString(key[ye]) );
 		handler.sendEmptyMessage(RESULTS_READY);
-		if ( !router.getSSIDsubpart().equalsIgnoreCase(ssidFinal) && 
-				router.ssid.startsWith("INFINITUM") )
+		if ( !getRouter().getSSIDsubpart().equalsIgnoreCase(ssidFinal) && 
+				getRouter().getSsid().startsWith("INFINITUM") )
 		{
 
 			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 

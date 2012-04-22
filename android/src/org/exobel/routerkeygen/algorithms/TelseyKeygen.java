@@ -16,7 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exobel.routerkeygen;
+package org.exobel.routerkeygen.algorithms;
+
+import org.exobel.routerkeygen.JenkinsHash;
+import org.exobel.routerkeygen.R;
 
 import android.content.res.Resources;
 import android.os.Handler;
@@ -192,13 +195,13 @@ public class TelseyKeygen extends KeygenThread {
 	
 	public void run(){
 		JenkinsHash hash = new JenkinsHash();
-		if ( router.getMac().equals("") ) 
+		if ( getRouter().getMac().equals("") ) 
 		{
 			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
 					resources.getString(R.string.msg_nomac)));
 			return;
 		}
-		long [] key = scrambler(router.getMac());
+		long [] key = scrambler(getRouter().getMac());
 		long seed = 0;
 
 		for (int x = 0; x < 64; x++) {	

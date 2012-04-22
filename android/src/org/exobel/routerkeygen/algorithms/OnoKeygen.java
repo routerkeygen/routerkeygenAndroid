@@ -16,10 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exobel.routerkeygen;
+package org.exobel.routerkeygen.algorithms;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
+import org.exobel.routerkeygen.R;
+import org.exobel.routerkeygen.StringUtils;
 
 import android.content.res.Resources;
 import android.os.Handler;
@@ -44,18 +47,18 @@ public class OnoKeygen extends KeygenThread {
 	}
 
 	public void run(){
-		if ( router == null)
+		if ( getRouter() == null)
 			return;
-		if ( router.ssid.length() != 13 ) 
+		if ( getRouter().getSsid().length() != 13 ) 
 		{
 			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
 					resources.getString(R.string.msg_shortessid6)));
 			return;
 		}
-		String val = router.ssid.substring(0,11)+ 
-					Integer.toString(Integer.parseInt(router.ssid.substring(11))+1);
+		String val = getRouter().getSsid().substring(0,11)+ 
+					Integer.toString(Integer.parseInt(getRouter().getSsid().substring(11))+1);
 		if ( val.length() < 13 )
-			val = router.ssid.substring(0,11)+ "0" + router.ssid.substring(11);
+			val = getRouter().getSsid().substring(0,11)+ "0" + getRouter().getSsid().substring(11);
 		int [] pseed = new int[4];
 		pseed[0] = 0;
 		pseed[1] = 0;

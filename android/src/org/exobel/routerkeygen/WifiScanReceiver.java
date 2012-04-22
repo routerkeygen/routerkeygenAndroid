@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -42,9 +43,9 @@ class WiFiScanReceiver extends BroadcastReceiver {
 		  
 		if ( solver == null )
 			return;
-		if ( solver.wifi == null )
+		if ( solver.getWifi() == null )
 			return;
-	    List<ScanResult> results = solver.wifi.getScanResults();
+	    List<ScanResult> results = solver.getWifi().getScanResults();
 	    ArrayList<WifiNetwork> list = new ArrayList<WifiNetwork>();
 	    Set<WifiNetwork> set = new TreeSet<WifiNetwork>();
 	    if ( results == null )/*He have had reports of this returning null instead of empty*/
@@ -60,13 +61,13 @@ class WiFiScanReceiver extends BroadcastReceiver {
 	    Iterator<WifiNetwork> it = set.iterator();
 	    while( it.hasNext())
 	    	list.add(it.next());
-	    solver.vulnerable = list;
+	    solver.setVulnerable(list);
 	    if (  list.isEmpty() )
 	    {
 			Toast.makeText( solver , solver.getResources().getString(R.string.msg_nowifidetected) ,
 					Toast.LENGTH_SHORT).show();
 	    }
-	    solver.scanResuls.setAdapter(new WifiListAdapter(list , solver)); 
+	    solver.getScanResuls().setAdapter(new WifiListAdapter(list , solver)); 
 	    try{
 		solver.unregisterReceiver(this);   
 	    }catch(Exception e ){}

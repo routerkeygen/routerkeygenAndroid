@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exobel.routerkeygen;
+package org.exobel.routerkeygen.algorithms;
 
 import java.io.DataInputStream;
 import java.io.File;
@@ -30,6 +30,10 @@ import java.net.URLConnection;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.zip.ZipInputStream;
+
+import org.exobel.routerkeygen.Preferences;
+import org.exobel.routerkeygen.R;
+import org.exobel.routerkeygen.StringUtils;
 
 import android.content.res.Resources;
 import android.os.Environment;
@@ -48,7 +52,7 @@ public class ThomsonKeygen extends KeygenThread {
 	int sequenceNumber;
 	byte[] routerESSID;
 	boolean thomson3g;
-	boolean errorDict;
+	private boolean errorDict;
 	int len = 0;
 	String folderSelect;
 
@@ -60,11 +64,11 @@ public class ThomsonKeygen extends KeygenThread {
 		this.table= new byte[1282];
 		this.routerESSID = new byte[3];
 		this.thomson3g = thomson3g;
-		this.errorDict = false;
+		this.setErrorDict(false);
 	}
 
 	public void run(){
-		if ( router == null)
+		if ( getRouter() == null)
 			return;
 		try {
 			md = MessageDigest.getInstance("SHA1");
@@ -73,7 +77,7 @@ public class ThomsonKeygen extends KeygenThread {
 					resources.getString(R.string.msg_nosha1)));
 			return;
 		}
-		if ( router.getSSIDsubpart().length() != 6 ) 
+		if ( getRouter().getSSIDsubpart().length() != 6 ) 
 		{
 			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
 					resources.getString(R.string.msg_shortessid6)));
@@ -81,8 +85,8 @@ public class ThomsonKeygen extends KeygenThread {
 		}
 		
 		for (int i = 0; i < 6; i += 2)
-			routerESSID[i / 2] = (byte) ((Character.digit(router.getSSIDsubpart().charAt(i), 16) << 4)
-					+ Character.digit(router.getSSIDsubpart().charAt(i + 1), 16));
+			routerESSID[i / 2] = (byte) ((Character.digit(getRouter().getSSIDsubpart().charAt(i), 16) << 4)
+					+ Character.digit(getRouter().getSSIDsubpart().charAt(i + 1), 16));
 
 		
 		if ( !thomson3g )
@@ -121,7 +125,7 @@ public class ThomsonKeygen extends KeygenThread {
 				{
 					handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
 							resources.getString(R.string.msg_err_webdic_table)));
-					errorDict = true;
+					setErrorDict(true);
 					return false;
 				}
 				else
@@ -145,7 +149,7 @@ public class ThomsonKeygen extends KeygenThread {
                 {
                     handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
                             resources.getString(R.string.msg_err_webdic_table)));
-                    errorDict = true;
+                    setErrorDict(true);
                     return false;
                 }
                 else
@@ -159,7 +163,7 @@ public class ThomsonKeygen extends KeygenThread {
 				{
 					handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
 							resources.getString(R.string.msg_err_webdic_table)));
-					errorDict = true;
+					setErrorDict(true);
 					return false;
 				}
 				else
@@ -189,12 +193,6 @@ public class ThomsonKeygen extends KeygenThread {
 			URLConnection con= url.openConnection();
 			con.setRequestProperty("Range", "bytes="  + totalOffset + "-");
 			onlineFile = new DataInputStream(con.getInputStream());
-			if ( onlineFile == null )
-			{
-				handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-						resources.getString(R.string.msg_errthomson3g)));
-				return false;
-			}
 			len = 0;
 			this.entry = new byte[lenght];
 			if ( ( len = onlineFile.read(this.entry , 0 , lenght ) ) != -1 ){
@@ -207,7 +205,7 @@ public class ThomsonKeygen extends KeygenThread {
 		} catch ( IOException e) {
 			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
 					resources.getString(R.string.msg_err_webdic_table)));
-			errorDict = true;
+			setErrorDict(true);
 			return false;
 		}
 	}
@@ -219,7 +217,7 @@ public class ThomsonKeygen extends KeygenThread {
 		{
 			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
 					resources.getString(R.string.msg_nosdcard)));
-			errorDict = true;
+			setErrorDict(true);
 			return false;
 		}
 		RandomAccessFile fis;
@@ -229,7 +227,7 @@ public class ThomsonKeygen extends KeygenThread {
 		} catch (FileNotFoundException e2) {
 			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
 					resources.getString(R.string.msg_dictnotfound)));
-			errorDict = true;
+			setErrorDict(true);
 			return false;
 		}
 		int version = 0;
@@ -238,7 +236,7 @@ public class ThomsonKeygen extends KeygenThread {
 			{
 				handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
 						resources.getString(R.string.msg_errordict)));
-				errorDict = true;
+				setErrorDict(true);
 				return false;
 			}
 			version = table[0] << 8 | table[1];
@@ -260,7 +258,7 @@ public class ThomsonKeygen extends KeygenThread {
 			{
 				handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
 						resources.getString(R.string.msg_errordict)));
-				errorDict = true;
+				setErrorDict(true);
 				return false;
 			}	
 			if ( table[( 0xFF &routerESSID[1] )*4] == routerESSID[1] )
@@ -296,11 +294,11 @@ public class ThomsonKeygen extends KeygenThread {
 			{
 				handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
 						resources.getString(R.string.msg_errordict)));
-				errorDict = true;
+				setErrorDict(true);
 				return false;
 			}
 		} catch (IOException e1) {
-			errorDict = true;
+			setErrorDict(true);
 			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
 					resources.getString(R.string.msg_errordict)));
 			return false;
@@ -309,7 +307,7 @@ public class ThomsonKeygen extends KeygenThread {
 		{
 			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
 					resources.getString(R.string.msg_errversion)));
-			errorDict = true;
+			setErrorDict(true);
 			return false;
 		}
 		
@@ -364,7 +362,7 @@ public class ThomsonKeygen extends KeygenThread {
 						resources.getString(R.string.err_misbuilt_apk)));
 				return false;
 			}
-			if ( stopRequested )
+			if ( isStopRequested() )
 				return false;
 			for (int i = 0 ; i < results.length ; ++i  )
 				pwList.add(results[i]);
@@ -377,7 +375,7 @@ public class ThomsonKeygen extends KeygenThread {
 		cp[1] = (byte) (char) 'P';
 		for (int offset = 0; offset < len ; offset += 3 )
 		{
-			if ( stopRequested )
+			if ( isStopRequested() )
 				return;
 			sequenceNumber = ( (0xFF & entry[offset + 0]) << 16 ) | 
 			( (0xFF & entry[offset + 1])  << 8 ) | (0xFF & entry[offset + 2]) ;
@@ -418,7 +416,7 @@ public class ThomsonKeygen extends KeygenThread {
 		cp[1] = (byte) (char) 'P';
 		for (int offset = 0; offset < len ; offset += 4 )
 		{
-			if ( stopRequested )
+			if ( isStopRequested() )
 				return;
 
 			if ( entry[offset] != routerESSID[2])
@@ -451,6 +449,13 @@ public class ThomsonKeygen extends KeygenThread {
 			}
 		}
 	}
+    public boolean isErrorDict() {
+        return errorDict;
+    }
+
+    public void setErrorDict(boolean errorDict) {
+        this.errorDict = errorDict;
+    }
     static byte[] charectbytes0 = {
         '3','3','3','3','3','3',
         '3','3','3','3','4','4',

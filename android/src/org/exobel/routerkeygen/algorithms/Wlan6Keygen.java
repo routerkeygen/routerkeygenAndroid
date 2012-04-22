@@ -16,7 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exobel.routerkeygen;
+package org.exobel.routerkeygen.algorithms;
+
+import org.exobel.routerkeygen.R;
 
 import android.content.res.Resources;
 import android.os.Handler;
@@ -30,16 +32,16 @@ public class Wlan6Keygen extends KeygenThread {
 
 	public void run()
 	{
-		if ( router == null )
+		if ( getRouter() == null )
 			return;
-		if ( router.getMac().equals("") ) 
+		if ( getRouter().getMac().equals("") ) 
 		{	
 			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
 					resources.getString(R.string.msg_nomac)));
 			return;
 		}
-		String ssidStr = router.getSSIDsubpart();
-		String macStr = router.mac;
+		String ssidStr = getRouter().getSSIDsubpart();
+		String macStr = getRouter().getMac();
 		char [] ssidSubPart = {'1', '2','3', '4', '5','6' };/*These values are not revelant.*/
 		char [] bssidLastByte = { '6', '6' };
 		ssidSubPart[0] = ssidStr.charAt(0);
@@ -89,7 +91,7 @@ public class Wlan6Keygen extends KeygenThread {
 		}
 		handler.sendEmptyMessage(RESULTS_READY);
 		if ( ( ( ssidSubPart[0] != macStr.charAt(10) ) || ( ssidSubPart[1] != macStr.charAt(12) ) ||( ssidSubPart[2] != macStr.charAt(13) ) )
-				&& !router.ssid.startsWith("WiFi"))
+				&& !getRouter().getSsid().startsWith("WiFi"))
 		{
 			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
 					resources.getString(R.string.msg_err_essid_no_match)));

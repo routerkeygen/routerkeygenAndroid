@@ -16,7 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exobel.routerkeygen;
+package org.exobel.routerkeygen.algorithms;
+
+import org.exobel.routerkeygen.R;
 
 import android.content.res.Resources;
 import android.os.Handler;
@@ -29,7 +31,7 @@ public class VerizonKeygen extends KeygenThread {
 	}
 
 	public void run(){
-		String ssid = router.ssid;
+		String ssid = getRouter().getSsid();
 		if ( ssid.length() != 5 )
 		{
 			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
@@ -55,9 +57,9 @@ public class VerizonKeygen extends KeygenThread {
 		ssid = Integer.toHexString(result).toUpperCase();
 		while ( ssid.length() < 6 )
 			ssid = "0" + ssid;
-	    if ( !router.mac.equals(""))
+	    if ( !getRouter().getMac().equals(""))
 	    {
-	    	pwList.add(router.mac.substring(3,5) + router.mac.substring(6,8) + 
+	    	pwList.add(getRouter().getMac().substring(3,5) + getRouter().getMac().substring(6,8) + 
 	    					Integer.toHexString(result).toUpperCase());
 	    }
 	    else	

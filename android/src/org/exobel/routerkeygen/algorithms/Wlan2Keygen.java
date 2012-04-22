@@ -16,7 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exobel.routerkeygen;
+package org.exobel.routerkeygen.algorithms;
+
+import org.exobel.routerkeygen.R;
 
 import android.content.res.Resources;
 import android.os.Handler;
@@ -34,15 +36,14 @@ public class Wlan2Keygen extends KeygenThread {
 
 	public Wlan2Keygen(Handler h, Resources res) {
 		super(h, res);
-		// TODO Auto-generated constructor stub
 	}
 
 	public void run() {
 		char[] key = new char[26];
 
-		if (router == null)
+		if (getRouter() == null)
 			return;
-		String mac = router.getMac();
+		String mac = getRouter().getMac();
 
 		if (mac.length() != 12) {
 			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
@@ -79,7 +80,7 @@ public class Wlan2Keygen extends KeygenThread {
 		key[25] = mac.charAt(5);
 
 		int max = 9;
-		String begin = router.ssidSubpart.substring(0,1);
+		String begin = getRouter().getSsidSubpart().substring(0,1);
 		int primer_n = Integer.parseInt(begin, 16);  
 		if (primer_n > max) {
 		   String cadena = String.valueOf(key, 0, 2);  	

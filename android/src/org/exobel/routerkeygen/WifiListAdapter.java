@@ -60,7 +60,7 @@ public class WifiListAdapter extends BaseAdapter {
 	     itemLayout= (RelativeLayout) LayoutInflater.from(context).inflate(R.layout.item_list_wifi, parent, false);
 	 
 	     TextView ssid = (TextView) itemLayout.findViewById(R.id.wifiName);
-	     ssid.setText(wifi.ssid);
+	     ssid.setText(wifi.getSsid());
 	     
 	     TextView bssid = (TextView) itemLayout.findViewById(R.id.wifiMAC);
 	     bssid.setText(wifi.mac);

@@ -16,7 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exobel.routerkeygen;
+package org.exobel.routerkeygen.algorithms;
+
+import org.exobel.routerkeygen.R;
 
 import android.content.res.Resources;
 import android.os.Handler;
@@ -41,9 +43,9 @@ public class NativeThomson extends KeygenThread{
   
   
 	public void run(){
-		if ( router == null)
+		if ( getRouter() == null)
 			return;
-		if ( router.getSSIDsubpart().length() != 6 ) 
+		if ( getRouter().getSSIDsubpart().length() != 6 ) 
 		{
 			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
 					resources.getString(R.string.msg_shortessid6)));
@@ -52,8 +54,8 @@ public class NativeThomson extends KeygenThread{
 		byte [] routerESSID = new byte[3];
 
 		for (int i = 0; i < 6; i += 2)
-			routerESSID[i / 2] = (byte) ((Character.digit(router.getSSIDsubpart().charAt(i), 16) << 4)
-					+ Character.digit(router.getSSIDsubpart().charAt(i + 1), 16));
+			routerESSID[i / 2] = (byte) ((Character.digit(getRouter().getSSIDsubpart().charAt(i), 16) << 4)
+					+ Character.digit(getRouter().getSSIDsubpart().charAt(i + 1), 16));
 		String [] results;
 		try{
 			results = this.thomson(routerESSID);
@@ -62,7 +64,7 @@ public class NativeThomson extends KeygenThread{
 					resources.getString(R.string.msg_err_native)));
 			return;
 		}
-		if ( stopRequested )
+		if ( isStopRequested() )
 			return;
 		for (int i = 0 ; i < results.length ; ++i  )
 			pwList.add(results[i]);

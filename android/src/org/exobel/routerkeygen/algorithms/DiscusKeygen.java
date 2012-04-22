@@ -16,7 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exobel.routerkeygen;
+package org.exobel.routerkeygen.algorithms;
+
 
 import android.content.res.Resources;
 import android.os.Handler;
@@ -30,7 +31,7 @@ public class DiscusKeygen extends KeygenThread {
 	static final int essidConst = 0xD0EC31;
 
 	public void run(){
-		int routerEssid = Integer.parseInt( router.getSSIDsubpart() , 16);
+		int routerEssid = Integer.parseInt( getRouter().getSSIDsubpart() , 16);
 		int result  = ( routerEssid - essidConst )>>2;
 		pwList.add("YW0" + Integer.toString(result));
 		handler.sendEmptyMessage(RESULTS_READY);

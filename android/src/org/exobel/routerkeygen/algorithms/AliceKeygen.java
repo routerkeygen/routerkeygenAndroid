@@ -16,11 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exobel.routerkeygen;
+package org.exobel.routerkeygen.algorithms;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
+import org.exobel.routerkeygen.R;
 
 import android.content.res.Resources;
 import android.os.Handler;
@@ -28,12 +30,13 @@ import android.os.Message;
 
 public class AliceKeygen extends KeygenThread {
 
-	public AliceKeygen(Handler h, Resources res) {
-		super(h, res);
-		// TODO Auto-generated constructor stub
-	}
 
-	final private String preInitCharset =
+	public AliceKeygen(Handler h, Resources res) {
+        super(h, res);
+    }
+
+
+    final private String preInitCharset =
 			 "0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvWxyz0123";
 	 
 	 private byte specialSeq[/*32*/]= {
@@ -49,15 +52,15 @@ public class AliceKeygen extends KeygenThread {
 	
 	public void run() {
 
-		if ( router == null)
+		if ( getRouter() == null)
 			return;
-		if ( router.supportedAlice == null )
+		if ( getRouter().getSupportedAlice() == null )
 		{
 			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
 					resources.getString(R.string.msg_erralicenotsupported)));
 			return;
 		}
-		if ( router.supportedAlice.isEmpty() )
+		if ( getRouter().getSupportedAlice().isEmpty() )
 		{
 			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
 					resources.getString(R.string.msg_erralicenotsupported)));
@@ -71,12 +74,12 @@ public class AliceKeygen extends KeygenThread {
 					resources.getString(R.string.msg_nosha256)));
 			return;
 		}
-		for ( int j = 0 ; j <router.supportedAlice.size() ; ++j )
+		for ( int j = 0 ; j <getRouter().getSupportedAlice().size() ; ++j )
 		{/*For pre AGPF 4.5.0sx*/
-			String serialStr = router.supportedAlice.get(j).serial + "X";
-			int Q = router.supportedAlice.get(j).magic[0];
-			int k = router.supportedAlice.get(j).magic[1] ;
-			int serial = ( Integer.valueOf(router.getSSIDsubpart()) - Q ) / k;
+			String serialStr = getRouter().getSupportedAlice().get(j).getSerial() + "X";
+			int Q = getRouter().getSupportedAlice().get(j).getMagic()[0];
+			int k = getRouter().getSupportedAlice().get(j).getMagic()[1] ;
+			int serial = ( Integer.valueOf(getRouter().getSSIDsubpart()) - Q ) / k;
 			String tmp = Integer.toString(serial);
 			for (int i = 0; i < 7 - tmp.length(); i++){
 				serialStr += "0";
@@ -87,12 +90,12 @@ public class AliceKeygen extends KeygenThread {
 			String key = "";
 			byte [] hash;		
 			
-			if (  router.getMac().length() == 12 ) {
+			if (  getRouter().getMac().length() == 12 ) {
 					
 				
 				for (int i = 0; i < 12; i += 2)
-					mac[i / 2] = (byte) ((Character.digit(router.getMac().charAt(i), 16) << 4)
-							+ Character.digit(router.getMac().charAt(i + 1), 16));
+					mac[i / 2] = (byte) ((Character.digit(getRouter().getMac().charAt(i), 16) << 4)
+							+ Character.digit(getRouter().getMac().charAt(i + 1), 16));
 	
 				md.reset();
 				md.update(specialSeq);
@@ -112,12 +115,12 @@ public class AliceKeygen extends KeygenThread {
 			}
 			
 			/*For post AGPF 4.5.0sx*/
-			String macEth = router.getMac().substring(0,6);
+			String macEth = getRouter().getMac().substring(0,6);
 			int extraNumber = 0;
 			while ( extraNumber <= 9 )
 			{
 				String calc = Integer.toHexString(Integer.valueOf(
-						extraNumber + router.getSSIDsubpart()) ).toUpperCase();
+						extraNumber + getRouter().getSSIDsubpart()) ).toUpperCase();
 				if ( macEth.charAt(5) == calc.charAt(0))
 				{
 					macEth += calc.substring(1);
@@ -125,7 +128,7 @@ public class AliceKeygen extends KeygenThread {
 				}
 				extraNumber++;
 			}
-			if ( macEth.equals(router.getMac().substring(0,6)) )
+			if ( macEth.equals(getRouter().getMac().substring(0,6)) )
 			{
 				handler.sendEmptyMessage(RESULTS_READY);
 				return;
