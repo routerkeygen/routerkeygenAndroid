@@ -1,4 +1,5 @@
-<-- 
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
    Copyright 2012 Rui Araújo, Luís Fonseca
   
    This file is part of Router Keygen.
@@ -16,7 +17,6 @@
    You should have received a copy of the GNU General Public License
    along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
    -->
-<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <!-- This translation was kindly done by Sven Van Hove, X.W. Koehoorn en Matthijs de Rijk -->
     
