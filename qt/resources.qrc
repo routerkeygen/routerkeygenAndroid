@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>alice/alice.xml</file>
+        <file>images/icon.png</file>
+    </qresource>
+</RCC>

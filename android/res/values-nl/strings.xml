@@ -1,0 +1,162 @@
+<-- 
+   Copyright 2012 Rui Araújo, Luís Fonseca
+  
+   This file is part of Router Keygen.
+  
+   Router Keygen is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+   
+   Router Keygen is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+   
+   You should have received a copy of the GNU General Public License
+   along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
+   -->
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- This translation was kindly done by Sven Van Hove, X.W. Koehoorn en Matthijs de Rijk -->
+    
+    <!-- MISC STRINGS -->
+    <string name="app_name">Router Keygen</string>
+	<string name="msg_welcome_title">Router Keygen</string>
+	<string name="msg_welcome_text">Bedankt voor het uitproberen van Router Keygen. Als u deze app leuk vindt, denk er dan over de donatieversie te kopen. De link is in het instellingenmenu. Uw donatie zal de ontwikkelaars aanmoedigen om deze open-source app nog beter te maken.</string>
+	<string name="msg_welcome_text_donate">Bedankt voor uw aanschaf van de donatieversie van Router Keygen. Uw donatie zal de ontwikkelaars aanmoedigen om deze open-source app nog beter te maken.</string> <!-- UNTRANSLATED -->
+    <string name="menu_scan">Scan</string>
+    <string name="menu_manual">Handmatige Invoer</string>
+    <string name="menu_preferences">Instellingen</string>
+	<string name="share_msg_begin">Sleutels</string>
+	<string name="share_title">Deel Sleutels</string>
+	<string name="msg_copied"> is gekopieerd naar het klipbord</string>
+	<string name="msg_scanstarted">Gestart met scannen</string>
+	<string name="msg_wifienabling">WiFi aanzetten...</string>
+	<string name="msg_results">Klik op 1 van de sleutels om die te kopieren.\nVervolgens zullen de WiFi instellingen openen zodat u de sleutel kan testen.</string>
+    <string name="manual_mac_separator">:</string>
+    
+    <!-- BUTTONS STRINGS -->
+	<string name="bt_manual_cancel">Annuleer</string>
+	<string name="bt_manual_calc">Bereken</string>
+	<string name="bt_share">Deel Sleutels</string>
+	<string name="bt_choose">Open</string>
+	<string name="bt_choose_back">Omhoog</string>
+	<string name="bt_close">Sluiten</string>
+	<string name="bt_ok">Ok</string>
+	<string name="bt_yes">Ja</string>
+	<string name="bt_no">Nee</string>	
+	<string name="bt_pause">Pauze</string>
+	<string name="bt_save_sd">Opslaan op de SD kaart</string>
+	<string name="bt_connect">Automatisch verbinden</string>
+	<string name="bt_website">Ga naar de website</string>
+	
+	<!-- DIALOG STRINGS -->	
+	<string name="lb_manual">Voer hier uw ESSID in:</string>
+	<string name="dialog_nativecalc">Sleutels Berekenen</string>
+	<string name="dialog_nativecalc_msg">Dit kan tot 2 minuten duren. Even geduld...</string>
+	<string name="dialog_thomson3g">Thomson 3G</string>
+	<string name="dialog_thomson3g_msg">Sleutels Ophalen...</string>
+	<string name="msg_dicislarge">De dictionary is 28 MB groot. Wij raden het gebruik van een WiFi-connectie aan.\nBent u zeker dat u wilt doorgaan?</string>
+	<string name="msg_dl_estimating">Geschatte downloadsnelheid en resterende tijd...</string>
+	<string name="msg_dl_dlingdic">dictionary downloaden...</string>
+    <string name="msg_dl_speed">­Download snelheid</string>
+    <string name="msg_dl_eta">­Geschatte resterende tijd</string>
+    <string name="msg_dic_updated">Uw dictionary is al de laatste versie.</string>
+    <string name="msg_dic_updated_finished">Uw dictionary is nu de laatste versie.</string>
+    <string name="msg_wait">Ogenblik geduld...</string>
+	<string name="lb_manual_bssid">MAC adres</string>
+	<string name="dialog_about_credits">Credits</string>
+	<string name="dialog_about_credits_desc">Router Keygen kon niet bestaan zonder de onschatbare bijdrages van volgende mensen/bedrijven:\n\n
+								<b>Luís Fonseca</b> - Exobel Team Member\n
+								<b>Rui Araújo</b> - Exobel Team Member\n
+								<b>Ângela Igreja</b> - Portuguese Vertaling\n
+								<b>Simone Guidi</b> - Italiaanse Vertaling\n
+								<b>Matthijs de Rijk</b>, <b>X.W. Koehoorn</b> and <b>Sven Van Hove</b> - Nederlandse Vertaling\n
+								<b>Jon Uriarte</b> - Spaanse Vertaling en de WLAN_XX implementatie\n
+								<b><a href="http://www.gnucitizen.org/">GNUCITIZEN</a></b> voor het Thomson algoritme\n
+								<b><a href="http://wifiresearchers.wordpress.com/">White Hats Crew</a></b> voor de Alice en FASTWEB algoritmes\n
+								<b>Fred Williams</b> voor het Verizon FiOS algoritme\n
+								<b>Muris Kurgaš </b> voor het Discus algoritme\n
+								<b><a href="http://websec.ca/">Pedro Joaquim</a></b> voor het Huawei algoritme\n
+								<b>chaeo</b> voor het SKY V1 algorithm.
+								</string>
+	<string name="dialog_about_license">Licentie</string>
+	<string name="dialog_about_license_desc">Deze applicatie is uitgebracht onder de GPLv3.\n\nU kan de voorwaarden 
+									<a href="http://www.gnu.org/licenses/gpl-3.0.html">hier</a>nalezen.</string>									
+	<string name="msg_app_updated">Uw versie van Router Keyken is al up-to-date</string>
+	<string name="folder_chooser_title">Kies uw map</string> 
+	<string name="folder_chooser_no_dir">(Er zijn geen dictionaries meer)</string> 
+	<string name="update_title">Update beschikbaar</string> 
+	<string name="update_message">Versie <xliff:g id="version">%1$s</xliff:g> is beschikbaar. Ga naar de website om deze te downloaden</string> 
+		
+    <!-- PREFERENCES STRINGS -->
+	<string name="pref_hinton_wifion">Activeer WiFi automatisch</string>
+	<string name="pref_hintoff_wifion">Activeer WiFi niet automatisch</string>
+	<string name="pref_wifion">Auto Wifi Aan</string>
+	<string name="pref_wifioff">Auto Wifi Uit</string>
+	<string name="pref_folder_select">Selecteer Map</string>
+	<string name="pref_folder_select_des">Selecteer de map van de dictionary</string>
+	<string name="pref_1section">Algemene Opties</string>
+	<string name="pref_2section">Info</string>
+	<string name="pref_donate">Doneer</string>
+	<string name="pref_donate_why">Trakteer mij op een koffie als je deze app leuk vond</string>
+	<string name="pref_about">Over Router Keygen</string>
+	<string name="pref_about_desc">Router Keygen berekent paswoorden voor verschillende soorten routers\n\n
+			<a href="http://code.google.com/p/android-thomson-key-solver/">Project Website</a>\n\nVersie: </string>
+	<string name="pref_msg_found">geselecteerd.</string>
+	<string name="pref_native">Primitieve Berekening</string>
+	<string name="pref_hinton_native">Berekenen op doel als de dictionary niet gevonden is.</string>
+	<string name="pref_hintoff_native">Alleen waarschuwen als de dictionary niet kan worden gevonden.</string>
+	<string name="pref_download_des">dictionary nodig voor Thomson sleutels</string>
+	<string name="pref_download">Download dictionary</string>
+	<string name="pref_thomson3g">Gebruik 3G voor Thomson</string>
+	<string name="pref_hinton_thomson3g">Sleutels ophalen van het internet.</string>
+	<string name="pref_hintoff_thomson3g">Gebruik dictionary om sleutels te genereren.</string>
+    <string name="pref_hinton_manual_mac">Manuele invoer heeft ook een MAC veld.</string>
+    <string name="pref_hintoff_manual_mac">Manuele invoer heeft alleen een SSID veld.</string>
+    <string name="pref_thomson_section">Thomson Opties</string>
+    <string name="pref_manual_mac">MAC manuele invoer</string>
+	<string name="pref_update">Controleer op updates</string>
+	
+	<!-- ERROR MESSAGE STRINGS -->
+	<string name="msg_newthomson">Dat is een nieuwe Thomson router, deze sleutel kan niet berekend worden!</string>
+	<string name="msg_unspported">Die ESSID wordt niet ondersteund</string>
+	<string name="msg_nowifidetected">Geen WiFi signaal gevonden</string>
+	<string name="msg_nowifi">Wifi niet geactiveerd!</string>
+	<string name="msg_scanfailed">Scannen is mislukt</string>
+	<string name="msg_wifibroken">WiFi activatie is mislukt!</string>
+	<string name="msg_shortessid6">Ongeldige ESSID. Lengte moet 6 zijn.</string>
+	<string name="msg_errordict">Fout bij het inlezen van de dictionary.</string>
+	<string name="msg_errnomatches">Geen overeenkomsten gevonden</string>
+	<string name="msg_shortessid5">Ongeldige ESSID. Lengte moet 5 zijn.</string>
+	<string name="msg_nomac">Deze sleutel kan niet gegenereerd worden zonder MAC address.</string>
+	<string name="msg_dlinkerror">Fout in de berekening van de D-Link sleutel.</string>
+	<string name="msg_dictnotfound">dictionary niet gevonden op SD-kaart</string>
+	<string name="pref_msg_notfound">dictionary niet gevonden op </string>
+	<string name="msg_nosdcard">De externe opslag is niet beschikbaar.</string>
+	<string name="msg_nomd5">Deze telefoon kan geen MD5 hash verwerken.</string>
+	<string name="msg_nosha1">Deze telefoon kan geen SHA1 hash verwerken.</string>
+	<string name="msg_nosha256">Deze telefoon kan geen SHA256 hash verwerken.</string>
+	<string name="msg_errpirelli">Het MAC adres is ongeldig.</string>
+	<string name="msg_errthomson3g">Fout bij het verbinden met de webservice.</string>
+	<string name="msg_erralicenotsupported">Deze Alice serie wordt nog niet ondersteund.</string>
+	<string name="msg_errversion">Onbekende versie van het dictionary.</string>
+	<string name="msg_startingnativecalc">Fout in dictionary, start met primitieve berekening.</string>
+	<string name="msg_rotation_nativecalc">Berekening geannuleerd. Kantel de telefoon niet terwijl de berekening bezig is.</string>
+	<string name="msg_err_essid_no_match">De berekende SSID kwam niet overeen met de opgegeven SSID.</string>
+	<string name="msg_err_native">­Fout in de primitieve berekening, neem a.u.b. contact op met de ontwikkelaar.</string>
+	<string name="msg_nomemoryonsdcard">De externe opslag heeft niet genoeg vrije ruimte.</string>
+	<string name="msg_error">Fout</string>
+	<string name="pref_msg_err_backup_dic">Fout bij het verplaatsen van de vorige dictionary naar een backup</string>
+	<string name="pref_msg_err_rename_dic">Fout bij het hernoemen van de gedownloade dictionary.</string>
+	<string name="msg_err_sendto">Fout bij het delen van de sleutels.</string>
+	<string name="msg_shortessid13">Ongeldig ESSID. Lengte moet 13 zijn.</string>
+    <string name="msg_err_unkown">Er is een onbekende error opgetreden.</string>
+    <string name="msg_err_online_too_adv">De online versie van het dictionary is te geavanceerd voor dit programma.\nMogelijk is een update nodig.</string>
+    <string name="err_misbuilt_apk">Uw APK is niet juist gecompileerd. Denk er aan eerst het primitieve gedeelte te compileren.</string>
+    <string name="msg_err_verizon_ssid">Fout bij het verwerken van deze SSID.</string>
+    <string name="msg_err_saving_key_file">Fout bij het opslaan van de sleutels.</string>
+    <string name="msg_saved_key_file">opgeslagen op de SD kaart.</string>
+    <string name="pref_msg_no_network">Er is geen netwerkverbinding.</string>
+</resources>

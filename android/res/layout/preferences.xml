@@ -1,0 +1,73 @@
+<-- 
+   Copyright 2012 Rui Araújo, Luís Fonseca
+  
+   This file is part of Router Keygen.
+  
+   Router Keygen is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+   
+   Router Keygen is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+   
+   You should have received a copy of the GNU General Public License
+   along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
+   -->
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+        <PreferenceCategory
+                android:title="@string/pref_1section">
+                <CheckBoxPreference
+                        android:title="@string/pref_wifion"
+                        android:defaultValue="true"
+                        android:summaryOn="@string/pref_hinton_wifion"
+                        android:summaryOff="@string/pref_hintoff_wifion"
+                        android:key="wifion" />  
+                  <CheckBoxPreference
+                        android:title="@string/pref_manual_mac"
+                        android:defaultValue="false"
+                        android:summaryOn="@string/pref_hinton_manual_mac"
+                        android:summaryOff="@string/pref_hintoff_manual_mac"
+                        android:key="manual_mac" />            
+        </PreferenceCategory>
+                        
+           <PreferenceCategory
+                android:title="@string/pref_thomson_section">                
+                 <CheckBoxPreference
+                        android:title="@string/pref_thomson3g"
+                        android:defaultValue="false"
+                        android:summaryOn="@string/pref_hinton_thomson3g"
+                        android:summaryOff="@string/pref_hintoff_thomson3g"
+                        android:key="thomson3g" />
+                 <CheckBoxPreference
+                        android:title="@string/pref_native"
+                        android:defaultValue="true"
+                        android:summaryOn="@string/pref_hinton_native"
+                        android:summaryOff="@string/pref_hintoff_native"
+                        android:key="nativethomson" />         
+                <Preference
+		                android:title="@string/pref_download"
+		                android:summary="@string/pref_download_des"
+		                android:key="download" />   
+		        <Preference
+		                android:title="@string/pref_folder_select"
+		                android:summary="@string/pref_folder_select_des"
+		                android:key="folderSelect" />		                
+        </PreferenceCategory>
+        <PreferenceCategory
+                android:title="@string/pref_2section">
+                <Preference
+                android:title="@string/pref_update"
+                android:key="update" />
+                <Preference
+                android:title="@string/pref_donate"
+                android:summary="@string/pref_donate_why"
+                android:key="donate" />
+                <Preference
+                android:title="@string/pref_about"
+                android:key="about" />
+           </PreferenceCategory>
+</PreferenceScreen>

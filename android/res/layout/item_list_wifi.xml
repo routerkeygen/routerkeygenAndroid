@@ -1,0 +1,73 @@
+<-- 
+   Copyright 2012 Rui Araújo, Luís Fonseca
+  
+   This file is part of Router Keygen.
+  
+   Router Keygen is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+   
+   Router Keygen is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+   
+   You should have received a copy of the GNU General Public License
+   along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
+   -->
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="?android:attr/listPreferredItemHeight"
+
+    android:padding="0dip">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:scaleType="fitXY"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="10dip"
+        android:src="@drawable/ic_impossible" />
+     <TextView
+        android:id="@+id/wifiMAC"
+        android:layout_width="wrap_content"
+        android:layout_toRightOf="@id/icon"
+        android:layout_height="30dip" 
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="false"
+        android:textColor="#545454"
+        android:singleLine="true" />   
+        <TextView
+        android:id="@+id/wifiName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:layout_toRightOf="@id/icon"
+        android:layout_below="@id/wifiMAC"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="false"
+        android:textSize="20sp"
+        android:singleLine="true"       
+        android:layout_alignWithParentIfMissing="true"
+        /> 
+        <LinearLayout android:layout_toRightOf="@id/wifiName" 
+        android:gravity="right"  
+        android:layout_width="fill_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="false"
+        android:layout_height="50dip" 
+        android:layout_marginRight="10dip"
+        >
+            <ImageView
+            android:id="@+id/strenght"
+            android:gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:src="@drawable/ic_wifi_weak" />
+        </LinearLayout>
+</RelativeLayout>
