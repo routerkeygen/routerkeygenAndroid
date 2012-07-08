@@ -1,21 +1,3 @@
-/*
- * Copyright 2012 Rui Araújo, Luís Fonseca
- *
- * This file is part of Router Keygen.
- *
- * Router Keygen is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * Router Keygen is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
- */
 package org.exobel.routerkeygen.thomsonGenerator;
 
 import java.io.File;
@@ -38,8 +20,8 @@ public class Stage3 {
 		String fileName = "56.dat";
 		int progress = 0;
 		int c = 0;
-		byte [] fileData = new  byte [300000];
-		byte [] outputData = new  byte [300000];
+		byte [] fileData = new  byte [3000000];
+		byte [] outputData = new  byte [3000000];
 		byte [] webDicTable = new byte[768]; 
 		RandomAccessFile webDicIndex = null;
 		try {
@@ -85,7 +67,7 @@ public class Stage3 {
 				entry.addEntry((short) (0xFF & currentEntry), address );
 				outputData[address + 0] = fileData[offset + 2];
 				outputData[address + 1] = fileData[offset + 3];
-                outputData[address + 2] = fileData[offset + 4];
+				outputData[address + 2] = fileData[offset + 4];
 				address += 3;
 				offset += 5;
 				while (offset < count ){
@@ -97,7 +79,7 @@ public class Stage3 {
 					}
 					outputData[address + 0] = fileData[offset + 2];
 					outputData[address + 1] = fileData[offset + 3];
-	                outputData[address + 2] = fileData[offset + 4];
+					outputData[address + 2] = fileData[offset + 4];
 					offset += 5;
 					address += 3;
 				}
