@@ -283,13 +283,22 @@ public class ThomsonKeygen extends KeygenThread {
 			if ( ( (0xFF & routerESSID[0] ) != 0xFF ) || ( (0xFF & routerESSID[1] ) != 0xFF  ) )
 			{
 				this.entry = new byte[length];
-				len = fis.read(entry,0, length);
 			}
 			else
 			{ /*Only for SSID starting with FFFF as we don't have a marker of the end.*/
-					this.entry = new byte[2000];
-					len = fis.read( entry );
+					length = 2000;
+					this.entry = new byte[length];
 			}
+
+			int bytesRead = 0;
+			len = 0;
+			while ( len < length ){
+				bytesRead  = fis.read(entry,len, length-len);
+				if ( bytesRead == -1 )
+					break;
+				len += bytesRead;
+			}
+			
 			if ( len == -1 )
 			{
 				handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
@@ -303,7 +312,7 @@ public class ThomsonKeygen extends KeygenThread {
 					resources.getString(R.string.msg_errordict)));
 			return false;
 		}
-		if ( version > 3 )
+		if ( version > 4 )
 		{
 			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
 					resources.getString(R.string.msg_errversion)));
@@ -317,7 +326,8 @@ public class ThomsonKeygen extends KeygenThread {
 			secondDic();
 		else if ( version == 3 )
 			return thirdDic();
-		
+		else if ( version == 4 )
+			forthDic();
 		return true;
 	}
 	
@@ -369,6 +379,50 @@ public class ThomsonKeygen extends KeygenThread {
 			return true;
 	}
 	
+
+	private void forthDic(){
+		cp[0] = (byte) (char) 'C';
+		cp[1] = (byte) (char) 'P';
+		for (int offset = 0; offset < len ; offset += 3 )
+		{
+			for ( int i = 0; i <= 1 ; ++i  ){
+				if ( isStopRequested() )
+					return;
+				sequenceNumber = i + (( (0xFF & entry[offset + 0]) << 16 ) | 
+				( (0xFF & entry[offset + 1])  << 8 ) | (0xFF & entry[offset + 2]) )*2 ;
+				c = sequenceNumber % 36;
+				b = sequenceNumber/36 % 36;
+				a = sequenceNumber/(36*36) % 36;
+				year = sequenceNumber / ( 36*36*36*52 ) + 4 ;
+				week = ( sequenceNumber / ( 36*36*36 ) ) % 52 + 1 ;				
+				cp[2] = (byte) Character.forDigit((year / 10), 10);
+				cp[3] = (byte) Character.forDigit((year % 10), 10);
+				cp[4] = (byte) Character.forDigit((week / 10), 10);
+				cp[5] = (byte) Character.forDigit((week % 10), 10);
+				cp[6] = charectbytes0[a];
+				cp[7] = charectbytes1[a];
+				cp[8] = charectbytes0[b];
+				cp[9] = charectbytes1[b];
+				cp[10] = charectbytes0[c];
+				cp[11] = charectbytes1[c];
+				md.reset();
+				md.update(cp);
+				hash = md.digest();
+				if ( hash[19] != routerESSID[2])
+					continue;
+				if ( hash[18] != routerESSID[1])
+					continue;
+				if ( hash[17] != routerESSID[0])
+					continue;
+				
+				try {
+					pwList.add(StringUtils.getHexString(hash).substring(0, 10).toUpperCase());
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
 	
 	private void secondDic(){
 		cp[0] = (byte) (char) 'C';
