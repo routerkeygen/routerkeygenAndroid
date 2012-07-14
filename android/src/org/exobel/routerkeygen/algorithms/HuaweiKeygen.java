@@ -18,11 +18,9 @@
  */
 package org.exobel.routerkeygen.algorithms;
 
-import org.exobel.routerkeygen.R;
+import java.util.List;
 
-import android.content.res.Resources;
-import android.os.Handler;
-import android.os.Message;
+import org.exobel.routerkeygen.R;
 /*
 *
 * Algorithm:
@@ -30,12 +28,12 @@ import android.os.Message;
 * http://websec.ca/blog/view/mac2wepkey_huawei
 * It has nice graphics that explain it all.
 * */
-public class HuaweiKeygen extends KeygenThread {
+public class HuaweiKeygen extends Keygen {
 
-	
-	
-	public HuaweiKeygen(Handler h, Resources res) {
-		super(h, res);
+	final private String ssidIdentifier;
+	public HuaweiKeygen(String ssid, String mac, int level, String enc ) {
+		super(ssid, mac, level, enc);
+		ssidIdentifier = ssid.substring(ssid.length()-4);
 	}
 
 	// Java adaptation of mac2wepkey.py from
@@ -92,19 +90,16 @@ public class HuaweiKeygen extends KeygenThread {
 	final int [] key= {30,31,32,33,34,35,36,37,38,39,61,62,63,64,65,66};
 	final char [] ssid= {'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'};
 
-	public void  run(){
-		if ( getRouter() == null)
-			return;
-		if ( getRouter().getMac().length() != 12 ) 
+	public List<String> getKeys() {
+		if ( getMacAddress().length() != 12 ) 
 		{
-			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-					resources.getString(R.string.msg_errpirelli)));
-			return;
+			setErrorCode(R.string.msg_errpirelli);
+			return null;
 		}
 		int [] mac = new int [12];
 		for ( int i = 0 ; i < 12 ; ++i)
 		{
-			mac[i] =  Integer.parseInt(getRouter().getMac().substring(i, i+1), 16);
+			mac[i] =  Integer.parseInt(getMacAddress().substring(i, i+1), 16);
 		}
 		int s1=(n1[mac[0]])^(a4[mac[1]])^(a6[mac[2]])^(a1[mac[3]])^(a11[mac[4]])^
 				(n20[mac[5]])^(a10[mac[6]])^(a4[mac[7]])^(a8[mac[8]])^(a2[mac[9]])^
@@ -135,17 +130,15 @@ public class HuaweiKeygen extends KeygenThread {
 		int ye=(n7[mac[0]])^(n14[mac[1]])^(a3[mac[2]])^(a5[mac[3]])^(a2[mac[4]])^
 				(a10[mac[5]])^(a7[mac[6]])^(a8[mac[7]])^(a14[mac[8]])^(a5[mac[9]])^
 				(a5[mac[10]])^(a2[mac[11]])^7;
-		pwList.add(Integer.toString(key[ya]) + Integer.toString(key[yb]) + 
+		addPassword(Integer.toString(key[ya]) + Integer.toString(key[yb]) + 
 				Integer.toString(key[yc]) + Integer.toString(key[yd]) + 
 				Integer.toString(key[ye]) );
-		handler.sendEmptyMessage(RESULTS_READY);
-		if ( !getRouter().getSSIDsubpart().equalsIgnoreCase(ssidFinal) && 
-				getRouter().getSsid().startsWith("INFINITUM") )
+		if ( !ssidIdentifier.equalsIgnoreCase(ssidFinal) && 
+				getSsidName().startsWith("INFINITUM") )
 		{
 
-			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-					resources.getString(R.string.msg_err_essid_no_match)));
+			setErrorCode(R.string.msg_err_essid_no_match);
 		}
-		return;
+		return getResults();
 	}
 }

@@ -18,56 +18,53 @@
  */
 package org.exobel.routerkeygen.algorithms;
 
+import java.util.List;
+
 import org.exobel.routerkeygen.R;
 
-import android.content.res.Resources;
-import android.os.Handler;
-import android.os.Message;
+public class VerizonKeygen extends Keygen {
 
-public class VerizonKeygen extends KeygenThread {
 
-	public VerizonKeygen(Handler h, Resources res) {
-		super(h, res);
+	public VerizonKeygen(String ssid, String mac, int level, String enc ) {
+		super(ssid, mac, level, enc);
 	}
 
-	public void run(){
-		String ssid = getRouter().getSsid();
-		if ( ssid.length() != 5 )
+	@Override
+	public List<String> getKeys() {
+		if ( getSsidName().length() != 5 )
 		{
-			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-					resources.getString(R.string.msg_shortessid5)));
-			return;
+			setErrorCode(R.string.msg_shortessid5);
+			return null;
 		}
 		char [] inverse = new char[5];
-		inverse[0] = ssid.charAt(4);
-		inverse[1] = ssid.charAt(3);
-        inverse[2] = ssid.charAt(2);
-		inverse[3] = ssid.charAt(1);
-		inverse[4] = ssid.charAt(0);
+		inverse[0] = getSsidName().charAt(4);
+		inverse[1] = getSsidName().charAt(3);
+        inverse[2] = getSsidName().charAt(2);
+		inverse[3] = getSsidName().charAt(1);
+		inverse[4] = getSsidName().charAt(0);
 		
 		int result = 0;
 		try{
 			result = Integer.valueOf(String.copyValueOf(inverse), 36);
 		}catch(NumberFormatException e){
-			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-					resources.getString(R.string.msg_err_verizon_ssid)));
-			return;
+			setErrorCode(R.string.msg_err_verizon_ssid);
+			return null;
 		}
 		
-		ssid = Integer.toHexString(result).toUpperCase();
-		while ( ssid.length() < 6 )
-			ssid = "0" + ssid;
-	    if ( !getRouter().getMac().equals(""))
+		String ssidKey = Integer.toHexString(result).toUpperCase();
+		while ( ssidKey.length() < 6 )
+			ssidKey = "0" + ssidKey;
+	    if ( !getMacAddress().equals(""))
 	    {
-	    	pwList.add(getRouter().getMac().substring(3,5) + getRouter().getMac().substring(6,8) + 
-	    					Integer.toHexString(result).toUpperCase());
+	    	addPassword(getMacAddress().substring(3,5) + getMacAddress().substring(6,8) + 
+	    					ssidKey);
 	    }
 	    else	
 	    {
-	    	pwList.add("1801" + Integer.toHexString(result).toUpperCase());
-	    	pwList.add("1F90" + Integer.toHexString(result).toUpperCase());
+	    	addPassword("1801" + ssidKey);
+	    	addPassword("1F90" + ssidKey);
 	    }
-	    handler.sendEmptyMessage(RESULTS_READY);
-		return;
+		return getResults();
 	}
+
 }

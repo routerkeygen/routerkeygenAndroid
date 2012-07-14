@@ -18,16 +18,17 @@
  */
 package org.exobel.routerkeygen.algorithms;
 
+import java.util.List;	
+
 import org.exobel.routerkeygen.R;
 
-import android.content.res.Resources;
-import android.os.Handler;
-import android.os.Message;
+public class NativeThomson extends Keygen{
 
-public class NativeThomson extends KeygenThread{
 
-	public NativeThomson(Handler h, Resources res) {
-		super(h, res);
+	final private String ssidIdentifier;
+	public NativeThomson(String ssid, String mac, int level, String enc ) {
+		super(ssid, mac, level, enc);
+		ssidIdentifier = ssid.substring(ssid.length()-6);
 	}
 
 
@@ -40,43 +41,35 @@ public class NativeThomson extends KeygenThread{
    * Native processing without a dictionary.
    */
 	public native String[] thomson( byte [] essid );
-  
-  
-	public void run(){
-		if ( getRouter() == null)
-			return;
-		if ( getRouter().getSSIDsubpart().length() != 6 ) 
+
+	@Override
+	public List<String> getKeys() {
+		if ( ssidIdentifier.length() != 6 ) 
 		{
-			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-					resources.getString(R.string.msg_shortessid6)));
-			return;
+			setErrorCode(R.string.msg_shortessid6);
+			return null;
 		}
 		byte [] routerESSID = new byte[3];
 
 		for (int i = 0; i < 6; i += 2)
-			routerESSID[i / 2] = (byte) ((Character.digit(getRouter().getSSIDsubpart().charAt(i), 16) << 4)
-					+ Character.digit(getRouter().getSSIDsubpart().charAt(i + 1), 16));
+			routerESSID[i / 2] = (byte) ((Character.digit(ssidIdentifier.charAt(i), 16) << 4)
+					+ Character.digit(ssidIdentifier.charAt(i + 1), 16));
 		String [] results;
 		try{
 			results = this.thomson(routerESSID);
 		}catch (Exception e) {
-			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-					resources.getString(R.string.msg_err_native)));
-			return;
+			setErrorCode(R.string.msg_err_native);
+			return null;
 		}
 		if ( isStopRequested() )
-			return;
+			return null;
 		for (int i = 0 ; i < results.length ; ++i  )
-			pwList.add(results[i]);
+			addPassword(results[i]);
 		
-		if(pwList.toArray().length == 0)
-		{
-			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-					resources.getString(R.string.msg_errnomatches)));
-			return;
-		}
-		handler.sendEmptyMessage(RESULTS_READY);
-		return;
+		 if(getResults().size() == 0)
+			setErrorCode(R.string.msg_errnomatches);
+		return getResults();
 	}
+
 
 }

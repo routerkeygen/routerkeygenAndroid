@@ -29,18 +29,16 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 import java.util.zip.ZipInputStream;
 
 import org.exobel.routerkeygen.Preferences;
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.StringUtils;
 
-import android.content.res.Resources;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
 
-public class ThomsonKeygen extends KeygenThread {
+public class ThomsonKeygen extends Keygen {
 
 	byte[] cp;
 	byte[] hash;
@@ -54,68 +52,64 @@ public class ThomsonKeygen extends KeygenThread {
 	boolean thomson3g;
 	private boolean errorDict;
 	int len = 0;
-	String folderSelect;
+	private String folderSelect;
 
-	public ThomsonKeygen(Handler h, Resources res , String folder , boolean thomson3g ) {
-		super(h, res);
-		this.folderSelect = folder;
+	private MessageDigest md;
+	final private String ssidIdentifier;
+	private InputStream webdic;
+	
+	public ThomsonKeygen(String ssid, String mac, int level, String enc ) {
+		super(ssid, mac, level, enc);
 		this.cp = new byte[12];
 		this.hash = new byte[19];
 		this.table= new byte[1282];
 		this.routerESSID = new byte[3];
-		this.thomson3g = thomson3g;
-		this.setErrorDict(false);
+		this.errorDict = false;
+		this.ssidIdentifier = ssid.substring(ssid.length()-6);
 	}
 
-	public void run(){
-		if ( getRouter() == null)
-			return;
+	@Override
+	public List<String> getKeys() {
 		try {
 			md = MessageDigest.getInstance("SHA1");
 		} catch (NoSuchAlgorithmException e1) {
-			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-					resources.getString(R.string.msg_nosha1)));
-			return;
+			setErrorCode(R.string.msg_nosha1);
+			return null;
 		}
-		if ( getRouter().getSSIDsubpart().length() != 6 ) 
+		if ( ssidIdentifier.length() != 6 ) 
 		{
-			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-					resources.getString(R.string.msg_shortessid6)));
-			return;
+			setErrorCode(R.string.msg_shortessid6);
+			return null;
 		}
 		
 		for (int i = 0; i < 6; i += 2)
-			routerESSID[i / 2] = (byte) ((Character.digit(getRouter().getSSIDsubpart().charAt(i), 16) << 4)
-					+ Character.digit(getRouter().getSSIDsubpart().charAt(i + 1), 16));
+			routerESSID[i / 2] = (byte) ((Character.digit(ssidIdentifier.charAt(i), 16) << 4)
+					+ Character.digit(ssidIdentifier.charAt(i + 1), 16));
 
 		
 		if ( !thomson3g )
 		{
 			if (!localCalc() )
-				return;
+				return null;
 		}
 		else
 		{
 			if (!internetCalc())
-				return;
+				return null;
 		}
 
-		if(pwList.toArray().length == 0)
-		{
-			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-					resources.getString(R.string.msg_errnomatches)));
-			return;
+		if( getResults().size() == 0) {
+			setErrorCode(R.string.msg_errnomatches);
+			return null;
 		}
-		handler.sendEmptyMessage(RESULTS_READY);
-		return;
+		return getResults();
 	}
 	private boolean internetCalc(){
 		try{
 			DataInputStream onlineFile = null;
 			int lenght =0 ;
 			URL url;
-			InputStream file = resources.openRawResource(R.raw.webdic);
-			ZipInputStream fis = new ZipInputStream(file);
+			ZipInputStream fis = new ZipInputStream(webdic);
 			fis.getNextEntry();
 			int check = 0 , ret = 0 ;
 			while ( check != 1024 )/*ZipInputStream doens't seems to block.*/
@@ -123,9 +117,8 @@ public class ThomsonKeygen extends KeygenThread {
 				ret = fis.read(table , check , 1024 - check);
 				if ( ret == -1 )
 				{
-					handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-							resources.getString(R.string.msg_err_webdic_table)));
-					setErrorDict(true);
+					setErrorCode(R.string.msg_err_webdic_table);
+					errorDict = true;
 					return false;
 				}
 				else
@@ -147,9 +140,8 @@ public class ThomsonKeygen extends KeygenThread {
                 retLong = fis.skip((i/4)*768 - checkLong);
                 if ( retLong == -1 )
                 {
-                    handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-                            resources.getString(R.string.msg_err_webdic_table)));
-                    setErrorDict(true);
+                    setErrorCode(R.string.msg_err_webdic_table);
+                    errorDict = true;
                     return false;
                 }
                 else
@@ -161,9 +153,8 @@ public class ThomsonKeygen extends KeygenThread {
 				ret = fis.read(table , check , 768 - check);
 				if ( ret == -1 )
 				{
-					handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-							resources.getString(R.string.msg_err_webdic_table)));
-					setErrorDict(true);
+					setErrorCode(R.string.msg_err_webdic_table);
+					errorDict = true;
 					return false;
 				}
 				else
@@ -203,9 +194,8 @@ public class ThomsonKeygen extends KeygenThread {
 			fis.close();
 			return thirdDic();
 		} catch ( IOException e) {
-			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-					resources.getString(R.string.msg_err_webdic_table)));
-			setErrorDict(true);
+			setErrorCode(R.string.msg_err_webdic_table);
+			errorDict = true;
 			return false;
 		}
 	}
@@ -215,9 +205,8 @@ public class ThomsonKeygen extends KeygenThread {
 		if ( !Environment.getExternalStorageState().equals("mounted")  && 
 		     !Environment.getExternalStorageState().equals("mounted_ro")	)
 		{
-			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-					resources.getString(R.string.msg_nosdcard)));
-			setErrorDict(true);
+			setErrorCode(R.string.msg_nosdcard);
+			errorDict = true;
 			return false;
 		}
 		RandomAccessFile fis;
@@ -225,18 +214,16 @@ public class ThomsonKeygen extends KeygenThread {
 			File dictionay = getDictionaryFile();
 			fis = new RandomAccessFile(dictionay, "r");
 		} catch (FileNotFoundException e2) {
-			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-					resources.getString(R.string.msg_dictnotfound)));
-			setErrorDict(true);
+			setErrorCode(R.string.msg_dictnotfound);
+			errorDict = true;
 			return false;
 		}
 		int version = 0;
 		try {
 			if ( fis.read(table) == -1 )
 			{
-				handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-						resources.getString(R.string.msg_errordict)));
-				setErrorDict(true);
+				setErrorCode(R.string.msg_errordict);
+				errorDict = true;
 				return false;
 			}
 			version = table[0] << 8 | table[1];
@@ -256,9 +243,8 @@ public class ThomsonKeygen extends KeygenThread {
 			fis.seek(totalOffset);
 			if ( fis.read(table,0,1024) == -1 )
 			{
-				handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-						resources.getString(R.string.msg_errordict)));
-				setErrorDict(true);
+				setErrorCode(R.string.msg_errordict);
+				errorDict = true;
 				return false;
 			}	
 			if ( table[( 0xFF &routerESSID[1] )*4] == routerESSID[1] )
@@ -301,22 +287,19 @@ public class ThomsonKeygen extends KeygenThread {
 			
 			if ( len == -1 )
 			{
-				handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-						resources.getString(R.string.msg_errordict)));
-				setErrorDict(true);
+				setErrorCode(R.string.msg_errordict);
+				errorDict = true;
 				return false;
 			}
 		} catch (IOException e1) {
-			setErrorDict(true);
-			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-					resources.getString(R.string.msg_errordict)));
+			errorDict = true;
+			setErrorCode(R.string.msg_errordict);
 			return false;
 		}
 		if ( version > 4 )
 		{
-			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-					resources.getString(R.string.msg_errversion)));
-			setErrorDict(true);
+			setErrorCode(R.string.msg_errversion);
+			errorDict = true;
 			return false;
 		}
 		
@@ -364,18 +347,16 @@ public class ThomsonKeygen extends KeygenThread {
 			try{
 				results = 	this.thirdDicNative(routerESSID , entry , entry.length);
 			}catch (Exception e) {
-				handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-						resources.getString(R.string.msg_err_native)));
+				setErrorCode(R.string.msg_err_native);
 				return false;
 			}catch (LinkageError e) {
-				handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-						resources.getString(R.string.err_misbuilt_apk)));
+				setErrorCode(R.string.err_misbuilt_apk);
 				return false;
 			}
 			if ( isStopRequested() )
 				return false;
 			for (int i = 0 ; i < results.length ; ++i  )
-				pwList.add(results[i]);
+				addPassword(results[i]);
 			return true;
 	}
 	
@@ -416,7 +397,7 @@ public class ThomsonKeygen extends KeygenThread {
 					continue;
 				
 				try {
-					pwList.add(StringUtils.getHexString(hash).substring(0, 10).toUpperCase());
+					addPassword(StringUtils.getHexString(hash).substring(0, 10).toUpperCase());
 				} catch (UnsupportedEncodingException e) {
 					e.printStackTrace();
 				}
@@ -459,7 +440,7 @@ public class ThomsonKeygen extends KeygenThread {
 				continue;
 			
 			try {
-				pwList.add(StringUtils.getHexString(hash).substring(0, 10).toUpperCase());
+				addPassword(StringUtils.getHexString(hash).substring(0, 10).toUpperCase());
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
@@ -497,20 +478,27 @@ public class ThomsonKeygen extends KeygenThread {
 			hash = md.digest();
 			
 			try {
-				pwList.add(StringUtils.getHexString(hash).substring(0, 10).toUpperCase());
+				addPassword(StringUtils.getHexString(hash).substring(0, 10).toUpperCase());
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
 		}
 	}
+
+	public void setWebdic(InputStream webdic) {
+		this.webdic = webdic;
+	}
+
+	
     public boolean isErrorDict() {
         return errorDict;
     }
 
-    public void setErrorDict(boolean errorDict) {
-        this.errorDict = errorDict;
+    public void setFolder(String folder){
+    	folderSelect = folder;
     }
-    static byte[] charectbytes0 = {
+    
+    final private static byte[] charectbytes0 = {
         '3','3','3','3','3','3',
         '3','3','3','3','4','4',
         '4','4','4','4','4','4',
@@ -519,7 +507,7 @@ public class ThomsonKeygen extends KeygenThread {
         '5','5','5','5','5','5',
         };
     
-    static byte[] charectbytes1 = {
+    final private static byte[] charectbytes1 = {
         '0','1','2','3','4','5',
         '6','7','8','9','1','2',
         '3','4','5','6','7','8',
@@ -527,4 +515,5 @@ public class ThomsonKeygen extends KeygenThread {
         'F','0','1','2','3','4',
         '5','6','7','8','9','A',
         };
+
 }

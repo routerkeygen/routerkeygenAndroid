@@ -21,13 +21,10 @@ package org.exobel.routerkeygen.algorithms;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.StringUtils;
-
-import android.content.res.Resources;
-import android.os.Handler;
-import android.os.Message;
 
 /*
  * This is the algorithm to generate the WPA passphrase 
@@ -35,32 +32,31 @@ import android.os.Message;
  * The key is the 26 first characters from the SSID SHA1 hash.
  *  Link : http://rafale.org/~mattoufoutu/ebooks/Rafale-Mag/Rafale12/Rafale12.08.HTML
  */
-public class TecomKeygen extends KeygenThread {
+public class TecomKeygen extends Keygen {
 
-	public TecomKeygen(Handler h, Resources res) {
-		super(h, res);
+	private MessageDigest md;
+	
+	public TecomKeygen(String ssid, String mac, int level, String enc ) {
+		super(ssid, mac, level, enc);
 	}
-	
-	
-	public void run(){
-		if ( getRouter() == null)
-			return;
+
+	@Override
+	public List<String> getKeys() {
 		try {
 			md = MessageDigest.getInstance("SHA1");
 		} catch (NoSuchAlgorithmException e1) {
-			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-					resources.getString(R.string.msg_nosha1)));
-			return;
+			setErrorCode(R.string.msg_nosha1);
+			return null;
 		}
 		md.reset();
-		md.update(getRouter().getSsid().getBytes());
+		md.update(getSsidName().getBytes());
 		byte [] hash = md.digest();
 		try {
-			pwList.add(StringUtils.getHexString(hash).substring(0,26));
+			addPassword(StringUtils.getHexString(hash).substring(0,26));
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		handler.sendEmptyMessage(RESULTS_READY);
-		return;
+		return getResults();
 	}
+
 }

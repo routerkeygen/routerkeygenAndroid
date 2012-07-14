@@ -18,31 +18,35 @@
  */
 package org.exobel.routerkeygen.algorithms;
 
+import java.util.List;
+
 import org.exobel.routerkeygen.R;
 
-import android.content.res.Resources;
-import android.os.Handler;
-import android.os.Message;
+/**
+ * 
+ * Link:http://fodi.me/codigo-fonte-wpa-dlink-php-c/
+ * @author Rui Araújo
+ *
+ */
+public class DlinkKeygen extends Keygen {
 
-public class DlinkKeygen extends KeygenThread {
-
-	public DlinkKeygen(Handler h, Resources res) {
-		super(h, res);
+	public DlinkKeygen(String ssid, String mac, int level, String enc) {
+		super(ssid, mac, level, enc);
 	}
 
-	public void run(){
-		 char hash[] =  { 'X', 'r', 'q', 'a', 'H', 'N',
-				 			'p', 'd', 'S', 'Y', 'w', 
-				 			'8', '6', '2', '1', '5'};
-		 
-		if ( getRouter().getMac().equals("") ) 
+	final static char hash[] =  { 'X', 'r', 'q', 'a', 'H', 'N',
+			 			'p', 'd', 'S', 'Y', 'w', 
+			 			'8', '6', '2', '1', '5'};
+
+	@Override
+	public List<String> getKeys() {
+		if ( getMacAddress().equals("") ) 
 		{
-			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-					resources.getString(R.string.msg_nomac)));
-			return;
+			setErrorCode(R.string.msg_nomac);
+			return null;
 		}
-		char[] key = new char[20];
-		String mac = getRouter().getMac();
+		final char[] key = new char[20];
+		final String mac = getMacAddress();
 		key[0]=mac.charAt(11);
 		key[1]=mac.charAt(0);
 		 
@@ -87,15 +91,15 @@ public class DlinkKeygen extends KeygenThread {
 					index = t-'A'+10;
 				else
 				{
-					handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-							resources.getString(R.string.msg_dlinkerror)));
-					return;
+					/*TODO:handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+							resources.getString(R.string.msg_dlinkerror)));*/
+					return null;
 				}
 			}
 			newkey[i]=hash[index];
 		}
-		pwList.add(String.valueOf(newkey, 0, 20));
-		handler.sendEmptyMessage(RESULTS_READY);
-		return;
+		addPassword(String.valueOf(newkey, 0, 20));
+		return getResults();
 	}
+
 }

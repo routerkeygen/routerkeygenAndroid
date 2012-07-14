@@ -18,12 +18,10 @@
  */
 package org.exobel.routerkeygen.algorithms;
 
+import java.util.List;
+
 import org.exobel.routerkeygen.JenkinsHash;
 import org.exobel.routerkeygen.R;
-
-import android.content.res.Resources;
-import android.os.Handler;
-import android.os.Message;
 
 /*
  * The algorithm for the FASTWEB Telsey
@@ -47,10 +45,10 @@ import android.os.Message;
  *  http://www.pcpedia.it/Hacking/algoritmi-di-generazione-wpa-alice-e-fastweb-e-lavidita-del-sapere.html
  *  http://wifiresearchers.wordpress.com/2010/09/09/telsey-fastweb-full-disclosure/
  */
-public class TelseyKeygen extends KeygenThread {
+public class TelseyKeygen extends Keygen {
 
-	public TelseyKeygen(Handler h, Resources res) {
-		super(h, res);
+	public TelseyKeygen(String ssid, String mac, int level, String enc ) {
+		super(ssid, mac, level, enc);
 	}
 
 	//Scramble Function
@@ -193,15 +191,15 @@ public class TelseyKeygen extends KeygenThread {
 		return vector;
 	}	
 	
-	public void run(){
+	@Override
+	public List<String> getKeys() {
 		JenkinsHash hash = new JenkinsHash();
-		if ( getRouter().getMac().equals("") ) 
+		if ( getMacAddress().equals("") ) 
 		{
-			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-					resources.getString(R.string.msg_nomac)));
-			return;
+			setErrorCode(R.string.msg_nomac);
+			return null;
 		}
-		long [] key = scrambler(getRouter().getMac());
+		long [] key = scrambler(getMacAddress());
 		long seed = 0;
 
 		for (int x = 0; x < 64; x++) {	
@@ -231,10 +229,8 @@ public class TelseyKeygen extends KeygenThread {
 		String S2 =  Long.toHexString(seed);
 		while ( S2.length() < 8 )
 			S2 = "0" + S2;
-		pwList.add(S1.substring(S1.length() - 5) +  S2.substring(0, 5));
-		handler.sendEmptyMessage(RESULTS_READY);
-		return;
+		addPassword(S1.substring(S1.length() - 5) +  S2.substring(0, 5));
+		return getResults();
 	}
-	
 	
 }

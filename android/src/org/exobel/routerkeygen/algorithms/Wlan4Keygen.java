@@ -21,57 +21,53 @@ package org.exobel.routerkeygen.algorithms;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.StringUtils;
 
-import android.content.res.Resources;
-import android.os.Handler;
-import android.os.Message;
+public class Wlan4Keygen extends Keygen {
 
-public class Wlan4Keygen extends KeygenThread {
-
-	public Wlan4Keygen(Handler h, Resources res) {
-		super(h, res);
+	final private String ssidIdentifier;
+	private MessageDigest md;
+	public Wlan4Keygen(String ssid, String mac, int level, String enc ) {
+		super(ssid, mac, level, enc);
+		ssidIdentifier = ssid.substring(ssid.length()-4);
 	}
-	
 	static final String magic = "bcgbghgg";
-	public void run(){
-		if ( getRouter() == null)
-			return;
+	
+	@Override
+	public List<String> getKeys() {
 		try {
 			md = MessageDigest.getInstance("MD5");
 		} catch (NoSuchAlgorithmException e1) {
-			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-					resources.getString(R.string.msg_nomd5)));
-			return;
+			setErrorCode(R.string.msg_nomd5);
+			return null;
 		}
-		if ( getRouter().getMac().length() != 12 ) 
+		if ( getMacAddress().length() != 12 ) 
 		{
-			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-					resources.getString(R.string.msg_errpirelli)));
-			return;
+			setErrorCode(R.string.msg_errpirelli);
+			return null;
 		}
-		String macMod = getRouter().getMac().substring(0,8) + getRouter().getSSIDsubpart();
+		String macMod = getMacAddress().substring(0,8) + ssidIdentifier;
 		md.reset();
 		try {
-			if ( !getRouter().getMac().toUpperCase().startsWith("001FA4") )
+			if ( !getMacAddress().toUpperCase().startsWith("001FA4") )
 				md.update(magic.getBytes("ASCII"));
-			if ( !getRouter().getMac().toUpperCase().startsWith("001FA4") )
+			if ( !getMacAddress().toUpperCase().startsWith("001FA4") )
 				md.update(macMod.toUpperCase().getBytes("ASCII"));
 			else
 				md.update(macMod.toLowerCase().getBytes("ASCII"));
-			if ( !getRouter().getMac().toUpperCase().startsWith("001FA4") )
-				md.update(getRouter().getMac().toUpperCase().getBytes("ASCII"));
+			if ( !getMacAddress().toUpperCase().startsWith("001FA4") )
+				md.update( getMacAddress().toUpperCase().getBytes("ASCII"));
 			byte [] hash = md.digest();
-			if  ( !getRouter().getMac().toUpperCase().startsWith("001FA4") )
-				pwList.add(StringUtils.getHexString(hash).substring(0,20));
+			if  ( !getMacAddress().toUpperCase().startsWith("001FA4") )
+				addPassword(StringUtils.getHexString(hash).substring(0,20));
 			else
-				pwList.add(StringUtils.getHexString(hash).substring(0,20).toUpperCase());
-			handler.sendEmptyMessage(RESULTS_READY);
-			return;
+				addPassword(StringUtils.getHexString(hash).substring(0,20).toUpperCase());
+			return getResults();
 		} catch (UnsupportedEncodingException e) {}
-		
+		return null;
 	}
 
 }

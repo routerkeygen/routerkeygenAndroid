@@ -20,13 +20,10 @@ package org.exobel.routerkeygen.algorithms;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.StringUtils;
-
-import android.content.res.Resources;
-import android.os.Handler;
-import android.os.Message;
 /*
  * The algorithm for the type of network
  * whose SSID must be in the form of [pP]1XXXXXX0000X
@@ -40,25 +37,25 @@ import android.os.Message;
  *  pulido from http://foro.elhacker.net
  *  http://foro.elhacker.net/hacking_wireless/desencriptando_wep_por_defecto_de_las_redes_ono_wifi_instantaneamente-t160928.0.html
  * */
-public class OnoKeygen extends KeygenThread {
+public class OnoKeygen extends Keygen {
 
-	public OnoKeygen(Handler h, Resources res) {
-		super(h, res);
+	private MessageDigest md;
+
+	public OnoKeygen(String ssid, String mac, int level, String enc ) {
+		super(ssid, mac, level, enc);
 	}
 
-	public void run(){
-		if ( getRouter() == null)
-			return;
-		if ( getRouter().getSsid().length() != 13 ) 
+	@Override
+	public List<String> getKeys() {
+		if ( getSsidName().length() != 13 ) 
 		{
-			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-					resources.getString(R.string.msg_shortessid6)));
-			return;
+			setErrorCode(R.string.msg_shortessid13);
+			return null;
 		}
-		String val = getRouter().getSsid().substring(0,11)+ 
-					Integer.toString(Integer.parseInt(getRouter().getSsid().substring(11))+1);
+		String val = getSsidName().substring(0,11)+ 
+					Integer.toString(Integer.parseInt(getSsidName().substring(11))+1);
 		if ( val.length() < 13 )
-			val = getRouter().getSsid().substring(0,11)+ "0" + getRouter().getSsid().substring(11);
+			val = getSsidName().substring(0,11)+ "0" + getSsidName().substring(11);
 		int [] pseed = new int[4];
 		pseed[0] = 0;
 		pseed[1] = 0;
@@ -78,23 +75,21 @@ public class OnoKeygen extends KeygenThread {
 			tmp = (short) ((randNumber >> 16) & 0xff);
 			key += StringUtils.getHexString(tmp).toUpperCase();
 		}
-		pwList.add(key);
+		addPassword(key);
 		key = "";
 		try {
 			md = MessageDigest.getInstance("MD5");
 		} catch (NoSuchAlgorithmException e1) {
-			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-					resources.getString(R.string.msg_nomd5)));
-			return;
+			setErrorCode(R.string.msg_nomd5);
+			return null; 
 		}
 		md.reset();
 		md.update(padto64(val).getBytes());
 		byte [] hash = md.digest();
 		for ( int i = 0 ; i < 13 ; ++i )
 			key += StringUtils.getHexString((short)hash[i]);
-		pwList.add(key.toUpperCase());
-		handler.sendEmptyMessage(RESULTS_READY);
-		return;
+		addPassword(key.toUpperCase());
+		return getResults();
 	}
 	
 	
@@ -106,6 +101,5 @@ public class OnoKeygen extends KeygenThread {
 			ret += val;
 		return ret.substring(0,64);
 	}
-	
 
 }

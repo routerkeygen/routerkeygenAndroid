@@ -20,6 +20,9 @@ package org.exobel.routerkeygen;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.exobel.routerkeygen.algorithms.Keygen;
+
 import android.content.Context;
 import android.net.wifi.WifiManager;
 import android.view.LayoutInflater;
@@ -31,13 +34,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class WifiListAdapter extends BaseAdapter {
-	private List<WifiNetwork> listNetworks; 
+	private List<Keygen> listNetworks; 
 	private Context context; 
-	public WifiListAdapter(List<WifiNetwork> list, Context context) {
+	public WifiListAdapter(List<Keygen> list, Context context) {
 		if ( list != null )
 			this.listNetworks = list;
 		else
-			this.listNetworks = new ArrayList<WifiNetwork>();
+			this.listNetworks = new ArrayList<Keygen>();
         this.context = context;
     }
 	
@@ -55,18 +58,18 @@ public class WifiListAdapter extends BaseAdapter {
 
 	public View getView(int position, View convertView, ViewGroup parent) {
 		 RelativeLayout itemLayout;
-		 WifiNetwork wifi = listNetworks.get(position);
+		 Keygen wifi = listNetworks.get(position);
 		 int strenght = listNetworks.get(position).getLevel();
 	     itemLayout= (RelativeLayout) LayoutInflater.from(context).inflate(R.layout.item_list_wifi, parent, false);
 	 
 	     TextView ssid = (TextView) itemLayout.findViewById(R.id.wifiName);
-	     ssid.setText(wifi.getSsid());
+	     ssid.setText(wifi.getSsidName());
 	     
 	     TextView bssid = (TextView) itemLayout.findViewById(R.id.wifiMAC);
-	     bssid.setText(wifi.mac);
+	     bssid.setText(wifi.getDisplayMacAddress().toUpperCase());
 	     
 	     ImageView icon = (ImageView)itemLayout.findViewById(R.id.icon);
-	     if ( wifi.supported && !wifi.newThomson)
+	     if ( wifi.isSupported() )
 	    	 icon.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_possible));
 	     
 	     ImageView networkS = (ImageView)itemLayout.findViewById(R.id.strenght);

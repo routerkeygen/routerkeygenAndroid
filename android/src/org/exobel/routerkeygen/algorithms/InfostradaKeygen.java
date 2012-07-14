@@ -18,35 +18,31 @@
  */
 package org.exobel.routerkeygen.algorithms;
 
-import org.exobel.routerkeygen.R;
+import java.util.List;
 
-import android.content.res.Resources;
-import android.os.Handler;
-import android.os.Message;
+import org.exobel.routerkeygen.R;
 
 /*
  * This is not actual an algorithm
  * as the key is calculated from the MAC 
  * address adding a '2' as the first character
  */
-public class InfostradaKeygen extends KeygenThread {
+public class InfostradaKeygen extends Keygen {
 
-	public InfostradaKeygen(Handler h, Resources res) {
-		super(h, res);
+	public InfostradaKeygen(String ssid, String mac, int level, String enc ) {
+		super(ssid, mac, level, enc);
+		// TODO Auto-generated constructor stub
 	}
 	
-	public void run(){
-		if ( getRouter() == null)
-			return;
-		if ( getRouter().getMac().length() != 12 ) 
+	@Override
+	public List<String> getKeys() {
+		if ( getMacAddress().length() != 12 ) 
 		{
-			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-					resources.getString(R.string.msg_errpirelli)));
-			return;
+			setErrorCode(R.string.msg_errpirelli);
+			return null;
 		}
-		pwList.add("2"+getRouter().getMac().toUpperCase());
-		handler.sendEmptyMessage(RESULTS_READY);
-		return;
+		addPassword("2"+getMacAddress().toUpperCase());
+		return getResults();
 	}
-	
+
 }

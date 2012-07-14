@@ -20,12 +20,9 @@ package org.exobel.routerkeygen.algorithms;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 import org.exobel.routerkeygen.R;
-
-import android.content.res.Resources;
-import android.os.Handler;
-import android.os.Message;
 
 
 /*
@@ -37,32 +34,31 @@ import android.os.Message;
  *  Use theses numbers, modulus 26, to find the correct letter
  *  and append to the key.
  */
-public class SkyV1Keygen extends KeygenThread{
+public class SkyV1Keygen extends Keygen{
 
-	public SkyV1Keygen(Handler h, Resources res) {
-		super(h, res);
+	private MessageDigest md;
+	public SkyV1Keygen(String ssid, String mac, int level, String enc ) {
+		super(ssid, mac, level, enc);
 	}
 
 	final static String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-	public void run(){
-		if ( getRouter() == null)
-			return;
-		if ( getRouter().getMac().length() != 12 ) 
+
+	@Override
+	public List<String> getKeys() {
+		if ( getMacAddress().length() != 12 ) 
 		{
-			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-					resources.getString(R.string.msg_nomac)));
-			return;
+			setErrorCode(R.string.msg_nomac);
+			return null;
 		}
 		try {
 			md = MessageDigest.getInstance("MD5");
 		} catch (NoSuchAlgorithmException e1) {
-			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-					resources.getString(R.string.msg_nomd5)));
-			return;
+			setErrorCode(R.string.msg_nomd5);
+			return null;
 		}
 		md.reset();
-		md.update(getRouter().getMac().getBytes());
+		md.update(getMacAddress().getBytes());
 		byte [] hash = md.digest();
 		String key ="";
 		for ( int i = 1 ; i <= 15 ; i += 2 )
@@ -72,8 +68,8 @@ public class SkyV1Keygen extends KeygenThread{
 			key += ALPHABET.substring(index,index+1 );
 		}
 
-		pwList.add(key);
-		handler.sendEmptyMessage(RESULTS_READY);
-		return;
+		addPassword(key);
+		return getResults();
 	}
+	
 }

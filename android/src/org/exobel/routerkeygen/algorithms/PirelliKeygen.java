@@ -21,56 +21,54 @@ package org.exobel.routerkeygen.algorithms;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.StringUtils;
 
-import android.content.res.Resources;
-import android.os.Handler;
-import android.os.Message;
 
-
-public class PirelliKeygen extends KeygenThread{
+public class PirelliKeygen extends Keygen{
 	
-	public PirelliKeygen(Handler h, Resources res) {
-		super(h, res);
+	private MessageDigest md;
+	final private String ssidIdentifier;
+
+	public PirelliKeygen(String ssid, String mac, int level, String enc ) {
+		super(ssid, mac, level, enc);
+		ssidIdentifier = ssid.substring(ssid.length()-12);
 	}
-	
-	final byte[] saltMD5 = {
+
+	final static byte[] saltMD5 = {
 			0x22, 0x33, 0x11, 0x34, 0x02,
 		    (byte) 0x81, (byte) 0xFA, 0x22, 0x11, 0x41,
 			0x68, 0x11,	0x12, 0x01, 0x05,
 			0x22, 0x71, 0x42, 0x10, 0x66 };
 	
-	public void run(){
 
-		if ( getRouter() == null)
-			return;
+	@Override
+	public List<String> getKeys() {
 		try {
 			md = MessageDigest.getInstance("MD5");
 		} catch (NoSuchAlgorithmException e1) {
-			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-					resources.getString(R.string.msg_nomd5)));
-			return;
+			setErrorCode(R.string.msg_nomd5);
+			return null;
 		}
-		if ( getRouter().getSSIDsubpart().length() != 12 ) 
+		if ( ssidIdentifier.length() != 12 ) 
 		{
-			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-					resources.getString(R.string.msg_errpirelli)));
-			return;
+			setErrorCode(R.string.msg_errpirelli);
+			return null;
 		}
 		
 		byte [] routerESSID = new byte[6];
 		for (int i = 0; i < 12; i += 2)
-			routerESSID[i / 2] = (byte) ((Character.digit(getRouter().getSSIDsubpart().charAt(i), 16) << 4)
-					+ Character.digit(getRouter().getSSIDsubpart().charAt(i + 1), 16));
+			routerESSID[i / 2] = (byte) ((Character.digit(ssidIdentifier.charAt(i), 16) << 4)
+					+ Character.digit(ssidIdentifier.charAt(i + 1), 16));
 
 		md.reset();
 		md.update(routerESSID);
 		md.update(saltMD5);
 		byte [] hash = md.digest();
 		short [] key = new short[5];
-		/*Grouping in five groups fo five bits*/
+		/*Grouping in five groups of five bits*/
 		key[0] = (short)( (hash[0] & 0xF8) >> 3 );
 		key[1] = (short)(( (hash[0] & 0x07) << 2) | ( (hash[1] & 0xC0) >>6 ));
 		key[2] = (short)((hash[1] & 0x3E) >> 1 );
@@ -80,10 +78,9 @@ public class PirelliKeygen extends KeygenThread{
 			if ( key[i] >= 0x0A )
 				key[i] += 0x57;
 		try {
-			pwList.add(StringUtils.getHexString(key));
+			addPassword(StringUtils.getHexString(key));
 		} catch (UnsupportedEncodingException e) {}
-		handler.sendEmptyMessage(RESULTS_READY);
-		return;
+		return  getResults();
 	}
 
 }

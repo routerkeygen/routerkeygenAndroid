@@ -21,28 +21,30 @@ package org.exobel.routerkeygen.algorithms;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.StringUtils;
 
-import android.content.res.Resources;
-import android.os.Handler;
-import android.os.Message;
+/*
+ * Eircom algorithm published here:
+ * http://www.bacik.org/eircomwep/howto.html
+ */
+public class EircomKeygen extends Keygen  {
 
-public class EircomKeygen extends KeygenThread  {
-
-	public EircomKeygen(Handler h, Resources res) {
-		super(h, res);
+	private MessageDigest md;
+	public EircomKeygen(String ssid, String mac, int level, String enc ) {
+		super(ssid, mac, level, enc);
 	}
 
-	public void run(){
-		String mac=  getRouter().getMacEnd();
+	@Override
+	public List<String> getKeys() {		
+		String mac = getMacAddress().substring(6);
 		try {
 			md = MessageDigest.getInstance("SHA1");
 		} catch (NoSuchAlgorithmException e1) {
-			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-					resources.getString(R.string.msg_nosha1)));
-			return;
+			setErrorCode(R.string.msg_nosha1);
+			return null;
 		}
 		byte [] routerMAC = new byte[4];
 		routerMAC[0] = 1;
@@ -56,12 +58,10 @@ public class EircomKeygen extends KeygenThread  {
 		md.update(mac.getBytes());
 		byte [] hash = md.digest();
 		try {
-			pwList.add(StringUtils.getHexString(hash).substring(0,26));
+			addPassword(StringUtils.getHexString(hash).substring(0,26));
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		handler.sendEmptyMessage(RESULTS_READY);
-		return;
+		return getResults();
 	}
-	
 }

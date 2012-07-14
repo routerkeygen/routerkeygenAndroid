@@ -21,25 +21,28 @@ package org.exobel.routerkeygen.algorithms;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
+import org.exobel.routerkeygen.AliceMagicInfo;
 import org.exobel.routerkeygen.R;
 
-import android.content.res.Resources;
-import android.os.Handler;
-import android.os.Message;
+public class AliceKeygen extends Keygen {
 
-public class AliceKeygen extends KeygenThread {
+	private MessageDigest md;
+	final private String ssidIdentifier;
+	final private List <AliceMagicInfo> supportedAlice;
 
+	public AliceKeygen(String ssid, String mac, int level, String enc,
+			List<AliceMagicInfo> supportedAlice) {
+		super(ssid, mac, level, enc);
+		this.ssidIdentifier = ssid.substring(ssid.length()-8);
+		this.supportedAlice = supportedAlice;
+	}
 
-	public AliceKeygen(Handler h, Resources res) {
-        super(h, res);
-    }
-
-
-    final private String preInitCharset =
+    final static private String preInitCharset =
 			 "0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvWxyz0123";
 	 
-	 private byte specialSeq[/*32*/]= {
+	final static private byte specialSeq[/*32*/]= {
 		0x64, (byte) 0xC6, (byte) 0xDD, (byte) 0xE3, 
 		(byte) 0xE5, 0x79, (byte) 0xB6, (byte) 0xD9, 
 		(byte) 0x86, (byte) 0x96, (byte) 0x8D, 0x34, 
@@ -49,37 +52,24 @@ public class AliceKeygen extends KeygenThread {
 		0x05, (byte) 0xCE, 0x20, 0x75, 
 		(byte) 0x91, 0x3F, (byte) 0xDC, (byte) 0xE8};
 	
-	
-	public void run() {
-
-		if ( getRouter() == null)
-			return;
-		if ( getRouter().getSupportedAlice() == null )
-		{
-			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-					resources.getString(R.string.msg_erralicenotsupported)));
-			return;
+	@Override
+	public List<String> getKeys() {
+		if ( supportedAlice == null || supportedAlice.isEmpty() ) {
+			setErrorCode(R.string.msg_erralicenotsupported);
+			return null;
 		}
-		if ( getRouter().getSupportedAlice().isEmpty() )
-		{
-			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-					resources.getString(R.string.msg_erralicenotsupported)));
-			return;
-		}
-		
 		try {
 			md = MessageDigest.getInstance("SHA256");
 		} catch (NoSuchAlgorithmException e1) {
-			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-					resources.getString(R.string.msg_nosha256)));
-			return;
+			setErrorCode(R.string.msg_nosha256);
+			return null;
 		}
-		for ( int j = 0 ; j <getRouter().getSupportedAlice().size() ; ++j )
+		for ( int j = 0 ; j < supportedAlice.size() ; ++j )
 		{/*For pre AGPF 4.5.0sx*/
-			String serialStr = getRouter().getSupportedAlice().get(j).getSerial() + "X";
-			int Q = getRouter().getSupportedAlice().get(j).getMagic()[0];
-			int k = getRouter().getSupportedAlice().get(j).getMagic()[1] ;
-			int serial = ( Integer.valueOf(getRouter().getSSIDsubpart()) - Q ) / k;
+			String serialStr = supportedAlice.get(j).getSerial() + "X";
+			int Q = supportedAlice.get(j).getMagic()[0];
+			int k = supportedAlice.get(j).getMagic()[1] ;
+			int serial = ( Integer.valueOf(ssidIdentifier) - Q ) / k;
 			String tmp = Integer.toString(serial);
 			for (int i = 0; i < 7 - tmp.length(); i++){
 				serialStr += "0";
@@ -90,12 +80,12 @@ public class AliceKeygen extends KeygenThread {
 			String key = "";
 			byte [] hash;		
 			
-			if (  getRouter().getMac().length() == 12 ) {
+			if (  getMacAddress().length() == 12 ) {
 					
 				
 				for (int i = 0; i < 12; i += 2)
-					mac[i / 2] = (byte) ((Character.digit(getRouter().getMac().charAt(i), 16) << 4)
-							+ Character.digit(getRouter().getMac().charAt(i + 1), 16));
+					mac[i / 2] = (byte) ((Character.digit(getMacAddress().charAt(i), 16) << 4)
+							+ Character.digit(getMacAddress().charAt(i + 1), 16));
 	
 				md.reset();
 				md.update(specialSeq);
@@ -110,17 +100,16 @@ public class AliceKeygen extends KeygenThread {
 				{
 					key += preInitCharset.charAt(hash[i] & 0xFF);
 				}
-				if ( !pwList.contains(key)  ) 
-					pwList.add(key);
+				addPassword(key);
 			}
 			
 			/*For post AGPF 4.5.0sx*/
-			String macEth = getRouter().getMac().substring(0,6);
+			String macEth = getMacAddress().substring(0,6);
 			int extraNumber = 0;
 			while ( extraNumber <= 9 )
 			{
 				String calc = Integer.toHexString(Integer.valueOf(
-						extraNumber + getRouter().getSSIDsubpart()) ).toUpperCase();
+						extraNumber + ssidIdentifier) ).toUpperCase();
 				if ( macEth.charAt(5) == calc.charAt(0))
 				{
 					macEth += calc.substring(1);
@@ -128,14 +117,9 @@ public class AliceKeygen extends KeygenThread {
 				}
 				extraNumber++;
 			}
-			if ( macEth.equals(getRouter().getMac().substring(0,6)) )
-			{
-				handler.sendEmptyMessage(RESULTS_READY);
-				return;
+			if ( macEth.equals(getMacAddress().substring(0,6)) ) {
+				return getResults();
 			}
-			
-			
-			
 			for (int i = 0; i < 12; i += 2)
 				mac[i / 2] = (byte) ((Character.digit(macEth.charAt(i), 16) << 4)
 						+ Character.digit(macEth.charAt(i + 1), 16));
@@ -151,10 +135,10 @@ public class AliceKeygen extends KeygenThread {
 			hash = md.digest();
 			for ( int i = 0 ; i < 24 ; ++i )
 				key += preInitCharset.charAt(hash[i] & 0xFF);
-			if ( !pwList.contains(key)  ) 
-				pwList.add(key);
+			addPassword(key);
 		}
-		handler.sendEmptyMessage(RESULTS_READY);
-		return;
+		return getResults();
 	}
+
+
 }

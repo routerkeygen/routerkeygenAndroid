@@ -18,38 +18,34 @@
  */
 package org.exobel.routerkeygen.algorithms;
 
+import java.util.List;
+
 import org.exobel.routerkeygen.R;
 
-import android.content.res.Resources;
-import android.os.Handler;
-import android.os.Message;
-
-public class Wlan6Keygen extends KeygenThread {
+public class Wlan6Keygen extends Keygen {
 	
-	public Wlan6Keygen(Handler h, Resources res) {
-		super(h, res);
+	final private String ssidIdentifier;
+	public Wlan6Keygen(String ssid, String mac, int level, String enc ) {
+		super(ssid, mac, level, enc);
+		ssidIdentifier = ssid.substring(ssid.length()-6);
 	}
 
-	public void run()
-	{
-		if ( getRouter() == null )
-			return;
-		if ( getRouter().getMac().equals("") ) 
+	@Override
+	public List<String> getKeys() {
+		if ( getMacAddress().equals("") ) 
 		{	
-			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-					resources.getString(R.string.msg_nomac)));
-			return;
+			setErrorCode(R.string.msg_nomac);
+			return null;
 		}
-		String ssidStr = getRouter().getSSIDsubpart();
-		String macStr = getRouter().getMac();
+		String macStr = getMacAddress();
 		char [] ssidSubPart = {'1', '2','3', '4', '5','6' };/*These values are not revelant.*/
 		char [] bssidLastByte = { '6', '6' };
-		ssidSubPart[0] = ssidStr.charAt(0);
-		ssidSubPart[1] = ssidStr.charAt(1);
-		ssidSubPart[2] = ssidStr.charAt(2);
-		ssidSubPart[3] = ssidStr.charAt(3);
-		ssidSubPart[4] = ssidStr.charAt(4);
-		ssidSubPart[5] = ssidStr.charAt(5);
+		ssidSubPart[0] = ssidIdentifier.charAt(0);
+		ssidSubPart[1] = ssidIdentifier.charAt(1);
+		ssidSubPart[2] = ssidIdentifier.charAt(2);
+		ssidSubPart[3] = ssidIdentifier.charAt(3);
+		ssidSubPart[4] = ssidIdentifier.charAt(4);
+		ssidSubPart[5] = ssidIdentifier.charAt(5);
 		bssidLastByte[0] = macStr.charAt(15);
 		bssidLastByte[1] = macStr.charAt(16);
 		for ( int  k = 0; k < 6 ; ++k ) 
@@ -87,17 +83,14 @@ public class Wlan6Keygen extends KeygenThread {
 						Integer.toHexString(eleventh & 0xf) + Integer.toHexString(twelfth & 0xf) +
 						Integer.toHexString(thirteenth & 0xf);
 			
-			pwList.add(key.toUpperCase());
+			addPassword(key.toUpperCase());
 		}
-		handler.sendEmptyMessage(RESULTS_READY);
 		if ( ( ( ssidSubPart[0] != macStr.charAt(10) ) || ( ssidSubPart[1] != macStr.charAt(12) ) ||( ssidSubPart[2] != macStr.charAt(13) ) )
-				&& !getRouter().getSsid().startsWith("WiFi"))
+				&& !getSsidName().startsWith("WiFi"))
 		{
-			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-					resources.getString(R.string.msg_err_essid_no_match)));
+			setErrorCode(R.string.msg_err_essid_no_match);
 		}
-		return;
+		return getResults();
 	}
-
 
 }

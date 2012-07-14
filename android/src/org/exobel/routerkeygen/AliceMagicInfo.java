@@ -25,16 +25,16 @@ public class AliceMagicInfo implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1640975633984337261L;
-	String alice;
+	private String alice;
 	private int [] magic;
 	private String serial;
-	String mac;
+	private String mac;
 	public AliceMagicInfo(String alice,  int[] magic,
 			String serial, String mac) {
-		this.alice = alice;
+		this.setAlice(alice);
 		this.setMagic(magic);
 		this.setSerial(serial);
-		this.mac = mac;
+		this.setMac(mac);
 	}
     public int [] getMagic() {
         return magic;
@@ -48,4 +48,16 @@ public class AliceMagicInfo implements Serializable{
     public void setSerial(String serial) {
         this.serial = serial;
     }
+	public String getAlice() {
+		return alice;
+	}
+	public void setAlice(String alice) {
+		this.alice = alice;
+	}
+	public String getMac() {
+		return mac;
+	}
+	public void setMac(String mac) {
+		this.mac = mac;
+	}
 }

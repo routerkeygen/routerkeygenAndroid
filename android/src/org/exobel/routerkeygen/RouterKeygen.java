@@ -23,48 +23,32 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
-import org.exobel.routerkeygen.R;
-import org.exobel.routerkeygen.WifiNetwork.TYPE;
-import org.exobel.routerkeygen.algorithms.AliceKeygen;
-import org.exobel.routerkeygen.algorithms.DiscusKeygen;
-import org.exobel.routerkeygen.algorithms.DlinkKeygen;
-import org.exobel.routerkeygen.algorithms.EircomKeygen;
-import org.exobel.routerkeygen.algorithms.HuaweiKeygen;
-import org.exobel.routerkeygen.algorithms.InfostradaKeygen;
-import org.exobel.routerkeygen.algorithms.KeygenThread;
-import org.exobel.routerkeygen.algorithms.NativeThomson;
-import org.exobel.routerkeygen.algorithms.OnoKeygen;
-import org.exobel.routerkeygen.algorithms.PirelliKeygen;
-import org.exobel.routerkeygen.algorithms.SkyV1Keygen;
-import org.exobel.routerkeygen.algorithms.TecomKeygen;
-import org.exobel.routerkeygen.algorithms.TelseyKeygen;
+import org.exobel.routerkeygen.algorithms.Keygen;
 import org.exobel.routerkeygen.algorithms.ThomsonKeygen;
-import org.exobel.routerkeygen.algorithms.VerizonKeygen;
-import org.exobel.routerkeygen.algorithms.Wlan2Keygen;
-import org.exobel.routerkeygen.algorithms.Wlan4Keygen;
-import org.exobel.routerkeygen.algorithms.Wlan6Keygen;
+import org.exobel.routerkeygen.algorithms.UnsupportedKeygen;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.app.AlertDialog.Builder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.DialogInterface.OnCancelListener;
-import android.content.DialogInterface.OnClickListener;
 import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.text.ClipboardManager;
@@ -81,27 +65,27 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
-import java.lang.Runnable;
 @SuppressWarnings("deprecation")
 public class RouterKeygen extends Activity {
 
 	private WifiManager wifi;
 	boolean wifi_state;
 	private ListView scanResuls;
-	KeygenThread calculator;
-	ArrayList<String> list_key = null;
+	List<String> list_key = null;
 	BroadcastReceiver scanFinished;
 	BroadcastReceiver stateChanged;
-	private ArrayList<WifiNetwork> vulnerable;
-	WifiNetwork router;
+	private ArrayList<Keygen> vulnerable;
+	private WirelessMatcher networkMatcher;
+	Keygen router;
 	long begin;
+	private KeygenThread calculator ;
 	static final String TAG = "RouterKeygen";
 	static final String welcomeScreenShownPref = "welcomeScreenShown";
 
@@ -132,45 +116,32 @@ public class RouterKeygen extends Activity {
 			editor.commit();
 		}
 
-
-		setScanResuls((ListView) findViewById(R.id.ListWifi));
-		getScanResuls().setOnItemClickListener(new OnItemClickListener() {
+		networkMatcher = new WirelessMatcher(getResources());
+		scanResuls = (ListView) findViewById(R.id.ListWifi);
+		scanResuls.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				router = getVulnerable().get(position);
-				if (router.newThomson)
-				{
-					Toast.makeText( RouterKeygen.this , getString(R.string.msg_newthomson) ,
-							Toast.LENGTH_SHORT).show();
-					return;
-				}
-				calcKeys(router);
+				calculator = (KeygenThread) new KeygenThread(router).execute();
 			}
 		});
 		stateChanged = new WifiStateReceiver(getWifi());
-		scanFinished = new WiFiScanReceiver(this);
+		scanFinished = new WiFiScanReceiver(this, networkMatcher);
 		if ( savedInstanceState == null  )
 			return;
-		Boolean warning = (Boolean)savedInstanceState.getSerializable("warning");
-		if ( warning != null )
-		{
-			removeDialog(DIALOG_NATIVE_CALC);
-			if ( calculator != null )
-				calculator.setStopRequested(true);
-		}
-		ArrayList<WifiNetwork> list_networks =(ArrayList<WifiNetwork>) savedInstanceState.getSerializable("networks");
+		ArrayList<Keygen> list_networks =(ArrayList<Keygen>) savedInstanceState.getSerializable("networks");
 		if ( list_networks != null )
 		{
 			setVulnerable(list_networks);
 			getScanResuls().setAdapter(new WifiListAdapter(getVulnerable(), this));
 		}
-		WifiNetwork r = (WifiNetwork) savedInstanceState.getSerializable("router");
+		Keygen r = (Keygen) savedInstanceState.getSerializable("router");
 		if ( r != null )
 		{
 			router = r;
 		}
 		else
-			router = new WifiNetwork("","",0,"",this);
+			router = new UnsupportedKeygen("","",0,"");
 		ArrayList<String> list_k =  (ArrayList<String>) savedInstanceState.getSerializable("keys");
 		if ( list_k != null )
 		{
@@ -180,13 +151,9 @@ public class RouterKeygen extends Activity {
 	
 	protected void onSaveInstanceState (Bundle outState){	
 		try {
-			if ( calculator instanceof NativeThomson )
-			{
-				outState.putSerializable("warning", true);
-			}
-			outState.putSerializable("router", router);
-			outState.putSerializable("keys", list_key );
-			outState.putSerializable("networks", getVulnerable() );
+			//TODO: outState.putSerializable("router", router);
+			outState.putSerializable("keys", (Serializable) list_key );
+			//TODO: outState.putSerializable("networks", getVulnerable() );
 		}
 		catch(Exception e){}
 	}
@@ -238,7 +205,7 @@ public class RouterKeygen extends Activity {
 						new DialogInterface.OnClickListener(){
 					public void onClick(DialogInterface dialog, int which) {
 						if ( RouterKeygen.this.calculator != null )
-							RouterKeygen.this.calculator.setStopRequested(true);
+							RouterKeygen.this.calculator.cancel(true);
 						removeDialog(DIALOG_THOMSON3G);
 					}
 				});
@@ -247,7 +214,7 @@ public class RouterKeygen extends Activity {
 			}
 			case DIALOG_KEY_LIST: {
 				AlertDialog.Builder builder = new Builder(this);
-				builder.setTitle(router.getSsid());
+				builder.setTitle(router.getSsidName());
 			    LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
 			    View layout = inflater.inflate(R.layout.results,
 			                                   (ViewGroup) findViewById(R.id.layout_root));
@@ -290,9 +257,9 @@ public class RouterKeygen extends Activity {
 									{
 										Intent i = new Intent(Intent.ACTION_SEND);
 										i.setType("text/plain");
-										i.putExtra(Intent.EXTRA_SUBJECT, router.getSsid() + getString(R.string.share_msg_begin));
+										i.putExtra(Intent.EXTRA_SUBJECT, router.getSsidName() + getString(R.string.share_msg_begin));
 										Iterator<String> it = list_key.iterator();
-										String message = router.getSsid() + getString(R.string.share_msg_begin) + ":\n";
+										String message = router.getSsidName() + getString(R.string.share_msg_begin) + ":\n";
 										while ( it.hasNext() )
 											message += it.next() + "\n";
 										
@@ -320,8 +287,8 @@ public class RouterKeygen extends Activity {
 						}
 						try {
 							BufferedWriter out = new BufferedWriter(
-									new FileWriter(folderSelect + File.separator + router.getSsid() + ".txt"));
-							out.write(router.getSsid() + " KEYS");
+									new FileWriter(folderSelect + File.separator + router.getSsidName() + ".txt"));
+							out.write(router.getSsidName() + " KEYS");
 							out.newLine();
 							for ( String s : list_key )
 							{
@@ -336,7 +303,7 @@ public class RouterKeygen extends Activity {
 									Toast.LENGTH_SHORT).show();
 							return ;
 						}
-						Toast.makeText( RouterKeygen.this , router.getSsid() + ".txt " + getString(R.string.msg_saved_key_file),
+						Toast.makeText( RouterKeygen.this , router.getSsidName() + ".txt " + getString(R.string.msg_saved_key_file),
 								Toast.LENGTH_SHORT).show();
 					}
 				});
@@ -444,8 +411,8 @@ public class RouterKeygen extends Activity {
 						if ( ssid.equals("") )
 							return;
 						begin =  System.currentTimeMillis();
-						router = new WifiNetwork(ssid, mac , 0 ,"" , RouterKeygen.this);
-						calcKeys(router);
+						router = networkMatcher.getKeygen(ssid, mac , 0 ,"");
+						calculator = (KeygenThread) new KeygenThread(router).execute();
 						InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 						imm.hideSoftInputFromWindow(edit.getWindowToken(), 0);						
 					}
@@ -470,7 +437,7 @@ public class RouterKeygen extends Activity {
 						new DialogInterface.OnClickListener(){
 					public void onClick(DialogInterface dialog, int which) {
 						if ( RouterKeygen.this.calculator != null )
-							RouterKeygen.this.calculator.setStopRequested(true);
+							RouterKeygen.this.calculator.cancel(true);
 						removeDialog(DIALOG_THOMSON3G);
 					}
 				});
@@ -522,18 +489,10 @@ public class RouterKeygen extends Activity {
 					Toast.LENGTH_SHORT).show();
 		}
 		else{
-			Thread run = new Thread (new Runnable() {
-				
-				public void run() {
-					if ( getWifi().startScan() )
-						handler.sendMessage(Message.obtain(handler, KeygenThread.ERROR_MSG , 
-								getResources().getString(R.string.msg_scanstarted)));
-					else
-						handler.sendMessage(Message.obtain(handler, KeygenThread.ERROR_MSG , 
-								getResources().getString(R.string.msg_scanfailed)));
-				}
-			});
-			run.start();
+			if ( getWifi().startScan() )	
+				Toast.makeText(this, R.string.msg_scanstarted, Toast.LENGTH_SHORT).show();
+			else
+				Toast.makeText(this, R.string.msg_scanfailed, Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -553,90 +512,13 @@ public class RouterKeygen extends Activity {
 		}
 	}
 
-	private void calcKeys(WifiNetwork wifi){
-		if ( !wifi.supported )
-		{
-			Toast.makeText( RouterKeygen.this , 
-					RouterKeygen.this.getResources().getString(R.string.msg_unspported),
-					Toast.LENGTH_SHORT).show();
-			return;
-		}
-		try {
-			switch( wifi.type )
-			{
-				case THOMSON: RouterKeygen.this.calculator = 
-							new ThomsonKeygen(handler,getResources(), folderSelect , thomson3g);
-							break;
-				case DISCUS: RouterKeygen.this.calculator = 
-							new DiscusKeygen(handler,getResources());
-							break;
-				case EIRCOM: RouterKeygen.this.calculator = 
-							new EircomKeygen(handler,getResources());
-							break;
-				case DLINK: RouterKeygen.this.calculator = 
-							new DlinkKeygen(handler,getResources());
-							break;
-				case VERIZON: RouterKeygen.this.calculator = 
-							new VerizonKeygen(handler,getResources());
-							break;
-				case PIRELLI: RouterKeygen.this.calculator = 
-							new PirelliKeygen(handler,getResources());
-							break;
-				case TELSEY: RouterKeygen.this.calculator = 
-							new TelseyKeygen(handler,getResources());
-							break;
-				case ALICE:	 RouterKeygen.this.calculator = 
-							new AliceKeygen(handler,getResources());
-							break;
-				case WLAN4:	 RouterKeygen.this.calculator = 
-							new Wlan4Keygen(handler,getResources());
-							break;
-				case HUAWEI: RouterKeygen.this.calculator = 
-							new HuaweiKeygen(handler,getResources());
-							break;
-				case WLAN2:	 RouterKeygen.this.calculator = 
-							new Wlan2Keygen(handler,getResources());
-							break;
-				case ONO_WEP: RouterKeygen.this.calculator = 
-							new OnoKeygen(handler,getResources());
-							break;
-				case SKY_V1: RouterKeygen.this.calculator = 
-							new SkyV1Keygen(handler,getResources());
-							break;	
-				case WLAN6: RouterKeygen.this.calculator = 
-							new Wlan6Keygen(handler,getResources());
-							break;
-				case TECOM: RouterKeygen.this.calculator = 
-							new TecomKeygen(handler,getResources());
-							break;
-				case INFOSTRADA: RouterKeygen.this.calculator = 
-							new InfostradaKeygen(handler,getResources());
-							break;			
-			}
-		}catch(LinkageError e){
-			Toast.makeText( RouterKeygen.this ,
-					RouterKeygen.this.getResources().getString(R.string.err_misbuilt_apk), 
-					Toast.LENGTH_SHORT).show();
-			return;
-		}
 
-		RouterKeygen.this.calculator.setRouter(wifi);
-		RouterKeygen.this.calculator.setPriority(Thread.MAX_PRIORITY);
-		begin =  System.currentTimeMillis();//debugging
-		RouterKeygen.this.calculator.start();
-		removeDialog(DIALOG_KEY_LIST);
-		removeDialog(DIALOG_MANUAL_CALC);
-		if (  wifi.type == TYPE.THOMSON && thomson3g )
-			showDialog(DIALOG_THOMSON3G);
-		removeDialog(DIALOG_KEY_LIST);
-	}
-
-	boolean wifiOn;
-	boolean thomson3g;
-	boolean nativeCalc;
-	boolean manualMac;
-	String folderSelect;
-	final String folderSelectPref = "folderSelect";
+	private boolean wifiOn;
+	private boolean thomson3g;
+	private boolean nativeCalc;
+	private boolean manualMac;
+	private String folderSelect;
+	private final String folderSelectPref = "folderSelect";
 	final String wifiOnPref = "wifion";
 	final String thomson3gPref = "thomson3g";
 	final String nativeCalcPref = "nativethomson";
@@ -653,11 +535,11 @@ public class RouterKeygen extends Activity {
 				Environment.getExternalStorageDirectory().getAbsolutePath());
 	}
 
-	public ArrayList<WifiNetwork> getVulnerable() {
+	public ArrayList<Keygen> getVulnerable() {
         return vulnerable;
     }
 
-    public void setVulnerable(ArrayList<WifiNetwork> vulnerable) {
+    public void setVulnerable(ArrayList<Keygen> vulnerable) {
         this.vulnerable = vulnerable;
     }
     public ListView getScanResuls() {
@@ -674,66 +556,79 @@ public class RouterKeygen extends Activity {
     public void setWifi(WifiManager wifi) {
         this.wifi = wifi;
     }
-    Handler handler = new Handler() {
-		public void handleMessage(Message msg) {
+	
+	private class KeygenThread extends AsyncTask<Keygen, String, List<String>>{
+		private Keygen keygen;
+		private KeygenThread(Keygen keygen){
+			this.keygen = keygen;
+		}
+		
+		@Override
+		protected void onPostExecute(List<String> result) {
 			if ( thomson3g)
 				removeDialog(DIALOG_THOMSON3G);
 			if ( nativeCalc )
 				removeDialog(DIALOG_NATIVE_CALC);
-			if ( msg.what == KeygenThread.RESULTS_READY ) /*Got Keys*/
-			{
-				begin = System.currentTimeMillis()-begin;
-				list_key = RouterKeygen.this.calculator.getResults();
-				Log.d(TAG, "Time to solve:" + begin);
-				if (!isFinishing())
-					showDialog(DIALOG_KEY_LIST);
+			if ( result == null )
 				return;
-			}
-			if ( msg.what == KeygenThread.ERROR_MSG ) 
-			{
-				if ( nativeCalc && ( calculator instanceof ThomsonKeygen ) )
-				{
-					if ( ((ThomsonKeygen)calculator).isErrorDict() )
-					{
-						Toast.makeText( RouterKeygen.this , getString(R.string.msg_startingnativecalc) , 
-								Toast.LENGTH_SHORT).show();
-						
-						WifiNetwork tmp = RouterKeygen.this.calculator.getRouter();
-						try{
-							RouterKeygen.this.calculator = new NativeThomson(this ,RouterKeygen.this.getResources() );
-						}catch(LinkageError e){
-							Toast.makeText( RouterKeygen.this ,getString(R.string.err_misbuilt_apk), 
-									Toast.LENGTH_SHORT).show();
-							return;
-						}
-						if (isFinishing())
-							return;
-						RouterKeygen.this.calculator.setRouter(tmp);
-						RouterKeygen.this.calculator.setPriority(Thread.MAX_PRIORITY);
-						RouterKeygen.this.calculator.start();
-						showDialog(DIALOG_NATIVE_CALC);
-						return;
-					}
+			begin = System.currentTimeMillis()-begin;
+			list_key = result;
+			Log.d(TAG, "Time to solve:" + begin);
+			if (!isFinishing())
+				showDialog(DIALOG_KEY_LIST);
+		}
 
-				}
-				if (!isFinishing())
-					Toast.makeText( RouterKeygen.this , msg.obj.toString() , Toast.LENGTH_SHORT).show();
-				return;
-			}
-			if ( msg.what == 2 )
+		@Override
+		protected void onPreExecute() {
+			if ( !keygen.isSupported() )
 			{
-				progressDialog.setProgress(progressDialog.getProgress() +1);
-				return;
-			}
-			if ( msg.what == 3 )
-			{
-				removeDialog(DIALOG_AUTO_CONNECT);
-				if (!isFinishing())
-					Toast.makeText( RouterKeygen.this ,msg.obj.toString() , Toast.LENGTH_SHORT).show();
-				return;
+				Toast.makeText( getApplicationContext() , R.string.msg_unspported,
+						Toast.LENGTH_SHORT).show();
+				cancel(true);
 			}
 		}
+
+		@Override
+		protected void onProgressUpdate(String... values) {
+			for ( String s : values )
+				Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
+		}
+
+		@Override
+		protected List<String> doInBackground(Keygen... params) {
+			if ( !keygen.isSupported() )
+				return null;
+			if ( keygen instanceof ThomsonKeygen )
+				((ThomsonKeygen)keygen).setFolder(folderSelect);
+			final List<String> result = keygen.getKeys();
+			final int errorCode = keygen.getErrorCode();
+			if ( errorCode != 0 )
+				publishProgress(getString(errorCode));
+		/*	if ( nativeCalc && ( keygen instanceof ThomsonKeygen ) )
+			{
+				if ( ((ThomsonKeygen)keygen).isErrorDict() )
+				{
+					Toast.makeText( RouterKeygen.this , getString(R.string.msg_startingnativecalc) , 
+							Toast.LENGTH_SHORT).show();
+					
+					Keygen tmp = RouterKeygen.this.calculator.getRouter();
+					try{
+						RouterKeygen.this.calculator = new NativeThomson(this ,RouterKeygen.this.getResources() );
+					}catch(LinkageError e){
+						Toast.makeText( RouterKeygen.this ,getString(R.string.err_misbuilt_apk), 
+								Toast.LENGTH_SHORT).show();
+						return;
+					}
+					if (isFinishing())
+						return;
+					showDialog(DIALOG_NATIVE_CALC);
+					return;
+				}
+
+			}*/
+			return result;
+		}
 		
-	};
+	}
 
 }
