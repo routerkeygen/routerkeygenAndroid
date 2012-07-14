@@ -9,6 +9,7 @@ import javax.xml.parsers.SAXParserFactory;
 import org.exobel.routerkeygen.algorithms.AliceKeygen;
 import org.exobel.routerkeygen.algorithms.DiscusKeygen;
 import org.exobel.routerkeygen.algorithms.DlinkKeygen;
+import org.exobel.routerkeygen.algorithms.EasyBoxKeygen;
 import org.exobel.routerkeygen.algorithms.EircomKeygen;
 import org.exobel.routerkeygen.algorithms.HuaweiKeygen;
 import org.exobel.routerkeygen.algorithms.InfostradaKeygen;
@@ -134,6 +135,9 @@ public class WirelessMatcher {
 		
 		if ( ssid.matches("(WLAN|WiFi|YaCom)[0-9a-zA-Z]{6}") )
 			return new Wlan6Keygen(ssid, mac, level, enc);
+		
+		if ( ssid.matches("(Arcor|EasyBox|Vodafone)(-| )[0-9a-zA-Z]{6}") )
+			return new EasyBoxKeygen(ssid, mac, level, enc);
 
 		if ( ssid.length() == 5  && 
 			  ( mac.startsWith("00:1F:90") || mac.startsWith("A8:39:44") ||

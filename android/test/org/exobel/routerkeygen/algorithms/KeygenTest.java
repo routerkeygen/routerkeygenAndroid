@@ -43,4 +43,13 @@ public class KeygenTest {
 		assertEquals("There should only one result", 1, results.size());
 		assertEquals("The password should be 29b2e9560b3a83a187ec5f2057", "29b2e9560b3a83a187ec5f2057", results.get(0));		
 	}
+	
+	@Test
+	public void testEasyBox() {
+		Keygen keygen = new EasyBoxKeygen("Arcor-910B02", "00:12:BF:91:0B:EC", 0, "");
+		List<String> results = keygen.getKeys();
+		assertEquals("Errors should not happen",0, keygen.getErrorCode());
+		assertEquals("There should only one result", 1, results.size());
+		assertEquals("The password should be F9C8C9DEF", "F9C8C9DEF", results.get(0));		
+	}
 }
