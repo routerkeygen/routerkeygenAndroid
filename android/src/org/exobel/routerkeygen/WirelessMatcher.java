@@ -15,6 +15,7 @@ import org.exobel.routerkeygen.algorithms.HuaweiKeygen;
 import org.exobel.routerkeygen.algorithms.InfostradaKeygen;
 import org.exobel.routerkeygen.algorithms.Keygen;
 import org.exobel.routerkeygen.algorithms.OnoKeygen;
+import org.exobel.routerkeygen.algorithms.OteKeygen;
 import org.exobel.routerkeygen.algorithms.PirelliKeygen;
 import org.exobel.routerkeygen.algorithms.SkyV1Keygen;
 import org.exobel.routerkeygen.algorithms.TecomKeygen;
@@ -136,9 +137,16 @@ public class WirelessMatcher {
 		if ( ssid.matches("(WLAN|WiFi|YaCom)[0-9a-zA-Z]{6}") )
 			return new Wlan6Keygen(ssid, mac, level, enc);
 		
-		if ( ssid.matches("(Arcor|EasyBox|Vodafone)(-| )[0-9a-zA-Z]{6}") )
+		if ( ssid.matches("(Arcor|EasyBox|Vodafone)(-| )[0-9a-fA-F]{6}") )
 			return new EasyBoxKeygen(ssid, mac, level, enc);
 
+		if ( ssid.matches("OTE[0-9a-fA-F]{6}") )
+			return new OteKeygen(ssid, mac, level, enc);
+		
+
+		if ( ssid.matches("CONN-?[0-9a-fA-F]{1}") )
+			return new OteKeygen(ssid, mac, level, enc);
+		
 		if ( ssid.length() == 5  && 
 			  ( mac.startsWith("00:1F:90") || mac.startsWith("A8:39:44") ||
 				mac.startsWith("00:18:01") || mac.startsWith("00:20:E0") ||

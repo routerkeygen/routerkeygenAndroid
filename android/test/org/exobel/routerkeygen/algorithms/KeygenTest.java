@@ -52,4 +52,24 @@ public class KeygenTest {
 		assertEquals("There should only one result", 1, results.size());
 		assertEquals("The password should be F9C8C9DEF", "F9C8C9DEF", results.get(0));		
 	}
+	
+
+	@Test
+	public void testOTE() {
+		Keygen keygen = new OteKeygen("OTE37cb4c", "", 0, "");
+		List<String> results = keygen.getKeys();
+		assertEquals("Errors should not happen",0, keygen.getErrorCode());
+		assertEquals("There should only one result", 1, results.size());
+		assertEquals("The password should be b075d537cb4c", "b075d537cb4c", results.get(0));		
+	}
+	
+
+	@Test
+	public void testCONN() {
+		Keygen keygen = new ConnKeygen("CONN-1", "", 0, "");
+		List<String> results = keygen.getKeys();
+		assertEquals("Errors should not happen",0, keygen.getErrorCode());
+		assertEquals("There should only one result", 1, results.size());
+		assertEquals("The password should be 1234567890123", "1234567890123", results.get(0));		
+	}
 }
