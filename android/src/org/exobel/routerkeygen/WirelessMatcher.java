@@ -139,7 +139,12 @@ public class WirelessMatcher {
 		if ( ssid.matches("(WLAN|WiFi|YaCom)[0-9a-zA-Z]{6}") )
 			return new Wlan6Keygen(ssid, mac, level, enc);
 		
-		if ( ssid.matches("(Arcor|EasyBox|Vodafone)(-| )[0-9a-fA-F]{6}") )
+		if ( ssid.matches("(Arcor|EasyBox|Vodafone)(-| )[0-9a-fA-F]{6}") && 
+			(	mac.startsWith("00:12:BF") || mac.startsWith("00:1A:2A") || 
+				mac.startsWith("00:1D:19") || mac.startsWith("00:23:08") || 
+				mac.startsWith("00:26:4D") || mac.startsWith("1C:C6:3C") || 
+				mac.startsWith("74:31:70") || mac.startsWith("7C:4F:B5") ||
+				mac.startsWith("88:25:2C")) )
 			return new EasyBoxKeygen(ssid, mac, level, enc);
 
 		if ( ssid.matches("OTE[0-9a-fA-F]{6}") )
