@@ -115,7 +115,7 @@ public class RouterKeygen extends Activity {
 			editor.commit();
 		}
 
-		networkMatcher = new WirelessMatcher(getResources());
+		networkMatcher = new WirelessMatcher(getResources().openRawResource(R.raw.alice));
 		scanResuls = (ListView) findViewById(R.id.ListWifi);
 		scanResuls.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,

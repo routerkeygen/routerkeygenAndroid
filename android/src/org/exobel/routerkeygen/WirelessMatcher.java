@@ -1,5 +1,6 @@
 package org.exobel.routerkeygen;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +16,7 @@ import org.exobel.routerkeygen.algorithms.EircomKeygen;
 import org.exobel.routerkeygen.algorithms.HuaweiKeygen;
 import org.exobel.routerkeygen.algorithms.InfostradaKeygen;
 import org.exobel.routerkeygen.algorithms.Keygen;
+import org.exobel.routerkeygen.algorithms.MegaredKeygen;
 import org.exobel.routerkeygen.algorithms.OnoKeygen;
 import org.exobel.routerkeygen.algorithms.OteKeygen;
 import org.exobel.routerkeygen.algorithms.PBSKeygen;
@@ -29,21 +31,21 @@ import org.exobel.routerkeygen.algorithms.Wlan2Keygen;
 import org.exobel.routerkeygen.algorithms.Wlan4Keygen;
 import org.exobel.routerkeygen.algorithms.Wlan6Keygen;
 
-import android.content.res.Resources;
-
 public class WirelessMatcher {
 
 	private final Map<String, List<AliceMagicInfo>> supportedAlices;
 
-	public WirelessMatcher( Resources resources ){
+	public WirelessMatcher( InputStream aliceXml ){
 		AliceHandle aliceReader = new AliceHandle();
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 	    SAXParser saxParser;
 	    try {
 	    	saxParser = factory.newSAXParser();
-			saxParser.parse(resources.openRawResource(R.raw.alice), aliceReader);
+			saxParser.parse(aliceXml, aliceReader);
 		} 
-	    catch (Exception e) {}
+	    catch (Exception e) {
+	    	e.printStackTrace();
+	    }
 	    supportedAlices = aliceReader.getSupportedAlices();
 	}
 	
@@ -155,6 +157,12 @@ public class WirelessMatcher {
 
 		if ( ssid.matches("CONN-?[0-9a-fA-F]{1}") )
 			return new ConnKeygen(ssid, mac, level, enc);
+
+		if ( ssid.matches("Megared[0-9a-fA-F]{4}") ) {
+			//the final 4 characters of the SSID should match the final 
+			if ( mac.length() == 0 || ssid.substring(ssid.length()-4).equals(mac.replace(":", "").substring(8)) )
+				return new MegaredKeygen(ssid, mac, level, enc);
+		}
 		
 		if ( ssid.length() == 5  && 
 			  ( mac.startsWith("00:1F:90") || mac.startsWith("A8:39:44") ||
@@ -163,6 +171,7 @@ public class WirelessMatcher {
 				mac.startsWith("00:15:05") || mac.startsWith("00:24:7B") ||
 				mac.startsWith("00:26:62") || mac.startsWith("00:26:B8") ) )
 			return new VerizonKeygen(ssid, mac, level, enc);
+		
 		if ( ssid.matches("INFINITUM[0-9a-zA-Z]{4}") && ( 
 				mac.startsWith("00:25:9E") || mac.startsWith("00:25:68") ||
 				mac.startsWith("00:22:A1") || mac.startsWith("00:1E:10") ||
