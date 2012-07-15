@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "org_exobel_routerkeygen_NativeThomson.h"
+#include "org_exobel_routerkeygen_algorithms_NativeThomson.h"
 #include <ctype.h>
 #include <string.h>
 #include "sha.h"
@@ -25,8 +25,10 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <android/log.h>
+#define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "Routerkeygen", __VA_ARGS__))
 
-JNIEXPORT jobjectArray JNICALL Java_org_exobel_routerkeygen_NativeThomson_thomson
+
+JNIEXPORT jobjectArray JNICALL Java_org_exobel_routerkeygen_algorithms_NativeThomson_thomson
   (JNIEnv * env, jobject obj, jbyteArray ess )
 {
     int n = sizeof(dic)/sizeof("AAA");
@@ -51,7 +53,7 @@ JNIEXPORT jobjectArray JNICALL Java_org_exobel_routerkeygen_NativeThomson_thomso
 	input[0] = 'C';
 	input[1] = 'P';
 	input[2] = '0';
-	char result[5][11];
+	char result[10][11];
 	int keys = 0;
 	for( i = 0; i < n; ++i  )
 	{
@@ -61,9 +63,10 @@ JNIEXPORT jobjectArray JNICALL Java_org_exobel_routerkeygen_NativeThomson_thomso
 		if ( stop )
 		{
 			(*env)->ReleaseByteArrayElements(env, ess, e_native, 0);
-			return;
+			//LOGI("Stopping");
+			return NULL;
 		}
-		for ( year = 4 ; year <= 9 ; ++year )
+		for ( year = 4 ; year <= 12 ; ++year )
 		{
 		    for ( week = 1 ; week <= 52 ; ++week )
 		    {

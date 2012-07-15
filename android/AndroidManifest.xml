@@ -8,7 +8,7 @@
     <application
     	android:icon="@drawable/icon"
     	android:label="@string/app_name"
-    	android:allowClearUserData="true">
+    	android:allowClearUserData="true" android:debuggable="true">
         <activity android:name=".RouterKeygen"
                   android:label="@string/app_name"
                   android:configChanges="orientation|keyboard">

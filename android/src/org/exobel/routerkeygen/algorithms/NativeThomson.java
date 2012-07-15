@@ -31,6 +31,11 @@ public class NativeThomson extends Keygen{
 		ssidIdentifier = ssid.substring(ssid.length()-6);
 	}
 
+	public NativeThomson( Keygen keygen) {
+		super(keygen.getSsidName(), keygen.getMacAddress(), keygen.getLevel(), keygen.getEncryption());
+		ssidIdentifier = keygen.getSsidName().substring(keygen.getSsidName().length()-6);
+	}
+
 
 	static {
 		System.loadLibrary("thomson");

@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.exobel.routerkeygen.algorithms.Keygen;
+import org.exobel.routerkeygen.algorithms.NativeThomson;
 import org.exobel.routerkeygen.algorithms.ThomsonKeygen;
 import org.exobel.routerkeygen.algorithms.UnsupportedKeygen;
 
@@ -204,7 +205,7 @@ public class RouterKeygen extends Activity {
 						new DialogInterface.OnClickListener(){
 					public void onClick(DialogInterface dialog, int which) {
 						if ( RouterKeygen.this.calculator != null )
-							RouterKeygen.this.calculator.cancel(true);
+							RouterKeygen.this.calculator.cancel();
 						removeDialog(DIALOG_THOMSON3G);
 					}
 				});
@@ -435,7 +436,7 @@ public class RouterKeygen extends Activity {
 						new DialogInterface.OnClickListener(){
 					public void onClick(DialogInterface dialog, int which) {
 						if ( RouterKeygen.this.calculator != null )
-							RouterKeygen.this.calculator.cancel(true);
+							RouterKeygen.this.calculator.cancel();
 						removeDialog(DIALOG_THOMSON3G);
 					}
 				});
@@ -555,7 +556,7 @@ public class RouterKeygen extends Activity {
         this.wifi = wifi;
     }
 	
-	private class KeygenThread extends AsyncTask<Keygen, String, List<String>>{
+	private class KeygenThread extends AsyncTask<Keygen, Integer, List<String>>{
 		private Keygen keygen;
 		private KeygenThread(Keygen keygen){
 			this.keygen = keygen;
@@ -585,10 +586,23 @@ public class RouterKeygen extends Activity {
 		}
 
 		@Override
-		protected void onProgressUpdate(String... values) {
-			for ( String s : values )
-				Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
+		protected void onProgressUpdate(Integer... values) {
+			for ( Integer s : values )
+			{
+				if ( s == 0 )
+					showDialog(DIALOG_NATIVE_CALC);
+				else
+					Toast.makeText(getApplicationContext(), getString(s), Toast.LENGTH_SHORT).show();
+
+			}
 		}
+		
+		public void cancel(){
+			keygen.setStopRequested(true);
+			cancel(true);
+		}
+		
+		private final static int SHOW_NATIVE_DIALOG = 0;
 
 		@Override
 		protected List<String> doInBackground(Keygen... params) {
@@ -596,36 +610,37 @@ public class RouterKeygen extends Activity {
 				return null;
 			if ( keygen instanceof ThomsonKeygen )
 				((ThomsonKeygen)keygen).setFolder(folderSelect);
-			final long begin = System.currentTimeMillis();
-			final List<String> result = keygen.getKeys();
-			final long end = System.currentTimeMillis() -begin;
+			long begin = System.currentTimeMillis();
+			List<String> result = keygen.getKeys();
+			long end = System.currentTimeMillis() -begin;
 			Log.d(TAG, "Time to solve:" + end);
 
 			final int errorCode = keygen.getErrorCode();
 			if ( errorCode != 0 )
-				publishProgress(getString(errorCode));
-		/*	if ( nativeCalc && ( keygen instanceof ThomsonKeygen ) )
+				publishProgress(errorCode);
+			if ( nativeCalc && ( keygen instanceof ThomsonKeygen ) )
 			{
 				if ( ((ThomsonKeygen)keygen).isErrorDict() )
 				{
-					Toast.makeText( RouterKeygen.this , getString(R.string.msg_startingnativecalc) , 
-							Toast.LENGTH_SHORT).show();
-					
-					Keygen tmp = RouterKeygen.this.calculator.getRouter();
+					publishProgress(R.string.msg_startingnativecalc);
 					try{
-						RouterKeygen.this.calculator = new NativeThomson(this ,RouterKeygen.this.getResources() );
-					}catch(LinkageError e){
-						Toast.makeText( RouterKeygen.this ,getString(R.string.err_misbuilt_apk), 
-								Toast.LENGTH_SHORT).show();
-						return;
-					}
-					if (isFinishing())
-						return;
-					showDialog(DIALOG_NATIVE_CALC);
-					return;
-				}
+						keygen = new NativeThomson(keygen);
+						if (isCancelled())
+							return null;
+						publishProgress(SHOW_NATIVE_DIALOG);
+						begin = System.currentTimeMillis();
+						result = keygen.getKeys();
+						end = System.currentTimeMillis() -begin;
+						Log.d(TAG, "Time to solve:" + end);
 
-			}*/
+						if ( keygen.getErrorCode() != 0 )
+							publishProgress(keygen.getErrorCode());
+					}catch(LinkageError e){
+						publishProgress(R.string.err_misbuilt_apk);
+						return null;
+					}
+				}
+			}
 			return result;
 		}
 		

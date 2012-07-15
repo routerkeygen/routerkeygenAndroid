@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "org_exobel_routerkeygen_ThomsonKeygen.h"
+#include "org_exobel_routerkeygen_algorithms_ThomsonKeygen.h"
 #include <ctype.h>
 #include <string.h>
 #include "sha.h"
@@ -44,7 +44,7 @@ static char charectbytes1[] = {
 	'5','6','7','8','9','A',
 	};
 
-JNIEXPORT jobjectArray JNICALL Java_org_exobel_routerkeygen_ThomsonKeygen_thirdDicNative
+JNIEXPORT jobjectArray JNICALL Java_org_exobel_routerkeygen_algorithms_ThomsonKeygen_thirdDicNative
   (JNIEnv * env, jobject obj , jbyteArray ess , jbyteArray ent, jint size)
 {
 	int year = 4;
@@ -124,7 +124,7 @@ JNIEXPORT jobjectArray JNICALL Java_org_exobel_routerkeygen_ThomsonKeygen_thirdD
 
 
 
-JNIEXPORT jobjectArray JNICALL Java_org_exobel_routerkeygen_ThomsonKeygen_forthDicNative
+JNIEXPORT jobjectArray JNICALL Java_org_exobel_routerkeygen_algorithms_ThomsonKeygen_forthDicNative
   (JNIEnv * env, jobject obj , jbyteArray ess , jbyteArray ent, jint size)
 {
 	int year = 4;
