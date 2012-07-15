@@ -608,8 +608,10 @@ public class RouterKeygen extends Activity {
 		protected List<String> doInBackground(Keygen... params) {
 			if ( !keygen.isSupported() )
 				return null;
-			if ( keygen instanceof ThomsonKeygen )
+			if ( keygen instanceof ThomsonKeygen ) {
 				((ThomsonKeygen)keygen).setFolder(folderSelect);
+				((ThomsonKeygen)keygen).setInternetAlgorithm(thomson3g);
+			}
 			long begin = System.currentTimeMillis();
 			List<String> result = keygen.getKeys();
 			long end = System.currentTimeMillis() -begin;

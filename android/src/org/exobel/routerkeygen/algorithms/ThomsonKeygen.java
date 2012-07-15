@@ -39,19 +39,19 @@ import org.exobel.routerkeygen.StringUtils;
 import android.os.Environment;
 
 public class ThomsonKeygen extends Keygen {
+	private byte[] cp;
+	private byte[] hash;
+	private byte[] entry;
+	private byte[] table;
+	private int a, b, c;
+	private int year;
+	private int week;
+	private int sequenceNumber;
+	private byte[] routerESSID;
+	private boolean internetAlgorithm;
 
-	byte[] cp;
-	byte[] hash;
-	byte[] entry;
-	byte[] table;
-	int a, b, c;
-	int year;
-	int week;
-	int sequenceNumber;
-	byte[] routerESSID;
-	boolean thomson3g;
 	private boolean errorDict;
-	int len = 0;
+	private int len = 0;
 	private String folderSelect;
 
 	private MessageDigest md;
@@ -87,7 +87,7 @@ public class ThomsonKeygen extends Keygen {
 					+ Character.digit(ssidIdentifier.charAt(i + 1), 16));
 
 		
-		if ( !thomson3g )
+		if ( !internetAlgorithm )
 		{
 			if (!localCalc() )
 				return null;
@@ -498,6 +498,11 @@ public class ThomsonKeygen extends Keygen {
     	folderSelect = folder;
     }
     
+
+	public void setInternetAlgorithm(boolean thomson3g) {
+		this.internetAlgorithm = thomson3g;
+	}
+	
     final private static byte[] charectbytes0 = {
         '3','3','3','3','3','3',
         '3','3','3','3','4','4',
