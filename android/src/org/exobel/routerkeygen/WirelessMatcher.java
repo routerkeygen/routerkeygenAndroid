@@ -7,6 +7,7 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.exobel.routerkeygen.algorithms.AliceKeygen;
+import org.exobel.routerkeygen.algorithms.ConnKeygen;
 import org.exobel.routerkeygen.algorithms.DiscusKeygen;
 import org.exobel.routerkeygen.algorithms.DlinkKeygen;
 import org.exobel.routerkeygen.algorithms.EasyBoxKeygen;
@@ -16,6 +17,7 @@ import org.exobel.routerkeygen.algorithms.InfostradaKeygen;
 import org.exobel.routerkeygen.algorithms.Keygen;
 import org.exobel.routerkeygen.algorithms.OnoKeygen;
 import org.exobel.routerkeygen.algorithms.OteKeygen;
+import org.exobel.routerkeygen.algorithms.PBSKeygen;
 import org.exobel.routerkeygen.algorithms.PirelliKeygen;
 import org.exobel.routerkeygen.algorithms.SkyV1Keygen;
 import org.exobel.routerkeygen.algorithms.TecomKeygen;
@@ -55,7 +57,7 @@ public class WirelessMatcher {
 		if ( ssid.matches("[eE]ircom[0-7]{4} ?[0-7]{4}")) {
 			if ( mac.length() == 0 ){
 				final String filteredSsid = ssid.replace(" ", "");
-				final String end = Integer.toHexString( Integer.parseInt(filteredSsid.substring(filteredSsid.length()-8), 8) ^ 0x000fcc );
+				final String end = Integer.toHexString( Integer.parseInt(filteredSsid.substring(filteredSsid.length()-8),8)^0x000fcc );
 				mac = "00:0F:CC" +  ":" + end.substring(0,2)+ ":" +
 						end.substring(2,4)+ ":" + end.substring(4,6);
 			}
@@ -142,10 +144,12 @@ public class WirelessMatcher {
 
 		if ( ssid.matches("OTE[0-9a-fA-F]{6}") )
 			return new OteKeygen(ssid, mac, level, enc);
-		
+
+		if ( ssid.matches("PBS-[0-9a-fA-F]{6}") )
+			return new PBSKeygen(ssid, mac, level, enc);
 
 		if ( ssid.matches("CONN-?[0-9a-fA-F]{1}") )
-			return new OteKeygen(ssid, mac, level, enc);
+			return new ConnKeygen(ssid, mac, level, enc);
 		
 		if ( ssid.length() == 5  && 
 			  ( mac.startsWith("00:1F:90") || mac.startsWith("A8:39:44") ||

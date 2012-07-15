@@ -78,13 +78,12 @@ public class RouterKeygen extends Activity {
 	private WifiManager wifi;
 	boolean wifi_state;
 	private ListView scanResuls;
-	List<String> list_key = null;
-	BroadcastReceiver scanFinished;
-	BroadcastReceiver stateChanged;
+	private List<String> list_key = null;
+	private BroadcastReceiver scanFinished;
+	private BroadcastReceiver stateChanged;
 	private ArrayList<Keygen> vulnerable;
 	private WirelessMatcher networkMatcher;
-	Keygen router;
-	long begin;
+	private Keygen router;
 	private KeygenThread calculator ;
 	static final String TAG = "RouterKeygen";
 	static final String welcomeScreenShownPref = "welcomeScreenShown";
@@ -410,7 +409,6 @@ public class RouterKeygen extends Activity {
 					    }
 						if ( ssid.equals("") )
 							return;
-						begin =  System.currentTimeMillis();
 						router = networkMatcher.getKeygen(ssid, mac , 0 ,"");
 						calculator = (KeygenThread) new KeygenThread(router).execute();
 						InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -571,9 +569,7 @@ public class RouterKeygen extends Activity {
 				removeDialog(DIALOG_NATIVE_CALC);
 			if ( result == null )
 				return;
-			begin = System.currentTimeMillis()-begin;
 			list_key = result;
-			Log.d(TAG, "Time to solve:" + begin);
 			if (!isFinishing())
 				showDialog(DIALOG_KEY_LIST);
 		}
@@ -600,7 +596,11 @@ public class RouterKeygen extends Activity {
 				return null;
 			if ( keygen instanceof ThomsonKeygen )
 				((ThomsonKeygen)keygen).setFolder(folderSelect);
+			final long begin = System.currentTimeMillis();
 			final List<String> result = keygen.getKeys();
+			final long end = System.currentTimeMillis() -begin;
+			Log.d(TAG, "Time to solve:" + end);
+
 			final int errorCode = keygen.getErrorCode();
 			if ( errorCode != 0 )
 				publishProgress(getString(errorCode));

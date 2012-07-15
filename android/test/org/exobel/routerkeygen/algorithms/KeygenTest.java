@@ -72,4 +72,14 @@ public class KeygenTest {
 		assertEquals("There should only one result", 1, results.size());
 		assertEquals("The password should be 1234567890123", "1234567890123", results.get(0));		
 	}
+	
+
+	@Test
+	public void testPBS() {
+		Keygen keygen = new PBSKeygen("PBS-11222E", "38:22:9D:11:22:2E", 0, "");
+		List<String> results = keygen.getKeys();
+		assertEquals("Errors should not happen",0, keygen.getErrorCode());
+		assertEquals("There should only one result", 1, results.size());
+		assertEquals("The password should be PcL2PgUcX0VhV", "PcL2PgUcX0VhV", results.get(0));		
+	}
 }

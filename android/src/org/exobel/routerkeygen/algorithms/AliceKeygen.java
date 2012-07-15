@@ -59,7 +59,7 @@ public class AliceKeygen extends Keygen {
 			return null;
 		}
 		try {
-			md = MessageDigest.getInstance("SHA256");
+			md = MessageDigest.getInstance("SHA-256");
 		} catch (NoSuchAlgorithmException e1) {
 			setErrorCode(R.string.msg_nosha256);
 			return null;
