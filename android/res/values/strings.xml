@@ -190,6 +190,12 @@
         <item>InfostradaWiFi-</item>
         <item>TN_private_</item>
         <item>CYTA</item>
+        <item>PBS</item>
+        <item>CONN</item>
+        <item>OTE</item>
+        <item>Vodafone-</item>
+        <item>EasyBox-</item>
+        <item>Arcor-</item>
     </string-array>
 </resources>
 

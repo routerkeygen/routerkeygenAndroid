@@ -161,4 +161,41 @@
     <string name="msg_saved_key_file">sauvegardé sur la carte SD.</string>
     <string name="pref_msg_no_network">Il n\'y a pas d\'accès au réseau.</string>
     <string name="msg_err_webdic_table">Erreur lors du traitement des clés en ligne.</string>
+    
+    <!-- AUTOCOMPLETE SUPPORT -->
+	<string-array name="supported_routers">
+        <item>Thomson</item>
+        <item>Blink</item>
+        <item>SpeedTouch</item>
+        <item>O2Wireless</item>
+        <item>Orange-</item>
+        <item>INFINITUM</item>
+        <item>BigPond</item>
+        <item>Otenet</item>
+        <item>Bbox-</item>
+        <item>DMAX</item>
+        <item>privat</item>
+        <item>DLink-</item>
+        <item>Discus--</item>
+        <item>eircom</item>
+        <item>FASTWEB-1-</item>
+        <item>Alice-</item>
+        <item>WLAN_</item>
+        <item>WLAN</item>
+		<item>JAZZTEL_</item>
+		<item>WiFi</item>
+		<item>YaCom</item>
+        <item>SKY</item>
+        <item>TECOM-AH4222-</item>
+        <item>TECOM-AH4021-</item>
+        <item>InfostradaWiFi-</item>
+        <item>TN_private_</item>
+        <item>CYTA</item>
+        <item>PBS</item>
+        <item>CONN</item>
+        <item>OTE</item>
+        <item>Vodafone-</item>
+        <item>EasyBox-</item>
+        <item>Arcor-</item>
+    </string-array>
 </resources>
