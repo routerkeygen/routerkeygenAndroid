@@ -40,16 +40,18 @@ class AliceHandle extends DefaultHandler{
 		int [] magic = new int[2];
 		String serial;
 		String mac;
-		List<AliceMagicInfo> supported = supportedAlices.get(localName);
+		if ( attributes.getLength() == 0 )
+			return;
+		List<AliceMagicInfo> supported = supportedAlices.get(qName);
 		if ( supported == null) {
-			supported = new ArrayList<AliceMagicInfo>();
-			supportedAlices.put(localName, supported);
+			supported = new ArrayList<AliceMagicInfo>(5);
+			supportedAlices.put(qName, supported);
 		}
 		serial = attributes.getValue("sn");
 		mac = attributes.getValue("mac");
 		magic[0] = Integer.parseInt(attributes.getValue("q"));
 		magic[1] = Integer.parseInt(attributes.getValue("k"));
-		supported.add(new AliceMagicInfo(localName, magic, serial, mac));
+		supported.add(new AliceMagicInfo(qName, magic, serial, mac));
 
 	}
 	
