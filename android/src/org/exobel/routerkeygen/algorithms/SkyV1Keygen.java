@@ -24,6 +24,9 @@ import java.util.List;
 
 import org.exobel.routerkeygen.R;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 
 /*
  * This is the algorithm to generate the WPA passphrase 
@@ -71,5 +74,19 @@ public class SkyV1Keygen extends Keygen{
 		addPassword(key);
 		return getResults();
 	}
+
+	private SkyV1Keygen(Parcel in) {
+		super(in);
+	}
+	
+    public static final Parcelable.Creator<SkyV1Keygen> CREATOR = new Parcelable.Creator<SkyV1Keygen>() {
+        public SkyV1Keygen createFromParcel(Parcel in) {
+            return new SkyV1Keygen(in);
+        }
+
+        public SkyV1Keygen[] newArray(int size) {
+            return new SkyV1Keygen[size];
+        }
+    };
 	
 }

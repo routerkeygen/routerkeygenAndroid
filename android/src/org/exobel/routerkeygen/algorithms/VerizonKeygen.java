@@ -22,6 +22,9 @@ import java.util.List;
 
 import org.exobel.routerkeygen.R;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 public class VerizonKeygen extends Keygen {
 
 
@@ -67,4 +70,18 @@ public class VerizonKeygen extends Keygen {
 		return getResults();
 	}
 
+
+	private VerizonKeygen(Parcel in) {
+		super(in);
+	}
+	
+    public static final Parcelable.Creator<VerizonKeygen> CREATOR = new Parcelable.Creator<VerizonKeygen>() {
+        public VerizonKeygen createFromParcel(Parcel in) {
+            return new VerizonKeygen(in);
+        }
+
+        public VerizonKeygen[] newArray(int size) {
+            return new VerizonKeygen[size];
+        }
+    };
 }

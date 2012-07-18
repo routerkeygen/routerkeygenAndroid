@@ -20,10 +20,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 				android:id="@+id/layout_root"
 				android:orientation="vertical"
-				android:layout_width="wrap_content"
-				android:layout_height="fill_parent"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
 				android:padding="10dp"
-				android:gravity="center"
               	>
    	<TextView
      			android:id="@+id/result_text"
@@ -33,12 +32,8 @@
    				/>
   	<ListView               
     			android:id="@+id/list_keys"   
-              	android:layout_width="fill_parent"
+              	android:layout_width="match_parent"
               	android:layout_height="wrap_content"
-				android:headerDividersEnabled="false"
-				android:footerDividersEnabled="false"
-				android:gravity="center" 
 				android:cacheColorHint="#00000000"
-				
 				/>
 </LinearLayout>

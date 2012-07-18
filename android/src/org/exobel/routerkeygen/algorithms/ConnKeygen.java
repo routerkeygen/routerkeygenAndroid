@@ -20,6 +20,9 @@ package org.exobel.routerkeygen.algorithms;
 
 import java.util.List;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /*
  * This is not actual an algorithm as
  * it is just a default WEP password
@@ -36,4 +39,17 @@ public class ConnKeygen extends Keygen {
 		return getResults();
 	}
 
+	private ConnKeygen(Parcel in) {
+		super(in);
+	}
+	
+    public static final Parcelable.Creator<ConnKeygen> CREATOR = new Parcelable.Creator<ConnKeygen>() {
+        public ConnKeygen createFromParcel(Parcel in) {
+            return new ConnKeygen(in);
+        }
+
+        public ConnKeygen[] newArray(int size) {
+            return new ConnKeygen[size];
+        }
+    };
 }

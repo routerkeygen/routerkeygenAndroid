@@ -4,6 +4,9 @@ import java.util.List;
 
 import org.exobel.routerkeygen.R;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 public class EasyBoxKeygen extends Keygen {
 
 	public EasyBoxKeygen(String ssid, String mac, int level, String enc) {
@@ -54,4 +57,17 @@ public class EasyBoxKeygen extends Keygen {
 		return getResults();
 	}
 
+	private EasyBoxKeygen(Parcel in) {
+		super(in);
+	}
+	
+    public static final Parcelable.Creator<EasyBoxKeygen> CREATOR = new Parcelable.Creator<EasyBoxKeygen>() {
+        public EasyBoxKeygen createFromParcel(Parcel in) {
+            return new EasyBoxKeygen(in);
+        }
+
+        public EasyBoxKeygen[] newArray(int size) {
+            return new EasyBoxKeygen[size];
+        }
+    };
 }

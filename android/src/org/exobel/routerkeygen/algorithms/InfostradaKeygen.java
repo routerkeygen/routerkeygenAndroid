@@ -22,6 +22,9 @@ import java.util.List;
 
 import org.exobel.routerkeygen.R;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /*
  * This is not actual an algorithm
  * as the key is calculated from the MAC 
@@ -31,7 +34,6 @@ public class InfostradaKeygen extends Keygen {
 
 	public InfostradaKeygen(String ssid, String mac, int level, String enc ) {
 		super(ssid, mac, level, enc);
-		// TODO Auto-generated constructor stub
 	}
 	
 	@Override
@@ -44,5 +46,19 @@ public class InfostradaKeygen extends Keygen {
 		addPassword("2"+getMacAddress().toUpperCase());
 		return getResults();
 	}
+
+	private InfostradaKeygen(Parcel in) {
+		super(in);
+	}
+	
+    public static final Parcelable.Creator<InfostradaKeygen> CREATOR = new Parcelable.Creator<InfostradaKeygen>() {
+        public InfostradaKeygen createFromParcel(Parcel in) {
+            return new InfostradaKeygen(in);
+        }
+
+        public InfostradaKeygen[] newArray(int size) {
+            return new InfostradaKeygen[size];
+        }
+    };
 
 }

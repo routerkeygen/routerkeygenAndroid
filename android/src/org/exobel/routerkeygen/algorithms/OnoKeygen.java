@@ -24,6 +24,9 @@ import java.util.List;
 
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.StringUtils;
+
+import android.os.Parcel;
+import android.os.Parcelable;
 /*
  * The algorithm for the type of network
  * whose SSID must be in the form of [pP]1XXXXXX0000X
@@ -101,5 +104,20 @@ public class OnoKeygen extends Keygen {
 			ret += val;
 		return ret.substring(0,64);
 	}
+	
+
+	private OnoKeygen(Parcel in) {
+		super(in);
+	}
+	
+    public static final Parcelable.Creator<OnoKeygen> CREATOR = new Parcelable.Creator<OnoKeygen>() {
+        public OnoKeygen createFromParcel(Parcel in) {
+            return new OnoKeygen(in);
+        }
+
+        public OnoKeygen[] newArray(int size) {
+            return new OnoKeygen[size];
+        }
+    };
 
 }

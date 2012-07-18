@@ -20,6 +20,9 @@ package org.exobel.routerkeygen.algorithms;
 
 import java.util.List;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /*
  * This is not actual an algorithm as
  * it is just the mac address with the first two characters.
@@ -35,5 +38,20 @@ public class MegaredKeygen extends Keygen {
 		addPassword(getMacAddress().substring(2));
 		return getResults();
 	}
+
+	private MegaredKeygen(Parcel in) {
+		super(in);
+	}
+	
+    public static final Parcelable.Creator<MegaredKeygen> CREATOR = new Parcelable.Creator<MegaredKeygen>() {
+        public MegaredKeygen createFromParcel(Parcel in) {
+            return new MegaredKeygen(in);
+        }
+
+        public MegaredKeygen[] newArray(int size) {
+            return new MegaredKeygen[size];
+        }
+    };
+	
 
 }

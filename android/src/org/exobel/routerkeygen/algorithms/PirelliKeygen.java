@@ -26,6 +26,9 @@ import java.util.List;
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.StringUtils;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 
 public class PirelliKeygen extends Keygen{
 	
@@ -82,5 +85,26 @@ public class PirelliKeygen extends Keygen{
 		} catch (UnsupportedEncodingException e) {}
 		return  getResults();
 	}
+
+	private PirelliKeygen(Parcel in) {
+		super(in);
+		ssidIdentifier = in.readString();
+	}
+
+	public void writeToParcel(Parcel dest, int flags) {
+		super.writeToParcel(dest, flags);
+		dest.writeString(ssidIdentifier);
+	}
+	
+    public static final Parcelable.Creator<PirelliKeygen> CREATOR = new Parcelable.Creator<PirelliKeygen>() {
+        public PirelliKeygen createFromParcel(Parcel in) {
+            return new PirelliKeygen(in);
+        }
+
+        public PirelliKeygen[] newArray(int size) {
+            return new PirelliKeygen[size];
+        }
+    };
+
 
 }

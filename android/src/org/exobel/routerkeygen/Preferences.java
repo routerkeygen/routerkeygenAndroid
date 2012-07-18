@@ -78,7 +78,12 @@ public class Preferences extends PreferenceActivity {
 	
 	byte[] dicVersion = new byte [2];
 	static byte[] cfvTable = new byte[18];
-	
+
+	public static final String folderSelectPref = "folderSelect";
+	public static final String wifiOnPref = "wifion";
+	public static final String thomson3gPref = "thomson3g";
+	public static final String nativeCalcPref = "nativethomson";
+	public static final String manualMacPref = "manual_mac";
 	public static final String PUB_DOWNLOAD = 
 		"http://android-thomson-key-solver.googlecode.com/files/RKDictionary.dic";
 	private static final String PUB_DIC_CFV =
@@ -86,7 +91,6 @@ public class Preferences extends PreferenceActivity {
 	private static final String PUB_VERSION =
 		"http://android-thomson-key-solver.googlecode.com/svn/trunk/RouterKeygenVersion.txt";
 
-	private static final String folderSelectPref = "folderSelect";
 	private static final String VERSION = "2.9.1";
 	private static final String LAUNCH_DATE = "04/01/2012";
 	private String version ="";

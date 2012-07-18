@@ -23,6 +23,9 @@ import java.util.List;
 import org.exobel.routerkeygen.JenkinsHash;
 import org.exobel.routerkeygen.R;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /*
  * The algorithm for the FASTWEB Telsey
  * SSID of the form:
@@ -45,7 +48,7 @@ import org.exobel.routerkeygen.R;
  *  http://www.pcpedia.it/Hacking/algoritmi-di-generazione-wpa-alice-e-fastweb-e-lavidita-del-sapere.html
  *  http://wifiresearchers.wordpress.com/2010/09/09/telsey-fastweb-full-disclosure/
  */
-public class TelseyKeygen extends Keygen {
+public class TelseyKeygen extends Keygen implements Parcelable{
 
 	public TelseyKeygen(String ssid, String mac, int level, String enc ) {
 		super(ssid, mac, level, enc);
@@ -232,5 +235,21 @@ public class TelseyKeygen extends Keygen {
 		addPassword(S1.substring(S1.length() - 5) +  S2.substring(0, 5));
 		return getResults();
 	}
+	
+
+
+	private TelseyKeygen(Parcel in) {
+		super(in);
+	}
+	
+    public static final Parcelable.Creator<TelseyKeygen> CREATOR = new Parcelable.Creator<TelseyKeygen>() {
+        public TelseyKeygen createFromParcel(Parcel in) {
+            return new TelseyKeygen(in);
+        }
+
+        public TelseyKeygen[] newArray(int size) {
+            return new TelseyKeygen[size];
+        }
+    };
 	
 }

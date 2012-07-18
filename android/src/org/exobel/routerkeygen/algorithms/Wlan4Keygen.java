@@ -26,6 +26,9 @@ import java.util.List;
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.StringUtils;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 public class Wlan4Keygen extends Keygen {
 
 	final private String ssidIdentifier;
@@ -69,5 +72,25 @@ public class Wlan4Keygen extends Keygen {
 		} catch (UnsupportedEncodingException e) {}
 		return null;
 	}
+
+	private Wlan4Keygen(Parcel in) {
+		super(in);
+		ssidIdentifier = in.readString();
+	}
+
+	public void writeToParcel(Parcel dest, int flags) {
+		super.writeToParcel(dest, flags);
+		dest.writeString(ssidIdentifier);
+	}
+	
+    public static final Parcelable.Creator<Wlan4Keygen> CREATOR = new Parcelable.Creator<Wlan4Keygen>() {
+        public Wlan4Keygen createFromParcel(Parcel in) {
+            return new Wlan4Keygen(in);
+        }
+
+        public Wlan4Keygen[] newArray(int size) {
+            return new Wlan4Keygen[size];
+        }
+    };
 
 }

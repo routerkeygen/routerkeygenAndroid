@@ -68,8 +68,8 @@ public class WirelessMatcher {
 		
 		if ( ssid.matches("(Thomson|Blink|SpeedTouch|O2Wireless|Orange-|INFINITUM|" +
 				"BigPond|Otenet|Bbox-|DMAX|privat|TN_private_|CYTA)[0-9a-fA-F]{6}")) {
-			
-			if ( mac.length() == 0 || !ssid.substring(ssid.length()-6).equals(mac.replaceAll(":", "").substring(6)))
+			final String macEnd= mac.replaceAll(":", "").substring(6);
+			if ( mac.length() == 0 || !ssid.substring(ssid.length()-6).equalsIgnoreCase(macEnd))
 				return new ThomsonKeygen(ssid, mac, level, enc);
 		}
 		if ( ssid.matches("DLink-[0-9a-fA-F]{6}")) 

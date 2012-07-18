@@ -24,6 +24,9 @@ import java.util.List;
 
 import org.exobel.routerkeygen.R;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * The link for this algorithm is:
  * http://sviehb.wordpress.com/2011/12/04/prg-eav4202n-default-wpa-key-algorithm/
@@ -32,7 +35,7 @@ import org.exobel.routerkeygen.R;
  */
 public class PBSKeygen extends Keygen{
 	
-	private MessageDigest md;
+	transient private MessageDigest md;
 
 	public PBSKeygen(String ssid, String mac, int level, String enc ) {
 		super(ssid, mac, level, enc);
@@ -78,5 +81,20 @@ public class PBSKeygen extends Keygen{
 		addPassword(key.toString());
 		return  getResults();
 	}
+	
+
+	private PBSKeygen(Parcel in) {
+		super(in);
+	}
+	
+    public static final Parcelable.Creator<PBSKeygen> CREATOR = new Parcelable.Creator<PBSKeygen>() {
+        public PBSKeygen createFromParcel(Parcel in) {
+            return new PBSKeygen(in);
+        }
+
+        public PBSKeygen[] newArray(int size) {
+            return new PBSKeygen[size];
+        }
+    };
 
 }

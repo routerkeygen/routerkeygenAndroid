@@ -28,10 +28,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.exobel.routerkeygen.WiFiScanReceiver.OnScanListener;
 import org.exobel.routerkeygen.algorithms.Keygen;
 import org.exobel.routerkeygen.algorithms.NativeThomson;
 import org.exobel.routerkeygen.algorithms.ThomsonKeygen;
 import org.exobel.routerkeygen.algorithms.UnsupportedKeygen;
+import org.exobel.routerkeygen.ui.WifiListAdapter;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -74,7 +76,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 @SuppressWarnings("deprecation")
-public class RouterKeygen extends Activity {
+public class RouterKeygen extends Activity implements OnScanListener {
 
 	private WifiManager wifi;
 	boolean wifi_state;
@@ -82,7 +84,7 @@ public class RouterKeygen extends Activity {
 	private List<String> list_key = null;
 	private BroadcastReceiver scanFinished;
 	private BroadcastReceiver stateChanged;
-	private ArrayList<Keygen> vulnerable;
+	private List<Keygen> vulnerable;
 	private WirelessMatcher networkMatcher;
 	private Keygen router;
 	private KeygenThread calculator ;
@@ -121,19 +123,19 @@ public class RouterKeygen extends Activity {
 		scanResuls.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				router = getVulnerable().get(position);
+				router = vulnerable.get(position);
 				calculator = (KeygenThread) new KeygenThread(router).execute();
 			}
 		});
 		stateChanged = new WifiStateReceiver(getWifi());
-		scanFinished = new WiFiScanReceiver(this, networkMatcher);
+		scanFinished = new WiFiScanReceiver(this, networkMatcher , wifi);
 		if ( savedInstanceState == null  )
 			return;
-		ArrayList<Keygen> list_networks =(ArrayList<Keygen>) savedInstanceState.getSerializable("networks");
+		final List<Keygen> list_networks =(List<Keygen>) savedInstanceState.getSerializable("networks");
 		if ( list_networks != null )
 		{
-			setVulnerable(list_networks);
-			getScanResuls().setAdapter(new WifiListAdapter(getVulnerable(), this));
+			vulnerable = list_networks;
+			scanResuls.setAdapter(new WifiListAdapter(vulnerable, this));
 		}
 		Keygen r = (Keygen) savedInstanceState.getSerializable("router");
 		if ( r != null )
@@ -534,13 +536,6 @@ public class RouterKeygen extends Activity {
 				Environment.getExternalStorageDirectory().getAbsolutePath());
 	}
 
-	public ArrayList<Keygen> getVulnerable() {
-        return vulnerable;
-    }
-
-    public void setVulnerable(ArrayList<Keygen> vulnerable) {
-        this.vulnerable = vulnerable;
-    }
     public ListView getScanResuls() {
         return scanResuls;
     }
@@ -646,6 +641,11 @@ public class RouterKeygen extends Activity {
 			return result;
 		}
 		
+	}
+
+	public void onScanFinished(List<Keygen> networks) {
+        this.vulnerable = networks;
+		scanResuls.setAdapter(new WifiListAdapter(vulnerable, this));
 	}
 
 }

@@ -16,32 +16,36 @@
  * You should have received a copy of the GNU General Public License
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exobel.routerkeygen;
+package org.exobel.routerkeygen.ui;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.algorithms.Keygen;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.net.wifi.WifiManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class WifiListAdapter extends BaseAdapter {
 	private List<Keygen> listNetworks; 
-	private Context context; 
+	
+	final private Resources resources;
+	final private LayoutInflater inflater;
 	public WifiListAdapter(List<Keygen> list, Context context) {
 		if ( list != null )
 			this.listNetworks = list;
 		else
 			this.listNetworks = new ArrayList<Keygen>();
-        this.context = context;
+        resources = context.getResources();
+        inflater = LayoutInflater.from(context);
     }
 	
 	public int getCount() {
@@ -57,38 +61,47 @@ public class WifiListAdapter extends BaseAdapter {
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {
-		 RelativeLayout itemLayout;
-		 Keygen wifi = listNetworks.get(position);
-		 int strenght = listNetworks.get(position).getLevel();
-	     itemLayout= (RelativeLayout) LayoutInflater.from(context).inflate(R.layout.item_list_wifi, parent, false);
+		 final Keygen wifi = listNetworks.get(position);
+		 final int strenght = listNetworks.get(position).getLevel();
+		 if ( convertView == null )
+			 convertView = inflater.inflate(R.layout.item_list_wifi, parent, false);
 	 
-	     TextView ssid = (TextView) itemLayout.findViewById(R.id.wifiName);
+	     final TextView ssid = (TextView) convertView.findViewById(R.id.wifiName);
 	     ssid.setText(wifi.getSsidName());
 	     
-	     TextView bssid = (TextView) itemLayout.findViewById(R.id.wifiMAC);
+	     final TextView bssid = (TextView) convertView.findViewById(R.id.wifiMAC);
 	     bssid.setText(wifi.getDisplayMacAddress().toUpperCase());
 	     
-	     ImageView icon = (ImageView)itemLayout.findViewById(R.id.icon);
+	     final ImageView icon = (ImageView)convertView.findViewById(R.id.icon);
 	     if ( wifi.isSupported() )
-	    	 icon.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_possible));
-	     
-	     ImageView networkS = (ImageView)itemLayout.findViewById(R.id.strenght);
-	     int pic = WifiManager.calculateSignalLevel(strenght, 4);
+	    	 icon.setImageDrawable(resources.getDrawable(R.drawable.ic_possible));
+	     else
+	    	 icon.setImageDrawable(resources.getDrawable(R.drawable.ic_impossible));
+
+	     final ImageView networkS = (ImageView)convertView.findViewById(R.id.strenght);
+	     final int pic = WifiManager.calculateSignalLevel(strenght, 4);
 	     switch (pic){
-	     	case 0: networkS.setImageDrawable(context.getResources().
+	     	case 0: networkS.setImageDrawable(resources.
 		    		 		getDrawable(R.drawable.ic_wifi_weak));
 		     		break;
-	     	case 1: networkS.setImageDrawable(context.getResources().
+	     	case 1: networkS.setImageDrawable(resources.
 	 						getDrawable(R.drawable.ic_wifi_medium));
 	     			break;
-	     	case 2: networkS.setImageDrawable(context.getResources().
+	     	case 2: networkS.setImageDrawable(resources.
 						getDrawable(R.drawable.ic_wifi_strong));
 	     			break;
-	     	case 3: networkS.setImageDrawable(context.getResources().
+	     	case 3: networkS.setImageDrawable(resources.
 					getDrawable(R.drawable.ic_wifi_verystrong));
      				break;
 	     }
-		return  itemLayout;
+		return  convertView;
 	}
+	
+
+	@Override
+	public boolean hasStableIds() {
+		return true;
+	}
+
 
 }

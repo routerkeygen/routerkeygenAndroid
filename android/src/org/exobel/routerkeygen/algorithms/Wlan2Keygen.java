@@ -22,6 +22,9 @@ import java.util.List;
 
 import org.exobel.routerkeygen.R;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * <b>This only calculates the keys for some WLAN_xx</b>
  * <br> 
@@ -89,4 +92,26 @@ public class Wlan2Keygen extends Keygen {
 		addPassword(String.valueOf(key, 0, 26));
 		return getResults();
 	}
+	
+
+	private Wlan2Keygen(Parcel in) {
+		super(in);
+		ssidIdentifier = in.readString();
+	}
+
+	public void writeToParcel(Parcel dest, int flags) {
+		super.writeToParcel(dest, flags);
+		dest.writeString(ssidIdentifier);
+	}
+	
+    public static final Parcelable.Creator<Wlan2Keygen> CREATOR = new Parcelable.Creator<Wlan2Keygen>() {
+        public Wlan2Keygen createFromParcel(Parcel in) {
+            return new Wlan2Keygen(in);
+        }
+
+        public Wlan2Keygen[] newArray(int size) {
+            return new Wlan2Keygen[size];
+        }
+    };
+
 }

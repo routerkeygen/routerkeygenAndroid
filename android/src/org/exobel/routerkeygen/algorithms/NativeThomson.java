@@ -22,6 +22,9 @@ import java.util.List;
 
 import org.exobel.routerkeygen.R;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 public class NativeThomson extends Keygen{
 
 
@@ -75,6 +78,27 @@ public class NativeThomson extends Keygen{
 			setErrorCode(R.string.msg_errnomatches);
 		return getResults();
 	}
+
+	private NativeThomson(Parcel in) {
+		super(in);
+		ssidIdentifier = in.readString();
+	}
+
+	public void writeToParcel(Parcel dest, int flags) {
+		super.writeToParcel(dest, flags);
+		dest.writeString(ssidIdentifier);
+	}
+	
+    public static final Parcelable.Creator<NativeThomson> CREATOR = new Parcelable.Creator<NativeThomson>() {
+        public NativeThomson createFromParcel(Parcel in) {
+            return new NativeThomson(in);
+        }
+
+        public NativeThomson[] newArray(int size) {
+            return new NativeThomson[size];
+        }
+    };
+
 
 
 }

@@ -37,17 +37,18 @@ import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.StringUtils;
 
 import android.os.Environment;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 public class ThomsonKeygen extends Keygen {
-	private byte[] cp;
-	private byte[] hash;
+	final private byte[] cp = new byte[12];
 	private byte[] entry;
-	private byte[] table;
+	final private byte[] table= new byte[1282];
 	private int a, b, c;
 	private int year;
 	private int week;
 	private int sequenceNumber;
-	private byte[] routerESSID;
+	final private byte[] routerESSID = new byte[3];
 	private boolean internetAlgorithm;
 
 	private boolean errorDict;
@@ -60,10 +61,6 @@ public class ThomsonKeygen extends Keygen {
 	
 	public ThomsonKeygen(String ssid, String mac, int level, String enc ) {
 		super(ssid, mac, level, enc);
-		this.cp = new byte[12];
-		this.hash = new byte[19];
-		this.table= new byte[1282];
-		this.routerESSID = new byte[3];
 		this.errorDict = false;
 		this.ssidIdentifier = ssid.substring(ssid.length()-6);
 	}
@@ -388,7 +385,7 @@ public class ThomsonKeygen extends Keygen {
 				cp[11] = charectbytes1[c];
 				md.reset();
 				md.update(cp);
-				hash = md.digest();
+				final byte[] hash = md.digest();
 				if ( hash[19] != routerESSID[2])
 					continue;
 				if ( hash[18] != routerESSID[1])
@@ -431,7 +428,7 @@ public class ThomsonKeygen extends Keygen {
 			cp[11] = charectbytes1[c];
 			md.reset();
 			md.update(cp);
-			hash = md.digest();
+			final byte[] hash = md.digest();
 			if ( hash[19] != routerESSID[2])
 				continue;
 			if ( hash[18] != routerESSID[1])
@@ -475,7 +472,7 @@ public class ThomsonKeygen extends Keygen {
 			cp[11] = charectbytes1[c];
 			md.reset();
 			md.update(cp);
-			hash = md.digest();
+			final byte[] hash = md.digest();
 			
 			try {
 				addPassword(StringUtils.getHexString(hash).substring(0, 10).toUpperCase());
@@ -520,5 +517,29 @@ public class ThomsonKeygen extends Keygen {
         'F','0','1','2','3','4',
         '5','6','7','8','9','A',
         };
+    
+
+	private ThomsonKeygen(Parcel in) {
+		super(in);
+		ssidIdentifier = in.readString();
+		errorDict = in.readInt() == 1;
+	}
+
+	public void writeToParcel(Parcel dest, int flags) {
+		super.writeToParcel(dest, flags);
+		dest.writeString(ssidIdentifier);
+		dest.writeInt(errorDict?1:0);
+	}
+	
+    public static final Parcelable.Creator<ThomsonKeygen> CREATOR = new Parcelable.Creator<ThomsonKeygen>() {
+        public ThomsonKeygen createFromParcel(Parcel in) {
+            return new ThomsonKeygen(in);
+        }
+
+        public ThomsonKeygen[] newArray(int size) {
+            return new ThomsonKeygen[size];
+        }
+    };
+
 
 }

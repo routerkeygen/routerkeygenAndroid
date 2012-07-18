@@ -26,6 +26,9 @@ import java.util.List;
 import org.exobel.routerkeygen.AliceMagicInfo;
 import org.exobel.routerkeygen.R;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 public class AliceKeygen extends Keygen {
 
 	private MessageDigest md;
@@ -139,6 +142,29 @@ public class AliceKeygen extends Keygen {
 		}
 		return getResults();
 	}
+
+	@SuppressWarnings("unchecked")
+	private AliceKeygen(Parcel in) {
+		super(in);
+		ssidIdentifier = in.readString();
+		supportedAlice = in.readArrayList(AliceMagicInfo.class.getClassLoader());
+	}
+
+	public void writeToParcel(Parcel dest, int flags) {
+		super.writeToParcel(dest, flags);
+		dest.writeString(ssidIdentifier);
+		dest.writeList(supportedAlice);
+	}
+	
+    public static final Parcelable.Creator<AliceKeygen> CREATOR = new Parcelable.Creator<AliceKeygen>() {
+        public AliceKeygen createFromParcel(Parcel in) {
+            return new AliceKeygen(in);
+        }
+
+        public AliceKeygen[] newArray(int size) {
+            return new AliceKeygen[size];
+        }
+    };
 
 
 }

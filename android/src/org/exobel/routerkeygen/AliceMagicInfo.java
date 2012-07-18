@@ -18,46 +18,57 @@
  */
 package org.exobel.routerkeygen;
 
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class AliceMagicInfo implements Serializable{
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1640975633984337261L;
-	private String alice;
-	private int [] magic;
-	private String serial;
-	private String mac;
-	public AliceMagicInfo(String alice,  int[] magic,
-			String serial, String mac) {
-		this.setAlice(alice);
-		this.setMagic(magic);
-		this.setSerial(serial);
-		this.setMac(mac);
+public class AliceMagicInfo implements Parcelable{
+	final private String alice;
+	final private int [] magic;
+	final private String serial;
+	final private String mac;
+	public AliceMagicInfo(String alice, int[] magic, String serial, String mac) {
+		this.alice = alice;
+		this.magic = magic;
+		this.serial = serial;
+		this.mac = mac;
 	}
-    public int [] getMagic() {
-        return magic;
-    }
-    public void setMagic(int [] magic) {
-        this.magic = magic;
-    }
-    public String getSerial() {
-        return serial;
-    }
-    public void setSerial(String serial) {
-        this.serial = serial;
-    }
 	public String getAlice() {
 		return alice;
 	}
-	public void setAlice(String alice) {
-		this.alice = alice;
+	public int[] getMagic() {
+		return magic;
+	}
+	public String getSerial() {
+		return serial;
 	}
 	public String getMac() {
 		return mac;
 	}
-	public void setMac(String mac) {
-		this.mac = mac;
+	public int describeContents() {
+		return 0;
 	}
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(alice);
+		dest.writeString(serial);
+		dest.writeString(mac);
+		dest.writeIntArray(magic);
+	}
+	
+	private AliceMagicInfo(Parcel in){
+		this.alice = in.readString();
+		this.serial = in.readString();
+		this.mac = in.readString();
+		this.magic = in.createIntArray();
+	}
+
+    public static final Parcelable.Creator<AliceMagicInfo> CREATOR = new Parcelable.Creator<AliceMagicInfo>() {
+        public AliceMagicInfo createFromParcel(Parcel in) {
+            return new AliceMagicInfo(in);
+        }
+
+        public AliceMagicInfo[] newArray(int size) {
+            return new AliceMagicInfo[size];
+        }
+    };
+
 }

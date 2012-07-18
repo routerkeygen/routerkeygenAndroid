@@ -26,6 +26,9 @@ import java.util.List;
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.StringUtils;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /*
  * This is the algorithm to generate the WPA passphrase 
  * for the Hitachi (TECOM) AH-4021 and Hitachi (TECOM) AH-4222.
@@ -59,4 +62,17 @@ public class TecomKeygen extends Keygen {
 		return getResults();
 	}
 
+	private TecomKeygen(Parcel in) {
+		super(in);
+	}
+	
+    public static final Parcelable.Creator<TecomKeygen> CREATOR = new Parcelable.Creator<TecomKeygen>() {
+        public TecomKeygen createFromParcel(Parcel in) {
+            return new TecomKeygen(in);
+        }
+
+        public TecomKeygen[] newArray(int size) {
+            return new TecomKeygen[size];
+        }
+    };
 }

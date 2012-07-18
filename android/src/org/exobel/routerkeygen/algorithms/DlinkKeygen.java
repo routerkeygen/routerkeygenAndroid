@@ -22,6 +22,9 @@ import java.util.List;
 
 import org.exobel.routerkeygen.R;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * 
  * Link:http://fodi.me/codigo-fonte-wpa-dlink-php-c/
@@ -91,8 +94,7 @@ public class DlinkKeygen extends Keygen {
 					index = t-'A'+10;
 				else
 				{
-					/*TODO:handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-							resources.getString(R.string.msg_dlinkerror)));*/
+					setErrorCode(R.string.msg_dlinkerror);
 					return null;
 				}
 			}
@@ -101,5 +103,20 @@ public class DlinkKeygen extends Keygen {
 		addPassword(String.valueOf(newkey, 0, 20));
 		return getResults();
 	}
+	
+
+	private DlinkKeygen(Parcel in) {
+		super(in);
+	}
+	
+    public static final Parcelable.Creator<DlinkKeygen> CREATOR = new Parcelable.Creator<DlinkKeygen>() {
+        public DlinkKeygen createFromParcel(Parcel in) {
+            return new DlinkKeygen(in);
+        }
+
+        public DlinkKeygen[] newArray(int size) {
+            return new DlinkKeygen[size];
+        }
+    };
 
 }

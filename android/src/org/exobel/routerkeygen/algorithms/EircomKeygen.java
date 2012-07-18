@@ -26,6 +26,9 @@ import java.util.List;
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.StringUtils;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /*
  * Eircom algorithm published here:
  * http://www.bacik.org/eircomwep/howto.html
@@ -64,4 +67,19 @@ public class EircomKeygen extends Keygen  {
 		}
 		return getResults();
 	}
+	
+
+	private EircomKeygen(Parcel in) {
+		super(in);
+	}
+	
+    public static final Parcelable.Creator<EircomKeygen> CREATOR = new Parcelable.Creator<EircomKeygen>() {
+        public EircomKeygen createFromParcel(Parcel in) {
+            return new EircomKeygen(in);
+        }
+
+        public EircomKeygen[] newArray(int size) {
+            return new EircomKeygen[size];
+        }
+    };
 }

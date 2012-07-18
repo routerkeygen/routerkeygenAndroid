@@ -20,6 +20,9 @@ package org.exobel.routerkeygen.algorithms;
 
 import java.util.List;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /*
  * This is not actual an algorithm as
  * it is just needed to add "b075d5" to last 6 characters
@@ -38,5 +41,25 @@ public class OteKeygen extends Keygen {
 		addPassword("b075d5"+ssidIdentifier);
 		return getResults();
 	}
+
+	private OteKeygen(Parcel in) {
+		super(in);
+		ssidIdentifier = in.readString();
+	}
+
+	public void writeToParcel(Parcel dest, int flags) {
+		super.writeToParcel(dest, flags);
+		dest.writeString(ssidIdentifier);
+	}
+	
+    public static final Parcelable.Creator<OteKeygen> CREATOR = new Parcelable.Creator<OteKeygen>() {
+        public OteKeygen createFromParcel(Parcel in) {
+            return new OteKeygen(in);
+        }
+
+        public OteKeygen[] newArray(int size) {
+            return new OteKeygen[size];
+        }
+    };
 
 }

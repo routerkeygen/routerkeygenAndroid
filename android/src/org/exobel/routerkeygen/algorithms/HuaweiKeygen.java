@@ -21,6 +21,9 @@ package org.exobel.routerkeygen.algorithms;
 import java.util.List;
 
 import org.exobel.routerkeygen.R;
+
+import android.os.Parcel;
+import android.os.Parcelable;
 /*
 *
 * Algorithm:
@@ -141,4 +144,26 @@ public class HuaweiKeygen extends Keygen {
 		}
 		return getResults();
 	}
+	
+
+	private HuaweiKeygen(Parcel in) {
+		super(in);
+		ssidIdentifier = in.readString();
+	}
+
+	public void writeToParcel(Parcel dest, int flags) {
+		super.writeToParcel(dest, flags);
+		dest.writeString(ssidIdentifier);
+	}
+	
+    public static final Parcelable.Creator<HuaweiKeygen> CREATOR = new Parcelable.Creator<HuaweiKeygen>() {
+        public HuaweiKeygen createFromParcel(Parcel in) {
+            return new HuaweiKeygen(in);
+        }
+
+        public HuaweiKeygen[] newArray(int size) {
+            return new HuaweiKeygen[size];
+        }
+    };
+
 }

@@ -22,6 +22,9 @@ import java.util.List;
 
 import org.exobel.routerkeygen.R;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 public class Wlan6Keygen extends Keygen {
 	
 	final private String ssidIdentifier;
@@ -92,5 +95,26 @@ public class Wlan6Keygen extends Keygen {
 		}
 		return getResults();
 	}
+	
+
+	private Wlan6Keygen(Parcel in) {
+		super(in);
+		ssidIdentifier = in.readString();
+	}
+
+	public void writeToParcel(Parcel dest, int flags) {
+		super.writeToParcel(dest, flags);
+		dest.writeString(ssidIdentifier);
+	}
+	
+    public static final Parcelable.Creator<Wlan6Keygen> CREATOR = new Parcelable.Creator<Wlan6Keygen>() {
+        public Wlan6Keygen createFromParcel(Parcel in) {
+            return new Wlan6Keygen(in);
+        }
+
+        public Wlan6Keygen[] newArray(int size) {
+            return new Wlan6Keygen[size];
+        }
+    };
 
 }

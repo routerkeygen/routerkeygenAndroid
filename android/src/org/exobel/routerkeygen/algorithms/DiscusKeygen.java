@@ -21,6 +21,9 @@ package org.exobel.routerkeygen.algorithms;
 
 import java.util.List;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * The algortihm is described on the pdf below
  * Link:http://www.remote-exploit.org/content/Pirelli_Discus_DRG_A225_WiFi_router.pdf
@@ -44,4 +47,17 @@ public class DiscusKeygen extends Keygen {
 		return getResults();
 	}
 
+	private DiscusKeygen(Parcel in) {
+		super(in);
+	}
+	
+    public static final Parcelable.Creator<DiscusKeygen> CREATOR = new Parcelable.Creator<DiscusKeygen>() {
+        public DiscusKeygen createFromParcel(Parcel in) {
+            return new DiscusKeygen(in);
+        }
+
+        public DiscusKeygen[] newArray(int size) {
+            return new DiscusKeygen[size];
+        }
+    };
 }
