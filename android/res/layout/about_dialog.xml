@@ -43,7 +43,7 @@
 		            <TextView
 				        android:id="@+id/text_about"
 				        android:layout_width="fill_parent"
-				        android:layout_height="fill_parent" 
+				        android:layout_height="wrap_content" 
 				        android:textSize="17sp"
 				   		android:text="@string/pref_about_desc"
 						/>
@@ -56,7 +56,7 @@
 		            <TextView
 		               	android:id="@+id/about_credits"
 				        android:layout_width="fill_parent"
-				        android:layout_height="fill_parent" 
+				        android:layout_height="wrap_content" 
 				        android:textSize="17sp"
 				   		android:text="@string/dialog_about_credits_desc"
 					/>
@@ -70,7 +70,7 @@
 		            <TextView
 		               	android:id="@+id/about_license"
 				        android:layout_width="fill_parent"
-				        android:layout_height="fill_parent" 
+				        android:layout_height="wrap_content" 
 				        android:textSize="17sp"
 				   		android:text="@string/dialog_about_license_desc"
 					/>
