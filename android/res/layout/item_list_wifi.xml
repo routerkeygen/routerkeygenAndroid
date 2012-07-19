@@ -17,7 +17,7 @@
    You should have received a copy of the GNU General Public License
    along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<org.exobel.routerkeygen.ui.CheckableRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="?android:attr/listPreferredItemHeight"
     android:background="?android:attr/activatedBackgroundIndicator"
@@ -31,7 +31,6 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentTop="true"
         android:layout_marginRight="10dip"
-        android:background="?android:attr/activatedBackgroundIndicator"
         android:focusable="false"
         android:scaleType="fitXY"
         android:src="@drawable/ic_impossible" />
@@ -43,7 +42,6 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="false"
         android:layout_toRightOf="@id/icon"
-        android:background="?android:attr/activatedBackgroundIndicator"
         android:focusable="false"
         android:singleLine="true"
         android:textColor="#545454" />
@@ -57,19 +55,17 @@
         android:layout_alignWithParentIfMissing="true"
         android:layout_below="@id/wifiMAC"
         android:layout_toRightOf="@id/icon"
-        android:background="?android:attr/activatedBackgroundIndicator"
         android:focusable="false"
         android:singleLine="true"
         android:textSize="20sp" />
 
-    <org.exobel.routerkeygen.ui.CheckableRelativeLayout
+    <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="50dip"
         android:layout_alignParentBottom="true"
         android:layout_alignParentTop="false"
         android:layout_marginRight="10dip"
         android:layout_toRightOf="@id/wifiName"
-        android:background="?android:attr/activatedBackgroundIndicator"
         android:focusable="false"
         android:gravity="right" >
 
@@ -77,10 +73,9 @@
             android:id="@+id/strenght"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="?android:attr/activatedBackgroundIndicator"
             android:focusable="false"
             android:gravity="center_vertical"
             android:src="@drawable/ic_wifi_weak" />
-    </org.exobel.routerkeygen.ui.CheckableRelativeLayout>
+    </RelativeLayout>
 
-</org.exobel.routerkeygen.ui.CheckableRelativeLayout>
+</RelativeLayout>
