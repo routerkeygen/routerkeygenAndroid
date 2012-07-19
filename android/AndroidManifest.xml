@@ -35,7 +35,7 @@
         <activity
             android:name=".ui.NetworksListActivity"
             android:label="@string/app_name"
-            android:configChanges="orientation|keyboard" >
+            android:configChanges="screenSize|keyboard|orientation" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -45,7 +45,7 @@
         <activity
             android:name=".ui.NetworkActivity"
             android:label="@string/app_name"
-            android:configChanges="orientation|keyboard" >
+            android:configChanges="screenSize|keyboard|orientation" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".NetworksListActivity" />
