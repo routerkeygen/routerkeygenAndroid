@@ -70,18 +70,22 @@ public class NetworksListActivity extends FragmentActivity implements
 		stateChanged = new WifiStateReceiver(wifi);
 	}
 
-	public void onItemSelected(Keygen id) {
+	public void onItemSelected(Keygen keygen) {
 		if (mTwoPane) {
 			Bundle arguments = new Bundle();
-			arguments.putParcelable(NetworkFragment.NETWORK_ID, id);
+			arguments.putParcelable(NetworkFragment.NETWORK_ID, keygen);
 			NetworkFragment fragment = new NetworkFragment();
 			fragment.setArguments(arguments);
 			getSupportFragmentManager().beginTransaction()
 					.replace(R.id.item_detail_container, fragment).commit();
 
 		} else {
+			if ( !keygen.isSupported() ){
+				Toast.makeText(this, R.string.msg_unspported, Toast.LENGTH_SHORT).show();
+				return;
+			}
 			Intent detailIntent = new Intent(this, NetworkActivity.class);
-			detailIntent.putExtra(NetworkFragment.NETWORK_ID, id);
+			detailIntent.putExtra(NetworkFragment.NETWORK_ID, keygen);
 			startActivity(detailIntent);
 		}
 	}
@@ -95,6 +99,9 @@ public class NetworksListActivity extends FragmentActivity implements
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+		case R.id.manual_input:
+			ManualDialogFragment.newInstance(manualMac).show(getSupportFragmentManager(), "ManualInput");
+			return true;
 		case R.id.wifi_scan:
 			scan();
 			return true;
