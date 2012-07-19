@@ -467,10 +467,10 @@ public class RouterKeygen extends Activity implements OnScanListener {
 
 	public boolean onCreateOptionsMenu(Menu menu) {
 
-		getMenuInflater().inflate(R.menu.wifi, menu);
+		getMenuInflater().inflate(R.menu.networks_list, menu);
+		getMenuInflater().inflate(R.menu.preferences, menu);
 		return true;
 	}
-
 	public void scan(){
 		registerReceiver(scanFinished, new IntentFilter(
 				WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));

@@ -1,3 +1,22 @@
+/*
+ * Copyright 2012 Rui Araújo, Luís Fonseca
+ *
+ * This file is part of Router Keygen.
+ *
+ * Router Keygen is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Router Keygen is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package org.exobel.routerkeygen.ui;
 
 import java.util.List;
@@ -20,6 +39,9 @@ import android.support.v4.app.Fragment;
 import android.text.ClipboardManager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -39,6 +61,7 @@ public class NetworkFragment extends Fragment {
 	private KeygenThread thread;
 	private ViewSwitcher root;
 	private TextView messages;
+	private List<String> passwordList;
 
 	public NetworkFragment() {
 	}
@@ -50,6 +73,7 @@ public class NetworkFragment extends Fragment {
 			keygen = (Keygen) getArguments().getParcelable(NETWORK_ID);
 			thread = new KeygenThread(keygen);
 		}
+		setHasOptionsMenu(true);
 	}
 
 	@Override
@@ -73,6 +97,41 @@ public class NetworkFragment extends Fragment {
 		thread.cancel();
 	}
 
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.share_keys, menu);
+		super.onCreateOptionsMenu(menu, inflater);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.menu_share:
+			try {
+				if (passwordList == null)
+					return true;
+				Intent i = new Intent(Intent.ACTION_SEND);
+				i.setType("text/plain");
+				i.putExtra(Intent.EXTRA_SUBJECT, keygen.getSsidName()
+						+ getString(R.string.share_msg_begin));
+				final StringBuilder message = new StringBuilder(keygen.getSsidName());
+				message.append(getString(R.string.share_msg_begin));
+				message.append(":\n");
+				for (String password : passwordList){
+					message.append(password);
+					message.append('\n');
+				}
+				i.putExtra(Intent.EXTRA_TEXT, message.toString());
+				startActivity(Intent.createChooser(i, getString(R.string.share_title)));
+			} catch (Exception e) {
+				Toast.makeText(getActivity(), R.string.msg_err_sendto,
+						Toast.LENGTH_SHORT).show();
+			}
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
 	private class KeygenThread extends AsyncTask<Keygen, Integer, List<String>> {
 		private Keygen keygen;
 
@@ -84,9 +143,9 @@ public class NetworkFragment extends Fragment {
 		protected void onPostExecute(List<String> result) {
 			if (getActivity() == null)
 				return;
+			passwordList = result;
 			final ListView list = (ListView) root.findViewById(R.id.list_keys);
 			list.setOnItemClickListener(new OnItemClickListener() {
-				@SuppressWarnings("deprecation")
 				public void onItemClick(AdapterView<?> parent, View view,
 						int position, long id) {
 					final String key = ((TextView) view).getText().toString();
