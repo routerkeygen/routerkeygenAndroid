@@ -173,6 +173,11 @@ public class NetworkFragment extends SherlockFragment {
 				messages.setText(R.string.msg_unspported);
 				cancel(true);
 			}
+			if (keygen instanceof ThomsonKeygen) {
+				((ThomsonKeygen) keygen).setFolder(folderSelect);
+				((ThomsonKeygen) keygen).setInternetAlgorithm(thomson3g);
+				((ThomsonKeygen) keygen).setWebdic(getActivity().getResources().openRawResource(R.raw.webdic));
+			}
 		}
 
 		@Override
@@ -213,12 +218,6 @@ public class NetworkFragment extends SherlockFragment {
 
 		@Override
 		protected List<String> doInBackground(Keygen... params) {
-			if (!keygen.isSupported())
-				return null;
-			if (keygen instanceof ThomsonKeygen) {
-				((ThomsonKeygen) keygen).setFolder(folderSelect);
-				((ThomsonKeygen) keygen).setInternetAlgorithm(thomson3g);
-			}
 			List<String> result = calcKeys();
 			if (nativeCalc && (keygen instanceof ThomsonKeygen)) {
 				if (((ThomsonKeygen) keygen).isErrorDict()) {

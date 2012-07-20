@@ -45,7 +45,6 @@
     <string name="bt_choose">Open</string>
     <string name="bt_choose_back">Up</string>
     <string name="bt_close">Close</string>
-    <string name="bt_ok">Ok</string>
     <string name="bt_yes">Yes</string>
     <string name="bt_no">No</string>
     <string name="bt_pause">Pause</string>
@@ -58,15 +57,15 @@
     <string name="dialog_nativecalc">Calculating Keys</string>
     <string name="dialog_nativecalc_msg">This can take up to 2 minutes. Please wait.</string>
     <string name="dialog_thomson3g">Thomson 3G</string>
-    <string name="dialog_thomson3g_msg">Fetching Keys...</string>
+    <string name="dialog_thomson3g_msg">Fetching Keys&#8230;</string>
     <string name="msg_dicislarge">The dictionary size is 28 MBs. It\'s advisable that you are using a wifi connection.\nAre you sure you want to continue?</string>
-    <string name="msg_dl_estimating">Estimating download speed and time left...</string>
+    <string name="msg_dl_estimating">Estimating download speed and time left&#8230;</string>
     <string name="msg_dl_dlingdic">Downloading dictionary</string>
     <string name="msg_dl_speed">Download speed</string>
     <string name="msg_dl_eta">Estimaded time left</string>
     <string name="msg_dic_updated">Your dictionary is already at the latest version.</string>
     <string name="msg_dic_updated_finished">Your dictionary has been updated to the latest version.</string>
-    <string name="msg_wait">Please wait...</string>
+    <string name="msg_wait">Please wait&#8230;</string>
     <string name="lb_manual_bssid">MAC address</string>
     <string name="dialog_about_credits">Credits</string>
     <string name="dialog_about_credits_desc">Router Keygen is the result of the invaluable contribution from the  following people/organizations:\n\n<b>Rui Araújo</b> - Exobel Team Member\n<b>Luís Fonseca</b> - Exobel Team Member\n<b>Ângela Igreja</b> for the Portuguese Translation\n<b>Simone Guidi</b> for the Italian Translation\n<b>Matthijs de Rijk</b> and <b>Van Hove Sven</b> for the Dutch Translation\n<b>Jon Uriarte</b> for the Spanish Translation and the WLAN_XX implementation\n<b><a href="http://www.gnucitizen.org/">GNUCITIZEN</a></b> for the Thomson algorithm\n<b><a href="http://wifiresearchers.wordpress.com/">White Hats Crew</a></b> for the Alice and FASTWEB algorithms\n<b>Fred Williams</b> for the Verizon FiOS algorithm\n<b>Muris Kurgaš </b> for the Discus algorithm\n<b><a href="http://websec.ca/">Pedro Joaquim</a></b> for the Huawei algorithm\n<b>chaeo</b> for the SKY V1 algorithm.</string>
