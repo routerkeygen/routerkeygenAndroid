@@ -147,6 +147,9 @@
     <string name="msg_saved_key_file">saved to the SD card.</string>
     <string name="pref_msg_no_network">There is no network access.</string>
     <string name="msg_err_webdic_table">Error while processing online keys.</string>
+    <string name="msg_err_webdic_table">Error while processing online keys.</string>
+    <string name="msg_unspported_network">A valid network was not recognized. Please check the SSID and the MAC address.</string>
+    <string name="msg_invalid_mac">A valid MAC address wasn\'t entered so it will be ignored.</string>
 
     <!-- AUTOCOMPLETE SUPPORT -->
     <string-array name="supported_routers">

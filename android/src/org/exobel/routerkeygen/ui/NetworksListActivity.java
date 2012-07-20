@@ -106,7 +106,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.manual_input:
-			ManualDialogFragment.newInstance(manualMac).show(getSupportFragmentManager(), "ManualInput");
+			ManualDialogFragment.newInstance(manualMac, networkMatcher ).show(getSupportFragmentManager(), "ManualInput");
 			return true;
 		case R.id.wifi_scan:
 			scan();

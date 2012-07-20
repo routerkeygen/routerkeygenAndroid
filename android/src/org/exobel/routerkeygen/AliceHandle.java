@@ -20,7 +20,6 @@ package org.exobel.routerkeygen;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.xml.sax.Attributes;
@@ -29,10 +28,10 @@ import org.xml.sax.helpers.DefaultHandler;
 
 
 class AliceHandle extends DefaultHandler{
-	private final Map<String, List<AliceMagicInfo>> supportedAlices;
+	private final Map<String, ArrayList<AliceMagicInfo>> supportedAlices;
 
 	public AliceHandle(){
-		supportedAlices = new HashMap<String, List<AliceMagicInfo>>();
+		supportedAlices = new HashMap<String, ArrayList<AliceMagicInfo>>();
 	} 
 	
 	public void startElement(String uri, String localName,
@@ -42,7 +41,7 @@ class AliceHandle extends DefaultHandler{
 		String mac;
 		if ( attributes.getLength() == 0 )
 			return;
-		List<AliceMagicInfo> supported = supportedAlices.get(qName);
+		ArrayList<AliceMagicInfo> supported = supportedAlices.get(qName);
 		if ( supported == null) {
 			supported = new ArrayList<AliceMagicInfo>(5);
 			supportedAlices.put(qName, supported);
@@ -63,7 +62,7 @@ class AliceHandle extends DefaultHandler{
 	              throws SAXException {}
 	
 	
-	public Map<String, List<AliceMagicInfo>> getSupportedAlices(){
+	public Map<String, ArrayList<AliceMagicInfo>> getSupportedAlices(){
 		return supportedAlices;
 	}
 }
