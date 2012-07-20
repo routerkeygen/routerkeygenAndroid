@@ -35,19 +35,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class WifiListAdapter extends BaseAdapter {
-	private List<Keygen> listNetworks; 
-	
+	private List<Keygen> listNetworks;
+
 	final private Resources resources;
 	final private LayoutInflater inflater;
+
 	public WifiListAdapter(List<Keygen> list, Context context) {
-		if ( list != null )
+		if (list != null)
 			this.listNetworks = list;
 		else
 			this.listNetworks = new ArrayList<Keygen>();
-        resources = context.getResources();
-        inflater = LayoutInflater.from(context);
-    }
-	
+		resources = context.getResources();
+		inflater = LayoutInflater.from(context);
+	}
+
 	public int getCount() {
 		return listNetworks.size();
 	}
@@ -61,47 +62,75 @@ public class WifiListAdapter extends BaseAdapter {
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {
-		 final Keygen wifi = listNetworks.get(position);
-		 final int strenght = listNetworks.get(position).getLevel();
-		 if ( convertView == null )
-			 convertView = inflater.inflate(R.layout.item_list_wifi, parent, false);
-	 
-	     final TextView ssid = (TextView) convertView.findViewById(R.id.wifiName);
-	     ssid.setText(wifi.getSsidName());
-	     
-	     final TextView bssid = (TextView) convertView.findViewById(R.id.wifiMAC);
-	     bssid.setText(wifi.getDisplayMacAddress().toUpperCase());
-	     
-	     final ImageView icon = (ImageView)convertView.findViewById(R.id.icon);
-	     if ( wifi.isSupported() )
-	    	 icon.setImageDrawable(resources.getDrawable(R.drawable.ic_possible));
-	     else
-	    	 icon.setImageDrawable(resources.getDrawable(R.drawable.ic_impossible));
+		final Keygen wifi = listNetworks.get(position);
+		final int strenght = listNetworks.get(position).getLevel();
+		if (convertView == null)
+			convertView = inflater.inflate(R.layout.item_list_wifi, parent,
+					false);
 
-	     final ImageView networkS = (ImageView)convertView.findViewById(R.id.strenght);
-	     final int pic = WifiManager.calculateSignalLevel(strenght, 4);
-	     switch (pic){
-	     	case 0: networkS.setImageDrawable(resources.
-		    		 		getDrawable(R.drawable.ic_wifi_weak));
-		     		break;
-	     	case 1: networkS.setImageDrawable(resources.
-	 						getDrawable(R.drawable.ic_wifi_medium));
-	     			break;
-	     	case 2: networkS.setImageDrawable(resources.
-						getDrawable(R.drawable.ic_wifi_strong));
-	     			break;
-	     	case 3: networkS.setImageDrawable(resources.
-					getDrawable(R.drawable.ic_wifi_verystrong));
-     				break;
-	     }
-		return  convertView;
+		final TextView ssid = (TextView) convertView
+				.findViewById(R.id.wifiName);
+		ssid.setText(wifi.getSsidName());
+
+		final TextView bssid = (TextView) convertView
+				.findViewById(R.id.wifiMAC);
+		bssid.setText(wifi.getDisplayMacAddress().toUpperCase());
+
+		final ImageView icon = (ImageView) convertView.findViewById(R.id.icon);
+		if (wifi.isSupported())
+			icon.setImageDrawable(resources.getDrawable(R.drawable.ic_possible));
+		else
+			icon.setImageDrawable(resources
+					.getDrawable(R.drawable.ic_impossible));
+
+		final ImageView networkS = (ImageView) convertView
+				.findViewById(R.id.strenght);
+		final int pic = WifiManager.calculateSignalLevel(strenght, 4);
+		if (wifi.isLocked()) {
+			switch (pic) {
+			case 0:
+				networkS.setImageDrawable(resources
+						.getDrawable(R.drawable.ic_wifi_lock_signal_1));
+				break;
+			case 1:
+				networkS.setImageDrawable(resources
+						.getDrawable(R.drawable.ic_wifi_lock_signal_2));
+				break;
+			case 2:
+				networkS.setImageDrawable(resources
+						.getDrawable(R.drawable.ic_wifi_lock_signal_3));
+				break;
+			case 3:
+				networkS.setImageDrawable(resources
+						.getDrawable(R.drawable.ic_wifi_lock_signal_4));
+				break;
+			}
+		} else {
+			switch (pic) {
+			case 0:
+				networkS.setImageDrawable(resources
+						.getDrawable(R.drawable.ic_wifi_signal_1));
+				break;
+			case 1:
+				networkS.setImageDrawable(resources
+						.getDrawable(R.drawable.ic_wifi_signal_2));
+				break;
+			case 2:
+				networkS.setImageDrawable(resources
+						.getDrawable(R.drawable.ic_wifi_signal_3));
+				break;
+			case 3:
+				networkS.setImageDrawable(resources
+						.getDrawable(R.drawable.ic_wifi_signal_4));
+				break;
+			}
+		}
+		return convertView;
 	}
-	
 
 	@Override
 	public boolean hasStableIds() {
 		return true;
 	}
-
 
 }

@@ -34,7 +34,7 @@ import android.net.wifi.WifiManager;
 import android.widget.Toast;
 
 public class WiFiScanReceiver extends BroadcastReceiver { 
-	final private OnScanListener scanListener;
+	final private OnScanListener [] scanListeners;
 	final private WirelessMatcher matcher;
 	final private WifiManager wifi;
 
@@ -43,17 +43,16 @@ public class WiFiScanReceiver extends BroadcastReceiver {
 		public void onScanFinished(List<Keygen> networks);
 	}
 
-	public WiFiScanReceiver(OnScanListener scanListener,
-			WirelessMatcher matcher, WifiManager wifi) {
+	public WiFiScanReceiver(WirelessMatcher matcher, WifiManager wifi, OnScanListener ... scanListener) {
 		super();
-		this.scanListener = scanListener;
+		this.scanListeners = scanListener;
 		this.matcher = matcher;
 		this.wifi = wifi;
 	}
 
 	public void onReceive(Context c, Intent intent) {
 
-		if (scanListener == null)
+		if (scanListeners == null)
 			return;
 		if (wifi == null)
 			return;
@@ -81,7 +80,8 @@ public class WiFiScanReceiver extends BroadcastReceiver {
 		Iterator<Keygen> it = set.iterator();
 		while (it.hasNext())
 			networks.add(it.next());
-		scanListener.onScanFinished(networks);
+		for ( OnScanListener scanListener : scanListeners )
+			scanListener.onScanFinished(networks);
 		if (networks.isEmpty())
 			Toast.makeText(c, R.string.msg_nowifidetected, Toast.LENGTH_SHORT)
 					.show();

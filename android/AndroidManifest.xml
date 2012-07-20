@@ -6,7 +6,7 @@
     android:versionName="2.9.1" >
 
     <uses-sdk
-        android:minSdkVersion="11"
+        android:minSdkVersion="7"
         android:targetSdkVersion="16" />
 
     <supports-screens
@@ -29,7 +29,7 @@
         android:label="@string/app_name" >
         <activity
             android:name=".Preferences"
-            android:configChanges="orientation|keyboard"
+            android:configChanges="screenSize|orientation|keyboard"
             android:label="@string/menu_preferences" >
         </activity>
         <activity

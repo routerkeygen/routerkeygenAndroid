@@ -19,9 +19,12 @@
 
 package org.exobel.routerkeygen.ui;
 
+import java.util.List;
+
 import org.exobel.routerkeygen.Preferences;
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.WiFiScanReceiver;
+import org.exobel.routerkeygen.WiFiScanReceiver.OnScanListener;
 import org.exobel.routerkeygen.WifiStateReceiver;
 import org.exobel.routerkeygen.WirelessMatcher;
 import org.exobel.routerkeygen.algorithms.Keygen;
@@ -35,12 +38,14 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 public class NetworksListActivity extends FragmentActivity implements
-		NetworksListFragment.OnItemSelectionListener {
+		NetworksListFragment.OnItemSelectionListener, OnScanListener {
 
 	private boolean mTwoPane;
 
@@ -63,10 +68,10 @@ public class NetworksListActivity extends FragmentActivity implements
 		networkMatcher = new WirelessMatcher(getResources().openRawResource(
 				R.raw.alice));
 		wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-
+		
 		wifi_state = wifi.getWifiState() == WifiManager.WIFI_STATE_ENABLED
 				|| wifi.getWifiState() == WifiManager.WIFI_STATE_ENABLING;
-		scanFinished = new WiFiScanReceiver(fragment, networkMatcher, wifi);
+		scanFinished = new WiFiScanReceiver(networkMatcher, wifi, fragment, this);
 		stateChanged = new WifiStateReceiver(wifi);
 	}
 
@@ -91,7 +96,7 @@ public class NetworksListActivity extends FragmentActivity implements
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) {
-
+		mOptionsMenu = menu;
 		getMenuInflater().inflate(R.menu.networks_list, menu);
 		getMenuInflater().inflate(R.menu.preferences, menu);
 		return true;
@@ -126,30 +131,58 @@ public class NetworksListActivity extends FragmentActivity implements
 		scan();
 	}
 	
+
+
+    private Menu mOptionsMenu;
+    private View mRefreshIndeterminateProgressView = null;
+    public void setRefreshActionItemState(boolean refreshing) {
+        // On Honeycomb, we can set the state of the refresh button by giving it a custom
+        // action view.
+        if (mOptionsMenu == null) {
+            return;
+        }
+
+        final MenuItem refreshItem = mOptionsMenu.findItem(R.id.wifi_scan);
+        if (refreshItem != null) {
+            if (refreshing) {
+                if (mRefreshIndeterminateProgressView == null) {
+                    LayoutInflater inflater = (LayoutInflater)
+                            getSystemService(
+                                    Context.LAYOUT_INFLATER_SERVICE);
+                    mRefreshIndeterminateProgressView = inflater.inflate(
+                            R.layout.actionbar_indeterminate_progress, null);
+                }
+
+                refreshItem.setActionView(mRefreshIndeterminateProgressView);
+            } else {
+                refreshItem.setActionView(null);
+            }
+        }
+    }
+
+	
 	public void onResume(){
 		super.onResume();
 		getPrefs();
 	}
 
 	public void scan() {
-		registerReceiver(scanFinished, new IntentFilter(
-				WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-
 		if (!wifi_state && !wifiOn) {
 			Toast.makeText(this, R.string.msg_nowifi, Toast.LENGTH_SHORT)
 					.show();
 			return;
 		}
-
+		registerReceiver(scanFinished, new IntentFilter(
+				WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
 		if (wifi.getWifiState() == WifiManager.WIFI_STATE_ENABLING) {
 			registerReceiver(stateChanged, new IntentFilter(
 					WifiManager.WIFI_STATE_CHANGED_ACTION));
 			Toast.makeText(this, R.string.msg_wifienabling, Toast.LENGTH_SHORT)
 					.show();
 		} else {
-			if (wifi.startScan())
-				Toast.makeText(this, R.string.msg_scanstarted,
-						Toast.LENGTH_SHORT).show();
+			if (wifi.startScan()){
+				setRefreshActionItemState(true);
+			}
 			else
 				Toast.makeText(this, R.string.msg_scanfailed,
 						Toast.LENGTH_SHORT).show();
@@ -165,6 +198,10 @@ public class NetworksListActivity extends FragmentActivity implements
 				.getDefaultSharedPreferences(getBaseContext());
 		wifiOn = prefs.getBoolean(Preferences.wifiOnPref, true);
 		manualMac = prefs.getBoolean(Preferences.manualMacPref, false);
+	}
+
+	public void onScanFinished(List<Keygen> networks) {
+		setRefreshActionItemState(false);
 	}
 
 }

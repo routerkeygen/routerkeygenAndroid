@@ -26,6 +26,8 @@ import android.os.Parcelable;
 
 public abstract class Keygen implements Comparable<Keygen>, Parcelable {
 
+	final public static String OPEN_ENCRIPTION = "Open";
+	
 	private String ssidName;
 	private String macAddress;
 	private int level;
@@ -150,6 +152,10 @@ public abstract class Keygen implements Comparable<Keygen>, Parcelable {
 		stopRequested = in.readInt() == 1;
 		pwList = in.createStringArrayList();
 
+	}
+	
+	public boolean isLocked(){
+		return !OPEN_ENCRIPTION.equals(encryption);
 	}
 
 }

@@ -128,7 +128,7 @@ public class RouterKeygen extends Activity implements OnScanListener {
 			}
 		});
 		stateChanged = new WifiStateReceiver(getWifi());
-		scanFinished = new WiFiScanReceiver(this, networkMatcher , wifi);
+		scanFinished = new WiFiScanReceiver(networkMatcher , wifi, this);
 		if ( savedInstanceState == null  )
 			return;
 		final List<Keygen> list_networks =(List<Keygen>) savedInstanceState.getSerializable("networks");

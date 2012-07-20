@@ -35,18 +35,22 @@
         android:scaleType="fitXY"
         android:src="@drawable/ic_impossible" />
 
-    <CheckedTextView
+    <TextView
         android:id="@+id/wifiMAC"
         android:layout_width="wrap_content"
-        android:layout_height="30dip"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="false"
         android:layout_toRightOf="@id/icon"
+        android:ellipsize="end"
         android:focusable="false"
+        android:maxLines="1"
+        android:scrollHorizontally="true"
         android:singleLine="true"
+        android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:textColor="#545454" />
 
-    <CheckedTextView
+    <TextView
         android:id="@+id/wifiName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -55,15 +59,17 @@
         android:layout_alignWithParentIfMissing="true"
         android:layout_below="@id/wifiMAC"
         android:layout_toRightOf="@id/icon"
+        android:ellipsize="end"
         android:focusable="false"
+        android:maxLines="1"
+        android:scrollHorizontally="true"
         android:singleLine="true"
+        android:textAppearance="?android:attr/textAppearanceListItem"
         android:textSize="20sp" />
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="50dip"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentTop="false"
+        android:layout_height="fill_parent"
         android:layout_marginRight="10dip"
         android:layout_toRightOf="@id/wifiName"
         android:focusable="false"
@@ -73,9 +79,9 @@
             android:id="@+id/strenght"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:focusable="false"
-            android:gravity="center_vertical"
-            android:src="@drawable/ic_wifi_weak" />
+            android:src="@drawable/ic_wifi_lock_signal_1" />
     </RelativeLayout>
 
 </RelativeLayout>
