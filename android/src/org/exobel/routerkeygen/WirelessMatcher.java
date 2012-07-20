@@ -52,7 +52,7 @@ public class WirelessMatcher {
 	
 	public Keygen getKeygen(String ssid, String mac, int level , String enc){
 		if ( enc.equals(""))
-			enc = "Open";
+			enc = Keygen.OPEN_ENCRIPTION;
 		if ( ssid.matches("Discus--?[0-9a-fA-F]{6}"))
 			return new DiscusKeygen(ssid, mac, level, enc);
 

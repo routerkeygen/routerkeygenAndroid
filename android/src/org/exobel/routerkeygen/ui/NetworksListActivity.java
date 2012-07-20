@@ -37,14 +37,15 @@ import android.content.SharedPreferences;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-public class NetworksListActivity extends FragmentActivity implements
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+
+public class NetworksListActivity extends SherlockFragmentActivity implements
 		NetworksListFragment.OnItemSelectionListener, OnScanListener {
 
 	private boolean mTwoPane;
@@ -97,8 +98,8 @@ public class NetworksListActivity extends FragmentActivity implements
 
 	public boolean onCreateOptionsMenu(Menu menu) {
 		mOptionsMenu = menu;
-		getMenuInflater().inflate(R.menu.networks_list, menu);
-		getMenuInflater().inflate(R.menu.preferences, menu);
+		getSupportMenuInflater().inflate(R.menu.networks_list, menu);
+		getSupportMenuInflater().inflate(R.menu.preferences, menu);
 		return true;
 	}
 

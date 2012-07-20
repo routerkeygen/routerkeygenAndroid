@@ -26,11 +26,12 @@ import org.exobel.routerkeygen.algorithms.Keygen;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ListView;
 
-public class NetworksListFragment extends ListFragment implements OnScanListener {
+import com.actionbarsherlock.app.SherlockListFragment;
+
+public class NetworksListFragment extends SherlockListFragment implements OnScanListener {
 
     private static final String STATE_ACTIVATED_POSITION = "activated_position";
 
