@@ -15,7 +15,6 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Spanned;
@@ -28,7 +27,9 @@ import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class ManualDialogFragment extends DialogFragment {
+import com.actionbarsherlock.app.SherlockDialogFragment;
+
+public class ManualDialogFragment extends SherlockDialogFragment {
 	private final static String MANUAL_MAC_ARG = "manualMac";
 
 	private final static String WIRELESS_MATCHER_ARG = "wirelessMatcher";

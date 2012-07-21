@@ -17,7 +17,7 @@
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.exobel.routerkeygen;
+package org.exobel.routerkeygen.ui;
 
 import java.io.DataInputStream;
 import java.io.File;
@@ -32,6 +32,9 @@ import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.util.Stack;
 import java.util.TreeSet;
+
+import org.exobel.routerkeygen.Downloader;
+import org.exobel.routerkeygen.R;
 
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -54,8 +57,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
-import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NavUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -66,7 +69,10 @@ import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class Preferences extends PreferenceActivity {
+import com.actionbarsherlock.app.SherlockPreferenceActivity;
+import com.actionbarsherlock.view.MenuItem;
+@SuppressWarnings("deprecation")
+public class Preferences extends SherlockPreferenceActivity {
 	
 	/** The maximum supported dictionary version */
 	public static final int MAX_DIC_VERSION = 3;
@@ -95,11 +101,11 @@ public class Preferences extends PreferenceActivity {
 	private static final String LAUNCH_DATE = "04/01/2012";
 	private String version ="";
 	
-	@SuppressWarnings("deprecation")
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.layout.preferences);
-	
+
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		findPreference("download").setOnPreferenceClickListener(
 				new OnPreferenceClickListener() {
@@ -211,6 +217,18 @@ public class Preferences extends PreferenceActivity {
 				return true;
 			}
 		});
+	}
+	
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			NavUtils.navigateUpTo(this, new Intent(this,
+					NetworksListActivity.class));
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 	
 	private void checkDownload(){
@@ -711,13 +729,13 @@ public class Preferences extends PreferenceActivity {
 				pbarDialog.setOnDismissListener(new OnDismissListener() {
 					public void onDismiss(DialogInterface dialog) {
 						if ( downloader != null )
-							downloader.stopRequested = true;
+							downloader.setStopRequested(true);
 					}
 				});
 				pbarDialog.setButton(getString(R.string.bt_pause), new OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						if ( downloader != null )
-							downloader.stopRequested = true;
+							downloader.setStopRequested(true);
 						removeDialog(DIALOG_DOWNLOAD);
 					}
 				});
@@ -725,8 +743,8 @@ public class Preferences extends PreferenceActivity {
 					public void onClick(DialogInterface dialog, int which) {
 						if ( downloader != null )
 						{
-							downloader.deleteTemp = true;
-							downloader.stopRequested = true;
+							downloader.setDeleteTemp(true);
+							downloader.setStopRequested(true);
 						}
 						removeDialog(DIALOG_DOWNLOAD);
 					}

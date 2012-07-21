@@ -19,7 +19,6 @@
 
 package org.exobel.routerkeygen.ui;
 
-import org.exobel.routerkeygen.Preferences;
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.algorithms.Keygen;
 

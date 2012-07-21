@@ -21,7 +21,6 @@ package org.exobel.routerkeygen.ui;
 
 import java.util.List;
 
-import org.exobel.routerkeygen.Preferences;
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.WiFiScanReceiver;
 import org.exobel.routerkeygen.WiFiScanReceiver.OnScanListener;
@@ -29,8 +28,10 @@ import org.exobel.routerkeygen.WifiStateReceiver;
 import org.exobel.routerkeygen.WirelessMatcher;
 import org.exobel.routerkeygen.algorithms.Keygen;
 
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -54,6 +55,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 	private WifiManager wifi;
 	private BroadcastReceiver scanFinished;
 	private BroadcastReceiver stateChanged;
+	private static final String welcomeScreenShownPref = "welcomeScreenShown";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -74,13 +76,32 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 				|| wifi.getWifiState() == WifiManager.WIFI_STATE_ENABLING;
 		scanFinished = new WiFiScanReceiver(networkMatcher, wifi, fragment, this);
 		stateChanged = new WifiStateReceiver(wifi);
+		
+
+		final SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		final boolean welcomeScreenShown = mPrefs.getBoolean( welcomeScreenShownPref, false);
+
+		if (!welcomeScreenShown) {
+
+			final String whatsNewTitle = getString(R.string.msg_welcome_title);
+			final String whatsNewText = getString(R.string.msg_welcome_text);
+			new AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert).setTitle(whatsNewTitle).setMessage(whatsNewText).setPositiveButton(
+					R.string.bt_ok, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.dismiss();
+						}
+					}).show();
+			final SharedPreferences.Editor editor = mPrefs.edit();
+			editor.putBoolean(welcomeScreenShownPref, true);
+			editor.commit();
+		}
 	}
 
 	public void onItemSelected(Keygen keygen) {
 		if (mTwoPane) {
-			Bundle arguments = new Bundle();
+			final Bundle arguments = new Bundle();
 			arguments.putParcelable(NetworkFragment.NETWORK_ID, keygen);
-			NetworkFragment fragment = new NetworkFragment();
+			final NetworkFragment fragment = new NetworkFragment();
 			fragment.setArguments(arguments);
 			getSupportFragmentManager().beginTransaction()
 					.replace(R.id.item_detail_container, fragment).commit();
@@ -133,6 +154,14 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 	}
 	
 
+	public void onStop() {
+		try{ 
+			super.onStop();
+			unregisterReceiver(scanFinished);
+			unregisterReceiver(stateChanged);
+		}
+		catch (Exception e) {}
+	}
 
     private Menu mOptionsMenu;
     private View mRefreshIndeterminateProgressView = null;

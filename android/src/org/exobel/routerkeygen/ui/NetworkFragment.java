@@ -21,7 +21,6 @@ package org.exobel.routerkeygen.ui;
 
 import java.util.List;
 
-import org.exobel.routerkeygen.Preferences;
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.algorithms.Keygen;
 import org.exobel.routerkeygen.algorithms.NativeThomson;

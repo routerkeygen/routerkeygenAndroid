@@ -32,8 +32,8 @@ import android.os.Message;
 public class Downloader extends Thread{
 	Handler messHand;
 	String urlDownload;	
-	boolean stopRequested = false;
-	boolean deleteTemp = false;
+	private boolean stopRequested = false;
+	private boolean deleteTemp = false;
 	public void run() {
 		File myDicFile;
 		URLConnection con;
@@ -82,9 +82,9 @@ public class Downloader extends Thread{
 				}
 				catch(Exception e){}
 				messHand.sendMessage(Message.obtain(messHand, 4, myProgress, fileLen));
-				if ( stopRequested )
+				if ( isStopRequested() )
 				{
-					if ( deleteTemp )
+					if ( isDeleteTemp() )
 						myDicFile.delete();
 					dis.close();
 					fos.close();
@@ -106,6 +106,22 @@ public class Downloader extends Thread{
 	public Downloader(Handler messHand, String urlDownload) {
 		this.messHand = messHand;
 		this.urlDownload = urlDownload;
+	}
+
+	public boolean isStopRequested() {
+		return stopRequested;
+	}
+
+	public void setStopRequested(boolean stopRequested) {
+		this.stopRequested = stopRequested;
+	}
+
+	public boolean isDeleteTemp() {
+		return deleteTemp;
+	}
+
+	public void setDeleteTemp(boolean deleteTemp) {
+		this.deleteTemp = deleteTemp;
 	}
 
 }

@@ -32,9 +32,9 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.zip.ZipInputStream;
 
-import org.exobel.routerkeygen.Preferences;
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.StringUtils;
+import org.exobel.routerkeygen.ui.Preferences;
 
 import android.os.Environment;
 import android.os.Parcel;
