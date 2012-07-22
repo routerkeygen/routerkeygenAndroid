@@ -32,7 +32,7 @@
 	<string name="share_title">Deel Sleutels</string>
 	<string name="msg_copied"> is gekopieerd naar het klipbord</string>
 	<string name="msg_scanstarted">Gestart met scannen</string>
-	<string name="msg_wifienabling">WiFi aanzetten...</string>
+	<string name="msg_wifienabling">WiFi aanzetten&#8230;</string>
 	<string name="msg_results">Klik op 1 van de sleutels om die te kopieren.\nVervolgens zullen de WiFi instellingen openen zodat u de sleutel kan testen.</string>
     <string name="manual_mac_separator">:</string>
     
@@ -53,17 +53,17 @@
 	<!-- DIALOG STRINGS -->	
 	<string name="lb_manual">Voer hier uw ESSID in:</string>
 	<string name="dialog_nativecalc">Sleutels Berekenen</string>
-	<string name="dialog_nativecalc_msg">Dit kan tot 2 minuten duren. Even geduld...</string>
+	<string name="dialog_nativecalc_msg">Dit kan tot 2 minuten duren. Even geduld&#8230;</string>
 	<string name="dialog_thomson3g">Thomson 3G</string>
-	<string name="dialog_thomson3g_msg">Sleutels Ophalen...</string>
+	<string name="dialog_thomson3g_msg">Sleutels Ophalen&#8230;</string>
 	<string name="msg_dicislarge">De dictionary is 28 MB groot. Wij raden het gebruik van een WiFi-connectie aan.\nBent u zeker dat u wilt doorgaan?</string>
-	<string name="msg_dl_estimating">Geschatte downloadsnelheid en resterende tijd...</string>
-	<string name="msg_dl_dlingdic">dictionary downloaden...</string>
+	<string name="msg_dl_estimating">Geschatte downloadsnelheid en resterende tijd&#8230;</string>
+	<string name="msg_dl_dlingdic">dictionary downloaden&#8230;</string>
     <string name="msg_dl_speed">­Download snelheid</string>
     <string name="msg_dl_eta">­Geschatte resterende tijd</string>
     <string name="msg_dic_updated">Uw dictionary is al de laatste versie.</string>
     <string name="msg_dic_updated_finished">Uw dictionary is nu de laatste versie.</string>
-    <string name="msg_wait">Ogenblik geduld...</string>
+    <string name="msg_wait">Ogenblik geduld&#8230;</string>
 	<string name="lb_manual_bssid">MAC adres</string>
 	<string name="dialog_about_credits">Credits</string>
 	<string name="dialog_about_credits_desc">Router Keygen kon niet bestaan zonder de onschatbare bijdrages van volgende mensen/bedrijven:\n\n
