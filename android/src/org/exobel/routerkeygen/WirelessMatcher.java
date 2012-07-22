@@ -57,7 +57,7 @@ public class WirelessMatcher implements Parcelable {
 
 	public Keygen getKeygen(String ssid, String mac, int level, String enc) {
 		if (enc.equals(""))
-			enc = Keygen.OPEN_ENCRIPTION;
+			enc = Keygen.OPEN;
 		if (ssid.matches("Discus--?[0-9a-fA-F]{6}"))
 			return new DiscusKeygen(ssid, mac, level, enc);
 
@@ -73,13 +73,24 @@ public class WirelessMatcher implements Parcelable {
 			return new EircomKeygen(ssid, mac, level, enc);
 		}
 
+		/* This test MUST be done before the Thomson one because some SSID are common and this test
+		 * checks for the MAC addresses*/
+		if (ssid.matches("(Arcor|EasyBox|Vodafone)(-| )[0-9a-fA-F]{6}")
+				&& (mac.startsWith("00:12:BF") || mac.startsWith("00:1A:2A")
+						|| mac.startsWith("00:1D:19")
+						|| mac.startsWith("00:23:08")
+						|| mac.startsWith("00:26:4D")
+						|| mac.startsWith("50:7E:5D")
+						|| mac.startsWith("1C:C6:3C")
+						|| mac.startsWith("74:31:70")
+						|| mac.startsWith("7C:4F:B5") || mac
+							.startsWith("88:25:2C")))
+			return new EasyBoxKeygen(ssid, mac, level, enc);
+
 		if (ssid.matches("(Thomson|Blink|SpeedTouch|O2Wireless|Orange-|INFINITUM|"
-				+ "BigPond|Otenet|Bbox-|DMAX|privat|TN_private_|CYTA)[0-9a-fA-F]{6}")) {
-			if (mac.length() == 0
-					|| !ssid.substring(ssid.length() - 6).equalsIgnoreCase(
-							mac.replaceAll(":", "").substring(6)))
+				+ "BigPond|Otenet|Bbox-|DMAX|privat|TN_private_|CYTA|Vodafone-|Optimus|OptimusFibra|MEO-)[0-9a-fA-F]{6}"))
 				return new ThomsonKeygen(ssid, mac, level, enc);
-		}
+
 		if (ssid.matches("DLink-[0-9a-fA-F]{6}"))
 			return new DlinkKeygen(ssid, mac, level, enc);
 
@@ -157,17 +168,6 @@ public class WirelessMatcher implements Parcelable {
 
 		if (ssid.matches("(WLAN|WiFi|YaCom)[0-9a-zA-Z]{6}"))
 			return new Wlan6Keygen(ssid, mac, level, enc);
-
-		if (ssid.matches("(Arcor|EasyBox|Vodafone)(-| )[0-9a-fA-F]{6}")
-				&& (mac.startsWith("00:12:BF") || mac.startsWith("00:1A:2A")
-						|| mac.startsWith("00:1D:19")
-						|| mac.startsWith("00:23:08")
-						|| mac.startsWith("00:26:4D")
-						|| mac.startsWith("1C:C6:3C")
-						|| mac.startsWith("74:31:70")
-						|| mac.startsWith("7C:4F:B5") || mac
-							.startsWith("88:25:2C")))
-			return new EasyBoxKeygen(ssid, mac, level, enc);
 
 		if (ssid.matches("OTE[0-9a-fA-F]{6}"))
 			return new OteKeygen(ssid, mac, level, enc);
