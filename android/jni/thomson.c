@@ -52,8 +52,7 @@ JNIEXPORT jobjectArray JNICALL Java_org_exobel_routerkeygen_algorithms_NativeTho
 	char input[13];
 	input[0] = 'C';
 	input[1] = 'P';
-	input[2] = '0';
-	char result[10][11];
+	char result[20][11];
 	int keys = 0;
 	for( i = 0; i < n; ++i  )
 	{
@@ -70,6 +69,7 @@ JNIEXPORT jobjectArray JNICALL Java_org_exobel_routerkeygen_algorithms_NativeTho
 		{
 		    for ( week = 1 ; week <= 52 ; ++week )
 		    {
+		    	input[2] = '0' + year / 10;
 		        input[3] = '0' + year % 10 ;
 		        input[4] = '0' + week / 10;
 		        input[5] = '0' + week % 10;
