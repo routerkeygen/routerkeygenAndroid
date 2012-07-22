@@ -21,13 +21,7 @@ extern "C" {
 JNIEXPORT jobjectArray JNICALL Java_org_exobel_routerkeygen_algorithms_ThomsonKeygen_thirdDicNative
   (JNIEnv *, jobject, jbyteArray, jbyteArray, jint);
 
-/*
- * Class:     org_exobel_routerkeygen_algorithms_ThomsonKeygen
- * Method:    forthDicNative
- * Signature: ([B[B)[Ljava/lang/String;
- */
-JNIEXPORT jobjectArray JNICALL Java_org_exobel_routerkeygen_algorithms_ThomsonKeygen_forthDicNative
-  (JNIEnv *, jobject, jbyteArray, jbyteArray, jint);
+
 #ifdef __cplusplus
 }
 #endif
