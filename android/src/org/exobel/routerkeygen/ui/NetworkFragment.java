@@ -19,6 +19,10 @@
 
 package org.exobel.routerkeygen.ui;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 
 import org.exobel.routerkeygen.R;
@@ -127,6 +131,36 @@ public class NetworkFragment extends SherlockFragment {
 				Toast.makeText(getActivity(), R.string.msg_err_sendto,
 						Toast.LENGTH_SHORT).show();
 			}
+			return true;
+		case R.id.menu_save_sd:
+			if ( !Environment.getExternalStorageState().equals("mounted")  && 
+				     !Environment.getExternalStorageState().equals("mounted_ro")	)
+			{
+				Toast.makeText( getActivity() , R.string.msg_nosdcard,
+					Toast.LENGTH_SHORT).show();
+				return true;
+			}
+			final StringBuilder message = new StringBuilder(keygen.getSsidName());
+			message.append(" KEYS\n");
+			for (String password : passwordList){
+				message.append(password);
+				message.append('\n');
+			}
+			try {
+				
+				final BufferedWriter out = new BufferedWriter(
+						new FileWriter(folderSelect + File.separator + keygen.getSsidName() + ".txt"));
+				out.write(message.toString());
+				out.close();
+			}
+			catch (IOException e)
+			{
+				Toast.makeText( getActivity() , getString(R.string.msg_err_saving_key_file),
+						Toast.LENGTH_SHORT).show();
+				return true;
+			}
+			Toast.makeText( getActivity() , keygen.getSsidName() + ".txt " + getString(R.string.msg_saved_key_file),
+					Toast.LENGTH_SHORT).show();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
