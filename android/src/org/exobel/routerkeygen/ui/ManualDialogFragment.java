@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -134,44 +135,9 @@ public class ManualDialogFragment extends SherlockDialogFragment {
 				});
 			}
 		}
-		builder.setNeutralButton(getString(R.string.bt_manual_calc),
+		builder.setPositiveButton(getString(R.string.bt_manual_calc),
 				new OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
-						String ssid = edit.getText().toString().trim();
-						StringBuilder mac = new StringBuilder();
-						if (manualMac) {
-							boolean warnUnused = false;
-							for (EditText m : macs) {
-								final String mText = m.getText().toString();
-								if (mText.length() > 0)
-									warnUnused = true;
-								mac.append(mText);
-								if (!m.equals(macs[5]))
-									mac.append(":"); // do not add this for the
-														// last one
-							}
-							if (mac.length() < 17) {
-								mac.setLength(0);
-								if (warnUnused)
-									Toast.makeText(getActivity(),
-											R.string.msg_invalid_mac,
-											Toast.LENGTH_SHORT).show();
-							}
-
-						}
-						if (ssid.equals(""))
-							return;
-						Keygen keygen = matcher.getKeygen(ssid, mac.toString(),
-								0, "");
-						if (keygen instanceof UnsupportedKeygen) {
-							Toast.makeText(getActivity(),
-									R.string.msg_unspported_network,
-									Toast.LENGTH_SHORT).show();
-							return;
-						}
-						dismissAllowingStateLoss();
-						mCallbacks.onItemSelected(keygen);
-
 					}
 				});
 		builder.setNegativeButton(getString(R.string.bt_manual_cancel),
@@ -182,7 +148,50 @@ public class ManualDialogFragment extends SherlockDialogFragment {
 				});
 		setCancelable(false);
 		builder.setView(layout);
-		return builder.create();
+		AlertDialog dialog = builder.create();
+		dialog.show();
+		Button theButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+		theButton.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				String ssid = edit.getText().toString().trim();
+				StringBuilder mac = new StringBuilder();
+				if (manualMac) {
+					boolean warnUnused = false;
+					for (EditText m : macs) {
+						final String mText = m.getText().toString();
+						if (mText.length() > 0)
+							warnUnused = true;
+						mac.append(mText);
+						if (!m.equals(macs[5]))
+							mac.append(":"); // do not add this for the
+												// last one
+					}
+					if (mac.length() < 17) {
+						mac.setLength(0);
+						if (warnUnused)
+							Toast.makeText(getActivity(),
+									R.string.msg_invalid_mac,
+									Toast.LENGTH_SHORT).show();
+					}
+
+				}
+				if (ssid.equals(""))
+					return;
+				Keygen keygen = matcher.getKeygen(ssid, mac.toString(),
+						0, "");
+				if (keygen instanceof UnsupportedKeygen) {
+					Toast.makeText(getActivity(),
+							R.string.msg_unspported_network,
+							Toast.LENGTH_SHORT).show();
+					return;
+				}
+				dismissAllowingStateLoss();
+				mCallbacks.onItemSelected(keygen);
+
+			}
+		});
+		return dialog;
 	}
 
 	private static OnItemSelectionListener sDummyCallbacks = new OnItemSelectionListener() {
