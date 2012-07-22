@@ -26,7 +26,6 @@ import org.exobel.routerkeygen.algorithms.Keygen;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.net.wifi.WifiManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,69 +62,81 @@ public class WifiListAdapter extends BaseAdapter {
 
 	public View getView(int position, View convertView, ViewGroup parent) {
 		final Keygen wifi = listNetworks.get(position);
-		final int strenght = listNetworks.get(position).getLevel();
-		if (convertView == null)
+		if (convertView == null) {
 			convertView = inflater.inflate(R.layout.item_list_wifi, parent,
 					false);
+			convertView.setTag(new ViewHolder((TextView) convertView
+					.findViewById(R.id.wifiName), (TextView) convertView
+					.findViewById(R.id.wifiMAC), (ImageView) convertView
+					.findViewById(R.id.icon), (ImageView) convertView
+					.findViewById(R.id.strenght)));
+		}
 
-		final TextView ssid = (TextView) convertView
-				.findViewById(R.id.wifiName);
-		ssid.setText(wifi.getSsidName());
-
-		final TextView bssid = (TextView) convertView
-				.findViewById(R.id.wifiMAC);
-		bssid.setText(wifi.getDisplayMacAddress().toUpperCase());
-
-		final ImageView icon = (ImageView) convertView.findViewById(R.id.icon);
+		final ViewHolder holder = (ViewHolder) convertView.getTag();
+		holder.ssid.setText(wifi.getSsidName());
+		holder.mac.setText(wifi.getDisplayMacAddress());
 		if (wifi.isSupported())
-			icon.setImageDrawable(resources.getDrawable(R.drawable.ic_possible));
+			holder.supported.setImageDrawable(resources.getDrawable(R.drawable.ic_possible));
 		else
-			icon.setImageDrawable(resources
+			holder.supported.setImageDrawable(resources
 					.getDrawable(R.drawable.ic_impossible));
-
-		final ImageView networkS = (ImageView) convertView
-				.findViewById(R.id.strenght);
-		final int pic = WifiManager.calculateSignalLevel(strenght, 4);
+		final int strenght = wifi.getLevel();
 		if (wifi.isLocked()) {
-			switch (pic) {
+			switch (strenght) {
 			case 0:
-				networkS.setImageDrawable(resources
+				holder.networkStrenght.setImageDrawable(resources
 						.getDrawable(R.drawable.ic_wifi_lock_signal_1));
 				break;
 			case 1:
-				networkS.setImageDrawable(resources
+				holder.networkStrenght.setImageDrawable(resources
 						.getDrawable(R.drawable.ic_wifi_lock_signal_2));
 				break;
 			case 2:
-				networkS.setImageDrawable(resources
+				holder.networkStrenght.setImageDrawable(resources
 						.getDrawable(R.drawable.ic_wifi_lock_signal_3));
 				break;
 			case 3:
-				networkS.setImageDrawable(resources
+				holder.networkStrenght.setImageDrawable(resources
 						.getDrawable(R.drawable.ic_wifi_lock_signal_4));
 				break;
 			}
 		} else {
-			switch (pic) {
+			switch (strenght) {
 			case 0:
-				networkS.setImageDrawable(resources
+				holder.networkStrenght.setImageDrawable(resources
 						.getDrawable(R.drawable.ic_wifi_signal_1));
 				break;
 			case 1:
-				networkS.setImageDrawable(resources
+				holder.networkStrenght.setImageDrawable(resources
 						.getDrawable(R.drawable.ic_wifi_signal_2));
 				break;
 			case 2:
-				networkS.setImageDrawable(resources
+				holder.networkStrenght.setImageDrawable(resources
 						.getDrawable(R.drawable.ic_wifi_signal_3));
 				break;
 			case 3:
-				networkS.setImageDrawable(resources
+				holder.networkStrenght.setImageDrawable(resources
 						.getDrawable(R.drawable.ic_wifi_signal_4));
 				break;
 			}
 		}
 		return convertView;
+	}
+
+	private static class ViewHolder {
+		final private TextView ssid;
+		final private TextView mac;
+		final private ImageView supported;
+		final private ImageView networkStrenght;
+
+		public ViewHolder(TextView ssid, TextView mac, ImageView supported,
+				ImageView networkStrenght) {
+			this.ssid = ssid;
+			this.mac = mac;
+			this.supported = supported;
+			this.networkStrenght = networkStrenght;
+		}
+
 	}
 
 	@Override

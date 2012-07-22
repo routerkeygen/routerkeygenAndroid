@@ -86,7 +86,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 			final String whatsNewTitle = getString(R.string.msg_welcome_title);
 			final String whatsNewText = getString(R.string.msg_welcome_text);
 			new AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert).setTitle(whatsNewTitle).setMessage(whatsNewText).setPositiveButton(
-					R.string.bt_ok, new DialogInterface.OnClickListener() {
+					android.R.string.ok, new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int which) {
 							dialog.dismiss();
 						}

@@ -151,8 +151,7 @@ public class ManualDialogFragment extends SherlockDialogFragment {
 														// last one
 							}
 							if (mac.length() < 17) {
-								mac.setLength(0);// TODO: warn about mac being
-													// ignored
+								mac.setLength(0);
 								if (warnUnused)
 									Toast.makeText(getActivity(),
 											R.string.msg_invalid_mac,

@@ -70,8 +70,8 @@ public class WiFiScanReceiver extends BroadcastReceiver {
 					results.remove(j--);
 		try {
 			for (ScanResult result : results)
-				set.add(matcher.getKeygen(result.SSID, result.BSSID,
-						result.level, result.capabilities));
+				set.add(matcher.getKeygen(result.SSID, result.BSSID.toUpperCase(),
+						WifiManager.calculateSignalLevel(result.level,4), result.capabilities));
 
 		} catch (LinkageError e) {
 			Toast.makeText(c, R.string.err_misbuilt_apk, Toast.LENGTH_SHORT)

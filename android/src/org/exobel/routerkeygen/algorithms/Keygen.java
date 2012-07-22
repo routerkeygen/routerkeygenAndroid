@@ -25,9 +25,13 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public abstract class Keygen implements Comparable<Keygen>, Parcelable {
-
-	final public static String OPEN_ENCRIPTION = "Open";
-	
+    // Constants used for different security types
+    public static final String PSK = "PSK";
+    public static final String WEP = "WEP";
+    public static final String EAP = "EAP";
+    public static final String OPEN = "Open";
+    
+    
 	private String ssidName;
 	private String macAddress;
 	private int level;
@@ -155,7 +159,23 @@ public abstract class Keygen implements Comparable<Keygen>, Parcelable {
 	}
 	
 	public boolean isLocked(){
-		return !OPEN_ENCRIPTION.equals(encryption);
+		return !OPEN.equals(getScanResultSecurity(this));
 	}
+	
+
+    /**
+     * @return The security of a given {@link ScanResult}.
+     */
+    public static String getScanResultSecurity(Keygen scanResult) {
+        final String cap = scanResult.encryption;
+        final String[] securityModes = { WEP, PSK, EAP };
+        for (int i = securityModes.length - 1; i >= 0; i--) {
+            if (cap.contains(securityModes[i])) {
+                return securityModes[i];
+            }
+        }
+        
+        return OPEN;
+    }
 
 }
