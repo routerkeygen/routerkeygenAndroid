@@ -33,6 +33,7 @@ import java.security.MessageDigest;
 import java.util.Stack;
 import java.util.TreeSet;
 
+import org.exobel.routerkeygen.DictionaryDownloadService;
 import org.exobel.routerkeygen.Downloader;
 import org.exobel.routerkeygen.R;
 
@@ -71,18 +72,19 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.MenuItem;
+
 @SuppressWarnings("deprecation")
 public class Preferences extends SherlockPreferenceActivity {
-	
+
 	/** The maximum supported dictionary version */
-	public static final int MAX_DIC_VERSION = 3;
+	public static final int MAX_DIC_VERSION = 4;
 
 	ProgressDialog pbarDialog;
 	Downloader downloader;
 	long myProgress = 0, fileLen;
 	long lastt, now = 0, downloadBegin = 0;
-	
-	byte[] dicVersion = new byte [2];
+
+	byte[] dicVersion = new byte[2];
 	static byte[] cfvTable = new byte[18];
 
 	public static final String folderSelectPref = "folderSelect";
@@ -90,114 +92,120 @@ public class Preferences extends SherlockPreferenceActivity {
 	public static final String thomson3gPref = "thomson3g";
 	public static final String nativeCalcPref = "nativethomson";
 	public static final String manualMacPref = "manual_mac";
-	public static final String PUB_DOWNLOAD = 
-		"http://android-thomson-key-solver.googlecode.com/files/RKDictionary.dic";
-	private static final String PUB_DIC_CFV =
-		"http://android-thomson-key-solver.googlecode.com/svn/trunk/RKDictionary.cfv";
-	private static final String PUB_VERSION =
-		"http://android-thomson-key-solver.googlecode.com/svn/trunk/RouterKeygenVersion.txt";
+	public static final String PUB_DOWNLOAD = "http://android-thomson-key-solver.googlecode.com/files/RKDictionary.dic";
+	private static final String PUB_DIC_CFV = "http://android-thomson-key-solver.googlecode.com/svn/trunk/RKDictionary.cfv";
+	private static final String PUB_VERSION = "http://android-thomson-key-solver.googlecode.com/svn/trunk/RouterKeygenVersion.txt";
 
 	private static final String VERSION = "2.9.1";
 	private static final String LAUNCH_DATE = "04/01/2012";
-	private String version ="";
-	
+	private String version = "";
+
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.layout.preferences);
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		
+
 		findPreference("download").setOnPreferenceClickListener(
 				new OnPreferenceClickListener() {
-					public boolean onPreferenceClick(Preference preference)
-					{
+					public boolean onPreferenceClick(Preference preference) {
 						ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-					    NetworkInfo netInfo = cm.getActiveNetworkInfo();
-					    if (netInfo == null || !netInfo.isConnectedOrConnecting()) {
-					    	Toast.makeText(getBaseContext(),getString(R.string.pref_msg_no_network),
-								Toast.LENGTH_SHORT).show();
-					        return true;
-					    }
-						
-						showDialog(DIALOG_ASK_DOWNLOAD);
+						NetworkInfo netInfo = cm.getActiveNetworkInfo();
+						if (netInfo == null
+								|| !netInfo.isConnectedOrConnecting()) {
+							Toast.makeText(getBaseContext(),
+									getString(R.string.pref_msg_no_network),
+									Toast.LENGTH_SHORT).show();
+							return true;
+						}
+
+						// Don't complain about dictionary size if user is on a wifi
+						// connection
+						if ((((WifiManager) getBaseContext().getSystemService(
+								Context.WIFI_SERVICE))).getConnectionInfo().getSSID() != null) {
+							try {
+								checkCurrentDictionary();
+							} catch (FileNotFoundException e) {
+								e.printStackTrace();
+							}
+						}
+						else
+							showDialog(DIALOG_ASK_DOWNLOAD);
 						return true;
 					}
 				});
-		
-		findPreference("donate").setOnPreferenceClickListener(
-  				new OnPreferenceClickListener() {
-  					public boolean onPreferenceClick(Preference preference)
-  					{
-  						String donateLink = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=V3FFBTRTTV5DN";
-  						Uri uri = Uri.parse(donateLink );
-  			    		startActivity( new Intent( Intent.ACTION_VIEW, uri ) );
 
-  						return true;
-  					}
-  				});
+		findPreference("donate").setOnPreferenceClickListener(
+				new OnPreferenceClickListener() {
+					public boolean onPreferenceClick(Preference preference) {
+						String donateLink = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=V3FFBTRTTV5DN";
+						Uri uri = Uri.parse(donateLink);
+						startActivity(new Intent(Intent.ACTION_VIEW, uri));
+
+						return true;
+					}
+				});
 		findPreference("update").setOnPreferenceClickListener(
 				new OnPreferenceClickListener() {
 					public boolean onPreferenceClick(Preference preference) {
 						new AsyncTask<Void, Void, Integer>() {
-  							protected void onPreExecute(){
-  									showDialog(DIALOG_CHECK_DOWNLOAD_SERVER);
-  							}
-  							
-  							protected Integer doInBackground(Void... params) {
+							protected void onPreExecute() {
+								showDialog(DIALOG_CHECK_DOWNLOAD_SERVER);
+							}
 
-								// Comparing this version with the online version
+							protected Integer doInBackground(Void... params) {
+
+								// Comparing this version with the online
+								// version
 								try {
-									URLConnection con = new URL(PUB_VERSION).openConnection();
-									DataInputStream dis = new DataInputStream(con.getInputStream());
-									final byte [] versionData = new byte[6];
+									URLConnection con = new URL(PUB_VERSION)
+											.openConnection();
+									DataInputStream dis = new DataInputStream(
+											con.getInputStream());
+									final byte[] versionData = new byte[6];
 									dis.read(versionData);
 									version = new String(versionData).trim();
-									
+
 									// Check our version
-									if(VERSION.equals(version))
-									{
+									if (VERSION.equals(version)) {
 										// All is well
 										return 1;
 									}
 									return 0;
-									
-								}  catch ( UnknownHostException e ){
+
+								} catch (UnknownHostException e) {
 									return -1;
-								}
-								catch (Exception e)
-								{
+								} catch (Exception e) {
 									return null;
 								}
-  							}
-  				      
-  							protected void onPostExecute(Integer result ){
-  								removeDialog(DIALOG_CHECK_DOWNLOAD_SERVER);
-  								if (isFinishing())
-  									return;
-  								if ( result == null )
-  								{
-  									showDialog(DIALOG_ERROR);
-  									return;
-  								}
-  								switch ( result )
-  								{
-  									case -1:  								
-		  								Toast.makeText(Preferences.this, 
-		  										R.string.msg_errthomson3g, 
-		  										Toast.LENGTH_SHORT).show();
-		  								break;
-  									case 0: 
-	  									showDialog(DIALOG_UPDATE_NEEDED);
-	  									break;
-  									case 1:
-  										Toast.makeText(Preferences.this, 
-		  										R.string.msg_app_updated, 
-		  										Toast.LENGTH_SHORT).show();
-		  								break;
-  								}
-  								
-  							}
-  						}.execute();
+							}
+
+							protected void onPostExecute(Integer result) {
+								removeDialog(DIALOG_CHECK_DOWNLOAD_SERVER);
+								if (isFinishing())
+									return;
+								if (result == null) {
+									showDialog(DIALOG_ERROR);
+									return;
+								}
+								switch (result) {
+								case -1:
+									Toast.makeText(Preferences.this,
+											R.string.msg_errthomson3g,
+											Toast.LENGTH_SHORT).show();
+									break;
+								case 0:
+									showDialog(DIALOG_UPDATE_NEEDED);
+									break;
+								case 1:
+									Toast.makeText(Preferences.this,
+											R.string.msg_app_updated,
+											Toast.LENGTH_SHORT).show();
+									break;
+								}
+
+							}
+						}.execute();
 						return true;
 					}
 				});
@@ -208,17 +216,18 @@ public class Preferences extends SherlockPreferenceActivity {
 						return true;
 					}
 				});
-		findPreference("folderSelect").setOnPreferenceClickListener(new OnPreferenceClickListener() {
-			public boolean onPreferenceClick(Preference preference) {
-				mPath = new File(Environment.getExternalStorageDirectory() + File.separator);
-				mChosenFile = File.separator;
-				directoryTree.clear();
-				showDialog(DIALOG_LOAD_FOLDER);
-				return true;
-			}
-		});
+		findPreference("folderSelect").setOnPreferenceClickListener(
+				new OnPreferenceClickListener() {
+					public boolean onPreferenceClick(Preference preference) {
+						mPath = new File(Environment
+								.getExternalStorageDirectory() + File.separator);
+						mChosenFile = File.separator;
+						directoryTree.clear();
+						showDialog(DIALOG_LOAD_FOLDER);
+						return true;
+					}
+				});
 	}
-	
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -230,33 +239,34 @@ public class Preferences extends SherlockPreferenceActivity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
-	private void checkDownload(){
+
+	private void checkDownload() {
 		showDialog(DIALOG_CHECKING_DOWNLOAD);
 		new Thread(new Runnable() {
 			public void run() {
-				try
-				{
+				try {
 					String folderSelect = PreferenceManager
-					.getDefaultSharedPreferences(getBaseContext()).getString(folderSelectPref, 
-							Environment.getExternalStorageDirectory().getAbsolutePath());
+							.getDefaultSharedPreferences(getBaseContext())
+							.getString(
+									folderSelectPref,
+									Environment.getExternalStorageDirectory()
+											.getAbsolutePath());
 
-					String dicTemp = Environment.getExternalStorageDirectory().getPath() + File.separator + "DicTemp.dic";
-					if(!checkDicMD5(dicTemp))
-					{
+					String dicTemp = Environment.getExternalStorageDirectory()
+							.getPath() + File.separator + "DicTemp.dic";
+					if (!checkDicMD5(dicTemp)) {
 						new File(dicTemp).delete();
 						messHand.sendEmptyMessage(-1);
 						return;
 					}
-					if (!renameFile(Environment.getExternalStorageDirectory().getPath() + File.separator + "DicTemp.dic" ,
-							folderSelect + File.separator + "RouterKeygen.dic" , true ))
-					{
+					if (!renameFile(Environment.getExternalStorageDirectory()
+							.getPath() + File.separator + "DicTemp.dic",
+							folderSelect + File.separator + "RouterKeygen.dic",
+							true)) {
 						messHand.sendEmptyMessage(8);
 						return;
 					}
-				}
-				catch (Exception e)
-				{
+				} catch (Exception e) {
 					messHand.sendEmptyMessage(-1);
 					return;
 				}
@@ -264,66 +274,62 @@ public class Preferences extends SherlockPreferenceActivity {
 			}
 		}).start();
 	}
-	
+
 	// Check RouterKeygen.dic file through md5
-	private boolean checkDicMD5(String dicFile)
-	{
-		try
-		{
+	private boolean checkDicMD5(String dicFile) {
+		try {
 			MessageDigest md = MessageDigest.getInstance("MD5");
 			InputStream is = new FileInputStream(dicFile);
 			try {
 				is = new DigestInputStream(is, md);
-				byte []  buffer = new byte [16384] ; 
-				while ( is.read ( buffer )  != -1 );
-			}
-			finally {
+				byte[] buffer = new byte[16384];
+				while (is.read(buffer) != -1)
+					;
+			} finally {
 				is.close();
 			}
 			byte[] digest = md.digest();
 
 			URLConnection con = new URL(PUB_DIC_CFV).openConnection();
 			DataInputStream dis = new DataInputStream(con.getInputStream());
-			if(con.getContentLength() != 18)
+			if (con.getContentLength() != 18)
 				throw new Exception();
-			
+
 			dis.read(Preferences.cfvTable);
 
-			for(int i = 0; i < 16; ++i)
-				if(digest[i] != cfvTable[i + 2])
+			for (int i = 0; i < 16; ++i)
+				if (digest[i] != cfvTable[i + 2])
 					return false;
-		}
-		catch(Exception e)
-		{
+		} catch (Exception e) {
 			return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	// Download the dictionary
 	private void startDownload() {
 		showDialog(DIALOG_DOWNLOAD);
 		myProgress = 0;
-		downloader = new Downloader(messHand , PUB_DOWNLOAD);
+		downloader = new Downloader(messHand, PUB_DOWNLOAD);
 		downloader.start();
 		lastt = downloadBegin = System.currentTimeMillis();
 	}
+
 	int downloadBefore = 0;
 	Handler messHand = new Handler() {
 
 		public void handleMessage(Message msg) {
-			
-			switch(msg.what)
-			{
+
+			switch (msg.what) {
 			case -1:
 				removeDialog(DIALOG_CHECK_DOWNLOAD_SERVER);
 				removeDialog(DIALOG_CHECKING_DOWNLOAD);
 				removeDialog(DIALOG_DOWNLOAD);
 				if (!isFinishing()) {
-				showDialog(DIALOG_ERROR);
+					showDialog(DIALOG_ERROR);
 				}
-			break;
+				break;
 			case 0:
 				removeDialog(DIALOG_DOWNLOAD);
 				if (!isFinishing()) {
@@ -342,34 +348,33 @@ public class Preferences extends SherlockPreferenceActivity {
 				break;
 			case 3:
 				removeDialog(DIALOG_DOWNLOAD);
-				checkDownload();				
+				checkDownload();
 				break;
 			case 4:
 				now = System.currentTimeMillis();
-				if(now - lastt < 1000 )
+				if (now - lastt < 1000)
 					break;
-				
-				myProgress = msg.arg1 ;
+
+				myProgress = msg.arg1;
 				fileLen = msg.arg2;
-				if ( fileLen == 0 )
+				if (fileLen == 0)
 					break;
-				
+
 				long kbs = 0;
-				try{
-					 kbs = (((myProgress- downloadBefore) / (now - downloadBegin))*1000/1024);
-					 
-				}catch(ArithmeticException e){
+				try {
+					kbs = (((myProgress - downloadBefore) / (now - downloadBegin)) * 1000 / 1024);
+
+				} catch (ArithmeticException e) {
 					kbs = 0;
 				}
-				if(kbs == 0)
+				if (kbs == 0)
 					break;
 				long eta = (fileLen - myProgress) / kbs / 1024;
-				long progress = ( 100L * myProgress )/ fileLen;
-				pbarDialog.setProgress((int)progress);
+				long progress = (100L * myProgress) / fileLen;
+				pbarDialog.setProgress((int) progress);
 				pbarDialog.setMessage(getString(R.string.msg_dl_speed) + ": "
-						+ kbs + "kb/s\n"
-						+ getString(R.string.msg_dl_eta) + ": "
-						+ (eta > 60 ? eta/60 + "m" : eta + "s"));
+						+ kbs + "kb/s\n" + getString(R.string.msg_dl_eta)
+						+ ": " + (eta > 60 ? eta / 60 + "m" : eta + "s"));
 				lastt = now;
 				break;
 			case 5:
@@ -381,96 +386,106 @@ public class Preferences extends SherlockPreferenceActivity {
 			case 6:
 				removeDialog(DIALOG_CHECK_DOWNLOAD_SERVER);
 				if (!isFinishing()) {
-					Toast.makeText(getBaseContext(),getResources().getString(R.string.msg_dic_updated),
+					Toast.makeText(getBaseContext(),
+							getResources().getString(R.string.msg_dic_updated),
 							Toast.LENGTH_SHORT).show();
 				}
 				break;
-			case 7: 
+			case 7:
 				removeDialog(DIALOG_CHECK_DOWNLOAD_SERVER);
-				startDownload();
+				//startDownload();
+				startService(new Intent(getApplicationContext(),
+						DictionaryDownloadService.class).putExtra(
+						DictionaryDownloadService.URL_DOWNLOAD,
+						PUB_DOWNLOAD));
 				break;
-			case 8: 
+			case 8:
 				removeDialog(DIALOG_CHECKING_DOWNLOAD);
 				if (!isFinishing()) {
-				Toast.makeText(getBaseContext(),getResources().getString(R.string.pref_msg_err_rename_dic),
-						Toast.LENGTH_SHORT).show();
+					Toast.makeText(
+							getBaseContext(),
+							getResources().getString(
+									R.string.pref_msg_err_rename_dic),
+							Toast.LENGTH_SHORT).show();
 				}
 				break;
-				
-			case 9: 
+
+			case 9:
 				removeDialog(DIALOG_CHECKING_DOWNLOAD);
 				if (!isFinishing()) {
-					Toast.makeText(Preferences.this, R.string.msg_dic_updated_finished, Toast.LENGTH_SHORT).show();
+					Toast.makeText(Preferences.this,
+							R.string.msg_dic_updated_finished,
+							Toast.LENGTH_SHORT).show();
 				}
 				break;
 			case 10:
 				removeDialog(DIALOG_CHECK_DOWNLOAD_SERVER);
 				if (!isFinishing()) {
-					Toast.makeText(Preferences.this, R.string.msg_errthomson3g, Toast.LENGTH_SHORT).show();
+					Toast.makeText(Preferences.this, R.string.msg_errthomson3g,
+							Toast.LENGTH_SHORT).show();
 				}
 				break;
 			}
 		}
 	};
-	
-	 private boolean renameFile(String file, String toFile , boolean saveOld) {
 
-	        File toBeRenamed = new File(file);
-	        File newFile = new File(toFile);
+	private boolean renameFile(String file, String toFile, boolean saveOld) {
 
-	        if (!toBeRenamed.exists() || toBeRenamed.isDirectory())
-	            return false;
-	        
+		File toBeRenamed = new File(file);
+		File newFile = new File(toFile);
 
-	        if (newFile.exists() && !newFile.isDirectory() && saveOld) {
-	        	if ( !renameFile(toFile,toFile+"_backup" , false) )
-	        		Toast.makeText(getBaseContext(),getResources().getString(R.string.pref_msg_err_backup_dic),
+		if (!toBeRenamed.exists() || toBeRenamed.isDirectory())
+			return false;
+
+		if (newFile.exists() && !newFile.isDirectory() && saveOld) {
+			if (!renameFile(toFile, toFile + "_backup", false))
+				Toast.makeText(
+						getBaseContext(),
+						getResources().getString(
+								R.string.pref_msg_err_backup_dic),
 						Toast.LENGTH_SHORT).show();
-	        	else
-	        		toFile +="_backup";
-	        }
-	        newFile = new File(toFile);
+			else
+				toFile += "_backup";
+		}
+		newFile = new File(toFile);
 
-	        //Rename
-	        if (!toBeRenamed.renameTo(newFile) )
-	           return false;
-	       
+		// Rename
+		if (!toBeRenamed.renameTo(newFile))
+			return false;
 
-	        return true;
-	    }
-	
+		return true;
+	}
+
 	private static final String TAG = "ThomsonPreferences";
 	private String[] mFileList;
-	
-	private File mPath = new File(Environment.getExternalStorageDirectory() + File.separator);
+
+	private File mPath = new File(Environment.getExternalStorageDirectory()
+			+ File.separator);
 	private String mChosenFile = File.separator;
 	Stack<String> directoryTree = new Stack<String>();
 
-
 	private void loadFolderList() {
-		mPath = new File(Environment.getExternalStorageDirectory() + File.separator + mChosenFile);
-		if(mPath.exists()){
-			FilenameFilter filter = new FilenameFilter(){
-				public boolean accept(File dir, String filename){
+		mPath = new File(Environment.getExternalStorageDirectory()
+				+ File.separator + mChosenFile);
+		if (mPath.exists()) {
+			FilenameFilter filter = new FilenameFilter() {
+				public boolean accept(File dir, String filename) {
 					File sel = new File(dir, filename);
 					return sel.isDirectory();
 				}
 			};
 			mFileList = mPath.list(filter);
-			if ( mFileList == null )
+			if (mFileList == null)
 				return;
 			TreeSet<String> sorter = new TreeSet<String>();
-			for ( int i = 0 ; i < mFileList.length ; ++i  )
+			for (int i = 0; i < mFileList.length; ++i)
 				sorter.add(mFileList[i]);
 			mFileList = sorter.toArray(mFileList);
-		}
-		else{ 
-			if ( !directoryTree.empty() )
-			{
+		} else {
+			if (!directoryTree.empty()) {
 				mChosenFile = directoryTree.pop();
 				loadFolderList();
-			}
-			else
+			} else
 				mFileList = null;
 		}
 	}
@@ -487,319 +502,330 @@ public class Preferences extends SherlockPreferenceActivity {
 	private static final int DIALOG_CHECKING_DOWNLOAD = 1009;
 	private static final int DIALOG_UPDATE_NEEDED = 1011;
 
-
-
 	protected Dialog onCreateDialog(int id) {
 		AlertDialog.Builder builder = new Builder(this);
-		switch(id) {
-			case DIALOG_LOAD_FOLDER:
-			{
-				loadFolderList();
-				builder.setTitle(getString(R.string.folder_chooser_title));
-				if(mFileList == null || mFileList.length == 0) {
-					Log.e(TAG, "Showing file picker before loading the file list");
-					mFileList = new String[1];
-					mFileList[0] = getString(R.string.folder_chooser_no_dir);
-					builder.setItems(mFileList, new DialogInterface.OnClickListener(){
-						public void onClick(DialogInterface dialog,int which) {}}
-					);
-				}
-				else
-					builder.setItems(mFileList, new DialogInterface.OnClickListener(){
-						public void onClick(DialogInterface dialog, int which){
-							directoryTree.push(mChosenFile);
-							mChosenFile += File.separator + mFileList[which];
-							removeDialog(DIALOG_LOAD_FOLDER);
-							showDialog(DIALOG_LOAD_FOLDER);
-						}
-					});
-				if ( !mChosenFile.equals(File.separator))
-					builder.setNegativeButton(R.string.bt_choose_back,new OnClickListener() {
-						public void onClick(DialogInterface dialog, int which) {
-							if ( !directoryTree.empty())
-								mChosenFile = directoryTree.pop();
-							else
-								mChosenFile = File.separator;
-							removeDialog(DIALOG_LOAD_FOLDER);
-							showDialog(DIALOG_LOAD_FOLDER);
-						}
-					});
-				builder.setNeutralButton(R.string.bt_choose,new OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						SharedPreferences customSharedPreference = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-						SharedPreferences.Editor editor = customSharedPreference
-						.edit();
-	
-						editor.putString(folderSelectPref,mPath.toString());
-						editor.commit();
-						String path = mPath.toString();
-						mPath = new File(path +  File.separator + "RouterKeygen.dic");
-						File second = new File(path +  File.separator + "RKDictionary.dic");
-						if ( !mPath.exists() && !second.exists())
-						{
-							Toast.makeText(getBaseContext(),getResources().getString(R.string.pref_msg_notfound) + " " + path,
-									Toast.LENGTH_SHORT).show();							
-						}
-						else
-						{
-							if ( mPath.exists() )
-								Toast.makeText(getBaseContext(),mPath.toString() +  " " + getResources().getString(R.string.pref_msg_found),
-										Toast.LENGTH_SHORT).show();
-							else
-								Toast.makeText(getBaseContext(),second.toString() +  " " + getResources().getString(R.string.pref_msg_found),
-										Toast.LENGTH_SHORT).show();
-						}
-					}
-				});
-	
-				break;
-			}
-			case DIALOG_ABOUT:
-			{
-				LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
-			    View layout = inflater.inflate(R.layout.about_dialog,
-			                                   (ViewGroup) findViewById(R.id.tabhost));
-			    TabHost tabs = (TabHost) layout.findViewById(R.id.tabhost);
-			    tabs.setup();
-			    TabSpec tspec1 = tabs.newTabSpec("about");
-			    tspec1.setIndicator(getString(R.string.pref_about));
-			    
-			    tspec1.setContent(R.id.text_about_scroll);	
-			    TextView text = ((TextView)layout.findViewById(R.id.text_about));
-			    text.setMovementMethod(LinkMovementMethod.getInstance());
-			    text.append(VERSION + "\n" + LAUNCH_DATE);
-			    tabs.addTab(tspec1);
-			    TabSpec tspec2 = tabs.newTabSpec("credits");
-			    tspec2.setIndicator(getString(R.string.dialog_about_credits));
-			    tspec2.setContent(R.id.about_credits_scroll);		   
-			    ((TextView)layout.findViewById(R.id.about_credits))
-			    .setMovementMethod(LinkMovementMethod.getInstance());
-			    tabs.addTab(tspec2);
-			    TabSpec tspec3 = tabs.newTabSpec("license");
-			    tspec3.setIndicator(getString(R.string.dialog_about_license));
-			    tspec3.setContent(R.id.about_license_scroll);		   
-			    ((TextView)layout.findViewById(R.id.about_license))
-			    .setMovementMethod(LinkMovementMethod.getInstance());
-			    tabs.addTab(tspec3);
-				builder.setNeutralButton(R.string.bt_close, new OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						removeDialog(DIALOG_ABOUT);
-	
-					}
-				});
-				builder.setView(layout);
-				break;
-			}
-			case DIALOG_ASK_DOWNLOAD:
-			{
-				DialogInterface.OnClickListener diOnClickListener = new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int id) {
-							// Check if we have the latest dictionary version.
-							try 
-							{
-								final File myDicFile = getDictionaryFile();
-								if( myDicFile == null )
-								{
-									messHand.sendEmptyMessage(7);
-								}
-								else
-								{
-								    removeDialog(DIALOG_ASK_DOWNLOAD);
-									showDialog(DIALOG_CHECK_DOWNLOAD_SERVER);
-									  new Thread(new Runnable() {
-										    public void run() {
-		
-												// Comparing this version with the online version
-												try {
-													InputStream is = new FileInputStream(myDicFile);
-													URLConnection con = new URL(PUB_DIC_CFV).openConnection();
-													DataInputStream dis = new DataInputStream(con.getInputStream());
-													if(con.getContentLength() != 18)
-														throw new Exception();
-													
-													dis.read(Preferences.cfvTable);
-													
-													// Check our version
-													is.read(dicVersion);
-													
-													int thisVersion, onlineVersion;
-													thisVersion = dicVersion[0] << 8 | dicVersion[1];
-													onlineVersion = cfvTable[0] << 8 | cfvTable[1];
-													
-													if(thisVersion == onlineVersion)
-													{
-														// It is the latest version, but is it not corrupt?
-														if(checkDicMD5(myDicFile.getPath()))
-														{
-															// All is well
-															messHand.sendEmptyMessage(6);
-															return;
-														}
-													}
-													if(onlineVersion > thisVersion && onlineVersion > MAX_DIC_VERSION)
-													{
-														// Online version is too advanced
-														messHand.sendEmptyMessage(5);
-														return;
-													}
-													messHand.sendEmptyMessage(7);
-													return;
-													
-												} catch ( FileNotFoundException e ){
-													messHand.sendEmptyMessage(7);
-													return;
-												} catch ( UnknownHostException e ){
-													messHand.sendEmptyMessage(10);
-													return;
-												}
-												catch (Exception e)
-												{
-													messHand.sendEmptyMessage(-1);
-													return;
-												}
-											}
-										  }).start();
-								}
+		switch (id) {
+		case DIALOG_LOAD_FOLDER: {
+			loadFolderList();
+			builder.setTitle(getString(R.string.folder_chooser_title));
+			if (mFileList == null || mFileList.length == 0) {
+				Log.e(TAG, "Showing file picker before loading the file list");
+				mFileList = new String[1];
+				mFileList[0] = getString(R.string.folder_chooser_no_dir);
+				builder.setItems(mFileList,
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int which) {
 							}
-							catch (Exception e) {
-									e.printStackTrace();					
-							}			
-			           }
-				};
-				// Don't complain about dictionary size if user is on a wifi connection
-				if((((WifiManager) getBaseContext().getSystemService(Context.WIFI_SERVICE))).getConnectionInfo().getSSID() != null)
-				{
-					diOnClickListener.onClick(null, -1);
-					break;
+						});
+			} else
+				builder.setItems(mFileList,
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int which) {
+								directoryTree.push(mChosenFile);
+								mChosenFile += File.separator
+										+ mFileList[which];
+								removeDialog(DIALOG_LOAD_FOLDER);
+								showDialog(DIALOG_LOAD_FOLDER);
+							}
+						});
+			if (!mChosenFile.equals(File.separator))
+				builder.setNegativeButton(R.string.bt_choose_back,
+						new OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int which) {
+								if (!directoryTree.empty())
+									mChosenFile = directoryTree.pop();
+								else
+									mChosenFile = File.separator;
+								removeDialog(DIALOG_LOAD_FOLDER);
+								showDialog(DIALOG_LOAD_FOLDER);
+							}
+						});
+			builder.setNeutralButton(R.string.bt_choose, new OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					SharedPreferences customSharedPreference = PreferenceManager
+							.getDefaultSharedPreferences(getBaseContext());
+					SharedPreferences.Editor editor = customSharedPreference
+							.edit();
+
+					editor.putString(folderSelectPref, mPath.toString());
+					editor.commit();
+					String path = mPath.toString();
+					mPath = new File(path + File.separator + "RouterKeygen.dic");
+					File second = new File(path + File.separator
+							+ "RKDictionary.dic");
+					if (!mPath.exists() && !second.exists()) {
+						Toast.makeText(
+								getBaseContext(),
+								getResources().getString(
+										R.string.pref_msg_notfound)
+										+ " " + path, Toast.LENGTH_SHORT)
+								.show();
+					} else {
+						if (mPath.exists())
+							Toast.makeText(
+									getBaseContext(),
+									mPath.toString()
+											+ " "
+											+ getResources().getString(
+													R.string.pref_msg_found),
+									Toast.LENGTH_SHORT).show();
+						else
+							Toast.makeText(
+									getBaseContext(),
+									second.toString()
+											+ " "
+											+ getResources().getString(
+													R.string.pref_msg_found),
+									Toast.LENGTH_SHORT).show();
+					}
 				}
-				
-				builder.setTitle(R.string.pref_download);
-				builder.setMessage(R.string.msg_dicislarge);
-				builder.setCancelable(false);
-				builder.setPositiveButton(R.string.bt_yes, diOnClickListener);
-				builder.setNegativeButton(R.string.bt_no, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-						removeDialog(DIALOG_ASK_DOWNLOAD);
+			});
+
+			break;
+		}
+		case DIALOG_ABOUT: {
+			LayoutInflater inflater = (LayoutInflater) this
+					.getSystemService(LAYOUT_INFLATER_SERVICE);
+			View layout = inflater.inflate(R.layout.about_dialog,
+					(ViewGroup) findViewById(R.id.tabhost));
+			TabHost tabs = (TabHost) layout.findViewById(R.id.tabhost);
+			tabs.setup();
+			TabSpec tspec1 = tabs.newTabSpec("about");
+			tspec1.setIndicator(getString(R.string.pref_about));
+
+			tspec1.setContent(R.id.text_about_scroll);
+			TextView text = ((TextView) layout.findViewById(R.id.text_about));
+			text.setMovementMethod(LinkMovementMethod.getInstance());
+			text.append(VERSION + "\n" + LAUNCH_DATE);
+			tabs.addTab(tspec1);
+			TabSpec tspec2 = tabs.newTabSpec("credits");
+			tspec2.setIndicator(getString(R.string.dialog_about_credits));
+			tspec2.setContent(R.id.about_credits_scroll);
+			((TextView) layout.findViewById(R.id.about_credits))
+					.setMovementMethod(LinkMovementMethod.getInstance());
+			tabs.addTab(tspec2);
+			TabSpec tspec3 = tabs.newTabSpec("license");
+			tspec3.setIndicator(getString(R.string.dialog_about_license));
+			tspec3.setContent(R.id.about_license_scroll);
+			((TextView) layout.findViewById(R.id.about_license))
+					.setMovementMethod(LinkMovementMethod.getInstance());
+			tabs.addTab(tspec3);
+			builder.setNeutralButton(R.string.bt_close, new OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					removeDialog(DIALOG_ABOUT);
+
+				}
+			});
+			builder.setView(layout);
+			break;
+		}
+		case DIALOG_ASK_DOWNLOAD: {
+			DialogInterface.OnClickListener diOnClickListener = new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					// Check if we have the latest dictionary version.
+					try {
+						checkCurrentDictionary();
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
-				});
-		       break;
-			}
-			case DIALOG_UPDATE_NEEDED:
-			{
-				builder.setTitle(R.string.update_title)
-				.setMessage(getString(R.string.update_message,version))
-				.setNegativeButton(R.string.bt_close,new OnClickListener() {
-					
-					public void onClick(DialogInterface dialog, int which) {
-						removeDialog(DIALOG_UPDATE_NEEDED);
-					}
-				})
-				.setPositiveButton(R.string.bt_website, new OnClickListener() {
-					
-					public void onClick(DialogInterface dialog, int which) {
-						String url = "http://code.google.com/p/android-thomson-key-solver/downloads/list";
-						Intent i = new Intent(Intent.ACTION_VIEW);
-						i.setData(Uri.parse(url));
-						startActivity(i);
-					}
-				});
-				break;
-			}
-			case DIALOG_CHECK_DOWNLOAD_SERVER:
-			{
-				pbarDialog = new ProgressDialog(Preferences.this);
-				pbarDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-				pbarDialog.setMessage(getString(R.string.msg_wait));
-				return pbarDialog;
-			}
-			case DIALOG_ERROR_TOO_ADVANCED:
-			{
-				builder.setTitle(R.string.msg_error)
-				.setMessage(R.string.msg_err_online_too_adv);
-				break;
-			}
-			case DIALOG_DOWNLOAD:
-			{
-				pbarDialog = new ProgressDialog(Preferences.this);
-				pbarDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-				pbarDialog.setMessage(getString(R.string.msg_dl_estimating));
-				pbarDialog.setMax(100);
-				pbarDialog.setTitle(R.string.msg_dl_dlingdic);
-				pbarDialog.setCancelable(true);
-				pbarDialog.setOnDismissListener(new OnDismissListener() {
-					public void onDismiss(DialogInterface dialog) {
-						if ( downloader != null )
-							downloader.setStopRequested(true);
-					}
-				});
-				pbarDialog.setButton(getString(R.string.bt_pause), new OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						if ( downloader != null )
-							downloader.setStopRequested(true);
-						removeDialog(DIALOG_DOWNLOAD);
-					}
-				});
-				pbarDialog.setButton2(getString(R.string.bt_manual_cancel), new OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						if ( downloader != null )
-						{
-							downloader.setDeleteTemp(true);
-							downloader.setStopRequested(true);
+				}
+			};
+
+			builder.setTitle(R.string.pref_download);
+			builder.setMessage(R.string.msg_dicislarge);
+			builder.setCancelable(false);
+			builder.setPositiveButton(android.R.string.yes, diOnClickListener);
+			builder.setNegativeButton(android.R.string.no,
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							removeDialog(DIALOG_ASK_DOWNLOAD);
 						}
-						removeDialog(DIALOG_DOWNLOAD);
-					}
-				});
-				return pbarDialog;
-			}
-			case DIALOG_ERROR:
-			{
-				builder.setTitle(R.string.msg_error)
-				.setMessage(R.string.msg_err_unkown);
-				break;
-			}
-			case DIALOG_ERROR_NOMEMORYONSD:
-			{
-				builder.setTitle(R.string.msg_error)
-				.setMessage(R.string.msg_nomemoryonsdcard);
-				break;
-			}
-			case DIALOG_ERROR_NOSD:
-			{
-				builder.setTitle(R.string.msg_error)
-				.setMessage(R.string.msg_nosdcard);
-				break;
-			}
-			case DIALOG_CHECKING_DOWNLOAD:
-			{
-				pbarDialog = new ProgressDialog(Preferences.this);
-				pbarDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-				pbarDialog.setMessage(getString(R.string.msg_wait));
-				return pbarDialog;
-			}
+					});
+			break;
+		}
+		case DIALOG_UPDATE_NEEDED: {
+			builder.setTitle(R.string.update_title)
+					.setMessage(getString(R.string.update_message, version))
+					.setNegativeButton(R.string.bt_close,
+							new OnClickListener() {
+
+								public void onClick(DialogInterface dialog,
+										int which) {
+									removeDialog(DIALOG_UPDATE_NEEDED);
+								}
+							})
+					.setPositiveButton(R.string.bt_website,
+							new OnClickListener() {
+
+								public void onClick(DialogInterface dialog,
+										int which) {
+									String url = "http://code.google.com/p/android-thomson-key-solver/downloads/list";
+									Intent i = new Intent(Intent.ACTION_VIEW);
+									i.setData(Uri.parse(url));
+									startActivity(i);
+								}
+							});
+			break;
+		}
+		case DIALOG_CHECK_DOWNLOAD_SERVER: {
+			pbarDialog = new ProgressDialog(Preferences.this);
+			pbarDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			pbarDialog.setMessage(getString(R.string.msg_wait));
+			return pbarDialog;
+		}
+		case DIALOG_ERROR_TOO_ADVANCED: {
+			builder.setTitle(R.string.msg_error).setMessage(
+					R.string.msg_err_online_too_adv);
+			break;
+		}
+		case DIALOG_DOWNLOAD: {
+			pbarDialog = new ProgressDialog(Preferences.this);
+			pbarDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+			pbarDialog.setMessage(getString(R.string.msg_dl_estimating));
+			pbarDialog.setMax(100);
+			pbarDialog.setTitle(R.string.msg_dl_dlingdic);
+			pbarDialog.setCancelable(true);
+			pbarDialog.setOnDismissListener(new OnDismissListener() {
+				public void onDismiss(DialogInterface dialog) {
+					if (downloader != null)
+						downloader.setStopRequested(true);
+				}
+			});
+			pbarDialog.setButton(getString(R.string.bt_pause),
+					new OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							if (downloader != null)
+								downloader.setStopRequested(true);
+							removeDialog(DIALOG_DOWNLOAD);
+						}
+					});
+			pbarDialog.setButton2(getString(R.string.bt_manual_cancel),
+					new OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							if (downloader != null) {
+								downloader.setDeleteTemp(true);
+								downloader.setStopRequested(true);
+							}
+							removeDialog(DIALOG_DOWNLOAD);
+						}
+					});
+			return pbarDialog;
+		}
+		case DIALOG_ERROR: {
+			builder.setTitle(R.string.msg_error).setMessage(
+					R.string.msg_err_unkown);
+			break;
+		}
+		case DIALOG_ERROR_NOMEMORYONSD: {
+			builder.setTitle(R.string.msg_error).setMessage(
+					R.string.msg_nomemoryonsdcard);
+			break;
+		}
+		case DIALOG_ERROR_NOSD: {
+			builder.setTitle(R.string.msg_error).setMessage(
+					R.string.msg_nosdcard);
+			break;
+		}
+		case DIALOG_CHECKING_DOWNLOAD: {
+			pbarDialog = new ProgressDialog(Preferences.this);
+			pbarDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			pbarDialog.setMessage(getString(R.string.msg_wait));
+			return pbarDialog;
+		}
 		}
 		return builder.create();
 	}
 	
+	private void checkCurrentDictionary() throws FileNotFoundException{
+		final File myDicFile = getDictionaryFile();
+		if (myDicFile == null) {
+			removeDialog(DIALOG_ASK_DOWNLOAD);
+			startService(new Intent(getApplicationContext(),
+					DictionaryDownloadService.class).putExtra(
+					DictionaryDownloadService.URL_DOWNLOAD,
+					PUB_DOWNLOAD));
+		} else {
+			removeDialog(DIALOG_ASK_DOWNLOAD);
+			showDialog(DIALOG_CHECK_DOWNLOAD_SERVER);
+			new Thread(new Runnable() {
+				public void run() {
+
+					// Comparing this version with the online
+					// version
+					try {
+						InputStream is = new FileInputStream(
+								myDicFile);
+						URLConnection con = new URL(PUB_DIC_CFV)
+								.openConnection();
+						DataInputStream dis = new DataInputStream(
+								con.getInputStream());
+						if (con.getContentLength() != 18)
+							throw new Exception();
+
+						dis.read(Preferences.cfvTable);
+
+						// Check our version
+						is.read(dicVersion);
+
+						int thisVersion, onlineVersion;
+						thisVersion = dicVersion[0] << 8
+								| dicVersion[1];
+						onlineVersion = cfvTable[0] << 8
+								| cfvTable[1];
+
+						if (thisVersion == onlineVersion) {
+							// It is the latest version, but is
+							// it not corrupt?
+							if (checkDicMD5(myDicFile.getPath())) {
+								// All is well
+								messHand.sendEmptyMessage(6);
+								return;
+							}
+						}
+						if (onlineVersion > thisVersion
+								&& onlineVersion > MAX_DIC_VERSION) {
+							// Online version is too advanced
+							messHand.sendEmptyMessage(5);
+							return;
+						}
+						messHand.sendEmptyMessage(7);
+						return;
+
+					} catch (FileNotFoundException e) {
+						messHand.sendEmptyMessage(7);
+						return;
+					} catch (UnknownHostException e) {
+						messHand.sendEmptyMessage(10);
+						return;
+					} catch (Exception e) {
+						messHand.sendEmptyMessage(-1);
+						return;
+					}
+				}
+			}).start();
+		}
+	}
+
 	private File getDictionaryFile() throws FileNotFoundException {
-		String folderSelect =  PreferenceManager.getDefaultSharedPreferences(getBaseContext())
-		.getString(folderSelectPref,
-				Environment.getExternalStorageDirectory().getAbsolutePath())
-				;
+		String folderSelect = PreferenceManager.getDefaultSharedPreferences(
+				getBaseContext()).getString(folderSelectPref,
+				Environment.getExternalStorageDirectory().getAbsolutePath());
 		String firstName = folderSelect + File.separator + "RouterKeygen.dic";
 		String secondName = folderSelect + File.separator + "RKDictionary.dic";
-		try{
+		try {
 			File dic = new File(firstName);
-			if ( dic.exists() )
+			if (dic.exists())
 				return dic;
 			dic = new File(secondName);
-			if ( dic.exists() )
+			if (dic.exists())
 				return dic;
-		} catch(SecurityException e  ){
+		} catch (SecurityException e) {
 			e.printStackTrace();
 			throw new FileNotFoundException("Permissions Error");
 		}
 		return null;
 	}
 };
-
-
