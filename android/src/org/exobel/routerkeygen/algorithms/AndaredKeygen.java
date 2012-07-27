@@ -20,9 +20,6 @@ package org.exobel.routerkeygen.algorithms;
 
 import java.util.List;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 /*
  * This is not actual an algorithm as
  * it is just a default WPA password.
@@ -38,20 +35,6 @@ public class AndaredKeygen extends Keygen {
 		addPassword("6b629f4c299371737494c61b5a101693a2d4e9e1f3e1320f3ebf9ae379cecf32");
 		return getResults();
 	}
-
-	private AndaredKeygen(Parcel in) {
-		super(in);
-	}
-	
-    public static final Parcelable.Creator<AndaredKeygen> CREATOR = new Parcelable.Creator<AndaredKeygen>() {
-        public AndaredKeygen createFromParcel(Parcel in) {
-            return new AndaredKeygen(in);
-        }
-
-        public AndaredKeygen[] newArray(int size) {
-            return new AndaredKeygen[size];
-        }
-    };
 	
 
 }

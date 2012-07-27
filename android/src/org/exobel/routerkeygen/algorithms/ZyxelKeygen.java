@@ -67,24 +67,5 @@ public class ZyxelKeygen extends Keygen {
 		return null;
 	}
 
-	private ZyxelKeygen(Parcel in) {
-		super(in);
-		ssidIdentifier = in.readString();
-	}
-
-	public void writeToParcel(Parcel dest, int flags) {
-		super.writeToParcel(dest, flags);
-		dest.writeString(ssidIdentifier);
-	}
-
-	public static final Parcelable.Creator<ZyxelKeygen> CREATOR = new Parcelable.Creator<ZyxelKeygen>() {
-		public ZyxelKeygen createFromParcel(Parcel in) {
-			return new ZyxelKeygen(in);
-		}
-
-		public ZyxelKeygen[] newArray(int size) {
-			return new ZyxelKeygen[size];
-		}
-	};
 
 }
