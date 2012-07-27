@@ -168,7 +168,7 @@ public class WirelessMatcher {
 		if ( ssid.matches("PBS-[0-9a-fA-F]{6}") )
 			return new PBSKeygen(ssid, mac, level, enc);
 
-		if ( ssid.matches("CONN-?[0-9a-fA-F]{1}") )
+		if (ssid.equals("CONN-X"))
 			return new ConnKeygen(ssid, mac, level, enc);
 
 		if (ssid.equals("Andared"))
