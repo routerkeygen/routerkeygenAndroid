@@ -26,16 +26,19 @@ import java.util.List;
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.StringUtils;
 
-public class Wlan4Keygen extends Keygen {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class ZyxelKeygen extends Keygen {
 
 	final private String ssidIdentifier;
 	private MessageDigest md;
-	public Wlan4Keygen(String ssid, String mac, int level, String enc ) {
+
+	public ZyxelKeygen(String ssid, String mac, int level, String enc) {
 		super(ssid, mac, level, enc);
-		ssidIdentifier = ssid.substring(ssid.length()-4);
+		ssidIdentifier = ssid.substring(ssid.length() - 4);
 	}
-	static final String magic = "bcgbghgg";
-	
+
 	@Override
 	public List<String> getKeys() {
 		try {
@@ -44,30 +47,44 @@ public class Wlan4Keygen extends Keygen {
 			setErrorCode(R.string.msg_nomd5);
 			return null;
 		}
-		if ( getMacAddress().length() != 12 ) 
-		{
+		final String mac = getMacAddress();
+		if (mac.length() != 12) {
 			setErrorCode(R.string.msg_errpirelli);
 			return null;
 		}
-		String macMod = getMacAddress().substring(0,8) + ssidIdentifier;
-		md.reset();
 		try {
-			if ( !getMacAddress().toUpperCase().startsWith("001FA4") )
-				md.update(magic.getBytes("ASCII"));
-			if ( !getMacAddress().toUpperCase().startsWith("001FA4") )
-				md.update(macMod.toUpperCase().getBytes("ASCII"));
-			else
-				md.update(macMod.toLowerCase().getBytes("ASCII"));
-			if ( !getMacAddress().toUpperCase().startsWith("001FA4") )
-				md.update( getMacAddress().toUpperCase().getBytes("ASCII"));
-			byte [] hash = md.digest();
-			if  ( !getMacAddress().toUpperCase().startsWith("001FA4") )
-				addPassword(StringUtils.getHexString(hash).substring(0,20));
-			else
-				addPassword(StringUtils.getHexString(hash).substring(0,20).toUpperCase());
+
+			final String macMod = mac.substring(0, 8) + ssidIdentifier;
+			md.reset();
+			md.update(macMod.toLowerCase().getBytes("ASCII"));
+
+			byte[] hash = md.digest();
+			addPassword(StringUtils.getHexString(hash).substring(0, 20)
+					.toUpperCase());
 			return getResults();
-		} catch (UnsupportedEncodingException e) {}
+		} catch (UnsupportedEncodingException e) {
+		}
 		return null;
 	}
+
+	private ZyxelKeygen(Parcel in) {
+		super(in);
+		ssidIdentifier = in.readString();
+	}
+
+	public void writeToParcel(Parcel dest, int flags) {
+		super.writeToParcel(dest, flags);
+		dest.writeString(ssidIdentifier);
+	}
+
+	public static final Parcelable.Creator<ZyxelKeygen> CREATOR = new Parcelable.Creator<ZyxelKeygen>() {
+		public ZyxelKeygen createFromParcel(Parcel in) {
+			return new ZyxelKeygen(in);
+		}
+
+		public ZyxelKeygen[] newArray(int size) {
+			return new ZyxelKeygen[size];
+		}
+	};
 
 }

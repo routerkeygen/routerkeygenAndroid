@@ -29,8 +29,9 @@ import org.exobel.routerkeygen.algorithms.ThomsonKeygen;
 import org.exobel.routerkeygen.algorithms.UnsupportedKeygen;
 import org.exobel.routerkeygen.algorithms.VerizonKeygen;
 import org.exobel.routerkeygen.algorithms.Wlan2Keygen;
-import org.exobel.routerkeygen.algorithms.Wlan4Keygen;
+import org.exobel.routerkeygen.algorithms.ComtrendKeygen;
 import org.exobel.routerkeygen.algorithms.Wlan6Keygen;
+import org.exobel.routerkeygen.algorithms.ZyxelKeygen;
 
 public class WirelessMatcher {
 
@@ -66,14 +67,27 @@ public class WirelessMatcher {
 			}
 			return new EircomKeygen(ssid, mac, level, enc);
 		}
-		
-		if ( ssid.matches("(Thomson|Blink|SpeedTouch|O2Wireless|Orange-|INFINITUM|" +
-				"BigPond|Otenet|Bbox-|DMAX|privat|TN_private_|CYTA)[0-9a-fA-F]{6}")) {
-			
-			if ( mac.length() == 0 || !ssid.substring(ssid.length()-6).equals(mac.replaceAll(":", "").substring(6)))
-				return new ThomsonKeygen(ssid, mac, level, enc);
-		}
-		if ( ssid.matches("DLink-[0-9a-fA-F]{6}")) 
+		/*
+		 * This test MUST be done before the Thomson one because some SSID are
+		 * common and this test checks for the MAC addresses
+		 */
+		if (ssid.matches("(Arcor|EasyBox|Vodafone)(-| )[0-9a-fA-F]{6}")
+				&& (mac.startsWith("00:12:BF") || mac.startsWith("00:1A:2A")
+						|| mac.startsWith("00:1D:19")
+						|| mac.startsWith("00:23:08")
+						|| mac.startsWith("00:26:4D")
+						|| mac.startsWith("50:7E:5D")
+						|| mac.startsWith("1C:C6:3C")
+						|| mac.startsWith("74:31:70")
+						|| mac.startsWith("7C:4F:B5") || mac
+							.startsWith("88:25:2C")))
+			return new EasyBoxKeygen(ssid, mac, level, enc);
+
+		if (ssid.matches("(Thomson|Blink|SpeedTouch|O2Wireless|Orange-|INFINITUM|"
+				+ "BigPond|Otenet|Bbox-|DMAX|privat|TN_private_|CYTA|Vodafone-|Optimus|OptimusFibra|MEO-)[0-9a-fA-F]{6}"))
+			return new ThomsonKeygen(ssid, mac, level, enc);
+
+		if (ssid.matches("DLink-[0-9a-fA-F]{6}"))
 			return new DlinkKeygen(ssid, mac, level, enc);
 
 
@@ -111,10 +125,16 @@ public class WirelessMatcher {
 		if ( ssid.matches("[Pp]1[0-9]{6}0{4}[0-9]") )
 			return new OnoKeygen(ssid, mac, level, enc);
 
-		if (  ssid.matches("(WLAN_|JAZZTEL_)[0-9a-fA-F]{4}") &&
-		    ( mac.startsWith("00:1F:A4") || mac.startsWith("64:68:0C") ||
-			  mac.startsWith("00:1D:20") ) )
-			return new Wlan4Keygen(ssid, mac, level, enc);
+		if (ssid.matches("(WLAN|JAZZTEL)_[0-9a-fA-F]{4}")) {
+			if (mac.startsWith("00:1F:A4") || mac.startsWith("F4:3E:61")
+					|| mac.startsWith("40:4A:03"))
+				return new ZyxelKeygen(ssid, mac, level, enc);
+
+			if (mac.startsWith("00:1B:20") || mac.startsWith("64:68:0C")
+					|| mac.startsWith("00:1D:20") || mac.startsWith("00:23:F8")
+					|| mac.startsWith("38:72:C0") || mac.startsWith("30:39:F2"))
+				return new ComtrendKeygen(ssid, mac, level, enc);
+		}
 
 		if ( ssid.matches("SKY[0-9]{5}") && (mac.startsWith("C4:3D:C7") || 
 		      mac.startsWith("E0:46:9A") ||  mac.startsWith("E0:91:F5") || 
@@ -142,14 +162,6 @@ public class WirelessMatcher {
 		if ( ssid.matches("(WLAN|WiFi|YaCom)[0-9a-zA-Z]{6}") )
 			return new Wlan6Keygen(ssid, mac, level, enc);
 		
-		if ( ssid.matches("(Arcor|EasyBox|Vodafone)(-| )[0-9a-fA-F]{6}") && 
-			(	mac.startsWith("00:12:BF") || mac.startsWith("00:1A:2A") || 
-				mac.startsWith("00:1D:19") || mac.startsWith("00:23:08") || 
-				mac.startsWith("00:26:4D") || mac.startsWith("1C:C6:3C") || 
-				mac.startsWith("74:31:70") || mac.startsWith("7C:4F:B5") ||
-				mac.startsWith("88:25:2C")) )
-			return new EasyBoxKeygen(ssid, mac, level, enc);
-
 		if ( ssid.matches("OTE[0-9a-fA-F]{6}") )
 			return new OteKeygen(ssid, mac, level, enc);
 
