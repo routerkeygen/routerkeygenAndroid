@@ -29,16 +29,18 @@ import org.exobel.routerkeygen.StringUtils;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Wlan4Keygen extends Keygen {
+public class ComtrendKeygen extends Keygen {
 
 	final private String ssidIdentifier;
 	private MessageDigest md;
-	public Wlan4Keygen(String ssid, String mac, int level, String enc ) {
+
+	public ComtrendKeygen(String ssid, String mac, int level, String enc) {
 		super(ssid, mac, level, enc);
-		ssidIdentifier = ssid.substring(ssid.length()-4);
+		ssidIdentifier = ssid.substring(ssid.length() - 4);
 	}
+
 	static final String magic = "bcgbghgg";
-	
+
 	@Override
 	public List<String> getKeys() {
 		try {
@@ -47,33 +49,26 @@ public class Wlan4Keygen extends Keygen {
 			setErrorCode(R.string.msg_nomd5);
 			return null;
 		}
-		if ( getMacAddress().length() != 12 ) 
-		{
+		final String mac = getMacAddress();
+		if (mac.length() != 12) {
 			setErrorCode(R.string.msg_errpirelli);
 			return null;
 		}
-		String macMod = getMacAddress().substring(0,8) + ssidIdentifier;
-		md.reset();
 		try {
-			if ( !getMacAddress().toUpperCase().startsWith("001FA4") )
-				md.update(magic.getBytes("ASCII"));
-			if ( !getMacAddress().toUpperCase().startsWith("001FA4") )
-				md.update(macMod.toUpperCase().getBytes("ASCII"));
-			else
-				md.update(macMod.toLowerCase().getBytes("ASCII"));
-			if ( !getMacAddress().toUpperCase().startsWith("001FA4") )
-				md.update( getMacAddress().toUpperCase().getBytes("ASCII"));
-			byte [] hash = md.digest();
-			if  ( !getMacAddress().toUpperCase().startsWith("001FA4") )
-				addPassword(StringUtils.getHexString(hash).substring(0,20));
-			else
-				addPassword(StringUtils.getHexString(hash).substring(0,20).toUpperCase());
+			final String macMod = mac.substring(0, 8) + ssidIdentifier;
+			md.reset();
+			md.update(magic.getBytes("ASCII"));
+			md.update(macMod.toUpperCase().getBytes("ASCII"));
+			md.update(mac.toUpperCase().getBytes("ASCII"));
+			byte[] hash = md.digest();
+			addPassword(StringUtils.getHexString(hash).substring(0, 20));
 			return getResults();
-		} catch (UnsupportedEncodingException e) {}
+		} catch (UnsupportedEncodingException e) {
+		}
 		return null;
 	}
 
-	private Wlan4Keygen(Parcel in) {
+	private ComtrendKeygen(Parcel in) {
 		super(in);
 		ssidIdentifier = in.readString();
 	}
@@ -82,15 +77,15 @@ public class Wlan4Keygen extends Keygen {
 		super.writeToParcel(dest, flags);
 		dest.writeString(ssidIdentifier);
 	}
-	
-    public static final Parcelable.Creator<Wlan4Keygen> CREATOR = new Parcelable.Creator<Wlan4Keygen>() {
-        public Wlan4Keygen createFromParcel(Parcel in) {
-            return new Wlan4Keygen(in);
-        }
 
-        public Wlan4Keygen[] newArray(int size) {
-            return new Wlan4Keygen[size];
-        }
-    };
+	public static final Parcelable.Creator<ComtrendKeygen> CREATOR = new Parcelable.Creator<ComtrendKeygen>() {
+		public ComtrendKeygen createFromParcel(Parcel in) {
+			return new ComtrendKeygen(in);
+		}
+
+		public ComtrendKeygen[] newArray(int size) {
+			return new ComtrendKeygen[size];
+		}
+	};
 
 }
