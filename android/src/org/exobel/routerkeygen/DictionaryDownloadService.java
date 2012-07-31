@@ -11,6 +11,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
+import java.util.Arrays;
 
 import org.exobel.routerkeygen.ui.Preferences;
 
@@ -32,7 +33,11 @@ public class DictionaryDownloadService extends IntentService {
 
 	public final static String URL_DOWNLOAD = "org.exobel.routerkeygen.DictionaryDownloadService.URL_DOWNLOAD";
 
-	private static final String PUB_DIC_CFV = "http://android-thomson-key-solver.googlecode.com/svn/trunk/RKDictionary.cfv";
+	private static final long MIN_TIME_BETWWEN_UPDATES = 500;
+
+	private static final byte[] DICTIONARY_HASH = { (byte) 0x98, 0x5f, 0x50,
+			(byte) 0xdc, (byte) 0x96, (byte) 0xdb, (byte) 0x83, (byte) 0xe5,
+			0x71, (byte) 0x8e, 0x14, (byte) 0xe8, 0x1d, 0x7f, (byte) 0xc5, 0x7f };
 
 	public DictionaryDownloadService() {
 		super("DictionaryDownloadService");
@@ -72,15 +77,15 @@ public class DictionaryDownloadService extends IntentService {
 			myDicFile = new File(dicTemp);
 
 			// Append mode on
-			fos = new FileOutputStream(myDicFile, true);
+			fos = new FileOutputStream(myDicFile, false);
 
 			// Resuming if possible
-			myProgress = byteRead = (int) myDicFile.length();
-			if (byteRead > 0)
-				con.setRequestProperty("Range", "bytes=" + byteRead + "-");
+			myProgress = byteRead = 0;// (int) myDicFile.length();
+			// if (byteRead > 0)
+			// con.setRequestProperty("Range", "bytes=" + byteRead + "-");
 
 			dis = new DataInputStream(con.getInputStream());
-			fileLen = myProgress + con.getContentLength();
+			fileLen = con.getContentLength();
 			// Checking if external storage has enough memory ...
 			android.os.StatFs stat = new android.os.StatFs(Environment
 					.getExternalStorageDirectory().getPath());
@@ -97,7 +102,7 @@ public class DictionaryDownloadService extends IntentService {
 					UNIQUE_ID,
 					createProgressBar(getString(R.string.msg_dl_dlingdic), "",
 							myProgress, false));
-			int myLastProgressReported = myProgress;
+			long lastNotificationTime = System.currentTimeMillis();
 			buf = new byte[1024 * 512];
 			while (myProgress < fileLen) {
 				if ((byteRead = dis.read(buf)) != -1) {
@@ -108,10 +113,10 @@ public class DictionaryDownloadService extends IntentService {
 					fos.close();
 					myProgress = fileLen;
 				}
-				if (((myProgress - myLastProgressReported) * 100) / fileLen > 2) {
+				if ((System.currentTimeMillis() - lastNotificationTime) > MIN_TIME_BETWWEN_UPDATES) {
 					mNotificationManager.notify(UNIQUE_ID,
 							updateProgressBar(myProgress, false));
-					myLastProgressReported = myProgress;
+					lastNotificationTime = System.currentTimeMillis();
 				}
 			}
 
@@ -209,23 +214,12 @@ public class DictionaryDownloadService extends IntentService {
 			} finally {
 				is.close();
 			}
-			byte[] digest = md.digest();
-
-			URLConnection con = new URL(PUB_DIC_CFV).openConnection();
-			DataInputStream dis = new DataInputStream(con.getInputStream());
-			if (con.getContentLength() != 18)
-				throw new Exception();
-			byte[] cfvTable = new byte[18];
-			dis.read(cfvTable);
-
-			for (int i = 0; i < 16; ++i)
-				if (digest[i] != cfvTable[i + 2])
-					return false;
+			final byte[] hash = md.digest();
+			return Arrays.equals(hash, DICTIONARY_HASH);
 		} catch (Exception e) {
 			return false;
 		}
 
-		return true;
 	}
 
 	private NotificationCompat2.Builder getSimple(CharSequence title,
