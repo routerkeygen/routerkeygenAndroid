@@ -8,6 +8,7 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.exobel.routerkeygen.algorithms.AliceKeygen;
+import org.exobel.routerkeygen.algorithms.AndaredKeygen;
 import org.exobel.routerkeygen.algorithms.ConnKeygen;
 import org.exobel.routerkeygen.algorithms.DiscusKeygen;
 import org.exobel.routerkeygen.algorithms.DlinkKeygen;
@@ -158,9 +159,14 @@ public class WirelessMatcher {
 		if ( ssid.matches("CONN-?[0-9a-fA-F]{1}") )
 			return new ConnKeygen(ssid, mac, level, enc);
 
-		if ( ssid.matches("Megared[0-9a-fA-F]{4}") ) {
-			//the final 4 characters of the SSID should match the final 
-			if ( mac.length() == 0 || ssid.substring(ssid.length()-4).equals(mac.replace(":", "").substring(8)) )
+		if (ssid.equals("Andared"))
+			return new AndaredKeygen(ssid, mac, level, enc);
+
+		if (ssid.matches("Megared[0-9a-fA-F]{4}")) {
+			// the final 4 characters of the SSID should match the final
+			if (mac.length() == 0
+					|| ssid.substring(ssid.length() - 4).equals(
+							mac.replace(":", "").substring(8)))
 				return new MegaredKeygen(ssid, mac, level, enc);
 		}
 		
