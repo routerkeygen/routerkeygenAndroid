@@ -177,6 +177,8 @@ public class NetworkFragment extends SherlockFragment {
 		protected void onPostExecute(List<String> result) {
 			if (getActivity() == null)
 				return;
+			if ( result == null )
+				return;
 			passwordList = result;
 			final ListView list = (ListView) root.findViewById(R.id.list_keys);
 			list.setOnItemClickListener(new OnItemClickListener() {
