@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?fileVersion 4.0.0?>
+
+<cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
+	<storageModule moduleId="org.eclipse.cdt.core.settings">
+		<cconfiguration id="org.eclipse.cdt.core.default.config.1081775273">
+			<storageModule buildSystemId="org.eclipse.cdt.core.defaultConfigDataProvider" id="org.eclipse.cdt.core.default.config.1081775273" moduleId="org.eclipse.cdt.core.settings" name="Configuration">
+				<externalSettings/>
+				<extensions>
+					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+				</extensions>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+		</cconfiguration>
+	</storageModule>
+	<storageModule moduleId="scannerConfiguration">
+		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.make.core.GCCStandardMakePerProjectProfile"/>
+	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets">
+		<buildTargets>
+			<target name="Qt Release Build" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+				<buildCommand>make</buildCommand>
+				<buildArguments/>
+				<buildTarget>release</buildTarget>
+				<stopOnError>false</stopOnError>
+				<useDefaultCommand>false</useDefaultCommand>
+				<runAllBuilders>true</runAllBuilders>
+			</target>
+			<target name="Qt Debug Build" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+				<buildCommand>make</buildCommand>
+				<buildArguments/>
+				<buildTarget>debug</buildTarget>
+				<stopOnError>false</stopOnError>
+				<useDefaultCommand>false</useDefaultCommand>
+				<runAllBuilders>true</runAllBuilders>
+			</target>
+		</buildTargets>
+	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
+	<storageModule moduleId="org.eclipse.cdt.core.pathentry">
+		<pathentry base-path="/usr/share/qt4/include" include="" kind="inc" path="" system="true"/>
+		<pathentry base-path="/usr/share/qt4/include" include="Qt" kind="inc" path="" system="true"/>
+		<pathentry base-path="/usr/share/qt4/include" include="QtDeclarative" kind="inc" path="" system="true"/>
+		<pathentry base-path="/usr/share/qt4/include" include="QtSvg" kind="inc" path="" system="true"/>
+		<pathentry base-path="/usr/share/qt4/include" include="QtSql" kind="inc" path="" system="true"/>
+		<pathentry base-path="/usr/share/qt4/include" include="QtHelp" kind="inc" path="" system="true"/>
+		<pathentry base-path="/usr/share/qt4/include" include="QtXmlPatterns" kind="inc" path="" system="true"/>
+		<pathentry base-path="/usr/share/qt4/include" include="QtXml" kind="inc" path="" system="true"/>
+		<pathentry base-path="/usr/share/qt4/include" include="QtOpenGL" kind="inc" path="" system="true"/>
+		<pathentry base-path="/usr/share/qt4/include" include="QtWebKit" kind="inc" path="" system="true"/>
+		<pathentry base-path="/usr/share/qt4/include" include="QtNetwork" kind="inc" path="" system="true"/>
+		<pathentry base-path="/usr/share/qt4/include" include="QtDBus" kind="inc" path="" system="true"/>
+		<pathentry base-path="/usr/share/qt4/include" include="QtUiTools" kind="inc" path="" system="true"/>
+		<pathentry base-path="/usr/share/qt4/include" include="Qt3Support" kind="inc" path="" system="true"/>
+		<pathentry base-path="/usr/share/qt4/include" include="QtGui" kind="inc" path="" system="true"/>
+		<pathentry base-path="/usr/share/qt4/include" include="QtScript" kind="inc" path="" system="true"/>
+		<pathentry base-path="/usr/share/qt4/include" include="QtCore" kind="inc" path="" system="true"/>
+		<pathentry base-path="/usr/share/qt4/include" include="QtDesigner" kind="inc" path="" system="true"/>
+		<pathentry base-path="/usr/share/qt4/include" include="QtScriptTools" kind="inc" path="" system="true"/>
+		<pathentry base-path="/usr/share/qt4/include" include="QtTest" kind="inc" path="" system="true"/>
+		<pathentry include="/usr/include" kind="inc" path="" system="true"/>
+		<pathentry include="/usr/include/c++/4.6.3" kind="inc" path="" system="true"/>
+		<pathentry kind="src" path=""/>
+		<pathentry kind="out" path=""/>
+	</storageModule>
+</cproject>

@@ -1,14 +1,14 @@
 #ifndef ONOKEYGEN_H
 #define ONOKEYGEN_H
-#include "keygenthread.h"
+#include "Keygen.h"
 
-class OnoKeygen : public KeygenThread
+class OnoKeygen : public Keygen
 {
-    private:
-        QString padto64( QString val );
     public:
-        OnoKeygen(WifiNetwork * router );
-        void run();
+        OnoKeygen(QString & ssid, QString & mac, int level, QString enc);
+    private:
+    	QVector<QString> & getKeys();
+        QString padto64( QString val );
 };
 
 #endif // ONOKEYGEN_H

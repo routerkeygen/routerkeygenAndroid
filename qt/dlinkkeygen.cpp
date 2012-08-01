@@ -18,20 +18,20 @@
  */
 #include "dlinkkeygen.h"
 
-DlinkKeygen::DlinkKeygen(WifiNetwork * router ) : KeygenThread(router){}
+DlinkKeygen::DlinkKeygen(QString & ssid, QString & mac, int level,
+		QString enc) :
+		Keygen(ssid, mac, level, enc) {}
 
-void DlinkKeygen::run(){
-    char hash[] =  {
-        'X', 'r', 'q', 'a', 'H', 'N',
-        'p', 'd', 'S', 'Y', 'w',
-        '8', '6', '2', '1', '5'};
+char DlinkKeygen::hash[] = { 'X', 'r', 'q', 'a', 'H', 'N', 'p', 'd', 'S', 'Y',
+			'w', '8', '6', '2', '1', '5' };
 
-    if ( router->getMac().size() < 12 )
+QVector<QString> & DlinkKeygen::getKeys() {
+    QString mac = getMacAddress();
+    if ( mac.size() < 12 )
     {
-        return;
+        throw ERROR; //TODO:
     }
-    char * key = new char[21];
-    QString mac = router->getMac();
+    char key[21];
     key[0]=mac.at(11).toAscii();
     key[1]=mac.at(0).toAscii();
 
@@ -61,7 +61,7 @@ void DlinkKeygen::run(){
 
     key[18]=mac.at(4).toAscii();
     key[19]=mac.at(10).toAscii();
-    char * newkey = new char[20];
+    char newkey[20];
     char t;
     int index = 0;
     for (int i=0; i < 20 ; i++)
@@ -76,13 +76,12 @@ void DlinkKeygen::run(){
                 index = t-'A'+10;
             else
             {
-                return;
+               throw ERROR;
             }
         }
         newkey[i]=hash[index];
     }
     newkey[21] = '\0';
     results.append(QString(newkey));
-    delete [] newkey;
-    delete [] key;
+    return results;
 }

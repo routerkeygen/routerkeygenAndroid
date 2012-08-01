@@ -18,9 +18,11 @@
  */
 #include "huaweikeygen.h"
 
-HuaweiKeygen::HuaweiKeygen( WifiNetwork * router ) : KeygenThread(router){}
+HuaweiKeygen::HuaweiKeygen(QString & ssid, QString & mac, int level,
+		QString enc) :
+		Keygen(ssid, mac, level, enc){}
 
-void HuaweiKeygen::run(){
+QVector<QString> & HuaweiKeygen::getKeys() {
     int a0[]= {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
     int a1[]= {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
     int a2[]= {0,13,10,7,5,8,15,2,10,7,0,13,15,2,5,8};
@@ -72,20 +74,19 @@ void HuaweiKeygen::run(){
  //   int n33[]= {0,4,9,13,3,7,10,14,7,3,14,10,4,0,13,9};
     int key[]= {30,31,32,33,34,35,36,37,38,39,61,62,63,64,65,66};
     //char ssid[]= {'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'};
-    if ( router == NULL)
-            return;
-    if ( router->getMac().size() != 12 )
+    QString macAd = getMacAddress();
+    if ( macAd.size() != 12 )
     {
            //TODO
-            return;
+            throw ERROR;
     }
     int mac[12];
     bool status;
     for ( int i = 0 ; i < 12 ; ++i)
     {
-            mac[i] =  router->getMac().mid(i, 1).toInt(&status, 16);
+            mac[i] =  macAd.mid(i, 1).toInt(&status, 16);
             if ( !status )
-                return; //TODO
+                throw ERROR; //TODO
     }
    /* int s1=(n1[mac[0]])^(a4[mac[1]])^(a6[mac[2]])^(a1[mac[3]])^(a11[mac[4]])^
                     (n20[mac[5]])^(a10[mac[6]])^(a4[mac[7]])^(a8[mac[8]])^(a2[mac[9]])^
@@ -137,6 +138,6 @@ void HuaweiKeygen::run(){
             handler.sendMessage(Message.obtain(handler, ERROR_MSG ,
                             resources.getString(R.string.msg_err_essid_no_match)));
     }*/
-    return;
+    return results;
 
 }

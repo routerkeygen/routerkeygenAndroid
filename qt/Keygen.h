@@ -16,20 +16,40 @@
  * You should have received a copy of the GNU General Public License
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef PIRELLIKEYGEN_H
-#define PIRELLIKEYGEN_H
-#include "Keygen.h"
-#include <QCryptographicHash>
+#ifndef Keygen_H
+#define Keygen_H
+#include <QString>
+#include <QVector>
 
-class PirelliKeygen: public Keygen {
+class Keygen {
 public:
-	PirelliKeygen(QString & ssid, QString & mac, int level, QString enc);
-	~PirelliKeygen();
+	const static int ERROR = 0;
+	Keygen(QString & ssid, QString & mac, int level, QString enc);
+	QVector<QString> & getResults();
+	void stop();
+	bool isStopped() const;
+	virtual bool isSupported() const;
+	QString getEncryption() const;
+	QString getError() const;
+	int getLevel() const;
+	QString getMacAddress() const;
+	QString getSsidName() const;
+	bool isStopRequested() const;
+	virtual ~Keygen() {
+	}
+protected:
+	QVector<QString> results;
+	bool stopRequested;
+	void setError(const QString & error);
 private:
-	QVector<QString> & getKeys();
-	const static char  saltMD5[];
-	QCryptographicHash * hash;
-	QString ssidIdentifier;
+	virtual QVector<QString> & getKeys() = 0;
+
+	QString ssidName;
+	QString macAddress;
+	int level;
+	QString encryption;
+	QString error;
+
 };
 
-#endif // PIRELLIKEYGEN_H
+#endif // Keygen_H

@@ -1,12 +1,13 @@
 #ifndef DLINKKEYGEN_H
 #define DLINKKEYGEN_H
-#include "keygenthread.h"
+#include "Keygen.h"
 
-class DlinkKeygen : public KeygenThread
-{
+class DlinkKeygen: public Keygen {
 public:
-    DlinkKeygen(WifiNetwork * router );
-    void run();
+	DlinkKeygen(QString & ssid, QString & mac, int level, QString enc);
+private:
+	QVector<QString> & getKeys() ;
+	static char hash[];
 };
 
 #endif // DLINKKEYGEN_H

@@ -18,17 +18,17 @@
  */
 #include "infostradakeygen.h"
 
-InfostradaKeygen::InfostradaKeygen( WifiNetwork * router ) : KeygenThread(router){}
+InfostradaKeygen::InfostradaKeygen(QString & ssid, QString & mac, int level,
+		QString enc) :
+		Keygen(ssid, mac, level, enc){}
 
-void InfostradaKeygen::run(){
-
-    if ( router == NULL)
-            return;
-    if ( router->getMac().size() != 12 )
+QVector<QString> & InfostradaKeygen::getKeys(){
+	QString mac = getMacAddress();
+    if ( mac.size() != 12 )
     {
             //TODO:error messages
-            return;
+            throw ERROR;
     }
-    results.append("2"+router->getMac().toUpper());
-    return;
+    results.append("2"+mac.toUpper());
+    return results;
 }

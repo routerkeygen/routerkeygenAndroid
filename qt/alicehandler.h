@@ -3,15 +3,18 @@
 #include "alicemagicinfo.h"
 #include <QtXml/QXmlDefaultHandler>
 #include <QTreeWidget>
+#include <QMap>
+#include <QVector>
+#include <memory>
 
 class AliceHandler : public QXmlDefaultHandler
 {
     public:
-        AliceHandler(QString alice);
-        ~AliceHandler();
+        AliceHandler(){}
+        ~AliceHandler(){}
         bool readFile(const QString &fileName);
         bool isSupported();
-        QVector<AliceMagicInfo *> & getSupportedAlice();
+        QMap<QString, QVector<AliceMagicInfo *> *> getSupportedAlice();
     protected:
         bool startElement(const QString &,
                           const QString &localName,
@@ -25,8 +28,7 @@ class AliceHandler : public QXmlDefaultHandler
 
     private:
         void cleanInfo();
-        QVector<AliceMagicInfo *> supportedAlice;
-        QString alice;
+        QMap<QString ,QVector<AliceMagicInfo *> *> supportedAlice;
 
 };
 

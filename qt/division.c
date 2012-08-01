@@ -15,7 +15,7 @@
     {
     return __aeabi_uidivmod (numerator, denominator);
     }
- #endif // __SERIES60_30__
- //#endif // __GCCE__
+ //#endif // __SERIES60_30__
+ #endif // __GCCE__
 
 

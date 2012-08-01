@@ -19,22 +19,7 @@
 #include "routerkeygen.h"
 #include "ui_routerkeygen.h"
 #include <QMessageBox>
-#include "tecomkeygen.h"
-#include "thomsonkeygen.h"
-#include "verizonkeygen.h"
-#include "infostradakeygen.h"
-#include "eircomkeygen.h"
-#include "skyv1keygen.h"
-#include "wlan2keygen.h"
-#include "wlan4keygen.h"
-#include "wlan6keygen.h"
-#include "discuskeygen.h"
-#include "dlinkkeygen.h"
-#include "pirellikeygen.h"
-#include "telseykeygen.h"
-#include "onokeygen.h"
-#include "huaweikeygen.h"
-#include "alicekeygen.h"
+#include "WirelessMatcher.h"
 #include <QCompleter>
 #include <QStringList>
 
@@ -54,93 +39,34 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
     completer->setCaseSensitivity(Qt::CaseInsensitive);
     completer->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
     ui->inputSSID->setCompleter(completer);
-    this->calculator = NULL;
     this->router = NULL;
+    this->calculator = NULL;
 
 }
 
 RouterKeygen::~RouterKeygen()
 {
     delete ui;
-    if ( calculator != NULL )
-    {
-        calculator->stop();
-        delete calculator;
-    }
-    delete router;
+    if ( !router )
+    	delete router;
+    if ( calculator->isRunning() )
+    	router->stop();
+    delete calculator;
 }
 
 void RouterKeygen::calculateKeys()
 {//TECOM-AH4222-527A92
    ///router= new WifiNetwork(ui->inputSSID->text(), "00:1F:90:E2:7E:61");
    //router= new WifiNetwork(ui->inputSSID->text());
-    if ( calculator != NULL )
-    {
-        if ( calculator->isRunning() )
-            return;
-    }
-    delete router;
-    router= new WifiNetwork(ui->inputSSID->text(), "00:23:8e:48:e7:d4");
-    if ( !router->isSupported() )
+	if ( router != NULL )
+		delete router;
+    router= matcher.getKeygen(ui->inputSSID->text(), "00:23:8e:48:e7:d4", 0, "");
+    if ( !router  )
     {
         ui->listWidget->insertItem(0,  "Not supported");
         return;
     }
-    switch ( router->getType() )
-    {
-    case WifiNetwork::THOMSON:
-                                this->calculator = new ThomsonKeygen(router , false );
-                                break;
-    case  WifiNetwork::EIRCOM:
-                                this->calculator = new EircomKeygen(router);
-                                break;
-    case  WifiNetwork::VERIZON:
-                                this->calculator = new VerizonKeygen(router);
-                                break;
-    case  WifiNetwork::TECOM:
-                                this->calculator = new TecomKeygen(router);
-                                break;
-    case  WifiNetwork::INFOSTRADA:
-                                this->calculator = new InfostradaKeygen(router);
-                                break;
-    case  WifiNetwork::SKY_V1:
-                                this->calculator = new SkyV1Keygen(router);
-                                break;
-    case WifiNetwork::WLAN2:
-                                this->calculator = new Wlan2Keygen(router);
-                                break;
-    case  WifiNetwork::WLAN4:
-                                this->calculator = new Wlan4Keygen(router);
-                                break;
-    case  WifiNetwork::WLAN6:
-                                this->calculator = new Wlan6Keygen(router);
-                                break;
-    case  WifiNetwork::DISCUS:
-                                this->calculator = new DiscusKeygen(router);
-                                break;
-    case  WifiNetwork::DLINK:
-                                this->calculator = new DlinkKeygen(router);
-                                break;
-    case  WifiNetwork::PIRELLI:
-                                this->calculator = new PirelliKeygen(router);
-                                break;
-    case  WifiNetwork::TELSEY:
-                                this->calculator = new TelseyKeygen(router);
-                                break;
-    case  WifiNetwork::ONO_WEP:
-                                this->calculator = new OnoKeygen(router);
-                                break;
-    case  WifiNetwork::HUAWEI:
-                                this->calculator = new HuaweiKeygen(router);
-                                break;
-    case  WifiNetwork::ALICE:
-                                this->calculator = new AliceKeygen(router);
-                                break;
-    default:    this->calculator = NULL;
-                break;
-    }
-    if ( this->calculator == NULL )
-        return;
+    this->calculator = new KeygenThread(router);
     connect( this->calculator , SIGNAL( finished() ), this , SLOT( getResults() ) );
     this->calculator->start();
 }

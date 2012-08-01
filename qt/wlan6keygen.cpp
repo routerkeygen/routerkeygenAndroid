@@ -18,18 +18,18 @@
  */
 #include "wlan6keygen.h"
 
-Wlan6Keygen::Wlan6Keygen( WifiNetwork * router ) : KeygenThread(router) {}
+Wlan6Keygen::Wlan6Keygen(QString & ssid, QString & mac, int level,
+		QString enc) :
+		Keygen(ssid, mac, level, enc)  {}
 
-void Wlan6Keygen::run(){
-    if ( router == NULL )
-            return;
-    if ( router->getMac() == "" )
+QVector<QString> & Wlan6Keygen::getKeys() {
+    if ( getMacAddress().size() != 12 )
     {
             //TODO
-            return;
+            throw ERROR;
     }
-    QString ssidStr = router->getSSIDsubpart();
-    QString macStr = router->getMac().right(2);
+    QString ssidStr = getSsidName().right(6);
+    QString macStr = getMacAddress().right(2);
     char ssidSubPart[] = {'1', '2','3', '4', '5','6' };/*These values are not revelant.*/
     char bssidLastByte[] = { '6', '6' };
     ssidSubPart[0] = ssidStr.at(0).toAscii();
@@ -77,5 +77,5 @@ void Wlan6Keygen::run(){
             results.append(key.toUpper());
     }
     //TODO:consistency check
-    return;
+    return  results;
 }

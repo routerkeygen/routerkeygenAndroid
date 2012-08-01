@@ -17,17 +17,20 @@
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "tecomkeygen.h"
+#include <QCryptographicHash>
 
-TecomKeygen::TecomKeygen( WifiNetwork * router ) : KeygenThread(router) {}
+TecomKeygen::TecomKeygen(QString & ssid, QString & mac, int level,
+		QString enc) :
+		Keygen(ssid, mac, level, enc) {}
 
-void TecomKeygen::run(){
+QVector<QString> & TecomKeygen::getKeys() {
     QString result;
     result = QString::fromAscii(QCryptographicHash::hash(
-                                router->getSSID().toUpper().toAscii() ,
+                                getSsidName().toUpper().toAscii() ,
                                 QCryptographicHash::Sha1 )
                                       .toHex().data());
     result.truncate(26);
-    if ( stopRequested )
-        return;
     this->results.append(result);
+    return results;
+
 }

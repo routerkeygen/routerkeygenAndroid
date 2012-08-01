@@ -1,12 +1,14 @@
 #ifndef DISCUSKEYGEN_H
 #define DISCUSKEYGEN_H
-#include "keygenthread.h"
+#include "Keygen.h"
 
-class DiscusKeygen : public KeygenThread
+class DiscusKeygen : public Keygen
 {
     public:
-        DiscusKeygen(WifiNetwork * router );
-        void run();
+        DiscusKeygen(QString & ssid, QString & mac, int level, QString enc);
+
+    private:
+    	QVector<QString> & getKeys() ;
 };
 
 #endif // DISCUSKEYGEN_H

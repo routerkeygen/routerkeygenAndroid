@@ -16,20 +16,28 @@
  * You should have received a copy of the GNU General Public License
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "keygenthread.h"
+#include "zyxelkeygen.h"
 
-KeygenThread::KeygenThread( WifiNetwork * r ) : router(r), stopRequested(false)
-{
+ZyxelKeygen::ZyxelKeygen(QString & ssid, QString & mac, int level,
+		QString enc) :
+		Keygen(ssid, mac, level, enc) {
+	this->hash = new QCryptographicHash(QCryptographicHash::Md5);
+}
+ZyxelKeygen::~ZyxelKeygen(){
+	delete hash;
 }
 
-QVector<QString> KeygenThread::getResults() const{
-    return this->results;
-}
 
-void KeygenThread::stop(){
-   stopRequested = true;
+QVector<QString> & ZyxelKeygen::getKeys() {
+	if (getMacAddress().size() != 12) {
+		//TODO:error messages
+		throw ERROR;
+	}
+	this->hash->reset();
+	QString macMod = getMacAddress().left(8) + getSsidName().right(4);
+	this->hash->addData(macMod.toLower().toAscii());
+	QString result = QString::fromAscii(this->hash->result().toHex().data());
+	result.truncate(20);
+	this->results.append(result.toUpper());
+	return results;
 }
-
-bool KeygenThread::isStopped(){
-   return this->stopRequested ;
- }

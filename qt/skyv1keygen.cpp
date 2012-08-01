@@ -17,29 +17,27 @@
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "skyv1keygen.h"
+#include <QCryptographicHash>
 
-SkyV1Keygen::SkyV1Keygen( WifiNetwork * router ) : KeygenThread(router) ,
-                    ALPHABET("ABCDEFGHIJKLMNOPQRSTUVWXYZ") {}
+SkyV1Keygen::SkyV1Keygen(QString & ssid, QString & mac, int level, QString enc) :
+		Keygen(ssid, mac, level, enc) {
+}
+const QString SkyV1Keygen::ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-void SkyV1Keygen::run(){
-    if ( router == NULL)
-        return;
-    if ( router->getMac().size() != 12 )
-    {
-            //TODO:error messages
-            return;
-    }
-   QByteArray hash = QCryptographicHash::hash( router->getMac().toAscii() ,
-                                QCryptographicHash::Md5 );
+QVector<QString> & SkyV1Keygen::getKeys() {
+	if (getMacAddress().size() != 12) {
+		//TODO:error messages
+		throw ERROR;
+	}
+	QByteArray hash = QCryptographicHash::hash(getMacAddress().toAscii(),
+			QCryptographicHash::Md5);
 
-    if ( stopRequested )
-        return;
-    QString key = "";
-    for ( int i = 1 ; i <= 15 ; i += 2 )
-    {
-            unsigned char index = hash[i];
-            index %= 26;
-            key += ALPHABET.at(index);
-    }
-    this->results.append(key);
+	QString key = "";
+	for (int i = 1; i <= 15; i += 2) {
+		unsigned char index = hash[i];
+		index %= 26;
+		key += ALPHABET.at(index);
+	}
+	this->results.append(key);
+	return results;
 }

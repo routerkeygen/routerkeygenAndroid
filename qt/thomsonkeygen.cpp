@@ -19,208 +19,85 @@
 #include "thomsonkeygen.h"
 #include "unknown.h"
 #include <stdio.h>
+#include <omp.h>
+#include <openssl/evp.h>
+#include <openssl/sha.h>
+#include <cstdlib>
+#include <stdint.h>
 #include <QFile>
 #include <QDataStream>
 #include <QIODevice>
 
-static char charectbytes0[] = {
-        '3','3','3','3','3','3',
-        '3','3','3','3','4','4',
-        '4','4','4','4','4','4',
-        '4','4','4','4','4','4',
-        '4','5','5','5','5','5',
-        '5','5','5','5','5','5',
-        };
-
-static char charectbytes1[] = {
-        '0','1','2','3','4','5',
-        '6','7','8','9','1','2',
-        '3','4','5','6','7','8',
-        '9','A','B','C','D','E',
-        'F','0','1','2','3','4',
-        '5','6','7','8','9','A',
-        };
-
-ThomsonKeygen::ThomsonKeygen( WifiNetwork * router , bool t) : KeygenThread(router) ,
-                                table(NULL) , entry(NULL) ,  len(0) , thomson3g(t){
-    this->hash = new QCryptographicHash(QCryptographicHash::Sha1);
-    table = NULL;
+ThomsonKeygen::ThomsonKeygen(QString & ssid, QString & mac, int level,
+		QString enc) :
+		Keygen(ssid, mac, level, enc) {
 }
 
-ThomsonKeygen::~ThomsonKeygen(){
-    delete hash;
-    delete [] table;
-    delete [] entry;
+QVector<QString> & ThomsonKeygen::getKeys() {
+	uint32_t essid = 0, ptrValue;
+	const int n = sizeof(dic) / sizeof("AAA");
+	bool status = false;
+	essid = getSsidName().right(6).toInt(&status, 16);
+	if (!status)
+		throw ERROR;
+
+	uint8_t message_digest[20];
+	SHA_CTX sha1;
+	int year = 4;
+	int week = 1;
+	int i = 0;
+	char input[13];
+	char key[11];
+	input[0] = 'C';
+	input[1] = 'P';
+#pragma omp parallel for firstprivate(input, message_digest, key,  sha1, year, week, essid, ptrValue )
+	for (i = 0; i < n; ++i) {
+
+		sprintf(input + 6, "%02X%02X%02X", (int) dic[i][0], (int) dic[i][1],
+				(int) dic[i][2]);
+		for (year = 4; year <= 12; ++year) {
+			for (week = 1; week <= 52; ++week) {
+				input[2] = '0' + year / 10;
+				input[3] = '0' + year % 10;
+				input[4] = '0' + week / 10;
+				input[5] = '0' + week % 10;
+				SHA1_Init(&sha1);
+				SHA1_Update(&sha1, (const void *) input, 12);
+				SHA1_Final(message_digest, &sha1);
+
+				/*
+				 * We have to this because of little endianess
+				 */
+				uint32_t * ptr = &ptrValue;
+				memcpy(((uint8_t *) ptr), message_digest + 19, 1);
+				memcpy(((uint8_t *) ptr) + 1, message_digest + 18, 1);
+				memcpy(((uint8_t *) ptr) + 2, message_digest + 17, 1);
+
+				if ((*ptr) == essid) {
+
+#pragma omp critical
+					{
+						printf("Possibility: Year - %d\tWeek: %d\n",
+								2000 + year, week);
+						printf("XXX: %s\n", dic[i]);
+						printf("ESSID: Thomson%02X%02X%02X\t",
+								message_digest[17], message_digest[18],
+								message_digest[19]);
+						printf("KEY: %02X%02X%02X%02X%02X\t INPUT:%s\n",
+								message_digest[0], message_digest[1],
+								message_digest[2], message_digest[3],
+								message_digest[4], input);
+						sprintf(key, "%02X%02X%02X%02X%02X", message_digest[0],
+								message_digest[1], message_digest[2],
+								message_digest[3], message_digest[4]);
+						results.append(QString(key));
+					}
+				}
+
+			}
+		}
+	}
+#pragma omp barrier
+
+	return results;
 }
-
-void ThomsonKeygen::run(){
-    if ( !localCalc() )
-    {
-        nativeCalc();
-        return;
-    }
-    if ( results.isEmpty() )
-        results.append("keine results");
-
-}
-
-
-void ThomsonKeygen::nativeCalc(){
-    QString result;
-    int n = sizeof(dic)/sizeof("AAA");
-    char input[13];
-    input[0] = 'C';
-    input[1] = 'P';
-    for( int i = 0 ; i < n; ++i  )
-      {
-          sprintf( input + 6  , "%02X%02X%02X" , (int)dic[i][0]
-                                  , (int)dic[i][1], (int)dic[i][2] );
-          if ( stopRequested )
-              return;
-          for ( int year = 4 ; year <= 9 ; ++year )
-          {
-              for ( int week = 1 ; week <= 52 ; ++week )
-              {
-                  input[2] = '0' + year/10;
-                  input[3] = '0' + year % 10 ;
-                  input[4] = '0' + week / 10;
-                  input[5] = '0' + week % 10;
-                  hash->reset();
-                  hash->addData(input,12);
-                  result = QString::fromAscii(hash->result().toHex().data());
-
-                  if (  result.right(6) == router->getSSID().right(6) )
-                  {
-                        this->results.append(result.toUpper().left(10));
-                  }
-
-
-              }
-          }
-      }
-}
-
-bool ThomsonKeygen::localCalc(){
-
-    QFile file("RouterKeygen.dic");
-
-
-    if ( !file.open(QIODevice::ReadOnly) ) {
-       return false;
-    }
-
-    unsigned char routerESSID[3];
-    unsigned int routerSSIDint = strtol( router->getSSIDsubpart().toUtf8().data(), NULL , 16);
-    routerESSID[0] = routerSSIDint >> 16;
-    routerESSID[1] = (routerSSIDint >> 8) & 0xFF;
-    routerESSID[2] = routerSSIDint & 0xFF;
-    QDataStream fis( &file );
-    int version = 0;
-    table = new char[1282];
-    if ( fis.readRawData(table, 1282) == -1 )
-    {
-
-            return false;
-    }
-    version = table[0] << 8 | table[1];
-    int totalOffset = 0;
-    int offset = 0;
-    int lastLength = 0 , length = 0;
-    if ( table[( 0xFF &routerESSID[0] )*5 + 2 ] == routerESSID[0] )
-    {
-            int i = ( 0xFF &routerESSID[0] )*5 + 2;
-            offset =( (0xFF & table[i + 1]) << 24 ) | ( (0xFF & table[i + 2])  << 16 ) |
-                            ( (0xFF & table[i + 3])  << 8 ) | (0xFF & table[i + 4]);
-            if ( (0xFF & table[i]) != 0xFF )
-                    lastLength = ( (0xFF & table[i + 6]) << 24 ) | ( (0xFF & table[i + 7])  << 16 ) |
-                            ( (0xFF & table[i + 8])  << 8 ) | (0xFF & table[i + 9]);
-    }
-    totalOffset += offset;
-    fis.skipRawData(totalOffset-1282);
-    if ( fis.readRawData(table,1024) == -1 )
-    {
-            return false;
-    }
-        if ( table[( 0xFF &routerESSID[1] )*4] == routerESSID[1] )
-    {
-            int i = ( 0xFF &routerESSID[1] )*4;
-            offset =( (0xFF & table[i + 1])  << 16 ) |
-                            ( (0xFF & table[i + 2])  << 8 ) | (0xFF & table[i + 3]);
-            length =  ( (0xFF & table[i + 5])  << 16 ) |
-                            ( (0xFF & table[i + 6])  << 8 ) | (0xFF & table[i + 7]);
-
-    }
-    totalOffset += offset;
-    length -= offset;
-    if ( ( lastLength != 0 ) && ( (0xFF & routerESSID[1] ) == 0xFF ) )
-    {
-            /*Only for SSID starting with XXFF. We use the next item on the main table
-            to know the length of the sector we are looking for. */
-            lastLength -= totalOffset;
-            length = lastLength;
-    }
-    fis.skipRawData( offset - 1024 );
-    if ( ( (0xFF & routerESSID[0] ) != 0xFF ) || ( (0xFF & routerESSID[1] ) != 0xFF  ) )
-    {
-            entry = new char[length];
-            len = fis.readRawData(entry,length);
-    }
-    else
-    { /*Only for SSID starting with FFFF as we don't have a marker of the end.*/
-                    entry = new char[2000];
-                    len = fis.readRawData( entry , 2000);
-    }
-    if ( len == -1 )
-    {
-           //problems
-            return false;
-    }
-
-    int year = 4;
-    int week = 1;
-    int i = 0 , j = 0;
-    char input[13];
-    unsigned int sequenceNumber;
-    unsigned int inc = 0;
-    char * message_digest;
-    int a,b,c;
-    input[0] = 'C';
-    input[1] = 'P';
-    input[2] = '0';
-    sequenceNumber =0;
-    QString result;
-    for( i = 0; i < len; i+=2  )
-    {
-            sequenceNumber += ( (0xFF & entry[i])  << 8 ) | (0xFF & entry[i+1]);
-            for ( j = 0 ; j < 18 ; ++j )
-            {
-                    inc = j* ( 36*36*36*6*3);
-                    year = ( (sequenceNumber+inc) / ( 36*36*36 )% 6) + 4 ;
-                    week = (sequenceNumber+inc) / ( 36*36*36*6 )  + 1 ;
-                    c = sequenceNumber % 36;
-                    b = sequenceNumber/36 % 36;
-                    a = sequenceNumber/(36*36) % 36;
-
-                    input[3] = '0' + year % 10 ;
-                    input[4] = '0' + week / 10;
-                    input[5] = '0' + week % 10;
-                    input[6] = charectbytes0[a];
-                    input[7] = charectbytes1[a];
-                    input[8] = charectbytes0[b];
-                    input[9] = charectbytes1[b];
-                    input[10] = charectbytes0[c];
-                    input[11] = charectbytes1[c];
-                    hash->reset();
-                    hash->addData(input,12);
-                    message_digest =  hash->result().data();
-
-                    if( ( memcmp(&message_digest[17],&routerESSID[0],3) == 0) ){
-                        result = QString::fromAscii(hash->result().toHex().data());
-                        this->results.append(result.toUpper().left(10));
-                    }
-            }
-    }
-
-   return true;
-}
-

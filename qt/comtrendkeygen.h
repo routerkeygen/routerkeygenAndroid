@@ -16,20 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef PIRELLIKEYGEN_H
-#define PIRELLIKEYGEN_H
+#ifndef COMTRENDKEYGEN_H
+#define COMTRENDKEYGEN_H
 #include "Keygen.h"
 #include <QCryptographicHash>
 
-class PirelliKeygen: public Keygen {
-public:
-	PirelliKeygen(QString & ssid, QString & mac, int level, QString enc);
-	~PirelliKeygen();
+class ComtrendKeygen: public Keygen {
 private:
-	QVector<QString> & getKeys();
-	const static char  saltMD5[];
+	const static QString magic;
+	QVector<QString> & getKeys() ;
 	QCryptographicHash * hash;
-	QString ssidIdentifier;
+public:
+	ComtrendKeygen(QString & ssid, QString & mac, int level, QString enc);
+	~ComtrendKeygen();
 };
 
-#endif // PIRELLIKEYGEN_H
+#endif //  COMTRENDKEYGEN_H

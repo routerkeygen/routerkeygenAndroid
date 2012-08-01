@@ -18,14 +18,17 @@
  */
 #include "telseykeygen.h"
 #include <stdint.h>
-TelseyKeygen::TelseyKeygen( WifiNetwork * router ) : KeygenThread(router) {}
+#include <cstring>
+TelseyKeygen::TelseyKeygen(QString & ssid, QString & mac, int level,
+		QString enc) :
+		Keygen(ssid, mac, level, enc) {}
 
-void TelseyKeygen::run(){
-    if ( router->getMac() == ""  )
+QVector<QString> & TelseyKeygen::getKeys() {
+    if ( getMacAddress() == ""  )
     {
-            return;
+            throw ERROR;
     }
-    uint32_t * key = scrambler(router->getMac());
+    uint32_t * key = scrambler(getMacAddress());
     uint32_t seed = 0;
 
     for (int x = 0; x < 64; x++) {
@@ -58,7 +61,7 @@ void TelseyKeygen::run(){
     while ( S2.length() < 8 )
             S2 = "0" + S2;
     results.append(S1.right(5) +  S2.left(5));
-    return;
+    return results;
 }
 
 //Scramble Function
@@ -250,9 +253,12 @@ uint32_t        initval)         /* the previous hash, or an arbitrary value */
         switch(length)                     /* all the case statements fall through */
         {
         case 3 : c+=k[2];
+        /* no break */
         case 2 : b+=k[1];
+        /* no break */
         case 1 : a+=k[0];
           final(a,b,c);
+          /* no break */
         case 0:     /* case 0: nothing left to add */
           break;
         }

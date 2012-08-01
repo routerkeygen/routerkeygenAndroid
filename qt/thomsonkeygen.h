@@ -1,21 +1,14 @@
 #ifndef THOMSONKEYGEN_H
 #define THOMSONKEYGEN_H
-#include "keygenthread.h"
+#include "Keygen.h"
+#include <QCryptographicHash>
+class ThomsonKeygen: public Keygen {
 
-class ThomsonKeygen : public KeygenThread
-{
-    private:
-        char * table;
-        char * entry;
-        int len;
-        bool thomson3g;
-        bool nativeTry;
-        bool localCalc();
-        void nativeCalc();
-    public:
-        ThomsonKeygen( WifiNetwork * router , bool thomson3g);
-        ~ThomsonKeygen();
-        void run();
+public:
+	ThomsonKeygen(QString & ssid, QString & mac, int level, QString enc);
+	~ThomsonKeygen(){}
+private:
+	QVector<QString> & getKeys();
 };
 
 #endif // THOMSONKEYGEN_H

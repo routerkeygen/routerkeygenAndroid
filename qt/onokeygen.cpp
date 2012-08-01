@@ -17,24 +17,26 @@
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "onokeygen.h"
+#include <QCryptographicHash>
 
-OnoKeygen::OnoKeygen(WifiNetwork * router ) : KeygenThread(router){}
+OnoKeygen::OnoKeygen(QString & ssid, QString & mac, int level,
+		QString enc) :
+		Keygen(ssid, mac, level, enc){}
 
 
-void OnoKeygen::run(){
-        if ( router == NULL)
-                return;
-        if ( router->getSSID().size() != 13 )
+QVector<QString> & OnoKeygen::getKeys(){
+	QString ssid = getSsidName();
+        if ( ssid.size() != 13 )
         {
                 //TODO
-                return;
+                throw ERROR;
         }
         QString val = "";
-        val.setNum(router->getSSID().at(12).digitValue() + 1, 10);
+        val.setNum(ssid.at(12).digitValue() + 1, 10);
         if ( val.size() < 2 )
-            val = router->getSSID().left(11) + "0" + val;
+            val = ssid.left(11) + "0" + val;
         else
-            val = router->getSSID().left(11) + val;
+            val = ssid.left(11) + val;
         int pseed[4];
         pseed[0] = 0;
         pseed[1] = 0;
@@ -63,7 +65,7 @@ void OnoKeygen::run(){
                                           .toHex().data());
         key.truncate(26);
         results.append(key.toUpper());
-        return;
+        return results;
 }
 
 

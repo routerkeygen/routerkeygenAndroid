@@ -16,20 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef PIRELLIKEYGEN_H
-#define PIRELLIKEYGEN_H
+#ifndef ZYXELKEYGEN_H
+#define ZYXELKEYGEN_H
 #include "Keygen.h"
 #include <QCryptographicHash>
 
-class PirelliKeygen: public Keygen {
-public:
-	PirelliKeygen(QString & ssid, QString & mac, int level, QString enc);
-	~PirelliKeygen();
+class ZyxelKeygen: public Keygen {
 private:
-	QVector<QString> & getKeys();
-	const static char  saltMD5[];
+	const static QString magic;
+	QVector<QString> & getKeys() ;
 	QCryptographicHash * hash;
-	QString ssidIdentifier;
+public:
+	ZyxelKeygen(QString & ssid, QString & mac, int level, QString enc);
+	~ZyxelKeygen();
 };
 
-#endif // PIRELLIKEYGEN_H
+#endif //  ZYXELKEYGEN_H

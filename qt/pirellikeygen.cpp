@@ -18,23 +18,26 @@
  */
 #include "pirellikeygen.h"
 
-PirelliKeygen::PirelliKeygen(WifiNetwork * router ) : KeygenThread(router){
+PirelliKeygen::PirelliKeygen(QString & ssid, QString & mac, int level, QString enc) : Keygen(ssid, mac, level, enc){
     this->hash = new QCryptographicHash(QCryptographicHash::Md5);
+	ssidIdentifier = ssid.right(12);
 }
 
-void PirelliKeygen::run(){
-    char saltMD5[] = {
-                            0x22, 0x33, 0x11, 0x34, 0x02,
-                            0x81, 0xFA, 0x22, 0x11, 0x41,
-                            0x68, 0x11,	0x12, 0x01, 0x05,
-                            0x22, 0x71, 0x42, 0x10, 0x66 };
-    bool status;
+PirelliKeygen::~PirelliKeygen(){
+	delete hash;
+}
+const char PirelliKeygen::saltMD5[] = { 0x22, 0x33, 0x11, 0x34, 0x02, 0x81, 0xFA, 0x22,
+			0x11, 0x41, 0x68, 0x11, 0x12, 0x01, 0x05, 0x22, 0x71, 0x42, 0x10,
+			0x66 };
+
+QVector<QString> & PirelliKeygen::getKeys(){
+    bool status = false;
     char macBytes[6];
     for (int i = 0; i < 12; i += 2)
-            macBytes[i / 2] = (router->getSSIDsubpart().mid(i,1).toInt(&status, 16) << 4)
-                            + router->getSSIDsubpart().mid(i + 1,1).toInt(&status, 16);
+            macBytes[i / 2] = (ssidIdentifier.mid(i,1).toInt(&status, 16) << 4)
+                            + ssidIdentifier.mid(i + 1,1).toInt(&status, 16);
     if ( !status )
-        return;
+        return results;//TODO
     hash->reset();
     hash->addData(macBytes,6);
     hash->addData(saltMD5 , 20);
@@ -50,4 +53,5 @@ void PirelliKeygen::run(){
             if ( key[i] >= 0x0A )
                     key[i] += 0x57;
     results.append(QString::fromAscii( QByteArray(key,5).toHex().data() ) );
+    return results;
 }

@@ -1,8 +1,9 @@
 #ifndef ROUTERKEYGEN_H
 #define ROUTERKEYGEN_H
-#include "keygenthread.h"
-#include "wifinetwork.h"
+#include "Keygen.h"
+#include "WirelessMatcher.h"
 #include <QMainWindow>
+#include "KeygenThread.h"
 
 namespace Ui {
     class RouterKeygen;
@@ -20,9 +21,10 @@ public slots:
     void getResults();
 private:
     Ui::RouterKeygen *ui;
-    KeygenThread * calculator;
     QVector<QString> listKeys;
-    WifiNetwork * router;
+    WirelessMatcher matcher;
+    Keygen * router;
+    KeygenThread * calculator;
 };
 
 #endif // ROUTERKEYGEN_H

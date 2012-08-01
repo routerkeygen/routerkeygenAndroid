@@ -16,21 +16,31 @@
  * You should have received a copy of the GNU General Public License
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "discuskeygen.h"
+#include "comtrendkeygen.h"
 
-DiscusKeygen::DiscusKeygen(QString & ssid, QString & mac, int level,
+ComtrendKeygen::ComtrendKeygen(QString & ssid, QString & mac, int level,
 		QString enc) :
 		Keygen(ssid, mac, level, enc) {
+	this->hash = new QCryptographicHash(QCryptographicHash::Md5);
+}
+ComtrendKeygen::~ComtrendKeygen(){
+	delete hash;
 }
 
-QVector<QString> & DiscusKeygen::getKeys() {
-	bool status = false;
-	unsigned int routerSSIDint = getSsidName().right(6).toInt(&status, 16);
-	if (!status)
+const QString ComtrendKeygen::magic = "bcgbghgg";
+
+QVector<QString> & ComtrendKeygen::getKeys() {
+	if (getMacAddress().size() != 12) {
+		//TODO:error messages
 		throw ERROR;
-	QString result;
-	result.setNum((routerSSIDint - 0xD0EC31) >> 2);
-	result = "YW0" + result;
-	results.append(result);
+	}
+	this->hash->reset();
+	this->hash->addData(magic.toAscii());
+	QString macMod = getMacAddress().left(8) + getSsidName().right(4);
+	this->hash->addData(macMod.toUpper().toAscii());
+	this->hash->addData(getMacAddress().toAscii());
+	QString result = QString::fromAscii(this->hash->result().toHex().data());
+	result.truncate(20);
+	this->results.append(result);
 	return results;
 }
