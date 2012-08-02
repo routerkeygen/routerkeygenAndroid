@@ -34,10 +34,10 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
     QStringList wordList;
     wordList << "TECOM-AH4222-" << "TECOM-AH4021-" << "Thomson" << "WLAN" << "WLAN_"
             << "eircom" << "InfostradaWiFi-" << "SKY" << "DLink-" << "WiFi" << "YaCom"
-            << "Discus--" << "FASTWEB-1-";
+          << "Discus--" << "FASTWEB-1-";
     QCompleter *completer = new QCompleter(wordList, this);
     completer->setCaseSensitivity(Qt::CaseInsensitive);
-    completer->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
+    completer->setCompletionMode(QCompleter::PopupCompletion);
     ui->inputSSID->setCompleter(completer);
     this->router = NULL;
     this->calculator = NULL;
