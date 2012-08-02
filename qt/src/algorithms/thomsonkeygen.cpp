@@ -73,17 +73,6 @@ public:
 					memcpy(((uint8_t *) currentSSID) + 2, message_digest + 17, 1);
 
 					if ((*currentSSID) == ssid) {
-
-						printf("Possibility: Year - %d\tWeek: %d\n",
-								2000 + year, week);
-						printf("XXX: %s\n", dic[i]);
-						printf("ESSID: Thomson%02X%02X%02X\t",
-								message_digest[17], message_digest[18],
-								message_digest[19]);
-						printf("KEY: %02X%02X%02X%02X%02X\t INPUT:%s\n",
-								message_digest[0], message_digest[1],
-								message_digest[2], message_digest[3],
-								message_digest[4], input);
 						sprintf(key, "%02X%02X%02X%02X%02X", message_digest[0],
 								message_digest[1], message_digest[2],
 								message_digest[3], message_digest[4]);
