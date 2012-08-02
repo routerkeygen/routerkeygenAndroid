@@ -37,6 +37,7 @@
 		</buildTargets>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
+	<storageModule moduleId="refreshScope"/>
 	<storageModule moduleId="org.eclipse.cdt.core.pathentry">
 		<pathentry base-path="/usr/share/qt4/include" include="" kind="inc" path="" system="true"/>
 		<pathentry base-path="/usr/share/qt4/include" include="Qt" kind="inc" path="" system="true"/>
@@ -59,7 +60,13 @@
 		<pathentry base-path="/usr/share/qt4/include" include="QtScriptTools" kind="inc" path="" system="true"/>
 		<pathentry base-path="/usr/share/qt4/include" include="QtTest" kind="inc" path="" system="true"/>
 		<pathentry include="/usr/include" kind="inc" path="" system="true"/>
-		<pathentry include="/usr/include/c++/4.6.3" kind="inc" path="" system="true"/>
+		<pathentry include="/usr/include/c++/4.6" kind="inc" path="" system="true"/>
+		<pathentry include="/usr/local/include" kind="inc" path="" system="true"/>
+		<pathentry include="/usr/include/c++/4.6/backward" kind="inc" path="" system="true"/>
+		<pathentry include="/usr/include/c++/4.6/x86_64-linux-gnu" kind="inc" path="" system="true"/>
+		<pathentry include="/usr/include/x86_64-linux-gnu" kind="inc" path="" system="true"/>
+		<pathentry include="/usr/lib/gcc/x86_64-linux-gnu/4.6/include" kind="inc" path="" system="true"/>
+		<pathentry include="/usr/lib/gcc/x86_64-linux-gnu/4.6/include-fixed" kind="inc" path="" system="true"/>
 		<pathentry kind="src" path=""/>
 		<pathentry kind="out" path=""/>
 	</storageModule>

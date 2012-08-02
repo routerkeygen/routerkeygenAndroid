@@ -6,57 +6,59 @@ QT += core \
     xml
 TARGET = RouterKeygen
 TEMPLATE = app
-SOURCES += KeygenThread.cpp \
-    WirelessMatcher.cpp \
-    zyxelkeygen.cpp \
-    comtrendkeygen.cpp \
-    keygen.cpp \
-    alicehandler.cpp \
-    alicemagicinfo.cpp \
-    discuskeygen.cpp \
-    wlan6keygen.cpp \
-    wlan2keygen.cpp \
-    verizonkeygen.cpp \
-    thomsonkeygen.cpp \
-    telseykeygen.cpp \
-    tecomkeygen.cpp \
-    skyv1keygen.cpp \
-    sha256.cpp \
-    pirellikeygen.cpp \
-    onokeygen.cpp \
-    infostradakeygen.cpp \
-    huaweikeygen.cpp \
-    eircomkeygen.cpp \
-    dlinkkeygen.cpp \
-    alicekeygen.cpp \
-    division.c\
-    routerkeygen.cpp \
-    main.cpp
-HEADERS += KeygenThread.h \
-    WirelessMatcher.h \
-    zyxelkeygen.h \
-    comtrendkeygen.h \
-    routerkeygen.h \
-    alicehandler.h \
-    alicemagicinfo.h \
-    discuskeygen.h \
-    wlan6keygen.h \
-    wlan2keygen.h \
-    verizonkeygen.h \
-    thomsonkeygen.h \
-    unknown.h \
-    telseykeygen.h \
-    tecomkeygen.h \
-    skyv1keygen.h \
-    sha256.h \
-    pirellikeygen.h \
-    onokeygen.h \
-    infostradakeygen.h \
-    huaweikeygen.h \
-    eircomkeygen.h \
-    dlinkkeygen.h \
-    alicekeygen.h
-FORMS += routerkeygen.ui
+SOURCES += src/algorithms/dlinkkeygen.cpp \
+    src/algorithms/pirellikeygen.cpp \
+    src/algorithms/wlan2keygen.cpp \
+    src/algorithms/wlan6keygen.cpp \
+    src/algorithms/zyxelkeygen.cpp \
+    src/algorithms/skyv1keygen.cpp \
+    src/algorithms/tecomkeygen.cpp \
+    src/algorithms/telseykeygen.cpp \
+    src/algorithms/thomsonkeygen.cpp \
+    src/algorithms/verizonkeygen.cpp \
+    src/algorithms/eircomkeygen.cpp \
+    src/algorithms/huaweikeygen.cpp \
+    src/algorithms/infostradakeygen.cpp \
+    src/algorithms/keygen.cpp \
+    src/algorithms/onokeygen.cpp \
+    src/algorithms/alicekeygen.cpp \
+    src/algorithms/comtrendkeygen.cpp \
+    src/algorithms/discuskeygen.cpp \
+    src/KeygenThread.cpp \
+    src/WirelessMatcher.cpp \
+    src/alicehandler.cpp \
+    src/alicemagicinfo.cpp \
+    src/division.c \
+    src/main.cpp \
+    src/routerkeygen.cpp \
+    src/sha256.cpp
+HEADERS += src/include/onokeygen.h \
+    src/include/sha256.h \
+    src/include/Keygen.h \
+    src/include/KeygenThread.h \
+    src/include/WirelessMatcher.h \
+    src/include/alicehandler.h \
+    src/include/alicemagicinfo.h \
+    src/include/routerkeygen.h \
+    src/include/alicekeygen.h \
+    src/include/comtrendkeygen.h \
+    src/include/discuskeygen.h \
+    src/include/dlinkkeygen.h \
+    src/include/eircomkeygen.h \
+    src/include/huaweikeygen.h \
+    src/include/infostradakeygen.h \
+    src/include/pirellikeygen.h \
+    src/include/skyv1keygen.h \
+    src/include/tecomkeygen.h \
+    src/include/telseykeygen.h \
+    src/include/thomsonkeygen.h \
+    src/include/unknown.h \
+    src/include/verizonkeygen.h \
+    src/include/wlan2keygen.h \
+    src/include/wlan6keygen.h \
+    src/include/zyxelkeygen.h
+INCLUDEPATH += src/include/
+FORMS += forms/routerkeygen.ui
 LIBS += -lcrypto
 symbian { 
     TARGET.UID3 = 0xed94ef91
