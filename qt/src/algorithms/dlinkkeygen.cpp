@@ -31,7 +31,7 @@ QVector<QString> & DlinkKeygen::getKeys() {
     {
         throw ERROR; //TODO:
     }
-    char key[21];
+    char key[22];
     key[0]=mac.at(11).toAscii();
     key[1]=mac.at(0).toAscii();
 
