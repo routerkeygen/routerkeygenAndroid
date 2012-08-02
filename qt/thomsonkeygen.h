@@ -9,6 +9,7 @@ public:
 	~ThomsonKeygen(){}
 private:
 	QVector<QString> & getKeys();
+
 };
 
 #endif // THOMSONKEYGEN_H

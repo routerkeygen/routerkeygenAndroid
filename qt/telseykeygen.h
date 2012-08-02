@@ -1,6 +1,7 @@
 #ifndef TELSEYKEYGEN_H
 #define TELSEYKEYGEN_H
 #include "Keygen.h"
+#include <cstring>
 #include <stdint.h>
 
 class TelseyKeygen: public Keygen {

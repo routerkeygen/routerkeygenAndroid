@@ -57,8 +57,7 @@ HEADERS += KeygenThread.h \
     dlinkkeygen.h \
     alicekeygen.h
 FORMS += routerkeygen.ui
-QMAKE_CXXFLAGS += -fopenmp
-LIBS += -fopenmp -lcrypto
+LIBS += -lcrypto
 symbian { 
     TARGET.UID3 = 0xed94ef91
     QMAKE_CXXFLAGS.GCCE -= -fvisibility-inlines-hidden
