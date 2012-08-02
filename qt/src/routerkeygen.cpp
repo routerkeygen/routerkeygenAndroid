@@ -68,6 +68,7 @@ void RouterKeygen::calculateKeys()
     }
     this->calculator = new KeygenThread(router);
     connect( this->calculator , SIGNAL( finished() ), this , SLOT( getResults() ) );
+    ui->calcButton->setEnabled(false);
     this->calculator->start();
 }
 
@@ -75,6 +76,7 @@ void RouterKeygen::calculateKeys()
 void RouterKeygen::getResults()
 {
     ui->listWidget->clear();
+    ui->calcButton->setEnabled(true);
     listKeys = this->calculator->getResults();
     if ( listKeys.isEmpty() )
     {
