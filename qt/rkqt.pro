@@ -3,10 +3,12 @@
 # -------------------------------------------------
 QT += core \
     gui \
-    xml
+    xml \
+    dbus
 TARGET = RouterKeygen
 TEMPLATE = app
-SOURCES += src/algorithms/dlinkkeygen.cpp \
+SOURCES += src/wifi/QWifiManager.cpp \
+    src/algorithms/dlinkkeygen.cpp \
     src/algorithms/pirellikeygen.cpp \
     src/algorithms/wlan2keygen.cpp \
     src/algorithms/wlan6keygen.cpp \
@@ -32,7 +34,9 @@ SOURCES += src/algorithms/dlinkkeygen.cpp \
     src/main.cpp \
     src/routerkeygen.cpp \
     src/sha256.cpp
-HEADERS += src/include/onokeygen.h \
+HEADERS += src/include/QScanResult.h \
+    src/include/QWifiManager.h \
+    src/include/onokeygen.h \
     src/include/sha256.h \
     src/include/Keygen.h \
     src/include/KeygenThread.h \
@@ -57,7 +61,8 @@ HEADERS += src/include/onokeygen.h \
     src/include/wlan2keygen.h \
     src/include/wlan6keygen.h \
     src/include/zyxelkeygen.h
-INCLUDEPATH += src/include/
+INCLUDEPATH += src/include/ \
+    /usr/include/NetworkManager
 FORMS += forms/routerkeygen.ui
 LIBS += -lcrypto
 symbian { 
