@@ -63,8 +63,8 @@ void QWifiManager::startScan() {
 				return;
 			}
 
+			clearPreviousScanResults();
 			foreach (const QDBusObjectPath& connection, accessPoints.value()) {
-				clearPreviousScanResults();
 				qDebug() << connection.path();
 				QDBusInterface acessPoint(NM_DBUS_SERVICE, connection.path(),
 						NM_DBUS_INTERFACE_ACCESS_POINT,

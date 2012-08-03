@@ -4,6 +4,7 @@
 #include "WirelessMatcher.h"
 #include <QMainWindow>
 #include "KeygenThread.h"
+#include "QWifiManager.h"
 
 namespace Ui {
     class RouterKeygen;
@@ -17,7 +18,8 @@ public:
     explicit RouterKeygen(QWidget *parent = 0);
     ~RouterKeygen();
 public slots:
-    void calculateKeys();
+    void refreshNetworks();
+    void scanFinished(int);
     void getResults();
 private:
     Ui::RouterKeygen *ui;
@@ -25,6 +27,7 @@ private:
     WirelessMatcher matcher;
     Keygen * router;
     KeygenThread * calculator;
+    QWifiManager manager;
 };
 
 #endif // ROUTERKEYGEN_H

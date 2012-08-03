@@ -22,15 +22,19 @@
 #include "WirelessMatcher.h"
 #include <QCompleter>
 #include <QStringList>
+#include "QWifiManager.h"
 
 RouterKeygen::RouterKeygen(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::RouterKeygen)
 {
     ui->setupUi(this);
-    connect( ui->calcButton , SIGNAL( clicked() ), this , SLOT( calculateKeys() ) );
+    connect( ui->refreshScan , SIGNAL( clicked() ), this , SLOT( refreshNetworks() ) );
+    connect( &manager , SIGNAL( scanFinished(int) ), this , SLOT( scanFinished(int) ) );
+    manager.startScan();
     this->setWindowIcon(QIcon(":/images/icon.png"));
     /*Auto-Complete!*/
+#if 0
     QStringList wordList;
     wordList << "TECOM-AH4222-" << "TECOM-AH4021-" << "Thomson" << "WLAN" << "WLAN_"
             << "eircom" << "InfostradaWiFi-" << "SKY" << "DLink-" << "WiFi" << "YaCom"
@@ -39,6 +43,7 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
     completer->setCaseSensitivity(Qt::CaseInsensitive);
     completer->setCompletionMode(QCompleter::PopupCompletion);
     ui->inputSSID->setCompleter(completer);
+#endif
     this->router = NULL;
     this->calculator = NULL;
 
@@ -53,8 +58,8 @@ RouterKeygen::~RouterKeygen()
     	router->stop();
     delete calculator;
 }
-
-void RouterKeygen::calculateKeys()
+#if 0
+void RouterKeygen::refreshNetworks()
 {//TECOM-AH4222-527A92
    ///router= new WifiNetwork(ui->inputSSID->text(), "00:1F:90:E2:7E:61");
    //router= new WifiNetwork(ui->inputSSID->text());
@@ -71,11 +76,33 @@ void RouterKeygen::calculateKeys()
     ui->calcButton->setEnabled(false);
     this->calculator->start();
 }
+#endif
+void RouterKeygen::refreshNetworks()
+{
+    ui->refreshScan->setEnabled(false);
+    manager.startScan();
+}
 
+void  RouterKeygen::scanFinished(int code){
+	ui->refreshScan->setEnabled(true);
+	if ( code == QWifiManager::SCAN_OK ){
+	    ui->networkslist->clear();
+    	QVector<QScanResult*> networks = manager.getScanResults();
+    	ui->networkslist->setRowCount(networks.size());
+    	ui->networkslist->setColumnCount(2);
+        for( int i = 0; i < networks.size(); ++i){
+            ui->networkslist->setItem(i, 0, new QTableWidgetItem(networks.at(i)->ssid));
+            ui->networkslist->setItem(i, 1, new QTableWidgetItem(networks.at(i)->bssid));
+        }
+	}
+	else
+		ui->statusBar->showMessage("Error");
+
+}
 
 void RouterKeygen::getResults()
 {
-    ui->listWidget->clear();
+  /*  ui->listWidget->clear();
     ui->calcButton->setEnabled(true);
     listKeys = this->calculator->getResults();
     if ( listKeys.isEmpty() )
@@ -84,7 +111,11 @@ void RouterKeygen::getResults()
     }
     for ( int i = 0 ; i < listKeys.size() ;++i)
         ui->listWidget->insertItem(0,listKeys.at(i) );
+    manager.startScan();
+    QVector<QScanResult*> networks = manager.getScanResults();
+    foreach ( QScanResult * scanResult , networks)
+    	ui->listWidget->insertItem(0, scanResult->ssid );
     delete calculator;
     calculator = NULL;
-
+*/
 }
