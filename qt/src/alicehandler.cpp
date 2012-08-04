@@ -28,7 +28,7 @@ QMap<QString, QVector<AliceMagicInfo *> *> AliceHandler::getSupportedAlice() {
 	return this->supportedAlice;
 }
 
-bool AliceHandler::startElement(const QString & uri, const QString & localName,
+bool AliceHandler::startElement(const QString & , const QString & ,
 		const QString & qName, const QXmlAttributes &attributes) {
 	int magic[2];
 	QString serial;

@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>alice/alice.xml</file>
         <file>images/icon.png</file>
+        <file>images/loading.gif</file>
     </qresource>
 </RCC>
