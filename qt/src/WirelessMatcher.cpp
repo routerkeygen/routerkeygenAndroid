@@ -25,6 +25,12 @@
 #include "onokeygen.h"
 #include "huaweikeygen.h"
 #include "alicekeygen.h"
+#include "ConnKeygen.h"
+#include "AndaredKeygen.h"
+#include "MegaredKeygen.h"
+#include "OteKeygen.h"
+#include "PBSKeygen.h"
+#include "EasyBoxKeygen.h"
 
 WirelessMatcher::WirelessMatcher() {
 	AliceHandler aliceReader;
@@ -70,19 +76,15 @@ Keygen * WirelessMatcher::getKeygen(QString ssid, QString mac, int level,
 	/*
 	 * This test MUST be done before the Thomson one because some SSID are
 	 * common and this test checks for the MAC addresses
-	 *
-	 if (ssid.count(QRegExp("(Arcor|EasyBox|Vodafone)(-| )[0-9a-fA-F]{6}")) == 1
-	 && (mac.startsWith("00:12:BF") || mac.startsWith("00:1A:2A")
-	 || mac.startsWith("00:1D:19")
-	 || mac.startsWith("00:23:08")
-	 || mac.startsWith("00:26:4D")
-	 || mac.startsWith("50:7E:5D")
-	 || mac.startsWith("1C:C6:3C")
-	 || mac.startsWith("74:31:70")
-	 || mac.startsWith("7C:4F:B5") || mac
-	 .startsWith("88:25:2C")))
-	 return new EasyBoxKeygen(ssid, mac, level, enc);
 	 */
+	if (ssid.count(QRegExp("(Arcor|EasyBox|Vodafone)(-| )[0-9a-fA-F]{6}")) == 1
+			&& (mac.startsWith("00:12:BF") || mac.startsWith("00:1A:2A")
+					|| mac.startsWith("00:1D:19") || mac.startsWith("00:23:08")
+					|| mac.startsWith("00:26:4D") || mac.startsWith("50:7E:5D")
+					|| mac.startsWith("1C:C6:3C") || mac.startsWith("74:31:70")
+					|| mac.startsWith("7C:4F:B5") || mac.startsWith("88:25:2C")))
+		return new EasyBoxKeygen(ssid, mac, level, enc);
+
 	if (ssid.count(
 			QRegExp(
 					"(Thomson|Blink|SpeedTouch|O2Wireless|Orange-|INFINITUM|BigPond|Otenet|Bbox-|DMAX|privat|TN_private_|CYTA|Vodafone-|Optimus|OptimusFibra|MEO-)[0-9a-fA-F]{6}"))
@@ -115,7 +117,8 @@ Keygen * WirelessMatcher::getKeygen(QString ssid, QString mac, int level,
 	}
 	if (ssid.count(QRegExp("[aA]lice-[0-9]{8}")) == 1) {
 
-		QVector<AliceMagicInfo * > * supported = supportedAlice.value(ssid.left(9));
+		QVector<AliceMagicInfo *> * supported = supportedAlice.value(
+				ssid.left(9));
 		if (supported != 0 && supported->size() > 0) {
 			if (mac.length() < 6)
 				mac = supported->at(0)->mac;
@@ -164,25 +167,25 @@ Keygen * WirelessMatcher::getKeygen(QString ssid, QString mac, int level,
 	if (ssid.count(QRegExp("(WLAN|WiFi|YaCom)[0-9a-zA-Z]{6}")) == 1)
 		return new Wlan6Keygen(ssid, mac, level, enc);
 
-	/*	if (ssid.count(QRegExp("OTE[0-9a-fA-F]{6}")) == 1)
-	 return new OteKeygen(ssid, mac, level, enc);
+	if (ssid.count(QRegExp("OTE[0-9a-fA-F]{6}")) == 1)
+		return new OteKeygen(ssid, mac, level, enc);
 
-	 if (ssid.count(QRegExp("PBS-[0-9a-fA-F]{6}")) == 1)
-	 return new PBSKeygen(ssid, mac, level, enc);
+	if (ssid.count(QRegExp("PBS-[0-9a-fA-F]{6}")) == 1)
+		return new PBSKeygen(ssid, mac, level, enc);
 
-	 if (ssid.equals("CONN-X"))
-	 return new ConnKeygen(ssid, mac, level, enc);
+	if (ssid == "CONN-X")
+		return new ConnKeygen(ssid, mac, level, enc);
 
-	 if (ssid.equals("Andared"))
-	 return new AndaredKeygen(ssid, mac, level, enc);
+	if (ssid == "Andared")
+		return new AndaredKeygen(ssid, mac, level, enc);
 
-	 if (ssid.count(QRegExp("Megared[0-9a-fA-F]{4}")) == 1) {
-	 // the 4 characters of the SSID should match the final
-	 if (mac.length() == 0
-	 || (ssid.right(4) == mac.replace(":", "").substring(8)))
-	 return new MegaredKeygen(ssid, mac, level, enc);
-	 }
-	 */
+	if (ssid.count(QRegExp("Megared[0-9a-fA-F]{4}")) == 1) {
+		// the 4 characters of the SSID should match the final
+		if (mac.length() == 0
+				|| (ssid.right(4) == mac.replace(":", "").right(4)))
+			return new MegaredKeygen(ssid, mac, level, enc);
+	}
+
 	if (ssid.length() == 5
 			&& (mac.startsWith("00:1F:90") || mac.startsWith("A8:39:44")
 					|| mac.startsWith("00:18:01") || mac.startsWith("00:20:E0")
@@ -204,6 +207,5 @@ Keygen * WirelessMatcher::getKeygen(QString ssid, QString mac, int level,
 					|| mac.startsWith("5C:4C:A9") || mac.startsWith("1C:1D:67")
 					|| mac.startsWith("CC:96:A0") || mac.startsWith("20:2B:C1")))
 		return new HuaweiKeygen(ssid, mac, level, enc);
-	//return new UnsupportedKeygen(ssid, mac, level, enc);
-	return 0;
+	return NULL;
 }

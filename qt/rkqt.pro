@@ -7,7 +7,13 @@ QT += core \
     dbus
 TARGET = RouterKeygen
 TEMPLATE = app
-SOURCES += src/wifi/QWifiManager.cpp \
+SOURCES += src/algorithms/EasyBoxKeygen.cpp \
+    src/algorithms/PBSKeygen.cpp \
+    src/algorithms/OteKeygen.cpp \
+    src/algorithms/MegaredKeygen.cpp \
+    src/algorithms/AndaredKeygen.cpp \
+    src/algorithms/ConnKeygen.cpp \
+    src/wifi/QWifiManager.cpp \
     src/algorithms/dlinkkeygen.cpp \
     src/algorithms/pirellikeygen.cpp \
     src/algorithms/wlan2keygen.cpp \
@@ -34,7 +40,13 @@ SOURCES += src/wifi/QWifiManager.cpp \
     src/main.cpp \
     src/routerkeygen.cpp \
     src/sha256.cpp
-HEADERS += src/include/QScanResult.h \
+HEADERS += src/include/EasyBoxKeygen.h \
+    src/include/OteKeygen.h \
+    src/include/PBSKeygen.h \
+    src/include/MegaredKeygen.h \
+    src/include/AndaredKeygen.h \
+    src/include/ConnKeygen.h \
+    src/include/QScanResult.h \
     src/include/QWifiManager.h \
     src/include/onokeygen.h \
     src/include/sha256.h \
