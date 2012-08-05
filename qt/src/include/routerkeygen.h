@@ -33,13 +33,15 @@ private slots:
     void copyKey();
 
 private:
+    void setLoadingAnimation(const QString& text);
+    void cleanLoadingAnimation();
     void calc(QString ssid, QString mac );
     Ui::RouterKeygen *ui;
     QVector<QString> listKeys;
     WirelessMatcher matcher;
     Keygen * router;
     KeygenThread * calculator;
-    QWifiManager manager;
+    QWifiManager * wifiManager;
     QMovie * loadingAnim;
     QLabel * loading;
     QLabel * loadingText;

@@ -12,14 +12,13 @@
 #include <QtDBus/QDBusInterface>
 #include <QtDBus/QDBusReply>
 #include <QVector>
-#include <NetworkManager.h>
 #include "QScanResult.h"
+#include <QProcess>
 
 class QWifiManager: public QObject {
 Q_OBJECT
 public:
-	QWifiManager() {
-	}
+	QWifiManager(bool refresh = false) ;
 	virtual ~QWifiManager() {
 	}
 	void startScan();
@@ -33,10 +32,13 @@ public:
 	};
 signals:
 	void scanFinished(int);
-
+private slots:
+	void forcedRefreshFinished();
 private:
 	void clearPreviousScanResults();
 	QVector<QScanResult*> scanResults;
+	bool forceRefresh;
+	QProcess * scan;
 };
 
 #endif /* QWIFIMANAGER_H_ */

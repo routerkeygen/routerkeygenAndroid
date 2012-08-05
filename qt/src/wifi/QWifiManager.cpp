@@ -8,8 +8,37 @@
 #include "QWifiManager.h"
 #include <QDebug>
 
+#ifdef Q_OS_LINUX
+#include <NetworkManager.h>
+#endif
+
+QWifiManager::QWifiManager(bool refresh) :
+		forceRefresh(refresh) {
+
+}
+
 void QWifiManager::startScan() {
 
+
+#ifdef Q_OS_LINUX
+	if (forceRefresh) {
+		scan = new QProcess(this);
+		QStringList args;
+		args << "iwlist" << "scan";
+		scan->start("pkexec", args);
+		connect(scan, SIGNAL(finished(int)), this, SLOT(forcedRefreshFinished()));
+	} else
+		forcedRefreshFinished();
+#endif
+
+#ifdef Q_OS_WIN
+	emit scanFinished(ERROR_NO_NM);
+#endif
+}
+
+void QWifiManager::forcedRefreshFinished() {
+
+#ifdef Q_OS_LINUX
 	QDBusInterface networkManager(NM_DBUS_SERVICE, NM_DBUS_PATH,
 			NM_DBUS_INTERFACE, QDBusConnection::systemBus());
 	if (!networkManager.isValid()) {
@@ -46,7 +75,7 @@ void QWifiManager::startScan() {
 				emit scanFinished(ERROR);
 				return;
 			}
-			if ( deviceState.toUInt() <= NM_DEVICE_STATE_UNAVAILABLE  )
+			if (deviceState.toUInt() <= NM_DEVICE_STATE_UNAVAILABLE)
 				continue; // we are only interested in enabled wifi devices
 
 			QDBusInterface wirelessDevice(NM_DBUS_SERVICE, connection.path(),
@@ -96,7 +125,10 @@ void QWifiManager::startScan() {
 		emit scanFinished(ERROR_NO_WIFI_ENABLED);
 	else
 		emit scanFinished(ERROR_NO_WIFI);
+
+#endif
 }
+
 QVector<QScanResult*> & QWifiManager::getScanResults() {
 	return scanResults;
 }

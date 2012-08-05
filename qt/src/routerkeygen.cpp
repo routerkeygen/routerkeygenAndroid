@@ -40,10 +40,10 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
 			SLOT( refreshNetworks() ));
 	connect(ui->networkslist, SIGNAL( cellClicked(int,int) ), this,
 			SLOT( tableRowSelected(int,int) ));
-	connect(&manager, SIGNAL( scanFinished(int) ), this,
+	wifiManager = new QWifiManager(true);
+	connect(wifiManager, SIGNAL( scanFinished(int) ), this,
 			SLOT( scanFinished(int) ));
 	loadingAnim = new QMovie(":/images/loading.gif");
-	manager.startScan();
 	/*Auto-Complete!*/
 	QStringList wordList;
 	wordList << "TECOM-AH4222-" << "TECOM-AH4021-" << "Thomson" << "WLAN"
@@ -64,6 +64,7 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
 RouterKeygen::~RouterKeygen() {
 	delete ui;
 	delete loadingAnim;
+	delete wifiManager;
 	if (!router)
 		delete router;
 	if (calculator->isRunning()) {
@@ -79,6 +80,10 @@ void RouterKeygen::manualCalculation() {
 }
 
 void RouterKeygen::calc(QString ssid, QString mac) {
+	if ( calculator != NULL )
+	{
+		return; //ignore while a calculator is still running
+	}
 	if (router != NULL)
 		delete router;
 	if (ssid == "")
@@ -96,13 +101,7 @@ void RouterKeygen::calc(QString ssid, QString mac) {
 		return;
 	}
 	ui->passwordsList->clear();
-	loadingAnim->start();
-	loading = new QLabel();
-	loading->setMovie(loadingAnim);
-	loadingText = new QLabel(tr("Calculating keys. This can take a while."));
-	ui->statusBar->clearMessage();
-	ui->statusBar->addWidget(loading);
-	ui->statusBar->addWidget(loadingText);
+	setLoadingAnimation(tr("Calculating keys. This can take a while."));
 	this->calculator = new KeygenThread(router);
 	connect(this->calculator, SIGNAL( finished() ), this, SLOT( getResults() ));
 	ui->calculateButton->setEnabled(false);
@@ -116,15 +115,17 @@ void RouterKeygen::tableRowSelected(int row, int) {
 
 void RouterKeygen::refreshNetworks() {
 	ui->refreshScan->setEnabled(false);
-	manager.startScan();
+	setLoadingAnimation(tr("Scanning the network"));
+	wifiManager->startScan();
 }
 
 void RouterKeygen::scanFinished(int code) {
+	cleanLoadingAnimation();
 	ui->refreshScan->setEnabled(true);
 	switch (code) {
 	case QWifiManager::SCAN_OK: {
 		ui->networkslist->clear();
-		QVector<QScanResult*> networks = manager.getScanResults();
+		QVector<QScanResult*> networks = wifiManager->getScanResults();
 		ui->networkslist->setRowCount(networks.size());
 		for (int i = 0; i < networks.size(); ++i) {
 			ui->networkslist->setItem(i, 0,
@@ -154,9 +155,7 @@ void RouterKeygen::scanFinished(int code) {
 }
 
 void RouterKeygen::getResults() {
-	loadingAnim->stop();
-	ui->statusBar->removeWidget(loading);
-	ui->statusBar->removeWidget(loadingText);
+	cleanLoadingAnimation();
 	ui->calculateButton->setEnabled(true);
 	listKeys = this->calculator->getResults();
 	if (listKeys.isEmpty()) {
@@ -207,5 +206,21 @@ void RouterKeygen::copyKey() {
 		return;
 	QClipboard *clipboard = QApplication::clipboard();
 	clipboard->setText(selectedItems.at(0)->text(), QClipboard::Clipboard);
+	ui->statusBar->showMessage(tr("Key copied"));
 }
 
+
+void RouterKeygen::setLoadingAnimation(const QString& text){
+	loadingAnim->start();
+	loading = new QLabel();
+	loading->setMovie(loadingAnim);
+	loadingText = new QLabel(text);
+	ui->statusBar->clearMessage();
+	ui->statusBar->addWidget(loading);
+	ui->statusBar->addWidget(loadingText);
+}
+void RouterKeygen::cleanLoadingAnimation(){
+	loadingAnim->stop();
+	ui->statusBar->removeWidget(loading);
+	ui->statusBar->removeWidget(loadingText);
+}
