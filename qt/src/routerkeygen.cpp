@@ -40,7 +40,9 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
 			SLOT( refreshNetworks() ));
 	connect(ui->networkslist, SIGNAL( cellClicked(int,int) ), this,
 			SLOT( tableRowSelected(int,int) ));
-	wifiManager = new QWifiManager(true);
+	connect(ui->forceRefresh, SIGNAL( stateChanged(int) ), this,
+			SLOT( forceRefreshToggle(int) ));
+	wifiManager = new QWifiManager();
 	connect(wifiManager, SIGNAL( scanFinished(int) ), this,
 			SLOT( scanFinished(int) ));
 	loadingAnim = new QMovie(":/images/loading.gif");
@@ -211,6 +213,10 @@ void RouterKeygen::copyKey() {
 	QClipboard *clipboard = QApplication::clipboard();
 	clipboard->setText(selectedItems.at(0)->text(), QClipboard::Clipboard);
 	ui->statusBar->showMessage(tr("Key copied"));
+}
+
+void RouterKeygen::forceRefreshToggle(int state){
+	wifiManager->setForceScan(state == Qt::Checked);
 }
 
 void RouterKeygen::setLoadingAnimation(const QString& text) {

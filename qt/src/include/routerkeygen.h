@@ -31,6 +31,7 @@ protected:
 private slots:
     void rightButtonClicked(QObject *obj,const QPoint &p);
     void copyKey();
+    void forceRefreshToggle(int);
 
 private:
     void setLoadingAnimation(const QString& text);

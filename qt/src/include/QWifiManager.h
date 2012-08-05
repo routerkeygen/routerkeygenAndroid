@@ -18,7 +18,7 @@
 class QWifiManager: public QObject {
 Q_OBJECT
 public:
-	QWifiManager(bool refresh = false) ;
+	QWifiManager() ;
 	virtual ~QWifiManager() {
 	}
 	void startScan();
@@ -30,6 +30,7 @@ public:
 		ERROR_NO_WIFI_ENABLED,
 		ERROR
 	};
+	void setForceScan(bool);
 signals:
 	void scanFinished(int);
 private slots:

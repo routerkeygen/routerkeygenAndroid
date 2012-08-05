@@ -12,8 +12,8 @@
 #include <NetworkManager.h>
 #endif
 
-QWifiManager::QWifiManager(bool refresh) :
-		forceRefresh(refresh) {
+QWifiManager::QWifiManager() :
+		forceRefresh(false) {
 
 }
 
@@ -127,6 +127,10 @@ void QWifiManager::forcedRefreshFinished() {
 		emit scanFinished(ERROR_NO_WIFI);
 
 #endif
+}
+
+void QWifiManager::setForceScan(bool refresh){
+	forceRefresh = refresh;
 }
 
 QVector<QScanResult*> & QWifiManager::getScanResults() {
