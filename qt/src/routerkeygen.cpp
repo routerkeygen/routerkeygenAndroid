@@ -46,9 +46,14 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
 	loadingAnim = new QMovie(":/images/loading.gif");
 	/*Auto-Complete!*/
 	QStringList wordList;
-	wordList << "TECOM-AH4222-" << "TECOM-AH4021-" << "Thomson" << "WLAN"
-			<< "WLAN_" << "eircom" << "InfostradaWiFi-" << "SKY" << "DLink-"
-			<< "WiFi" << "YaCom" << "Discus--" << "FASTWEB-1-";
+	wordList << "Thomson" << "Blink" << "SpeedTouch" << "O2Wireless"
+			<< "Orange-" << "INFINITUM" << "BigPond" << "Otenet" << "Bbox-"
+			<< "DMAX" << "privat" << "DLink-" << "Discus--" << "eircom"
+			<< "FASTWEB-1-" << "Alice-" << "WLAN_" << "WLAN" << "JAZZTEL_"
+			<< "WiFi" << "YaCom" << "SKY" << "TECOM-AH4222-" << "TECOM-AH4021-"
+			<< "InfostradaWiFi-" << "TN_private_" << "CYTA" << "PBS" << "CONN"
+			<< "OTE" << "Vodafone-" << "EasyBox-" << "Arcor-" << "Megared"
+			<< "Optimus" << "OptimusFibra" << "MEO-";
 	QCompleter *completer = new QCompleter(wordList, this);
 	completer->setCaseSensitivity(Qt::CaseInsensitive);
 	completer->setCompletionMode(QCompleter::PopupCompletion);
@@ -80,8 +85,7 @@ void RouterKeygen::manualCalculation() {
 }
 
 void RouterKeygen::calc(QString ssid, QString mac) {
-	if ( calculator != NULL )
-	{
+	if (calculator != NULL) {
 		return; //ignore while a calculator is still running
 	}
 	if (router != NULL)
@@ -209,8 +213,7 @@ void RouterKeygen::copyKey() {
 	ui->statusBar->showMessage(tr("Key copied"));
 }
 
-
-void RouterKeygen::setLoadingAnimation(const QString& text){
+void RouterKeygen::setLoadingAnimation(const QString& text) {
 	loadingAnim->start();
 	loading = new QLabel();
 	loading->setMovie(loadingAnim);
@@ -219,7 +222,7 @@ void RouterKeygen::setLoadingAnimation(const QString& text){
 	ui->statusBar->addWidget(loading);
 	ui->statusBar->addWidget(loadingText);
 }
-void RouterKeygen::cleanLoadingAnimation(){
+void RouterKeygen::cleanLoadingAnimation() {
 	loadingAnim->stop();
 	ui->statusBar->removeWidget(loading);
 	ui->statusBar->removeWidget(loadingText);
