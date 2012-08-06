@@ -31,6 +31,7 @@
 #include <QClipboard>
 #include "QWifiManager.h"
 
+
 RouterKeygen::RouterKeygen(QWidget *parent) :
 		QMainWindow(parent), ui(new Ui::RouterKeygen) {
 	ui->setupUi(this);
@@ -70,6 +71,9 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
 	this->router = NULL;
 	this->calculator = NULL;
 
+	//Set widget ration
+	ui->splitter->setStretchFactor(0,2);
+    ui->splitter->setStretchFactor(1,1);
 }
 
 RouterKeygen::~RouterKeygen() {
@@ -147,12 +151,20 @@ void RouterKeygen::scanFinished(int code) {
 			QString level;
 			level.setNum(networks.at(i)->level, 10);
 			ui->networkslist->setItem(i, 2, new QTableWidgetItem(level));
+			Keygen * supported = matcher.getKeygen(networks.at(i)->ssid,networks.at(i)->bssid,networks.at(i)->level, "" );
+			if ( supported != NULL ){
+				ui->networkslist->setItem(i, 3, new QTableWidgetItem(tr("Yes")));
+				delete supported;
+			}
+			else
+				ui->networkslist->setItem(i, 3, new QTableWidgetItem(tr("No")));
 		}
         QStringList headers;
-        headers << tr("SSID") << tr("BSSID") << tr("Strength");
+        headers << "SSID" << "BSSID" << tr("Strength") << tr("Supported");
         ui->networkslist->setHorizontalHeaderLabels(headers);
 		ui->networkslist->resizeColumnsToContents();
         ui->networkslist->horizontalHeader()->setStretchLastSection(true);
+        ui->networkslist->sortByColumn(3);
 		break;
 	}
 	case QWifiManager::ERROR_NO_NM:

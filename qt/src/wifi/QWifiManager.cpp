@@ -8,7 +8,7 @@
 #include "QWifiManager.h"
 #include <QDebug>
 
-#ifdef Q_OS_LINUX
+#ifdef Q_OS_UNIX
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusInterface>
 #include <QtDBus/QDBusReply>
@@ -25,7 +25,7 @@ QWifiManager::~QWifiManager() {
 	scan->waitForFinished();
 }
 void QWifiManager::startScan() {
-#ifdef Q_OS_LINUX
+#ifdef Q_OS_UNIX
 	if (forceRefresh) {
 		scan = new QProcess(this);
 		QStringList args;
@@ -71,7 +71,7 @@ void QWifiManager::forcedRefreshFinished() {
     }
     emit scanFinished(SCAN_OK);
 #endif
-#ifdef Q_OS_LINUX
+#ifdef Q_OS_UNIX
 	QDBusInterface networkManager(NM_DBUS_SERVICE, NM_DBUS_PATH,
 			NM_DBUS_INTERFACE, QDBusConnection::systemBus());
 	if (!networkManager.isValid()) {
