@@ -21,6 +21,8 @@ QWifiManager::QWifiManager() :
 
 QWifiManager::~QWifiManager() {
 	clearPreviousScanResults();
+	scan->terminate(); //we are using SIGTERM here because we really want it dead!
+	scan->waitForFinished();
 }
 void QWifiManager::startScan() {
 #ifdef Q_OS_LINUX
@@ -29,7 +31,7 @@ void QWifiManager::startScan() {
 		QStringList args;
         args << "iwlist" << "scan";
 		connect(scan, SIGNAL(finished(int)), this, SLOT(forcedRefreshFinished()));
-        scan->start("pkexec", args);
+	    scan->start("pkexec", args);
 	} else
 		forcedRefreshFinished();
 #endif
