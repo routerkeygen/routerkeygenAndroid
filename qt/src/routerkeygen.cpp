@@ -76,13 +76,15 @@ RouterKeygen::~RouterKeygen() {
 	delete ui;
 	delete loadingAnim;
 	delete wifiManager;
-	if (!router)
+    if (router != NULL )
 		delete router;
-	if (calculator->isRunning()) {
-		router->stop();
-		calculator->exit(0);
-	}
-	delete calculator;
+    if ( calculator != NULL ){
+        if (calculator->isRunning()) {
+            router->stop();
+            calculator->wait();
+        }
+        delete calculator;
+    }
 }
 void RouterKeygen::manualCalculation() {
 	if (ui->ssidInput->text().trimmed() == "")
@@ -173,14 +175,13 @@ void RouterKeygen::getResults() {
 	ui->calculateButton->setEnabled(true);
 	listKeys = this->calculator->getResults();
 	if (listKeys.isEmpty()) {
-		ui->statusBar->showMessage(tr("No keys were calculated."));
-		delete calculator;
-		calculator = NULL;
-		return;
+        ui->statusBar->showMessage(tr("No keys were calculated."));
 	}
-	for (int i = 0; i < listKeys.size(); ++i)
-		ui->passwordsList->insertItem(0, listKeys.at(i));
-	ui->statusBar->showMessage(tr("Calculation finished"));
+    else {
+        for (int i = 0; i < listKeys.size(); ++i)
+            ui->passwordsList->insertItem(0, listKeys.at(i));
+        ui->statusBar->showMessage(tr("Calculation finished"));
+    }
 	delete calculator;
 	calculator = NULL;
 }

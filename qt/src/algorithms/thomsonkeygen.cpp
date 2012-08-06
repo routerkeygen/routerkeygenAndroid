@@ -40,8 +40,8 @@
 class ThomsonTask: public QThread {
 
 public:
-	ThomsonTask(int i, int final , uint32_t essid, QVector<QString> * results, QMutex * mutex) :
-			i(i), final(final), ssid(essid), results(results), mutex(mutex) {
+    ThomsonTask(int i, int final , uint32_t essid, QVector<QString> * results, QMutex * mutex, bool * stop) :
+        i(i), final(final), ssid(essid), results(results), mutex(mutex), stopRequested(stop) {
 	}
 	~ThomsonTask() {
 	}
@@ -65,6 +65,10 @@ public:
 					input[3] = '0' + year % 10;
 					input[4] = '0' + week / 10;
 					input[5] = '0' + week % 10;
+                    if ( *stopRequested ){
+                        delete currentSSID;
+                        return;
+                    }
 					SHA1_Init(&sha1);
 					SHA1_Update(&sha1, (const void *) input, 12);
 					SHA1_Final(message_digest, &sha1);
@@ -96,6 +100,7 @@ private:
 	uint32_t ssid;
 	QVector<QString> * results;
 	QMutex * mutex;
+    bool * stopRequested;
 };
 
 ThomsonKeygen::ThomsonKeygen(QString & ssid, QString & mac, int level,
@@ -117,12 +122,12 @@ QVector<QString> & ThomsonKeygen::getKeys() {
 	QStack<ThomsonTask *> queue;
 	for ( int i = 0 ; i < totalThreads-1; ++i )
 	{
-		queue.push(new ThomsonTask(beggining , beggining + work , ssid , &results, &resultsLocker));
+        queue.push(new ThomsonTask(beggining , beggining + work , ssid , &results, &resultsLocker, &stopRequested));
 		beggining += work;
 		queue.top()->start();
 	}
 	//Doing the last one separately
-	queue.push(new ThomsonTask(beggining , n , ssid , &results, &resultsLocker));
+    queue.push(new ThomsonTask(beggining , n , ssid , &results, &resultsLocker, &stopRequested));
 	queue.top()->start();
 	while ( queue.size()> 0)
 	{
