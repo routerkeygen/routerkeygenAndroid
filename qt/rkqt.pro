@@ -4,7 +4,7 @@
 QT += core \
     gui \
     xml
-linux:QT += dbus
+unix:QT += dbus
 TARGET = RouterKeygen
 TEMPLATE = app
 SOURCES += src/algorithms/EasyBoxKeygen.cpp \
@@ -75,8 +75,8 @@ HEADERS += src/include/EasyBoxKeygen.h \
     src/include/zyxelkeygen.h
 
 INCLUDEPATH += src/include/
-linux:INCLUDEPATH += /usr/include/NetworkManager
-linux:LIBS += -lcrypto
+unix:INCLUDEPATH += /usr/include/NetworkManager
+unix:LIBS += -lcrypto
 
 win32:SOURCES +=  src/sha1/sha1dgst.c \
                 src/sha1/sha1-586.win32.S
