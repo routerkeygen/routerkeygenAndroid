@@ -31,7 +31,7 @@ QVector<QString> & DlinkKeygen::getKeys() {
     {
         throw ERROR; //TODO:
     }
-    char key[22];
+    char key[20];
     key[0]=mac.at(11).toAscii();
     key[1]=mac.at(0).toAscii();
 
@@ -61,7 +61,7 @@ QVector<QString> & DlinkKeygen::getKeys() {
 
     key[18]=mac.at(4).toAscii();
     key[19]=mac.at(10).toAscii();
-    char newkey[20];
+    char newkey[21];
     char t;
     int index = 0;
     for (int i=0; i < 20 ; i++)
@@ -81,7 +81,7 @@ QVector<QString> & DlinkKeygen::getKeys() {
         }
         newkey[i]=hash[index];
     }
-    newkey[21] = '\0';
+    newkey[20] = '\0';
     results.append(QString(newkey));
     return results;
 }
