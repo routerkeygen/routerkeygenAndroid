@@ -19,6 +19,9 @@ QWifiManager::QWifiManager() :
 		forceRefresh(false) {
 }
 
+QWifiManager::~QWifiManager() {
+	clearPreviousScanResults();
+}
 void QWifiManager::startScan() {
 #ifdef Q_OS_LINUX
 	if (forceRefresh) {

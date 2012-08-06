@@ -16,8 +16,7 @@ class QWifiManager: public QObject {
 Q_OBJECT
 public:
 	QWifiManager() ;
-	virtual ~QWifiManager() {
-	}
+	virtual ~QWifiManager();
 	void startScan();
 	QVector<QScanResult*> & getScanResults();
 	enum SCAN_RESULT_STATE{

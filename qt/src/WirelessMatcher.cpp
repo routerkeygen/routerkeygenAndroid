@@ -44,7 +44,7 @@ WirelessMatcher::~WirelessMatcher() {
 		QVector<AliceMagicInfo *> * supported = supportedAlice.value(
 				keys.at(i));
 		for (int j = 0; j < supported->size(); ++j)
-			delete supported->at(i);
+			delete supported->at(j);
 		delete supported;
 	}
 	supportedAlice.clear();

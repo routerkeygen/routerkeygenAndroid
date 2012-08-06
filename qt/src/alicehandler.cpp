@@ -37,7 +37,7 @@ bool AliceHandler::startElement(const QString & , const QString & ,
 	if (attributes.count() == 0)
 		return true;
 	QVector<AliceMagicInfo *> * supported = supportedAlice.value(qName);
-	if (supported == 0) {
+	if (supported == NULL) {
 		supported = new QVector<AliceMagicInfo *>();
 		supportedAlice.insert(qName, supported);
 	}
