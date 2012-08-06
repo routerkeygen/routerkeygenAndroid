@@ -3,8 +3,8 @@
 # -------------------------------------------------
 QT += core \
     gui \
-    xml \
-    dbus
+    xml
+linux:QT += dbus
 TARGET = RouterKeygen
 TEMPLATE = app
 SOURCES += src/algorithms/EasyBoxKeygen.cpp \
@@ -73,10 +73,19 @@ HEADERS += src/include/EasyBoxKeygen.h \
     src/include/wlan2keygen.h \
     src/include/wlan6keygen.h \
     src/include/zyxelkeygen.h
-INCLUDEPATH += src/include/ \
-    /usr/include/NetworkManager
+
+INCLUDEPATH += src/include/
+linux:INCLUDEPATH += /usr/include/NetworkManager
+linux:LIBS += -lcrypto
+
+win32:SOURCES +=  src/sha1/sha1dgst.c \
+                src/sha1/sha1-586.win32.S
+win32:HEADERS +=src/include/sha_locl.h \
+    src/include/sha.h \
+    src/include/opensslconf.h \
+    src/include/md32_common.h
+
 FORMS += forms/routerkeygen.ui
-LIBS += -lcrypto
 symbian { 
     TARGET.UID3 = 0xed94ef91
     QMAKE_CXXFLAGS.GCCE -= -fvisibility-inlines-hidden

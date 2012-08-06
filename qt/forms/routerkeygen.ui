@@ -164,7 +164,7 @@
       <item>
        <widget class="QLabel" name="passwordsLabel">
         <property name="text">
-         <string>Calculated Passowords</string>
+         <string>Calculated Passwords</string>
         </property>
        </widget>
       </item>

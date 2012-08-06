@@ -8,9 +8,6 @@
 #ifndef QWIFIMANAGER_H_
 #define QWIFIMANAGER_H_
 #include <QObject>
-#include <QtDBus/QDBusConnection>
-#include <QtDBus/QDBusInterface>
-#include <QtDBus/QDBusReply>
 #include <QVector>
 #include "QScanResult.h"
 #include <QProcess>

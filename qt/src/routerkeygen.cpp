@@ -40,8 +40,12 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
 			SLOT( refreshNetworks() ));
 	connect(ui->networkslist, SIGNAL( cellClicked(int,int) ), this,
 			SLOT( tableRowSelected(int,int) ));
+#ifdef Q_OS_WIN
+    ui->forceRefresh->setVisible(false); // it is not needed in Windows
+#else
 	connect(ui->forceRefresh, SIGNAL( stateChanged(int) ), this,
 			SLOT( forceRefreshToggle(int) ));
+#endif
 	wifiManager = new QWifiManager();
 	connect(wifiManager, SIGNAL( scanFinished(int) ), this,
 			SLOT( scanFinished(int) ));
@@ -142,7 +146,11 @@ void RouterKeygen::scanFinished(int code) {
 			level.setNum(networks.at(i)->level, 10);
 			ui->networkslist->setItem(i, 2, new QTableWidgetItem(level));
 		}
+        QStringList headers;
+        headers << tr("SSID") << tr("BSSID") << tr("Strength");
+        ui->networkslist->setHorizontalHeaderLabels(headers);
 		ui->networkslist->resizeColumnsToContents();
+        ui->networkslist->horizontalHeader()->setStretchLastSection(true);
 		break;
 	}
 	case QWifiManager::ERROR_NO_NM:

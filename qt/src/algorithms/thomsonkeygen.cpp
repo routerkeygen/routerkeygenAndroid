@@ -19,8 +19,12 @@
 #include "thomsonkeygen.h"
 #include "unknown.h"
 #include <stdio.h>
-#include <openssl/evp.h>
+
+#ifdef Q_OS_LINUX
 #include <openssl/sha.h>
+#else
+#include "sha.h"
+#endif
 #include <cstdlib>
 #include <stdint.h>
 #include <QFile>
