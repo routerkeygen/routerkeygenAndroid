@@ -31,7 +31,6 @@
 #include <QClipboard>
 #include "QWifiManager.h"
 
-
 RouterKeygen::RouterKeygen(QWidget *parent) :
 		QMainWindow(parent), ui(new Ui::RouterKeygen) {
 	ui->setupUi(this);
@@ -42,7 +41,7 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
 	connect(ui->networkslist, SIGNAL( cellClicked(int,int) ), this,
 			SLOT( tableRowSelected(int,int) ));
 #ifdef Q_OS_WIN
-    ui->forceRefresh->setVisible(false); // it is not needed in Windows
+	ui->forceRefresh->setVisible(false); // it is not needed in Windows
 #else
 	connect(ui->forceRefresh, SIGNAL( stateChanged(int) ), this,
 			SLOT( forceRefreshToggle(int) ));
@@ -72,23 +71,23 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
 	this->calculator = NULL;
 
 	//Set widget ration
-	ui->splitter->setStretchFactor(0,2);
-    ui->splitter->setStretchFactor(1,1);
+	ui->splitter->setStretchFactor(0, 2);
+	ui->splitter->setStretchFactor(1, 1);
 }
 
 RouterKeygen::~RouterKeygen() {
 	delete ui;
 	delete loadingAnim;
 	delete wifiManager;
-    if (router != NULL )
+	if (router != NULL)
 		delete router;
-    if ( calculator != NULL ){
-        if (calculator->isRunning()) {
-            router->stop();
-            calculator->wait();
-        }
-        delete calculator;
-    }
+	if (calculator != NULL) {
+		if (calculator->isRunning()) {
+			router->stop();
+			calculator->wait();
+		}
+		delete calculator;
+	}
 }
 void RouterKeygen::manualCalculation() {
 	if (ui->ssidInput->text().trimmed() == "")
@@ -151,20 +150,21 @@ void RouterKeygen::scanFinished(int code) {
 			QString level;
 			level.setNum(networks.at(i)->level, 10);
 			ui->networkslist->setItem(i, 2, new QTableWidgetItem(level));
-			Keygen * supported = matcher.getKeygen(networks.at(i)->ssid,networks.at(i)->bssid,networks.at(i)->level, "" );
-			if ( supported != NULL ){
-				ui->networkslist->setItem(i, 3, new QTableWidgetItem(tr("Yes")));
+			Keygen * supported = matcher.getKeygen(networks.at(i)->ssid,
+					networks.at(i)->bssid, networks.at(i)->level, "");
+			if (supported != NULL) {
+				ui->networkslist->setItem(i, 3,
+						new QTableWidgetItem(tr("Yes")));
 				delete supported;
-			}
-			else
+			} else
 				ui->networkslist->setItem(i, 3, new QTableWidgetItem(tr("No")));
 		}
-        QStringList headers;
-        headers << "SSID" << "BSSID" << tr("Strength") << tr("Supported");
-        ui->networkslist->setHorizontalHeaderLabels(headers);
+		QStringList headers;
+		headers << "SSID" << "BSSID" << tr("Strength") << tr("Supported");
+		ui->networkslist->setHorizontalHeaderLabels(headers);
 		ui->networkslist->resizeColumnsToContents();
-        ui->networkslist->horizontalHeader()->setStretchLastSection(true);
-        ui->networkslist->sortByColumn(3);
+		ui->networkslist->horizontalHeader()->setStretchLastSection(true);
+		ui->networkslist->sortByColumn(3);
 		break;
 	}
 	case QWifiManager::ERROR_NO_NM:
@@ -185,15 +185,22 @@ void RouterKeygen::scanFinished(int code) {
 void RouterKeygen::getResults() {
 	cleanLoadingAnimation();
 	ui->calculateButton->setEnabled(true);
+	if (calculator->hadError()) {
+		ui->statusBar->showMessage(tr("Error while calculating."));
+		delete calculator;
+		calculator = NULL;
+		return;
+	}
 	listKeys = this->calculator->getResults();
 	if (listKeys.isEmpty()) {
-        ui->statusBar->showMessage(tr("No keys were calculated."));
+		ui->statusBar->showMessage(tr("No keys were calculated."));
+		delete calculator;
+		calculator = NULL;
+		return;
 	}
-    else {
-        for (int i = 0; i < listKeys.size(); ++i)
-            ui->passwordsList->insertItem(0, listKeys.at(i));
-        ui->statusBar->showMessage(tr("Calculation finished"));
-    }
+	for (int i = 0; i < listKeys.size(); ++i)
+		ui->passwordsList->insertItem(0, listKeys.at(i));
+	ui->statusBar->showMessage(tr("Calculation finished"));
 	delete calculator;
 	calculator = NULL;
 }
@@ -223,7 +230,6 @@ void RouterKeygen::rightButtonClicked(QObject *obj, const QPoint &pos) {
 		connect(copy, SIGNAL(triggered()), this, SLOT(copyKey()));
 		menu->addAction(copy);
 		menu->exec(pos);
-
 	}
 }
 
@@ -236,7 +242,7 @@ void RouterKeygen::copyKey() {
 	ui->statusBar->showMessage(tr("Key copied"));
 }
 
-void RouterKeygen::forceRefreshToggle(int state){
+void RouterKeygen::forceRefreshToggle(int state) {
 	wifiManager->setForceScan(state == Qt::Checked);
 }
 

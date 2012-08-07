@@ -28,9 +28,7 @@ char DlinkKeygen::hash[] = { 'X', 'r', 'q', 'a', 'H', 'N', 'p', 'd', 'S', 'Y',
 QVector<QString> & DlinkKeygen::getKeys() {
     QString mac = getMacAddress();
     if ( mac.size() < 12 )
-    {
-        throw ERROR; //TODO:
-    }
+        throw ERROR;
     char key[20];
     key[0]=mac.at(11).toAscii();
     key[1]=mac.at(0).toAscii();

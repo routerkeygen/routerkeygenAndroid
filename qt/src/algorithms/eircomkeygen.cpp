@@ -29,10 +29,8 @@ QVector<QString> & EircomKeygen::getKeys() {
 	QString result = dectoString(
 			getMacAddress().right(6).toInt(&status, 16) + 0x01000000)
 			+ "Although your world wonders me, ";
-	if (!status) {
-		//TODO:error messages
-		return results;
-	}
+	if (!status)
+		throw ERROR;
 	result =
 			QString::fromAscii(
 					QCryptographicHash::hash(result.toAscii(),

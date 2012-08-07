@@ -29,10 +29,8 @@ ZyxelKeygen::~ZyxelKeygen(){
 
 
 QVector<QString> & ZyxelKeygen::getKeys() {
-	if (getMacAddress().size() != 12) {
-		//TODO:error messages
+	if (getMacAddress().size() != 12)
 		throw ERROR;
-	}
 	this->hash->reset();
 	QString macMod = getMacAddress().left(8) + getSsidName().right(4);
 	this->hash->addData(macMod.toLower().toAscii());

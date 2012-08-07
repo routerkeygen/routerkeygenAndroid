@@ -16,11 +16,13 @@ public:
 	KeygenThread(Keygen *);
 	virtual ~KeygenThread();
 	QVector<QString> getResults() const;
+	bool hadError() const;
 protected:
 	void run();
 private:
 	Keygen * router;
 	QVector<QString> results;
+	bool error;
 };
 
 #endif /* KEYGENTHREAD_H_ */

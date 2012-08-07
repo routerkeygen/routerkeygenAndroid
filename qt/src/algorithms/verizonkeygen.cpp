@@ -33,9 +33,8 @@ QVector<QString> & VerizonKeygen::getKeys() {
     bool test;
     int resultInt = QString::fromRawData(inverse , 5).toInt(&test, 36);
     if ( !test )
-    {
-        throw ERROR; //TODO: error message
-    }
+        throw ERROR;
+
     QString result;
     result.setNum(resultInt , 16);
     while ( result.size() < 6 )

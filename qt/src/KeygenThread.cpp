@@ -7,19 +7,26 @@
 
 #include "KeygenThread.h"
 
-KeygenThread::KeygenThread( Keygen * router): router(router) {}
+KeygenThread::KeygenThread( Keygen * router): router(router) , error(false){}
 
 KeygenThread::~KeygenThread() {
 }
 
 void KeygenThread::run(){
+	try{
 	results = router->getResults();
+	} catch (int e){
+		error = true;
+	}
 }
 
 QVector<QString> KeygenThread::getResults() const {
 	return results;
 }
 
+bool KeygenThread::hadError() const{
+	return error;
+}
 
 
 

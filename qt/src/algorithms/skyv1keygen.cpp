@@ -25,11 +25,10 @@ SkyV1Keygen::SkyV1Keygen(QString & ssid, QString & mac, int level, QString enc) 
 const QString SkyV1Keygen::ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 QVector<QString> & SkyV1Keygen::getKeys() {
-	if (getMacAddress().size() != 12) {
-		//TODO:error messages
+	QString mac = getMacAddress();
+	if (mac.size() != 12)
 		throw ERROR;
-	}
-	QByteArray hash = QCryptographicHash::hash(getMacAddress().toAscii(),
+	QByteArray hash = QCryptographicHash::hash(mac.toAscii(),
 			QCryptographicHash::Md5);
 
 	QString key = "";

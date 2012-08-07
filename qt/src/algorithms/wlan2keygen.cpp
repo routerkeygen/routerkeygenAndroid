@@ -27,10 +27,8 @@ QVector<QString> & Wlan2Keygen::getKeys() {
 
 	QString mac = getMacAddress();
 
-	if (mac.size() != 12) {
-		//TODO
+	if (mac.size() != 12)
 		throw ERROR;
-	}
 
 	key[0] = mac.at(10);
 	key[1] = mac.at(11);

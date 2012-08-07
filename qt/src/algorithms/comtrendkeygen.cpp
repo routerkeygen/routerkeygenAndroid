@@ -30,15 +30,14 @@ ComtrendKeygen::~ComtrendKeygen(){
 const QString ComtrendKeygen::magic = "bcgbghgg";
 
 QVector<QString> & ComtrendKeygen::getKeys() {
-	if (getMacAddress().size() != 12) {
-		//TODO:error messages
+	QString mac = getMacAddress();
+	if (mac.size() != 12)
 		throw ERROR;
-	}
 	this->hash->reset();
 	this->hash->addData(magic.toAscii());
-	QString macMod = getMacAddress().left(8) + getSsidName().right(4);
+	QString macMod = mac.left(8) + getSsidName().right(4);
 	this->hash->addData(macMod.toUpper().toAscii());
-	this->hash->addData(getMacAddress().toAscii());
+	this->hash->addData(mac.toAscii());
 	QString result = QString::fromAscii(this->hash->result().toHex().data());
 	result.truncate(20);
 	this->results.append(result);

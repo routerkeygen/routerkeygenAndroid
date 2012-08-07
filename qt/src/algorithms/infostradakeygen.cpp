@@ -25,10 +25,7 @@ InfostradaKeygen::InfostradaKeygen(QString & ssid, QString & mac, int level,
 QVector<QString> & InfostradaKeygen::getKeys(){
 	QString mac = getMacAddress();
     if ( mac.size() != 12 )
-    {
-            //TODO:error messages
             throw ERROR;
-    }
     results.append("2"+mac.toUpper());
     return results;
 }

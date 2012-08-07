@@ -39,10 +39,7 @@ const char AliceKeygen::specialSeq[/*32*/]= {
 QVector<QString> & AliceKeygen::getKeys(){
 
      if ( supportedAlice->isEmpty() )
-     {
-         //TODO
-         return results;
-     }
+         throw ERROR;
      SHA256 sha;
      char hash[32];
 
