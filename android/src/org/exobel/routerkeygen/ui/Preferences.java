@@ -28,14 +28,13 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
-import java.security.DigestInputStream;
-import java.security.MessageDigest;
 import java.util.Stack;
 import java.util.TreeSet;
 
 import org.exobel.routerkeygen.DictionaryDownloadService;
 import org.exobel.routerkeygen.Downloader;
 import org.exobel.routerkeygen.R;
+import org.exobel.routerkeygen.utils.HashUtils;
 
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -54,8 +53,6 @@ import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceManager;
@@ -83,9 +80,6 @@ public class Preferences extends SherlockPreferenceActivity {
 	Downloader downloader;
 	long myProgress = 0, fileLen;
 	long lastt, now = 0, downloadBegin = 0;
-
-	byte[] dicVersion = new byte[2];
-	static byte[] cfvTable = new byte[18];
 
 	public static final String folderSelectPref = "folderSelect";
 	public static final String wifiOnPref = "wifion";
@@ -119,17 +113,18 @@ public class Preferences extends SherlockPreferenceActivity {
 							return true;
 						}
 
-						// Don't complain about dictionary size if user is on a wifi
+						// Don't complain about dictionary size if user is on a
+						// wifi
 						// connection
 						if ((((WifiManager) getBaseContext().getSystemService(
-								Context.WIFI_SERVICE))).getConnectionInfo().getSSID() != null) {
+								Context.WIFI_SERVICE))).getConnectionInfo()
+								.getSSID() != null) {
 							try {
 								checkCurrentDictionary();
 							} catch (FileNotFoundException e) {
 								e.printStackTrace();
 							}
-						}
-						else
+						} else
 							showDialog(DIALOG_ASK_DOWNLOAD);
 						return true;
 					}
@@ -238,222 +233,6 @@ public class Preferences extends SherlockPreferenceActivity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
-	}
-
-	private void checkDownload() {
-		showDialog(DIALOG_CHECKING_DOWNLOAD);
-		new Thread(new Runnable() {
-			public void run() {
-				try {
-					String folderSelect = PreferenceManager
-							.getDefaultSharedPreferences(getBaseContext())
-							.getString(
-									folderSelectPref,
-									Environment.getExternalStorageDirectory()
-											.getAbsolutePath());
-
-					String dicTemp = Environment.getExternalStorageDirectory()
-							.getPath() + File.separator + "DicTemp.dic";
-					if (!checkDicMD5(dicTemp)) {
-						new File(dicTemp).delete();
-						messHand.sendEmptyMessage(-1);
-						return;
-					}
-					if (!renameFile(Environment.getExternalStorageDirectory()
-							.getPath() + File.separator + "DicTemp.dic",
-							folderSelect + File.separator + "RouterKeygen.dic",
-							true)) {
-						messHand.sendEmptyMessage(8);
-						return;
-					}
-				} catch (Exception e) {
-					messHand.sendEmptyMessage(-1);
-					return;
-				}
-				messHand.sendEmptyMessage(9);
-			}
-		}).start();
-	}
-
-	// Check RouterKeygen.dic file through md5
-	private boolean checkDicMD5(String dicFile) {
-		try {
-			MessageDigest md = MessageDigest.getInstance("MD5");
-			InputStream is = new FileInputStream(dicFile);
-			try {
-				is = new DigestInputStream(is, md);
-				byte[] buffer = new byte[16384];
-				while (is.read(buffer) != -1)
-					;
-			} finally {
-				is.close();
-			}
-			byte[] digest = md.digest();
-
-			URLConnection con = new URL(PUB_DIC_CFV).openConnection();
-			DataInputStream dis = new DataInputStream(con.getInputStream());
-			if (con.getContentLength() != 18)
-				throw new Exception();
-
-			dis.read(Preferences.cfvTable);
-
-			for (int i = 0; i < 16; ++i)
-				if (digest[i] != cfvTable[i + 2])
-					return false;
-		} catch (Exception e) {
-			return false;
-		}
-
-		return true;
-	}
-
-	// Download the dictionary
-	private void startDownload() {
-		showDialog(DIALOG_DOWNLOAD);
-		myProgress = 0;
-		downloader = new Downloader(messHand, PUB_DOWNLOAD);
-		downloader.start();
-		lastt = downloadBegin = System.currentTimeMillis();
-	}
-
-	int downloadBefore = 0;
-	Handler messHand = new Handler() {
-
-		public void handleMessage(Message msg) {
-
-			switch (msg.what) {
-			case -1:
-				removeDialog(DIALOG_CHECK_DOWNLOAD_SERVER);
-				removeDialog(DIALOG_CHECKING_DOWNLOAD);
-				removeDialog(DIALOG_DOWNLOAD);
-				if (!isFinishing()) {
-					showDialog(DIALOG_ERROR);
-				}
-				break;
-			case 0:
-				removeDialog(DIALOG_DOWNLOAD);
-				if (!isFinishing()) {
-					showDialog(DIALOG_ERROR_NOSD);
-				}
-				break;
-			case 1:
-				removeDialog(DIALOG_DOWNLOAD);
-				if (!isFinishing()) {
-					showDialog(DIALOG_ERROR_NOMEMORYONSD);
-				}
-				break;
-			case 2:
-				downloadBefore = msg.arg1;
-				fileLen = msg.arg2;
-				break;
-			case 3:
-				removeDialog(DIALOG_DOWNLOAD);
-				checkDownload();
-				break;
-			case 4:
-				now = System.currentTimeMillis();
-				if (now - lastt < 1000)
-					break;
-
-				myProgress = msg.arg1;
-				fileLen = msg.arg2;
-				if (fileLen == 0)
-					break;
-
-				long kbs = 0;
-				try {
-					kbs = (((myProgress - downloadBefore) / (now - downloadBegin)) * 1000 / 1024);
-
-				} catch (ArithmeticException e) {
-					kbs = 0;
-				}
-				if (kbs == 0)
-					break;
-				long eta = (fileLen - myProgress) / kbs / 1024;
-				long progress = (100L * myProgress) / fileLen;
-				pbarDialog.setProgress((int) progress);
-				pbarDialog.setMessage(getString(R.string.msg_dl_speed) + ": "
-						+ kbs + "kb/s\n" + getString(R.string.msg_dl_eta)
-						+ ": " + (eta > 60 ? eta / 60 + "m" : eta + "s"));
-				lastt = now;
-				break;
-			case 5:
-				removeDialog(DIALOG_CHECK_DOWNLOAD_SERVER);
-				if (!isFinishing()) {
-					showDialog(DIALOG_ERROR_TOO_ADVANCED);
-				}
-				break;
-			case 6:
-				removeDialog(DIALOG_CHECK_DOWNLOAD_SERVER);
-				if (!isFinishing()) {
-					Toast.makeText(getBaseContext(),
-							getResources().getString(R.string.msg_dic_updated),
-							Toast.LENGTH_SHORT).show();
-				}
-				break;
-			case 7:
-				removeDialog(DIALOG_CHECK_DOWNLOAD_SERVER);
-				//startDownload();
-				startService(new Intent(getApplicationContext(),
-						DictionaryDownloadService.class).putExtra(
-						DictionaryDownloadService.URL_DOWNLOAD,
-						PUB_DOWNLOAD));
-				break;
-			case 8:
-				removeDialog(DIALOG_CHECKING_DOWNLOAD);
-				if (!isFinishing()) {
-					Toast.makeText(
-							getBaseContext(),
-							getResources().getString(
-									R.string.pref_msg_err_rename_dic),
-							Toast.LENGTH_SHORT).show();
-				}
-				break;
-
-			case 9:
-				removeDialog(DIALOG_CHECKING_DOWNLOAD);
-				if (!isFinishing()) {
-					Toast.makeText(Preferences.this,
-							R.string.msg_dic_updated_finished,
-							Toast.LENGTH_SHORT).show();
-				}
-				break;
-			case 10:
-				removeDialog(DIALOG_CHECK_DOWNLOAD_SERVER);
-				if (!isFinishing()) {
-					Toast.makeText(Preferences.this, R.string.msg_errthomson3g,
-							Toast.LENGTH_SHORT).show();
-				}
-				break;
-			}
-		}
-	};
-
-	private boolean renameFile(String file, String toFile, boolean saveOld) {
-
-		File toBeRenamed = new File(file);
-		File newFile = new File(toFile);
-
-		if (!toBeRenamed.exists() || toBeRenamed.isDirectory())
-			return false;
-
-		if (newFile.exists() && !newFile.isDirectory() && saveOld) {
-			if (!renameFile(toFile, toFile + "_backup", false))
-				Toast.makeText(
-						getBaseContext(),
-						getResources().getString(
-								R.string.pref_msg_err_backup_dic),
-						Toast.LENGTH_SHORT).show();
-			else
-				toFile += "_backup";
-		}
-		newFile = new File(toFile);
-
-		// Rename
-		if (!toBeRenamed.renameTo(newFile))
-			return false;
-
-		return true;
 	}
 
 	private static final String TAG = "ThomsonPreferences";
@@ -738,26 +517,31 @@ public class Preferences extends SherlockPreferenceActivity {
 		}
 		return builder.create();
 	}
-	
-	private void checkCurrentDictionary() throws FileNotFoundException{
+
+	private void checkCurrentDictionary() throws FileNotFoundException {
 		final File myDicFile = getDictionaryFile();
 		if (myDicFile == null) {
 			removeDialog(DIALOG_ASK_DOWNLOAD);
 			startService(new Intent(getApplicationContext(),
 					DictionaryDownloadService.class).putExtra(
-					DictionaryDownloadService.URL_DOWNLOAD,
-					PUB_DOWNLOAD));
+					DictionaryDownloadService.URL_DOWNLOAD, PUB_DOWNLOAD));
 		} else {
-			removeDialog(DIALOG_ASK_DOWNLOAD);
-			showDialog(DIALOG_CHECK_DOWNLOAD_SERVER);
-			new Thread(new Runnable() {
-				public void run() {
+			new AsyncTask<Void, Void, Integer>() {
+				protected void onPreExecute() {
+					removeDialog(DIALOG_ASK_DOWNLOAD);
+					showDialog(DIALOG_CHECK_DOWNLOAD_SERVER);
+				}
+				private final static int TOO_ADVANCED = 1;
+				private final static int OK = 0;
+				private final static int DOWNLOAD_NEEDED = -1;
+				private final static int ERROR_NETWORK = -2;
+				private final static int ERROR = -3;
+				protected Integer doInBackground(Void... params) {
 
 					// Comparing this version with the online
 					// version
 					try {
-						InputStream is = new FileInputStream(
-								myDicFile);
+						InputStream is = new FileInputStream(myDicFile);
 						URLConnection con = new URL(PUB_DIC_CFV)
 								.openConnection();
 						DataInputStream dis = new DataInputStream(
@@ -765,47 +549,77 @@ public class Preferences extends SherlockPreferenceActivity {
 						if (con.getContentLength() != 18)
 							throw new Exception();
 
-						dis.read(Preferences.cfvTable);
+						byte[] cfvTable = new byte[18];
+						dis.read(cfvTable);
 
+						byte[] dicVersion = new byte[2];
 						// Check our version
 						is.read(dicVersion);
 
 						int thisVersion, onlineVersion;
-						thisVersion = dicVersion[0] << 8
-								| dicVersion[1];
-						onlineVersion = cfvTable[0] << 8
-								| cfvTable[1];
+						thisVersion = dicVersion[0] << 8 | dicVersion[1];
+						onlineVersion = cfvTable[0] << 8 | cfvTable[1];
 
 						if (thisVersion == onlineVersion) {
 							// It is the latest version, but is
 							// it not corrupt?
-							if (checkDicMD5(myDicFile.getPath())) {
+							byte[] dicHash = new byte[16];
+							for (int i = 2; i < 18; ++i)
+								dicHash[i - 2] = cfvTable[i];
+							if (HashUtils.checkDicMD5(myDicFile.getPath(),
+									dicHash)) {
 								// All is well
-								messHand.sendEmptyMessage(6);
-								return;
+								return OK;
 							}
 						}
 						if (onlineVersion > thisVersion
 								&& onlineVersion > MAX_DIC_VERSION) {
 							// Online version is too advanced
-							messHand.sendEmptyMessage(5);
-							return;
+							return TOO_ADVANCED;
 						}
-						messHand.sendEmptyMessage(7);
-						return;
-
+						return DOWNLOAD_NEEDED;
 					} catch (FileNotFoundException e) {
-						messHand.sendEmptyMessage(7);
-						return;
+						return DOWNLOAD_NEEDED;
 					} catch (UnknownHostException e) {
-						messHand.sendEmptyMessage(10);
-						return;
+						return ERROR_NETWORK;
 					} catch (Exception e) {
-						messHand.sendEmptyMessage(-1);
-						return;
+						return ERROR;
 					}
 				}
-			}).start();
+
+				protected void onPostExecute(Integer result) {
+					removeDialog(DIALOG_CHECK_DOWNLOAD_SERVER);
+					if (isFinishing())
+						return;
+					if (result == null) {
+						showDialog(DIALOG_ERROR);
+						return;
+					}
+					switch (result) {
+					case ERROR:
+						showDialog(DIALOG_ERROR);
+						break;
+					case ERROR_NETWORK:
+						Toast.makeText(Preferences.this, R.string.msg_errthomson3g,
+								Toast.LENGTH_SHORT).show();
+						break;
+					case DOWNLOAD_NEEDED:
+						startService(new Intent(getApplicationContext(),
+								DictionaryDownloadService.class).putExtra(
+								DictionaryDownloadService.URL_DOWNLOAD, PUB_DOWNLOAD));
+						break;
+					case OK:
+						Toast.makeText(getBaseContext(),
+								getResources().getString(R.string.msg_dic_updated),
+								Toast.LENGTH_SHORT).show();
+						break;
+					case TOO_ADVANCED:
+						showDialog(DIALOG_ERROR_TOO_ADVANCED);
+						break;
+					}
+
+				}
+			}.execute();
 		}
 	}
 

@@ -2,18 +2,14 @@ package org.exobel.routerkeygen;
 
 import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.security.DigestInputStream;
-import java.security.MessageDigest;
-import java.util.Arrays;
 
 import org.exobel.routerkeygen.ui.Preferences;
+import org.exobel.routerkeygen.utils.HashUtils;
 
 import android.app.IntentService;
 import android.app.Notification;
@@ -130,7 +126,7 @@ public class DictionaryDownloadService extends IntentService {
 					UNIQUE_ID,
 					createProgressBar(getString(R.string.msg_dl_dlingdic),
 							getString(R.string.msg_wait), myProgress, true));
-			if (!checkDicMD5(dicTemp)) {
+			if (!HashUtils.checkDicMD5(dicTemp, DICTIONARY_HASH)) {
 				new File(dicTemp).delete();
 				mNotificationManager.notify(
 						UNIQUE_ID,
@@ -201,26 +197,6 @@ public class DictionaryDownloadService extends IntentService {
 		return true;
 	}
 
-	// Check RouterKeygen.dic file through md5
-	private boolean checkDicMD5(String dicFile) {
-		try {
-			MessageDigest md = MessageDigest.getInstance("MD5");
-			InputStream is = new FileInputStream(dicFile);
-			try {
-				is = new DigestInputStream(is, md);
-				byte[] buffer = new byte[16384];
-				while (is.read(buffer) != -1)
-					;
-			} finally {
-				is.close();
-			}
-			final byte[] hash = md.digest();
-			return Arrays.equals(hash, DICTIONARY_HASH);
-		} catch (Exception e) {
-			return false;
-		}
-
-	}
 
 	private NotificationCompat2.Builder getSimple(CharSequence title,
 			CharSequence context) {

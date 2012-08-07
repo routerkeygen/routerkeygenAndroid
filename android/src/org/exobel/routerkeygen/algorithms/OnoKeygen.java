@@ -23,7 +23,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import org.exobel.routerkeygen.R;
-import org.exobel.routerkeygen.StringUtils;
+import org.exobel.routerkeygen.utils.StringUtils;
 
 import android.os.Parcel;
 import android.os.Parcelable;

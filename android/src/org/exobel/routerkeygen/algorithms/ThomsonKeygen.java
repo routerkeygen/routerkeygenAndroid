@@ -33,8 +33,8 @@ import java.util.List;
 import java.util.zip.ZipInputStream;
 
 import org.exobel.routerkeygen.R;
-import org.exobel.routerkeygen.StringUtils;
 import org.exobel.routerkeygen.ui.Preferences;
+import org.exobel.routerkeygen.utils.StringUtils;
 
 import android.os.Environment;
 import android.os.Parcel;
