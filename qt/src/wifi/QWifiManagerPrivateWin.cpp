@@ -6,10 +6,10 @@
  */
 
 #include "QWifiManagerPrivateWin.h"
+#include <QDebug>
+#include "QWifiManager.h"
 
-QWifiManagerPrivateWin::QWifiManagerPrivateWin() {
-	// TODO Auto-generated constructor stub
-
+QWifiManagerPrivateWin::QWifiManagerPrivateWin() : scan(NULL){
 }
 
 QWifiManagerPrivateWin::~QWifiManagerPrivateWin() {
@@ -25,7 +25,7 @@ void QWifiManagerPrivateWin::startScan() {
 	if (scan != NULL) {
 		delete scan;
 	}
-	scan = new QProcess(this);
+    scan = new QProcess();
 	QStringList args;
 	args << "wlan" << "show" << "network" << "mode=bssid";
 	connect(scan, SIGNAL(finished(int)), this, SLOT(parseResults()));

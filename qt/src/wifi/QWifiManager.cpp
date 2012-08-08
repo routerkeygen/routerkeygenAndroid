@@ -9,15 +9,22 @@
 #include <QDebug>
 
 
+#ifdef Q_OS_UNIX
 #include "QWifiManagerPrivateUnix.h"
 QWifiManager::QWifiManager() :
-		forceRefresh(false) , scan(NULL), impl(new QWifiManagerPrivateUnix()){}
+        forceRefresh(false) , scan(NULL), impl(new QWifiManagerPrivateUnix()){
+
+    connect(impl, SIGNAL(scanFinished(int)), this, SLOT(implScanFinished(int)));}
+
+#endif
 
 #ifdef Q_OS_WIN
 
 #include "QWifiManagerPrivateWin.h"
 QWifiManager::QWifiManager() :
-		forceRefresh(false) , scan(NULL), impl(new QWifiManagerPrivateWin()){}
+        forceRefresh(false) , scan(NULL), impl(new QWifiManagerPrivateWin()){
+
+    connect(impl, SIGNAL(scanFinished(int)), this, SLOT(implScanFinished(int)));}
 
 #endif
 
@@ -30,7 +37,6 @@ QWifiManager::~QWifiManager() {
 	}
 }
 void QWifiManager::startScan() {
-	connect(impl, SIGNAL(scanFinished(int)), this, SLOT(implScanFinished(int)));
 #ifdef Q_OS_UNIX
 	if (forceRefresh) {
 		if ( scan != NULL ){

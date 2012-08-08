@@ -80,10 +80,10 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
 
 	// build menu
 	trayMenu = new QMenu(this);
-	trayIcon = new QSystemTrayIcon(this);
+    trayIcon = new QSystemTrayIcon(this);
 	trayIcon->setIcon(windowIcon());
-	trayIcon->setContextMenu(trayMenu);
-	trayIcon->show();
+    trayIcon->setContextMenu(trayMenu);
+    trayIcon->show();
 
 	settings = new QSettings("Exobel", "RouterKeygen");
 	bool forceRefresh = settings->value(FORCE_REFRESH, false).toBool();
@@ -205,7 +205,7 @@ void RouterKeygen::scanFinished(int code) {
 		ui->networkslist->horizontalHeader()->setStretchLastSection(true);
 		ui->networkslist->sortByColumn(2); //Order by Strength
 		ui->networkslist->sortByColumn(3); // and then by support
-		ui->statusBar->clearMessage();
+        //ui->statusBar->clearMessage();
 		break;
 	}
 	case QWifiManager::ERROR_NO_NM:
