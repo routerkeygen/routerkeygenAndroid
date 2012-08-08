@@ -31,9 +31,12 @@
 #include <QClipboard>
 #include <QWidgetAction>
 #include "QWifiManager.h"
+#include <QDesktopServices>
+#include <stdlib.h>
 
 RouterKeygen::RouterKeygen(QWidget *parent) :
-    QMainWindow(parent), ui(new Ui::RouterKeygen), loading(NULL), loadingText(NULL) {
+		QMainWindow(parent), ui(new Ui::RouterKeygen), loading(NULL), loadingText(
+				NULL) {
 	ui->setupUi(this);
 	connect(ui->calculateButton, SIGNAL( clicked() ), this,
 			SLOT( manualCalculation() ));
@@ -46,13 +49,12 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
 			SLOT( forceRefreshToggle(int) ));
 #else
 	ui->forceRefresh->setVisible(false); // it is not needed in Windows
-
 #endif
 	wifiManager = new QWifiManager();
 	connect(wifiManager, SIGNAL( scanFinished(int) ), this,
 			SLOT( scanFinished(int) ));
-    loadingAnim = new QMovie(":/images/loading.gif");
-    loadingAnim->setParent(this);
+	loadingAnim = new QMovie(":/images/loading.gif");
+	loadingAnim->setParent(this);
 	/*Auto-Complete!*/
 	QStringList wordList;
 	wordList << "Thomson" << "Blink" << "SpeedTouch" << "O2Wireless"
@@ -81,16 +83,17 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
 
 	// build menu
 	trayMenu = new QMenu(this);
-    trayIcon = new QSystemTrayIcon(this);
+	trayIcon = new QSystemTrayIcon(this);
 	trayIcon->setIcon(windowIcon());
-    trayIcon->setContextMenu(trayMenu);
-    trayIcon->show();
+	trayIcon->setContextMenu(trayMenu);
+	trayIcon->show();
 
 	settings = new QSettings("Exobel", "RouterKeygen");
 	bool forceRefresh = settings->value(FORCE_REFRESH, false).toBool();
 	wifiManager->setForceScan(forceRefresh);
 	ui->forceRefresh->setChecked(forceRefresh);
 	runInBackground = settings->value(RUN_IN_BACKGROUND, true).toBool();
+	runOnStartUp = settings->value(RUN_ON_START_UP, false).toBool();
 	qApp->setQuitOnLastWindowClosed(!runInBackground);
 	wifiManager->startScan();
 
@@ -190,6 +193,11 @@ void RouterKeygen::scanFinished(int code) {
 			trayMenu->addAction(tr("\tNone were detected"))->setEnabled(false);
 		}
 		trayMenu->addSeparator();
+		QAction * startUp = trayMenu->addAction(tr("Run on Start up"));
+		startUp->setCheckable(true);
+		startUp->setChecked(runOnStartUp);
+		connect(startUp, SIGNAL(toggled(bool)), this,
+				SLOT(startUpRunToggle(bool)));
 		QAction * backgroundRun = trayMenu->addAction(
 				tr("Run in the background"));
 		backgroundRun->setCheckable(true);
@@ -206,7 +214,7 @@ void RouterKeygen::scanFinished(int code) {
 		ui->networkslist->horizontalHeader()->setStretchLastSection(true);
 		ui->networkslist->sortByColumn(2); //Order by Strength
 		ui->networkslist->sortByColumn(3); // and then by support
-        //ui->statusBar->clearMessage();
+		//ui->statusBar->clearMessage();
 		break;
 	}
 	case QWifiManager::ERROR_NO_NM:
@@ -309,24 +317,55 @@ void RouterKeygen::backgroundRunToggle(bool state) {
 	settings->setValue(RUN_IN_BACKGROUND, runInBackground);
 }
 
+void RouterKeygen::startUpRunToggle(bool state) {
+	runOnStartUp = state;
+	settings->setValue(RUN_ON_START_UP, runOnStartUp);
+#ifdef Q_OS_UNIX
+	QString newFile = "/home/" + QString(getenv("USER"))
+			+ "/.config/autostart/routerkeygen.desktop";
+	qDebug() << newFile;
+	if (runOnStartUp) {
+		QFile autoStart(":/routerkeygen.desktop");
+		if (!autoStart.copy(newFile))
+			qDebug() << "Error while copying file";
+		QFile::setPermissions(newFile,
+				QFile::ReadOwner | QFile::WriteOwner | QFile::ReadUser
+						| QFile::WriteUser | QFile::ReadGroup | QFile::ReadGroup
+						| QFile::ReadOther);
+	} else {
+		if (QFile::exists(newFile))
+			if (!QFile::remove(newFile))
+				qDebug() << "Error while removing file";
+	}
+#elif Q_OS_WIN
+	 QSettings settings("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",QSettings::NativeFormat);
+	    if (runOnStartUp) {
+	        settings.setValue("RouterKeygen", QCoreApplication::applicationFilePath().replace('/','\\'));
+	    } else {
+	        settings.remove("RouterKeygen");
+	    }
+#endif
+}
+
 void RouterKeygen::setLoadingAnimation(const QString& text) {
 	loadingAnim->start();
-    loading = new QLabel(ui->statusBar);
+	loading = new QLabel(ui->statusBar);
 	loading->setMovie(loadingAnim);
-    loadingText = new QLabel(text,ui->statusBar);
+	loadingText = new QLabel(text, ui->statusBar);
 	ui->statusBar->clearMessage();
 	ui->statusBar->addWidget(loading);
 	ui->statusBar->addWidget(loadingText);
 }
 void RouterKeygen::cleanLoadingAnimation() {
-    if ( loading == NULL || loadingText == NULL )
-        return;
+	if (loading == NULL || loadingText == NULL)
+		return;
 	loadingAnim->stop();
 	ui->statusBar->removeWidget(loading);
 	ui->statusBar->removeWidget(loadingText);
-    loading = NULL;
-    loadingText = NULL;
+	loading = NULL;
+	loadingText = NULL;
 }
 
+const QString RouterKeygen::RUN_ON_START_UP = "RUN_ON_START_UP";
 const QString RouterKeygen::RUN_IN_BACKGROUND = "RUN_IN_BACKGROUND";
 const QString RouterKeygen::FORCE_REFRESH = "FORCE_REFRESH";

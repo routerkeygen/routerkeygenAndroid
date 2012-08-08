@@ -36,6 +36,7 @@ private slots:
     void copyKey();
     void forceRefreshToggle(int);
     void backgroundRunToggle(bool);
+    void startUpRunToggle(bool);
 
 private:
     void addNetworkToTray(const QString & ssid, int level);
@@ -54,8 +55,11 @@ private:
     QSystemTrayIcon *trayIcon;
     QMenu *trayMenu;
     bool runInBackground;
+    bool runOnStartUp;
     //SETTINGS VALUES
     QSettings * settings;
+
+    const static QString RUN_ON_START_UP;
     const static QString RUN_IN_BACKGROUND;
     const static QString FORCE_REFRESH;
 };

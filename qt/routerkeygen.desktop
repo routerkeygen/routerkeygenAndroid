@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=RouterKegyen
+GenericName=Key Generator
+Comment=Generate the default key of several routers.
+Exec=/home/ruka/RouterKeygen -h
+Terminal=false
+Type=Application
+Icon=/home/ruka/Projectos/routerkeygen/qt/images/icon.png
+Categories=Network;
+StartupNotify=false

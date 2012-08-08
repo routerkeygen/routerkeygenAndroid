@@ -18,6 +18,7 @@
  */
 #include <QtGui/QApplication>
 #include "routerkeygen.h"
+#include <cstring>
 
 int main(int argc, char *argv[])
 {
@@ -26,7 +27,12 @@ int main(int argc, char *argv[])
 #if defined(Q_WS_S60)
     w.showMaximized();
 #else
-    w.show();
+    if ( argc > 1 ){
+    	if ( strcmp("-h", argv[1]) != 0)
+    		w.show();
+    }
+    else
+    	w.show();
 #endif
 
     return a.exec();
