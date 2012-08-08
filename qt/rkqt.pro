@@ -77,11 +77,9 @@ HEADERS += src/wifi/QWifiManagerPrivate.h \
     src/include/zyxelkeygen.h
 INCLUDEPATH += src/include/
 win32:SOURCES += src/wifi/QWifiManagerPrivateWin.cpp \
-    src/wifi/QWifiManagerPrivate.cpp \
     src/sha1/sha1dgst.c \
     src/sha1/sha1-586.win32.S
 win32:HEADERS += src/wifi/QWifiManagerPrivateWin.h \
-    src/wifi/QWifiManagerPrivate.h \
     src/include/sha_locl.h \
     src/include/sha.h \
     src/include/opensslconf.h \
