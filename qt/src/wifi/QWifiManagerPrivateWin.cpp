@@ -9,7 +9,7 @@
 #include <QDebug>
 #include "QWifiManager.h"
 
-QWifiManagerPrivateWin::QWifiManagerPrivateWin() : scan(NULL){
+QWifiManagerPrivateWin::QWifiManagerPrivateWin() : scan(NULL), timerId(-1){
 }
 
 QWifiManagerPrivateWin::~QWifiManagerPrivateWin() {
@@ -21,9 +21,13 @@ QWifiManagerPrivateWin::~QWifiManagerPrivateWin() {
 }
 
 void QWifiManagerPrivateWin::startScan() {
-
-	if (scan != NULL) {
-		delete scan;
+    if ( timerId == -1 )
+        timerId = startTimer(120000);
+    if (scan != NULL ) {
+        if ( scan->state() == QProcess::NotRunning )
+            delete scan;
+        else
+            return;
 	}
     scan = new QProcess();
 	QStringList args;
@@ -34,7 +38,7 @@ void QWifiManagerPrivateWin::startScan() {
 
 void QWifiManagerPrivateWin::parseResults() {
 	QString reply(scan->readAllStandardOutput());
-	qDebug() << reply;
+    //qDebug() << reply;
 	QStringList lines = reply.split("\n");
 	QString ssid, bssid, enc;
 	int level;
@@ -55,4 +59,10 @@ void QWifiManagerPrivateWin::parseResults() {
 
 	}
 	emit scanFinished(QWifiManager::SCAN_OK);
+}
+
+void QWifiManagerPrivateWin::timerEvent(QTimerEvent *event)
+{
+   // qDebug() << "Rescanning";
+    startScan();
 }

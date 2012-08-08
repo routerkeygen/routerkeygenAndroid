@@ -40,7 +40,12 @@ void QWifiManager::startScan() {
 #ifdef Q_OS_UNIX
 	if (forceRefresh) {
 		if ( scan != NULL ){
-			delete scan;
+            if ( scan->state() == QProcess::NotRunning )
+                delete scan;
+            else{
+                impl->startScan();
+                return;
+            }
 		}
 		scan = new QProcess(this);
 		QStringList args;

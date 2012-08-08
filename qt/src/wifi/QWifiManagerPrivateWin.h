@@ -10,6 +10,8 @@
 
 #include "QWifiManagerPrivate.h"
 #include <QProcess>
+#include <QTimerEvent>
+
 class QWifiManagerPrivateWin: public QWifiManagerPrivate {
 Q_OBJECT
 public:
@@ -17,11 +19,16 @@ public:
 	virtual ~QWifiManagerPrivateWin();
 	void startScan();
 
+protected:
+    void timerEvent(QTimerEvent *event);
+
+
 private slots:
 	void parseResults();
 
 private:
 	QProcess * scan;
+    int timerId;
 };
 
 #endif /* QWIFIMANAGERPRIVATEWIN_H_ */

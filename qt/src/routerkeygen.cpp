@@ -33,7 +33,7 @@
 #include "QWifiManager.h"
 
 RouterKeygen::RouterKeygen(QWidget *parent) :
-		QMainWindow(parent), ui(new Ui::RouterKeygen) {
+    QMainWindow(parent), ui(new Ui::RouterKeygen), loading(NULL), loadingText(NULL) {
 	ui->setupUi(this);
 	connect(ui->calculateButton, SIGNAL( clicked() ), this,
 			SLOT( manualCalculation() ));
@@ -51,7 +51,8 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
 	wifiManager = new QWifiManager();
 	connect(wifiManager, SIGNAL( scanFinished(int) ), this,
 			SLOT( scanFinished(int) ));
-	loadingAnim = new QMovie(":/images/loading.gif");
+    loadingAnim = new QMovie(":/images/loading.gif");
+    loadingAnim->setParent(this);
 	/*Auto-Complete!*/
 	QStringList wordList;
 	wordList << "Thomson" << "Blink" << "SpeedTouch" << "O2Wireless"
@@ -310,17 +311,21 @@ void RouterKeygen::backgroundRunToggle(bool state) {
 
 void RouterKeygen::setLoadingAnimation(const QString& text) {
 	loadingAnim->start();
-	loading = new QLabel();
+    loading = new QLabel(ui->statusBar);
 	loading->setMovie(loadingAnim);
-	loadingText = new QLabel(text);
+    loadingText = new QLabel(text,ui->statusBar);
 	ui->statusBar->clearMessage();
 	ui->statusBar->addWidget(loading);
 	ui->statusBar->addWidget(loadingText);
 }
 void RouterKeygen::cleanLoadingAnimation() {
+    if ( loading == NULL || loadingText == NULL )
+        return;
 	loadingAnim->stop();
 	ui->statusBar->removeWidget(loading);
 	ui->statusBar->removeWidget(loadingText);
+    loading = NULL;
+    loadingText = NULL;
 }
 
 const QString RouterKeygen::RUN_IN_BACKGROUND = "RUN_IN_BACKGROUND";
