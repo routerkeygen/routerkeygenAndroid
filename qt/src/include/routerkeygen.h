@@ -38,6 +38,7 @@ private slots:
     void backgroundRunToggle(bool);
 
 private:
+    void addNetworkToTray(const QString & ssid, int level);
     void setLoadingAnimation(const QString& text);
     void cleanLoadingAnimation();
     void calc(QString ssid, QString mac );

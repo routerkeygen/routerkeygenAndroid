@@ -76,15 +76,12 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
 	ui->splitter->setStretchFactor(0, 2);
 	ui->splitter->setStretchFactor(1, 1);
 
-	// load icon
-	QIcon icon = QIcon(":/images/icon.png");
-
 	// set up and show the system tray icon
 
 	// build menu
 	trayMenu = new QMenu(this);
 	trayIcon = new QSystemTrayIcon(this);
-	trayIcon->setIcon(icon);
+	trayIcon->setIcon(windowIcon());
 	trayIcon->setContextMenu(trayMenu);
 	trayIcon->show();
 
@@ -170,16 +167,6 @@ void RouterKeygen::scanFinished(int code) {
 				SIGNAL(triggered()), this, SLOT(show()));
 		bool foundVulnerable = false;
 		for (int i = 0; i < networks.size(); ++i) {
-			Keygen * keygen = matcher.getKeygen(networks.at(i)->ssid,
-					networks.at(i)->bssid, networks.at(i)->level,
-					networks.at(i)->capabilities);
-			if (keygen != NULL) {
-				QAction * net = trayMenu->addAction(windowIcon(),
-						networks.at(i)->ssid); // dummy action
-				connect(net, SIGNAL(triggered()), this, SLOT(show()));
-				delete keygen;
-				foundVulnerable = true;
-			}
 			ui->networkslist->setItem(i, 0,
 					new QTableWidgetItem(networks.at(i)->ssid));
 			ui->networkslist->setItem(i, 1,
@@ -193,6 +180,8 @@ void RouterKeygen::scanFinished(int code) {
 				ui->networkslist->setItem(i, 3,
 						new QTableWidgetItem(tr("Yes")));
 				delete supported;
+				addNetworkToTray(networks.at(i)->ssid, networks.at(i)->level);
+				foundVulnerable = true;
 			} else
 				ui->networkslist->setItem(i, 3, new QTableWidgetItem(tr("No")));
 		}
@@ -214,7 +203,8 @@ void RouterKeygen::scanFinished(int code) {
 		ui->networkslist->setHorizontalHeaderLabels(headers);
 		ui->networkslist->resizeColumnsToContents();
 		ui->networkslist->horizontalHeader()->setStretchLastSection(true);
-		ui->networkslist->sortByColumn(3);
+		ui->networkslist->sortByColumn(2); //Order by Strength
+		ui->networkslist->sortByColumn(3); // and then by support
 		ui->statusBar->clearMessage();
 		break;
 	}
@@ -231,6 +221,20 @@ void RouterKeygen::scanFinished(int code) {
 		break;
 	}
 
+}
+
+void RouterKeygen::addNetworkToTray(const QString & ssid, int level) {
+	QIcon icon;
+	if (level >= 75)
+		icon = QIcon::fromTheme("nm-signal-100");
+	else if (level >= 50)
+		icon = QIcon::fromTheme("nm-signal-75");
+	else if (level >= 25)
+		icon = QIcon::fromTheme("nm-signal-50");
+	else
+		icon = QIcon::fromTheme("nm-signal-25");
+	QAction * net = trayMenu->addAction(icon, ssid);
+	connect(net, SIGNAL(triggered()), this, SLOT(show()));
 }
 
 void RouterKeygen::getResults() {
@@ -295,13 +299,13 @@ void RouterKeygen::copyKey() {
 
 void RouterKeygen::forceRefreshToggle(int state) {
 	wifiManager->setForceScan(state == Qt::Checked);
-	settings->setValue(FORCE_REFRESH,state == Qt::Checked );
+	settings->setValue(FORCE_REFRESH, state == Qt::Checked);
 }
 
 void RouterKeygen::backgroundRunToggle(bool state) {
 	runInBackground = state;
 	qApp->setQuitOnLastWindowClosed(!state);
-	settings->setValue(RUN_IN_BACKGROUND,runInBackground);
+	settings->setValue(RUN_IN_BACKGROUND, runInBackground);
 }
 
 void RouterKeygen::setLoadingAnimation(const QString& text) {
@@ -318,7 +322,6 @@ void RouterKeygen::cleanLoadingAnimation() {
 	ui->statusBar->removeWidget(loading);
 	ui->statusBar->removeWidget(loadingText);
 }
-
 
 const QString RouterKeygen::RUN_IN_BACKGROUND = "RUN_IN_BACKGROUND";
 const QString RouterKeygen::FORCE_REFRESH = "FORCE_REFRESH";
