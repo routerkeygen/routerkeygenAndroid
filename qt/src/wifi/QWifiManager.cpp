@@ -30,10 +30,8 @@ QWifiManager::~QWifiManager() {
 	}
 }
 void QWifiManager::startScan() {
-
 	connect(impl, SIGNAL(scanFinished(int)), this, SLOT(implScanFinished(int)));
 #ifdef Q_OS_UNIX
-
 	if (forceRefresh) {
 		if ( scan != NULL ){
 			delete scan;
@@ -41,20 +39,9 @@ void QWifiManager::startScan() {
 		scan = new QProcess(this);
 		QStringList args;
 		args << "iwlist" << "scan";
-		connect(scan, SIGNAL(finished(int)), this,
-				SLOT(forcedRefreshFinished()));
 		scan->start("pkexec", args);
-	} else
-		forcedRefreshFinished();
-
+	}
 #endif
-
-#ifdef Q_OS_WIN
-	impl->startScan();
-#endif
-}
-
-void QWifiManager::forcedRefreshFinished() {
 	impl->startScan();
 }
 

@@ -21,9 +21,10 @@ public:
 	QWifiManagerPrivateUnix();
 	virtual ~QWifiManagerPrivateUnix();
 	void startScan();
+private slots:
+	void updateAccessPoints();
 
 private:
-	void initDbusConnection();
 	QDBusInterface * wirelessDevice;
 };
 

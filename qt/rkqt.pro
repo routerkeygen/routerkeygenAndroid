@@ -4,10 +4,11 @@
 QT += core \
     gui \
     xml
-unix:QT += dbus
+
 TARGET = RouterKeygen
 TEMPLATE = app
-SOURCES += src/algorithms/EasyBoxKeygen.cpp \
+SOURCES += src/wifi/QWifiManagerPrivate.cpp \
+    src/algorithms/EasyBoxKeygen.cpp \
     src/algorithms/PBSKeygen.cpp \
     src/algorithms/OteKeygen.cpp \
     src/algorithms/MegaredKeygen.cpp \
@@ -40,7 +41,8 @@ SOURCES += src/algorithms/EasyBoxKeygen.cpp \
     src/main.cpp \
     src/routerkeygen.cpp \
     src/sha256.cpp
-HEADERS += src/include/EasyBoxKeygen.h \
+HEADERS += src/wifi/QWifiManagerPrivate.h \
+    src/include/EasyBoxKeygen.h \
     src/include/OteKeygen.h \
     src/include/PBSKeygen.h \
     src/include/MegaredKeygen.h \
@@ -73,18 +75,25 @@ HEADERS += src/include/EasyBoxKeygen.h \
     src/include/wlan2keygen.h \
     src/include/wlan6keygen.h \
     src/include/zyxelkeygen.h
-
 INCLUDEPATH += src/include/
-unix:INCLUDEPATH += /usr/include/NetworkManager
-unix:LIBS += -lcrypto
-
-win32:SOURCES +=  src/sha1/sha1dgst.c \
-                src/sha1/sha1-586.win32.S
-win32:HEADERS +=src/include/sha_locl.h \
+win32:SOURCES += src/wifi/QWifiManagerPrivateWin.cpp \
+    src/wifi/QWifiManagerPrivate.cpp \
+    src/sha1/sha1dgst.c \
+    src/sha1/sha1-586.win32.S
+win32:HEADERS += src/wifi/QWifiManagerPrivateWin.h \
+    src/wifi/QWifiManagerPrivate.h \
+    src/include/sha_locl.h \
     src/include/sha.h \
     src/include/opensslconf.h \
     src/include/md32_common.h
+   
+unix:SOURCES += src/wifi/QWifiManagerPrivateUnix.cpp
+unix:HEADERS += src/wifi/QWifiManagerPrivateUnix.h
+unix:INCLUDEPATH += /usr/include/NetworkManager
+unix:LIBS += -lcrypto
+unix:QT += dbus
 
+    
 FORMS += forms/routerkeygen.ui
 symbian { 
     TARGET.UID3 = 0xed94ef91

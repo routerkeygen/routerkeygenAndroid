@@ -12,6 +12,7 @@
 #include "QScanResult.h"
 #include <QProcess>
 
+class QWifiManagerPrivate;
 class QWifiManager: public QObject {
 Q_OBJECT
 public:
@@ -30,12 +31,11 @@ public:
 signals:
 	void scanFinished(int);
 private slots:
-	void forcedRefreshFinished();
+	void implScanFinished(int);
 private:
-	void clearPreviousScanResults();
-	QVector<QScanResult*> scanResults;
 	bool forceRefresh;
 	QProcess * scan;
+	QWifiManagerPrivate * impl;
 };
 
 #endif /* QWIFIMANAGER_H_ */

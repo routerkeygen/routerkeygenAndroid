@@ -29,6 +29,7 @@
 #include <QMenu>
 #include <QDebug>
 #include <QClipboard>
+#include <QWidgetAction>
 #include "QWifiManager.h"
 
 RouterKeygen::RouterKeygen(QWidget *parent) :
@@ -73,6 +74,20 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
 	//Set widget ration
 	ui->splitter->setStretchFactor(0, 2);
 	ui->splitter->setStretchFactor(1, 1);
+
+	// load icon
+	QIcon icon = QIcon(":/images/icon.png");
+
+	// set up and show the system tray icon
+
+	// build menu
+	trayMenu = new QMenu(this);
+	trayIcon = new QSystemTrayIcon(this);
+	trayIcon->setIcon(icon);
+	trayIcon->setContextMenu(trayMenu);
+	trayIcon->show();
+
+	wifiManager->startScan();
 }
 
 RouterKeygen::~RouterKeygen() {
@@ -142,7 +157,21 @@ void RouterKeygen::scanFinished(int code) {
 		ui->networkslist->clear();
 		QVector<QScanResult*> networks = wifiManager->getScanResults();
 		ui->networkslist->setRowCount(networks.size());
+		trayMenu->clear();
+		connect(trayMenu->addAction(tr("Vulnerable networks")),
+				SIGNAL(triggered()), this, SLOT(show()));
+		bool foundVulnerable = false;
 		for (int i = 0; i < networks.size(); ++i) {
+			Keygen * keygen = matcher.getKeygen(networks.at(i)->ssid,
+					networks.at(i)->bssid, networks.at(i)->level,
+					networks.at(i)->capabilities);
+			if (keygen != NULL) {
+				QAction * net = trayMenu->addAction(windowIcon(),
+						networks.at(i)->ssid); // dummy action
+				connect(net, SIGNAL(triggered()), this, SLOT(show()));
+				delete keygen;
+				foundVulnerable = true;
+			}
 			ui->networkslist->setItem(i, 0,
 					new QTableWidgetItem(networks.at(i)->ssid));
 			ui->networkslist->setItem(i, 1,
@@ -159,12 +188,26 @@ void RouterKeygen::scanFinished(int code) {
 			} else
 				ui->networkslist->setItem(i, 3, new QTableWidgetItem(tr("No")));
 		}
+		if (!foundVulnerable) {
+			trayMenu->addAction(tr("\tNone were detected"))->setEnabled(false);
+		}
+		trayMenu->addSeparator();
+		QAction * backgroundRun = trayMenu->addAction(
+				tr("Run in the background"));
+		backgroundRun->setCheckable(true);
+		backgroundRun->setChecked(true);
+		connect(backgroundRun, SIGNAL(toggled(bool)), this,
+				SLOT(backgroundRunToggle(bool)));
+		trayMenu->addSeparator();
+		QAction * exitAction = trayMenu->addAction(tr("Exit"));
+		connect(exitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
 		QStringList headers;
 		headers << "SSID" << "BSSID" << tr("Strength") << tr("Supported");
 		ui->networkslist->setHorizontalHeaderLabels(headers);
 		ui->networkslist->resizeColumnsToContents();
 		ui->networkslist->horizontalHeader()->setStretchLastSection(true);
 		ui->networkslist->sortByColumn(3);
+		ui->statusBar->clearMessage();
 		break;
 	}
 	case QWifiManager::ERROR_NO_NM:
@@ -176,7 +219,7 @@ void RouterKeygen::scanFinished(int code) {
 		break;
 
 	case QWifiManager::ERROR_NO_WIFI_ENABLED:
-		ui->statusBar->showMessage(tr("The wifi card was not enabled"));
+		ui->statusBar->showMessage(tr("The wifi card is not enabled"));
 		break;
 	}
 
@@ -244,6 +287,10 @@ void RouterKeygen::copyKey() {
 
 void RouterKeygen::forceRefreshToggle(int state) {
 	wifiManager->setForceScan(state == Qt::Checked);
+}
+
+void RouterKeygen::backgroundRunToggle(bool state) {
+	qApp->setQuitOnLastWindowClosed(!state);
 }
 
 void RouterKeygen::setLoadingAnimation(const QString& text) {

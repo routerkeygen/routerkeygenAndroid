@@ -4,6 +4,8 @@
 #include "WirelessMatcher.h"
 #include <QMainWindow>
 #include <QLabel>
+#include <QSystemTrayIcon>
+#include <QMenu>
 #include "KeygenThread.h"
 #include "QWifiManager.h"
 
@@ -32,6 +34,7 @@ private slots:
     void rightButtonClicked(QObject *obj,const QPoint &p);
     void copyKey();
     void forceRefreshToggle(int);
+    void backgroundRunToggle(bool);
 
 private:
     void setLoadingAnimation(const QString& text);
@@ -46,6 +49,12 @@ private:
     QMovie * loadingAnim;
     QLabel * loading;
     QLabel * loadingText;
+    QSystemTrayIcon *trayIcon;
+    QMenu *trayMenu;
+
+    //SETTINGS VALUES
+    const static QString RUN_IN_BACKGROUND;
+    const static QString FORCE_REFRESH;
 };
 
 #endif // ROUTERKEYGEN_H
