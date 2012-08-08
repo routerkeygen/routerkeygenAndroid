@@ -41,11 +41,12 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
 			SLOT( refreshNetworks() ));
 	connect(ui->networkslist, SIGNAL( cellClicked(int,int) ), this,
 			SLOT( tableRowSelected(int,int) ));
-#ifdef Q_OS_WIN
-	ui->forceRefresh->setVisible(false); // it is not needed in Windows
-#else
+#ifdef Q_OS_UNIX
 	connect(ui->forceRefresh, SIGNAL( stateChanged(int) ), this,
 			SLOT( forceRefreshToggle(int) ));
+#else
+	ui->forceRefresh->setVisible(false); // it is not needed in Windows
+
 #endif
 	wifiManager = new QWifiManager();
 	connect(wifiManager, SIGNAL( scanFinished(int) ), this,
@@ -87,7 +88,14 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
 	trayIcon->setContextMenu(trayMenu);
 	trayIcon->show();
 
+	settings = new QSettings("Exobel", "RouterKeygen");
+	bool forceRefresh = settings->value(FORCE_REFRESH, false).toBool();
+	wifiManager->setForceScan(forceRefresh);
+	ui->forceRefresh->setChecked(forceRefresh);
+	runInBackground = settings->value(RUN_IN_BACKGROUND, true).toBool();
+	qApp->setQuitOnLastWindowClosed(!runInBackground);
 	wifiManager->startScan();
+
 }
 
 RouterKeygen::~RouterKeygen() {
@@ -195,7 +203,7 @@ void RouterKeygen::scanFinished(int code) {
 		QAction * backgroundRun = trayMenu->addAction(
 				tr("Run in the background"));
 		backgroundRun->setCheckable(true);
-		backgroundRun->setChecked(true);
+		backgroundRun->setChecked(runInBackground);
 		connect(backgroundRun, SIGNAL(toggled(bool)), this,
 				SLOT(backgroundRunToggle(bool)));
 		trayMenu->addSeparator();
@@ -287,10 +295,13 @@ void RouterKeygen::copyKey() {
 
 void RouterKeygen::forceRefreshToggle(int state) {
 	wifiManager->setForceScan(state == Qt::Checked);
+	settings->setValue(FORCE_REFRESH,state == Qt::Checked );
 }
 
 void RouterKeygen::backgroundRunToggle(bool state) {
+	runInBackground = state;
 	qApp->setQuitOnLastWindowClosed(!state);
+	settings->setValue(RUN_IN_BACKGROUND,runInBackground);
 }
 
 void RouterKeygen::setLoadingAnimation(const QString& text) {
@@ -307,3 +318,7 @@ void RouterKeygen::cleanLoadingAnimation() {
 	ui->statusBar->removeWidget(loading);
 	ui->statusBar->removeWidget(loadingText);
 }
+
+
+const QString RouterKeygen::RUN_IN_BACKGROUND = "RUN_IN_BACKGROUND";
+const QString RouterKeygen::FORCE_REFRESH = "FORCE_REFRESH";

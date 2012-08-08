@@ -8,6 +8,7 @@
 #include <QMenu>
 #include "KeygenThread.h"
 #include "QWifiManager.h"
+#include <QSettings>
 
 namespace Ui {
     class RouterKeygen;
@@ -51,8 +52,9 @@ private:
     QLabel * loadingText;
     QSystemTrayIcon *trayIcon;
     QMenu *trayMenu;
-
+    bool runInBackground;
     //SETTINGS VALUES
+    QSettings * settings;
     const static QString RUN_IN_BACKGROUND;
     const static QString FORCE_REFRESH;
 };

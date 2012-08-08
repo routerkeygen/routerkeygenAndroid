@@ -22,7 +22,6 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    a.setQuitOnLastWindowClosed(false);
     RouterKeygen w;
 #if defined(Q_WS_S60)
     w.showMaximized();
