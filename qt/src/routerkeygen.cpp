@@ -337,10 +337,11 @@ void RouterKeygen::startUpRunToggle(bool state) {
 			if (!QFile::remove(newFile))
 				qDebug() << "Error while removing file";
 	}
-#elif Q_OS_WIN
+#endif
+#ifdef Q_OS_WIN
 	 QSettings settings("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",QSettings::NativeFormat);
 	    if (runOnStartUp) {
-	        settings.setValue("RouterKeygen", QCoreApplication::applicationFilePath().replace('/','\\'));
+            settings.setValue("RouterKeygen", QCoreApplication::applicationFilePath().replace('/','\\')+ " -h");
 	    } else {
 	        settings.remove("RouterKeygen");
 	    }
