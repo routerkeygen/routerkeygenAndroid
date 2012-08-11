@@ -89,7 +89,7 @@
       <item>
        <widget class="QLabel" name="networkListLabel">
         <property name="text">
-         <string>Networks List</string>
+         <string>Scanned Networks</string>
         </property>
        </widget>
       </item>
