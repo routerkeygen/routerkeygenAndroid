@@ -17,7 +17,7 @@
    You should have received a copy of the GNU General Public License
    along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
    -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
     <!-- Translation proudly done by Simone "lostrozzacavalli" Guidi-->
     
     <!-- MISC STRINGS -->
@@ -43,8 +43,6 @@
 	<string name="bt_choose">Apri</string>
 	<string name="bt_choose_back">Su</string>
 	<string name="bt_close">Chiudi</string>
-	<string name="bt_yes">Sì</string>
-	<string name="bt_no">No</string>
 	<string name="bt_pause">Pausa</string>
 	<string name="bt_save_sd">Salva nella scheda SD</string>
 	<string name="bt_connect">Connetti automaticamente</string>
@@ -52,19 +50,14 @@
 		
 	<!-- DIALOG STRINGS -->
 	<string name="lb_manual">Inserisci qui il tuo ESSID:</string>
-	<string name="dialog_nativecalc">Calcolando le chiavi</string>
 	<string name="dialog_nativecalc_msg">Questo può richiedere fino a 2 minuti. Per favore attendi.</string>
-	<string name="dialog_thomson3g">Thomson 3G</string>
-	<string name="dialog_thomson3g_msg">Recuperando le chiavi&#8230;</string>
-	<string name="msg_dicislarge">Il dizionario occupa 28 MB. È consigliabile usare una connessione wifi.\nSei sicuro di voler continuare?</string>
+	<string name="msg_dicislarge">Il dizionario occupa 66 MB. È consigliabile usare una connessione wifi.\nSei sicuro di voler continuare?</string>
     <string name="msg_dl_estimating">Stimando la velocità di download e il tempo rimanente&#8230;</string>
     <string name="msg_dl_dlingdic">Scaricando il dizionario</string>
-	<string name="msg_dl_speed">velocità di download</string>
-    <string name="msg_dl_eta">Tempo rimanente stimato</string>
     <string name="msg_dic_updated">Il tuo dizionario è già aggiornato all\'ultima versione.</string>
     <string name="msg_dic_updated_finished">Il tuo dizionario è stato aggiornato all\'ultima versione.</string>
     <string name="msg_wait">Per favore attendi&#8230;</string>
-	<string name="lb_manual_bssid">indirizzo MAC</string>
+	<string name="lb_manual_bssid">MAC address (optional):</string> <!-- UNTRANSLATED -->
 	<string name="dialog_about_credits">Crediti</string>
 	<string name="dialog_about_credits_desc">Router Keygen è il risultato dell\'inestimabile contributo da parte delle seguenti persone/organizzazioni:\n\n
 				                <b>Luís Fonseca</b> - membro del Team Exobel\n
@@ -93,7 +86,6 @@
 	<string name="pref_hinton_wifion">Attivare il wifi automaticamente</string>
 	<string name="pref_hintoff_wifion">Non attivare il wifi automaticamente</string>
 	<string name="pref_wifion">Auto Wifi On</string>
-	<string name="pref_wifioff">Auto Wifi Off</string>
 	<string name="pref_folder_select">Seleziona la cartella</string>
 	<string name="pref_folder_select_des">Seleziona la cartella del dizionario</string>
 	<string name="pref_1section">Opzioni Generali</string>
@@ -112,14 +104,10 @@
 	<string name="pref_thomson3g">utilizza 3G per Thomson</string>
 	<string name="pref_hinton_thomson3g">Recuperando le chiavi da Internet</string>
 	<string name="pref_hintoff_thomson3g">Usando il dizionario per generare chiavi.</string>
-    <string name="pref_hinton_manual_mac">L\'input manuale ha anche un campo MAC</string>
-    <string name="pref_hintoff_manual_mac">L\'input manuale ha anche un campo SSID</string>
     <string name="pref_thomson_section">Opzioni Thomson</string>
-    <string name="pref_manual_mac">input manuale MAC</string>
 	<string name="pref_update">Check for Updates</string> <!-- UNTRANSLATED -->
 	
 	<!-- ERROR MESSAGE STRINGS -->
-	<string name="msg_newthomson">Questo è un nuovo router Thomson la cui chiave non può essere calcolata!</string>
 	<string name="msg_unspported">Questo ESSID non è supportato!</string>
 	<string name="msg_nowifidetected">Nessuna rete wifi trovata!</string>
 	<string name="msg_nowifi">Il Wifi non è attivo! Per favore attiva il Wifi!</string>
@@ -142,10 +130,10 @@
 	<string name="msg_erralicenotsupported">Questa serie Alice non è ancora supportata!</string>
 	<string name="msg_errversion">Versione sconosciuta del dizionario.</string>
 	<string name="msg_startingnativecalc">Errore con il dizionario. Inizio del calcolo nativo.</string>
-	<string name="msg_rotation_nativecalc">Calcolo cancellato. Per favore non ruotare il cellulare durante l\'elaborazione del calcolo.</string>
 	<string name="msg_err_essid_no_match">L\'SSID calcolato non corrisponde a quello inserito.</string>
 	<string name="msg_err_native">Errore nel calcolo nativo. Per favore informa il team.</string>
 	<string name="msg_nomemoryonsdcard">Lo spazio esterno non ha sufficiente memoria.</string>
+	<string name="msg_no_write_permissions">Impossible to write to the selected folder.</string>  <!-- UNTRANSLATED -->
 	<string name="msg_error">Errore</string>
 	<string name="pref_msg_err_backup_dic">Errore nello spostare il dizionario nel backup</string>
 	<string name="pref_msg_err_rename_dic">Errore nel rinominare il dizionario scaricato.</string>
@@ -159,6 +147,8 @@
     <string name="msg_saved_key_file">salvato nella scheda SD.</string>
     <string name="pref_msg_no_network">Nessun accesso alla rete.</string>
     <string name="msg_err_webdic_table">Error while processing online keys.</string>
+    <string name="msg_unspported_network">A valid network was not recognized. Please check the SSID and the MAC address.</string> <!-- UNTRANSLATED -->
+    <string name="msg_invalid_mac">A valid MAC address wasn\'t entered so it will be ignored.</string>  <!-- UNTRANSLATED -->
     
     <!-- AUTOCOMPLETE SUPPORT -->
 	<string-array name="supported_routers">
@@ -174,7 +164,7 @@
         <item>DMAX</item>
         <item>privat</item>
         <item>DLink-</item>
-        <item>Discus--</item>
+        <item tools:ignore="TypographyDashes">Discus--</item>
         <item>eircom</item>
         <item>FASTWEB-1-</item>
         <item>Alice-</item>

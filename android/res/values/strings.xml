@@ -17,7 +17,7 @@
    You should have received a copy of the GNU General Public License
    along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Main file and reference for the others. -->
 
@@ -45,8 +45,6 @@
     <string name="bt_choose">Open</string>
     <string name="bt_choose_back">Up</string>
     <string name="bt_close">Close</string>
-    <string name="bt_yes">Yes</string>
-    <string name="bt_no">No</string>
     <string name="bt_pause">Pause</string>
     <string name="bt_save_sd">Save to the SD</string>
     <string name="bt_connect">Auto connect</string>
@@ -54,19 +52,14 @@
 
     <!-- DIALOG STRINGS -->
     <string name="lb_manual">Input your ESSID here:</string>
-    <string name="dialog_nativecalc">Calculating Keys</string>
     <string name="dialog_nativecalc_msg">This can take up to 2 minutes. Please wait.</string>
-    <string name="dialog_thomson3g">Thomson 3G</string>
-    <string name="dialog_thomson3g_msg">Fetching Keys&#8230;</string>
-    <string name="msg_dicislarge">The dictionary size is 28 MBs. It\'s advisable that you are using a wifi connection.\nAre you sure you want to continue?</string>
+    <string name="msg_dicislarge">The dictionary size is 66 MBs. It\'s advisable that you are using a wifi connection.\nAre you sure you want to continue?</string>
     <string name="msg_dl_estimating">Estimating download speed and time left&#8230;</string>
     <string name="msg_dl_dlingdic">Downloading dictionary</string>
-    <string name="msg_dl_speed">Download speed</string>
-    <string name="msg_dl_eta">Estimaded time left</string>
     <string name="msg_dic_updated">Your dictionary is already at the latest version.</string>
     <string name="msg_dic_updated_finished">Your dictionary has been updated to the latest version.</string>
     <string name="msg_wait">Please wait&#8230;</string>
-    <string name="lb_manual_bssid">MAC address</string>
+    <string name="lb_manual_bssid">MAC address (optional):</string>
     <string name="dialog_about_credits">Credits</string>
     <string name="dialog_about_credits_desc">Router Keygen is the result of the invaluable contribution from the  following people/organizations:\n\n<b>Rui Araújo</b> - Exobel Team Member\n<b>Luís Fonseca</b> - Exobel Team Member\n<b>Ângela Igreja</b> for the Portuguese Translation\n<b>Simone Guidi</b> for the Italian Translation\n<b>Matthijs de Rijk</b> and <b>Van Hove Sven</b> for the Dutch Translation\n<b>Jon Uriarte</b> for the Spanish Translation and the WLAN_XX implementation\n<b><a href="http://www.gnucitizen.org/">GNUCITIZEN</a></b> for the Thomson algorithm\n<b><a href="http://wifiresearchers.wordpress.com/">White Hats Crew</a></b> for the Alice and FASTWEB algorithms\n<b>Fred Williams</b> for the Verizon FiOS algorithm\n<b>Muris Kurgaš </b> for the Discus algorithm\n<b><a href="http://websec.ca/">Pedro Joaquim</a></b> for the Huawei algorithm\n<b>chaeo</b> for the SKY V1 algorithm.</string>
     <string name="dialog_about_license">License</string>
@@ -81,7 +74,6 @@
     <string name="pref_hinton_wifion">Activate the Wifi Automatically</string>
     <string name="pref_hintoff_wifion">Do not activate the Wifi Automatically</string>
     <string name="pref_wifion">Auto Wifi On</string>
-    <string name="pref_wifioff">Auto Wifi Off</string>
     <string name="pref_folder_select">Folder Select</string>
     <string name="pref_folder_select_des">Select the folder of the dictionary</string>
     <string name="pref_1section">General Options</string>
@@ -99,14 +91,10 @@
     <string name="pref_thomson3g">Use 3G for Thomson</string>
     <string name="pref_hinton_thomson3g">Fetching keys from Internet</string>
     <string name="pref_hintoff_thomson3g">Using dictionary to generate keys.</string>
-    <string name="pref_hinton_manual_mac">Manual input has also a MAC field</string>
-    <string name="pref_hintoff_manual_mac">Manual input has only a SSID field</string>
     <string name="pref_thomson_section">Thomson Options</string>
-    <string name="pref_manual_mac">MAC manual input</string>
     <string name="pref_update">Check for Updates</string>
 
     <!-- ERROR MESSAGE STRINGS -->
-    <string name="msg_newthomson">That is a new Thomson router which key can not be calculated!</string>
     <string name="msg_unspported">That ESSID is not supported!</string>
     <string name="msg_nowifidetected">No WIFI networks detected!</string>
     <string name="msg_nowifi">Wifi not activated! Please activate Wifi!</string>
@@ -129,10 +117,10 @@
     <string name="msg_erralicenotsupported">This Alice series is not yet supported!</string>
     <string name="msg_errversion">Unknown version of the dictionary.</string>
     <string name="msg_startingnativecalc">Error with dictionary. Starting native calculation.</string>
-    <string name="msg_rotation_nativecalc">Calculation Cancelled. Please do not rotate your phone while doing the calculation.</string>
     <string name="msg_err_essid_no_match">The calculated SSID does not match the provided one.</string>
     <string name="msg_err_native">Error in the Native Calculation.Please inform the team.</string>
     <string name="msg_nomemoryonsdcard">The external storage has not enough free memory.</string>
+    <string name="msg_no_write_permissions">Impossible to write to the selected folder.</string>
     <string name="msg_error">Error</string>
     <string name="pref_msg_err_backup_dic">Error moving the previous Dictionary to a backup</string>
     <string name="pref_msg_err_rename_dic">Error renaming downloaded Dictionary.</string>
@@ -164,7 +152,7 @@
         <item>DMAX</item>
         <item>privat</item>
         <item>DLink-</item>
-        <item>Discus--</item>
+        <item tools:ignore="TypographyDashes">Discus--</item>
         <item>eircom</item>
         <item>FASTWEB-1-</item>
         <item>Alice-</item>
