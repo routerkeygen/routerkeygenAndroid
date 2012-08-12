@@ -31,18 +31,13 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockDialogFragment;
 
 public class ManualDialogFragment extends SherlockDialogFragment {
-	private final static String MANUAL_MAC_ARG = "manualMac";
-
 	private final static String WIRELESS_MATCHER_ARG = "wirelessMatcher";
 
-	private boolean manualMac;
 	private WirelessMatcher matcher;
 
-	public static ManualDialogFragment newInstance(boolean manualMac,
-			WirelessMatcher matcher) {
+	public static ManualDialogFragment newInstance(WirelessMatcher matcher) {
 		Bundle args = new Bundle();
 		args.putParcelable(WIRELESS_MATCHER_ARG, matcher);
-		args.putBoolean(MANUAL_MAC_ARG, manualMac);
 		ManualDialogFragment frag = new ManualDialogFragment();
 		frag.setArguments(args);
 		return frag;
@@ -50,7 +45,6 @@ public class ManualDialogFragment extends SherlockDialogFragment {
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		manualMac = getArguments().getBoolean(MANUAL_MAC_ARG);
 		matcher = getArguments().getParcelable(WIRELESS_MATCHER_ARG);
 		AlertDialog.Builder builder = new Builder(getActivity());
 		final LayoutInflater inflater = (LayoutInflater) getActivity()
@@ -87,54 +81,53 @@ public class ManualDialogFragment extends SherlockDialogFragment {
 		};
 		edit.setFilters(new InputFilter[] { filterMAC });
 		final EditText macs[] = new EditText[6];
-		if (manualMac) {
-			layout.findViewById(R.id.manual_mac_root).setVisibility(
-					View.VISIBLE);
-			edit.setImeOptions(EditorInfo.IME_ACTION_NEXT);
-			macs[0] = (EditText) layout.findViewById(R.id.input_mac_pair1);
-			macs[1] = (EditText) layout.findViewById(R.id.input_mac_pair2);
-			macs[2] = (EditText) layout.findViewById(R.id.input_mac_pair3);
-			macs[3] = (EditText) layout.findViewById(R.id.input_mac_pair4);
-			macs[4] = (EditText) layout.findViewById(R.id.input_mac_pair5);
-			macs[5] = (EditText) layout.findViewById(R.id.input_mac_pair6);
-			final InputFilter maxSize = new InputFilter.LengthFilter(2);
-			InputFilter filterMac = new InputFilter() {
-				public CharSequence filter(CharSequence source, int start,
-						int end, Spanned dest, int dstart, int dend) {
-					try {/* TODO:Lazy mode programming, improve in the future */
-						Integer.parseInt((String) source, 16);
-					} catch (Exception e) {
+		layout.findViewById(R.id.manual_mac_root).setVisibility(View.VISIBLE);
+		edit.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+		macs[0] = (EditText) layout.findViewById(R.id.input_mac_pair1);
+		macs[1] = (EditText) layout.findViewById(R.id.input_mac_pair2);
+		macs[2] = (EditText) layout.findViewById(R.id.input_mac_pair3);
+		macs[3] = (EditText) layout.findViewById(R.id.input_mac_pair4);
+		macs[4] = (EditText) layout.findViewById(R.id.input_mac_pair5);
+		macs[5] = (EditText) layout.findViewById(R.id.input_mac_pair6);
+		InputFilter filterMac = new InputFilter() {
+			public CharSequence filter(CharSequence source, int start, int end,
+					Spanned dest, int dstart, int dend) {
+				if (source.length() > 2)
+					return "";// max 2 chars
+				for (int i = start; i < end; i++) {
+					if (Character.digit(source.charAt(i),16) == -1 ) {
 						return "";
 					}
-					return null;
 				}
-			};
-			for (final EditText mac : macs) {
-				mac.setFilters(new InputFilter[] { filterMac, maxSize });
-				mac.addTextChangedListener(new TextWatcher() {
-					public void onTextChanged(CharSequence s, int start,
-							int before, int count) {
-					}
-
-					public void beforeTextChanged(CharSequence s, int start,
-							int count, int after) {
-					}
-
-					public void afterTextChanged(Editable e) {
-						if (e.length() != 2)
-							return;
-
-						for (int i = 0; i < 6; ++i) {
-							if (macs[i].getText().length() != 0)
-								continue;
-
-							macs[i].requestFocus();
-							return;
-						}
-					}
-				});
+				return null;
 			}
+		};
+		for (final EditText mac : macs) {
+			mac.setFilters(new InputFilter[] { filterMac });
+			mac.addTextChangedListener(new TextWatcher() {
+				public void onTextChanged(CharSequence s, int start,
+						int before, int count) {
+				}
+
+				public void beforeTextChanged(CharSequence s, int start,
+						int count, int after) {
+				}
+
+				public void afterTextChanged(Editable e) {
+					if (e.length() != 2)
+						return;
+
+					for (int i = 0; i < 6; ++i) {
+						if (macs[i].getText().length() >= 2)
+							continue;
+
+						macs[i].requestFocus();
+						return;
+					}
+				}
+			});
 		}
+
 		builder.setPositiveButton(getString(R.string.bt_manual_calc),
 				new OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
@@ -152,38 +145,34 @@ public class ManualDialogFragment extends SherlockDialogFragment {
 		dialog.show();
 		Button theButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
 		theButton.setOnClickListener(new View.OnClickListener() {
-			
+
 			public void onClick(View v) {
 				String ssid = edit.getText().toString().trim();
 				StringBuilder mac = new StringBuilder();
-				if (manualMac) {
-					boolean warnUnused = false;
-					for (EditText m : macs) {
-						final String mText = m.getText().toString();
-						if (mText.length() > 0)
-							warnUnused = true;
-						mac.append(mText);
-						if (!m.equals(macs[5]))
-							mac.append(":"); // do not add this for the
-												// last one
-					}
-					if (mac.length() < 17) {
-						mac.setLength(0);
-						if (warnUnused)
-							Toast.makeText(getActivity(),
-									R.string.msg_invalid_mac,
-									Toast.LENGTH_SHORT).show();
-					}
-
+				boolean warnUnused = false;
+				for (EditText m : macs) {
+					final String mText = m.getText().toString();
+					if (mText.length() > 0)
+						warnUnused = true;
+					mac.append(mText);
+					if (!m.equals(macs[5]))
+						mac.append(":"); // do not add this for the
+											// last one
 				}
+				if (mac.length() < 17) {
+					mac.setLength(0);
+					if (warnUnused)
+						Toast.makeText(getActivity(), R.string.msg_invalid_mac,
+								Toast.LENGTH_SHORT).show();
+				}
+
 				if (ssid.equals(""))
 					return;
-				Keygen keygen = matcher.getKeygen(ssid, mac.toString(),
-						0, "");
+				Keygen keygen = matcher.getKeygen(ssid, mac.toString(), 0, "");
 				if (keygen instanceof UnsupportedKeygen) {
 					Toast.makeText(getActivity(),
-							R.string.msg_unspported_network,
-							Toast.LENGTH_SHORT).show();
+							R.string.msg_unspported_network, Toast.LENGTH_SHORT)
+							.show();
 					return;
 				}
 				dismissAllowingStateLoss();

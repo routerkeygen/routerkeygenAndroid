@@ -4,7 +4,6 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -66,19 +65,16 @@ public class DictionaryDownloadService extends IntentService {
 		final String dicTemp = Environment.getExternalStorageDirectory()
 				.getPath() + File.separator + "DicTemp.dic";
 		try {
+			
 
 			final String urlDownload = intent.getStringExtra(URL_DOWNLOAD);
 
 			con = new URL(urlDownload).openConnection();
 			myDicFile = new File(dicTemp);
 
-			// Append mode on
 			fos = new FileOutputStream(myDicFile, false);
 
-			// Resuming if possible
-			myProgress = byteRead = 0;// (int) myDicFile.length();
-			// if (byteRead > 0)
-			// con.setRequestProperty("Range", "bytes=" + byteRead + "-");
+			myProgress = byteRead = 0;
 
 			dis = new DataInputStream(con.getInputStream());
 			fileLen = con.getContentLength();
@@ -94,6 +90,23 @@ public class DictionaryDownloadService extends IntentService {
 				return;
 			}
 
+			final String folderSelect = PreferenceManager
+					.getDefaultSharedPreferences(getBaseContext()).getString(
+							Preferences.folderSelectPref,
+							Environment.getExternalStorageDirectory()
+									.getAbsolutePath());
+			
+			//Testing if we can write to the file
+			if ( !new File(folderSelect
+					+ File.separator + "RouterKeygen.dic").canWrite() ) {
+				mNotificationManager.notify(
+						UNIQUE_ID,
+						getSimple(getString(R.string.msg_error),
+								getString(R.string.msg_no_write_permissions))
+								.build());
+				return;
+			}
+			
 			mNotificationManager.notify(
 					UNIQUE_ID,
 					createProgressBar(getString(R.string.msg_dl_dlingdic), "",
@@ -116,11 +129,6 @@ public class DictionaryDownloadService extends IntentService {
 				}
 			}
 
-			final String folderSelect = PreferenceManager
-					.getDefaultSharedPreferences(getBaseContext()).getString(
-							Preferences.folderSelectPref,
-							Environment.getExternalStorageDirectory()
-									.getAbsolutePath());
 
 			mNotificationManager.notify(
 					UNIQUE_ID,
@@ -156,14 +164,7 @@ public class DictionaryDownloadService extends IntentService {
 					getSimple(getString(R.string.msg_error),
 							getString(R.string.msg_nosdcard)).build());
 			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO:
-			mNotificationManager.notify(
-					UNIQUE_ID,
-					getSimple(getString(R.string.msg_error),
-							getString(R.string.msg_err_unkown)).build());
-			e.printStackTrace();
-		} catch (Exception e) {
+		}  catch (Exception e) {
 			mNotificationManager.notify(
 					UNIQUE_ID,
 					getSimple(getString(R.string.msg_error),
@@ -171,6 +172,7 @@ public class DictionaryDownloadService extends IntentService {
 			e.printStackTrace();
 		}
 	}
+
 
 	private boolean renameFile(String file, String toFile, boolean saveOld) {
 

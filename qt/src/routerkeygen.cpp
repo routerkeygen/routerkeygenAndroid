@@ -265,6 +265,7 @@ void RouterKeygen::getResults() {
 	for (int i = 0; i < listKeys.size(); ++i)
 		ui->passwordsList->insertItem(0, listKeys.at(i));
 	ui->statusBar->showMessage(tr("Calculation finished"));
+	ui->passwordsLabel->setText(tr("Calculated Passwords for %1").arg(router->getSsidName()));
 	delete calculator;
 	calculator = NULL;
 }
