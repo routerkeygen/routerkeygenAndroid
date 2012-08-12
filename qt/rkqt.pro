@@ -100,3 +100,5 @@ symbian {
         0x800000
 }
 RESOURCES += resources.qrc
+
+TRANSLATIONS = lang/routerkeygen_pt.ts
