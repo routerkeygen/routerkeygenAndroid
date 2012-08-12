@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "huaweikeygen.h"
+#include "HuaweiKeygen.h"
 
 HuaweiKeygen::HuaweiKeygen(QString & ssid, QString & mac, int level,
 		QString enc) :

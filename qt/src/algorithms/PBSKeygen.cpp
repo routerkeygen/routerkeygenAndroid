@@ -35,8 +35,8 @@ QVector<QString> & PBSKeygen::getKeys() {
 	if (!status)
 		throw ERROR;
 	sha.reset();
-	sha.addData(saltSHA256, sizeof(saltSHA256));
-	sha.addData(mac, sizeof(mac));
+	sha.addData(saltSHA256, (unsigned long)sizeof(saltSHA256));
+	sha.addData(mac, (unsigned long)sizeof(mac));
 
 	unsigned char hash[32];
 	sha.result((unsigned char *) hash);

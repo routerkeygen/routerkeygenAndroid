@@ -68,3 +68,9 @@ QVector<QScanResult*> & QWifiManager::getScanResults() {
 void QWifiManager::implScanFinished(int s){
 	emit scanFinished(s);
 }
+
+
+const QString QWifiManager::PSK = "PSK";
+const QString QWifiManager::WEP = "WEP";
+const QString QWifiManager::EAP = "EAP";
+const QString QWifiManager::OPEN = "Open";

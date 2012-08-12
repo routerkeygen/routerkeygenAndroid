@@ -39,7 +39,7 @@ private slots:
     void startUpRunToggle(bool);
 
 private:
-    void addNetworkToTray(const QString & ssid, int level);
+    void addNetworkToTray(const QString & ssid, int level, bool locked );
     void setLoadingAnimation(const QString& text);
     void cleanLoadingAnimation();
     void calc(QString ssid, QString mac );

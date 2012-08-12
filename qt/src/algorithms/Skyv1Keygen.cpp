@@ -16,21 +16,27 @@
  * You should have received a copy of the GNU General Public License
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "discuskeygen.h"
+#include "Skyv1Keygen.h"
+#include <QCryptographicHash>
 
-DiscusKeygen::DiscusKeygen(QString & ssid, QString & mac, int level,
-		QString enc) :
+SkyV1Keygen::SkyV1Keygen(QString & ssid, QString & mac, int level, QString enc) :
 		Keygen(ssid, mac, level, enc) {
 }
+const QString SkyV1Keygen::ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-QVector<QString> & DiscusKeygen::getKeys() {
-	bool status = false;
-	unsigned int routerSSIDint = getSsidName().right(6).toInt(&status, 16);
-	if (!status)
+QVector<QString> & SkyV1Keygen::getKeys() {
+	QString mac = getMacAddress();
+	if (mac.size() != 12)
 		throw ERROR;
-	QString result;
-	result.setNum((routerSSIDint - 0xD0EC31) >> 2);
-	result = "YW0" + result;
-	results.append(result);
+	QByteArray hash = QCryptographicHash::hash(mac.toAscii(),
+			QCryptographicHash::Md5);
+
+	QString key = "";
+	for (int i = 1; i <= 15; i += 2) {
+		unsigned char index = hash[i];
+		index %= 26;
+		key += ALPHABET.at(index);
+	}
+	this->results.append(key);
 	return results;
 }

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "eircomkeygen.h"
+#include "EircomKeygen.h"
 #include <QByteArray>
 #include <QCryptographicHash>
 EircomKeygen::EircomKeygen(QString & ssid, QString & mac, int level,

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "onokeygen.h"
+#include "OnoKeygen.h"
 #include <QCryptographicHash>
 
 OnoKeygen::OnoKeygen(QString & ssid, QString & mac, int level, QString enc) :

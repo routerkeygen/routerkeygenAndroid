@@ -7,6 +7,7 @@
 
 #include "QWifiManagerPrivateUnix.h"
 #include "QWifiManager.h"
+
 #include <QDebug>
 
 QWifiManagerPrivateUnix::QWifiManagerPrivateUnix() :
@@ -89,24 +90,47 @@ void QWifiManagerPrivateUnix::startScan() {
 			clearPreviousScanResults();
 			foreach (const QDBusObjectPath& connection, accessPoints.value()) {
 				qDebug() << connection.path();
-				QDBusInterface acessPoint(NM_DBUS_SERVICE, connection.path(),
+				QDBusInterface accessPoint(NM_DBUS_SERVICE, connection.path(),
 						NM_DBUS_INTERFACE_ACCESS_POINT,
 						QDBusConnection::systemBus());
-				QVariant mac = acessPoint.property("HwAddress");
-				QVariant ssid = acessPoint.property("Ssid");
-				QVariant frequency = acessPoint.property("Frequency");
-				QVariant strengh = acessPoint.property("Strength");
+				QVariant mac = accessPoint.property("HwAddress");
+				QVariant ssid = accessPoint.property("Ssid");
+				QVariant frequency = accessPoint.property("Frequency");
+				QVariant strengh = accessPoint.property("Strength");
+				QVariant capabilitiesWPA = accessPoint.property("WpaFlags");
+				QVariant capabilitiesRSN = accessPoint.property("RsnFlags");
+				QVariant flags = accessPoint.property("Flags");
 
 				if (!ssid.isValid() || !mac.isValid() || !frequency.isValid()
-						|| !strengh.isValid()) {
+						|| !strengh.isValid() || !capabilitiesRSN.isValid()
+						|| !capabilitiesWPA.isValid() || !flags.isValid() ) {
 					emit scanFinished(QWifiManager::ERROR);
 					return;
 				}
+				unsigned int capabilities = capabilitiesWPA.toUInt()
+						| capabilitiesRSN.toUInt() | flags.toUInt();
+				QString enc;
+				if (capabilities
+						& (NM_802_11_AP_SEC_PAIR_TKIP
+								| NM_802_11_AP_SEC_PAIR_CCMP
+								| NM_802_11_AP_SEC_GROUP_TKIP
+								| NM_802_11_AP_SEC_GROUP_CCMP
+								| NM_802_11_AP_SEC_KEY_MGMT_PSK
+								| NM_802_11_AP_SEC_KEY_MGMT_802_1X))
+					enc = QWifiManager::PSK;
+				else if (capabilities
+						& (NM_802_11_AP_SEC_PAIR_WEP40
+								| NM_802_11_AP_SEC_PAIR_WEP104
+								| NM_802_11_AP_SEC_GROUP_WEP40
+								| NM_802_11_AP_SEC_GROUP_WEP104))
+					enc = QWifiManager::WEP;
+				else
+					enc = QWifiManager::OPEN;
 				qDebug() << ssid.toString() << "  " << mac.toString() << " "
 						<< frequency.toString() << "Mhz Strength:"
 						<< strengh.toUInt();
 				scanResults.append(
-						new QScanResult(ssid.toString(), mac.toString(), "",
+						new QScanResult(ssid.toString(), mac.toString(), enc,
 								frequency.toInt(), strengh.toInt()));
 			}
 			emit scanFinished(QWifiManager::SCAN_OK);
@@ -151,22 +175,43 @@ void QWifiManagerPrivateUnix::updateAccessPoints() {
 	clearPreviousScanResults();
 	foreach (const QDBusObjectPath& connection, accessPoints.value()) {
 		qDebug() << connection.path();
-		QDBusInterface acessPoint(NM_DBUS_SERVICE, connection.path(),
+		QDBusInterface accessPoint(NM_DBUS_SERVICE, connection.path(),
 				NM_DBUS_INTERFACE_ACCESS_POINT, QDBusConnection::systemBus());
-		QVariant mac = acessPoint.property("HwAddress");
-		QVariant ssid = acessPoint.property("Ssid");
-		QVariant frequency = acessPoint.property("Frequency");
-		QVariant strengh = acessPoint.property("Strength");
+		QVariant mac = accessPoint.property("HwAddress");
+		QVariant ssid = accessPoint.property("Ssid");
+		QVariant frequency = accessPoint.property("Frequency");
+		QVariant strengh = accessPoint.property("Strength");
+		QVariant capabilitiesWPA = accessPoint.property("WpaFlags");
+		QVariant capabilitiesRSN = accessPoint.property("RsnFlags");
+		QVariant flags = accessPoint.property("Flags");
 
 		if (!ssid.isValid() || !mac.isValid() || !frequency.isValid()
-				|| !strengh.isValid()) {
+				|| !strengh.isValid() || !capabilitiesRSN.isValid()
+				|| !capabilitiesWPA.isValid() || !flags.isValid()) {
 			emit scanFinished(QWifiManager::ERROR);
 			return;
 		}
+		unsigned int capabilities = capabilitiesWPA.toUInt()
+				| capabilitiesRSN.toUInt() | flags.toUInt();
+		QString enc;
+		if (capabilities
+				& (NM_802_11_AP_SEC_PAIR_TKIP | NM_802_11_AP_SEC_PAIR_CCMP
+						| NM_802_11_AP_SEC_GROUP_TKIP
+						| NM_802_11_AP_SEC_GROUP_CCMP
+						| NM_802_11_AP_SEC_KEY_MGMT_PSK
+						| NM_802_11_AP_SEC_KEY_MGMT_802_1X))
+			enc = QWifiManager::PSK;
+		else if (capabilities
+				& (NM_802_11_AP_SEC_PAIR_WEP40 | NM_802_11_AP_SEC_PAIR_WEP104
+						| NM_802_11_AP_SEC_GROUP_WEP40
+						| NM_802_11_AP_SEC_GROUP_WEP104))
+			enc = QWifiManager::WEP;
+		else
+			enc = QWifiManager::OPEN;
 		qDebug() << ssid.toString() << "  " << mac.toString() << " "
 				<< frequency.toString() << "Mhz Strength:" << strengh.toUInt();
 		scanResults.append(
-				new QScanResult(ssid.toString(), mac.toString(), "",
+				new QScanResult(ssid.toString(), mac.toString(), enc,
 						frequency.toInt(), strengh.toInt()));
 	}
 	emit scanFinished(QWifiManager::SCAN_OK);

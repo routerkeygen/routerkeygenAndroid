@@ -27,6 +27,13 @@ public:
 		ERROR_NO_WIFI_ENABLED,
 		ERROR
 	};
+
+
+	// Constants used for different security types
+	const static QString PSK;
+	const static QString WEP;
+	const static QString EAP;
+	const static QString OPEN;
 	void setForceScan(bool);
 signals:
 	void scanFinished(int);

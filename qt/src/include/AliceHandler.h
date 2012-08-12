@@ -1,6 +1,6 @@
 #ifndef ALICEHANDLE_H
 #define ALICEHANDLE_H
-#include "alicemagicinfo.h"
+#include "AliceMagicInfo.h"
 #include <QtXml/QXmlDefaultHandler>
 #include <QTreeWidget>
 #include <QMap>

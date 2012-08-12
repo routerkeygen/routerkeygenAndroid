@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "wlan6keygen.h"
+#include "Wlan6Keygen.h"
 
 Wlan6Keygen::Wlan6Keygen(QString & ssid, QString & mac, int level, QString enc) :
 		Keygen(ssid, mac, level, enc) {

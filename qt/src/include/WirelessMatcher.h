@@ -9,7 +9,7 @@
 #define WIRELESSMATCHER_H_
 #include <QString>
 #include "Keygen.h"
-#include "alicemagicinfo.h"
+#include "AliceMagicInfo.h"
 #include <QVector>
 #include <QMap>
 class WirelessMatcher {

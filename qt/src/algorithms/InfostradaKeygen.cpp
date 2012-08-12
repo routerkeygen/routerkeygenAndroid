@@ -16,11 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "alicemagicinfo.h"
+#include "InfostradaKeygen.h"
 
-AliceMagicInfo::AliceMagicInfo(  QString a , int ma[2] , QString s , QString m ) :
-        alice(a) , serial(s) , mac(m)
-{
-    this->magic[0] = ma[0];
-    this->magic[1] = ma[1];
+InfostradaKeygen::InfostradaKeygen(QString & ssid, QString & mac, int level,
+		QString enc) :
+		Keygen(ssid, mac, level, enc){}
+
+QVector<QString> & InfostradaKeygen::getKeys(){
+	QString mac = getMacAddress();
+    if ( mac.size() != 12 )
+            throw ERROR;
+    results.append("2"+mac.toUpper());
+    return results;
 }

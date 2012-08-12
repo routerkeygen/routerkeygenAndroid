@@ -16,26 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "zyxelkeygen.h"
+#include "TecomKeygen.h"
+#include <QCryptographicHash>
 
-ZyxelKeygen::ZyxelKeygen(QString & ssid, QString & mac, int level,
+TecomKeygen::TecomKeygen(QString & ssid, QString & mac, int level,
 		QString enc) :
-		Keygen(ssid, mac, level, enc) {
-	this->hash = new QCryptographicHash(QCryptographicHash::Md5);
-}
-ZyxelKeygen::~ZyxelKeygen(){
-	delete hash;
-}
+		Keygen(ssid, mac, level, enc) {}
 
+QVector<QString> & TecomKeygen::getKeys() {
+    QString result;
+    result = QString::fromAscii(QCryptographicHash::hash(
+                                getSsidName().toUpper().toAscii() ,
+                                QCryptographicHash::Sha1 )
+                                      .toHex().data());
+    result.truncate(26);
+    this->results.append(result);
+    return results;
 
-QVector<QString> & ZyxelKeygen::getKeys() {
-	if (getMacAddress().size() != 12)
-		throw ERROR;
-	this->hash->reset();
-	QString macMod = getMacAddress().left(8) + getSsidName().right(4);
-	this->hash->addData(macMod.toLower().toAscii());
-	QString result = QString::fromAscii(this->hash->result().toHex().data());
-	result.truncate(20);
-	this->results.append(result.toUpper());
-	return results;
 }

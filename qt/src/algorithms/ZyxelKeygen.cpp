@@ -16,27 +16,26 @@
  * You should have received a copy of the GNU General Public License
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "skyv1keygen.h"
-#include <QCryptographicHash>
+#include "ZyxelKeygen.h"
 
-SkyV1Keygen::SkyV1Keygen(QString & ssid, QString & mac, int level, QString enc) :
+ZyxelKeygen::ZyxelKeygen(QString & ssid, QString & mac, int level,
+		QString enc) :
 		Keygen(ssid, mac, level, enc) {
+	this->hash = new QCryptographicHash(QCryptographicHash::Md5);
 }
-const QString SkyV1Keygen::ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+ZyxelKeygen::~ZyxelKeygen(){
+	delete hash;
+}
 
-QVector<QString> & SkyV1Keygen::getKeys() {
-	QString mac = getMacAddress();
-	if (mac.size() != 12)
+
+QVector<QString> & ZyxelKeygen::getKeys() {
+	if (getMacAddress().size() != 12)
 		throw ERROR;
-	QByteArray hash = QCryptographicHash::hash(mac.toAscii(),
-			QCryptographicHash::Md5);
-
-	QString key = "";
-	for (int i = 1; i <= 15; i += 2) {
-		unsigned char index = hash[i];
-		index %= 26;
-		key += ALPHABET.at(index);
-	}
-	this->results.append(key);
+	this->hash->reset();
+	QString macMod = getMacAddress().left(8) + getSsidName().right(4);
+	this->hash->addData(macMod.toLower().toAscii());
+	QString result = QString::fromAscii(this->hash->result().toHex().data());
+	result.truncate(20);
+	this->results.append(result.toUpper());
 	return results;
 }

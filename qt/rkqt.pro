@@ -4,10 +4,30 @@
 QT += core \
     gui \
     xml
-
 TARGET = RouterKeygen
 TEMPLATE = app
-SOURCES += src/wifi/QWifiManagerPrivate.cpp \
+SOURCES += src/algorithms/AliceHandler.cpp \
+    src/algorithms/AliceMagicInfo.cpp \
+    src/RouterKeygen.cpp \
+    src/algorithms/ZyxelKeygen.cpp \
+    src/algorithms/Wlan6Keygen.cpp \
+    src/algorithms/Wlan2Keygen.cpp \
+    src/algorithms/VerizonKeygen.cpp \
+    src/algorithms/ThomsonKeygen.cpp \
+    src/algorithms/TelseyKeygen.cpp \
+    src/algorithms/TecomKeygen.cpp \
+    src/algorithms/PirelliKeygen.cpp \
+    src/algorithms/Skyv1Keygen.cpp \
+    src/algorithms/OnoKeygen.cpp \
+    src/algorithms/InfostradaKeygen.cpp \
+    src/algorithms/HuaweiKeygen.cpp \
+    src/algorithms/EircomKeygen.cpp \
+    src/algorithms/DlinkKeygen.cpp \
+    src/algorithms/DiscusKeygen.cpp \
+    src/algorithms/ComtrendKeygen.cpp \
+    src/algorithms/AliceKeygen.cpp \
+    src/algorithms/Keygen.cpp \
+    src/wifi/QWifiManagerPrivate.cpp \
     src/algorithms/EasyBoxKeygen.cpp \
     src/algorithms/PBSKeygen.cpp \
     src/algorithms/OteKeygen.cpp \
@@ -15,33 +35,32 @@ SOURCES += src/wifi/QWifiManagerPrivate.cpp \
     src/algorithms/AndaredKeygen.cpp \
     src/algorithms/ConnKeygen.cpp \
     src/wifi/QWifiManager.cpp \
-    src/algorithms/dlinkkeygen.cpp \
-    src/algorithms/pirellikeygen.cpp \
-    src/algorithms/wlan2keygen.cpp \
-    src/algorithms/wlan6keygen.cpp \
-    src/algorithms/zyxelkeygen.cpp \
-    src/algorithms/skyv1keygen.cpp \
-    src/algorithms/tecomkeygen.cpp \
-    src/algorithms/telseykeygen.cpp \
-    src/algorithms/thomsonkeygen.cpp \
-    src/algorithms/verizonkeygen.cpp \
-    src/algorithms/eircomkeygen.cpp \
-    src/algorithms/huaweikeygen.cpp \
-    src/algorithms/infostradakeygen.cpp \
-    src/algorithms/keygen.cpp \
-    src/algorithms/onokeygen.cpp \
-    src/algorithms/alicekeygen.cpp \
-    src/algorithms/comtrendkeygen.cpp \
-    src/algorithms/discuskeygen.cpp \
     src/KeygenThread.cpp \
     src/WirelessMatcher.cpp \
-    src/alicehandler.cpp \
-    src/alicemagicinfo.cpp \
     src/division.c \
     src/main.cpp \
-    src/routerkeygen.cpp \
     src/sha256.cpp
-HEADERS += src/wifi/QWifiManagerPrivate.h \
+HEADERS += src/include/ZyxelKeygen.h \
+    src/include/Wlan6Keygen.h \
+    src/include/Wlan2Keygen.h \
+    src/include/VerizonKeygen.h \
+    src/include/ThomsonKeygen.h \
+    src/include/TelseyKeygen.h \
+    src/include/TecomKeygen.h \
+    src/include/Skyv1Keygen.h \
+    src/include/RouterKeygen.h \
+    src/include/PirelliKeygen.h \
+    src/include/OnoKeygen.h \
+    src/include/InfostradaKeygen.h \
+    src/include/HuaweiKeygen.h \
+    src/include/EircomKeygen.h \
+    src/include/DlinkKeygen.h \
+    src/include/DiscusKeygen.h \
+    src/include/ComtrendKeygen.h \
+    src/include/AliceMagicInfo.h \
+    src/include/AliceHandler.h \
+    src/include/AliceKeygen.h \
+    src/wifi/QWifiManagerPrivate.h \
     src/include/EasyBoxKeygen.h \
     src/include/OteKeygen.h \
     src/include/PBSKeygen.h \
@@ -50,31 +69,11 @@ HEADERS += src/wifi/QWifiManagerPrivate.h \
     src/include/ConnKeygen.h \
     src/include/QScanResult.h \
     src/include/QWifiManager.h \
-    src/include/onokeygen.h \
     src/include/sha256.h \
     src/include/Keygen.h \
     src/include/KeygenThread.h \
     src/include/WirelessMatcher.h \
-    src/include/alicehandler.h \
-    src/include/alicemagicinfo.h \
-    src/include/routerkeygen.h \
-    src/include/alicekeygen.h \
-    src/include/comtrendkeygen.h \
-    src/include/discuskeygen.h \
-    src/include/dlinkkeygen.h \
-    src/include/eircomkeygen.h \
-    src/include/huaweikeygen.h \
-    src/include/infostradakeygen.h \
-    src/include/pirellikeygen.h \
-    src/include/skyv1keygen.h \
-    src/include/tecomkeygen.h \
-    src/include/telseykeygen.h \
-    src/include/thomsonkeygen.h \
-    src/include/unknown.h \
-    src/include/verizonkeygen.h \
-    src/include/wlan2keygen.h \
-    src/include/wlan6keygen.h \
-    src/include/zyxelkeygen.h
+    src/include/unknown.h
 INCLUDEPATH += src/include/
 win32:SOURCES += src/wifi/QWifiManagerPrivateWin.cpp \
     src/sha1/sha1dgst.c \
@@ -84,14 +83,11 @@ win32:HEADERS += src/wifi/QWifiManagerPrivateWin.h \
     src/include/sha.h \
     src/include/opensslconf.h \
     src/include/md32_common.h
-   
 unix:SOURCES += src/wifi/QWifiManagerPrivateUnix.cpp
 unix:HEADERS += src/wifi/QWifiManagerPrivateUnix.h
 unix:INCLUDEPATH += /usr/include/NetworkManager
 unix:LIBS += -lcrypto
 unix:QT += dbus
-
-    
 FORMS += forms/routerkeygen.ui
 symbian { 
     TARGET.UID3 = 0xed94ef91

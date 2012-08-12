@@ -17,7 +17,7 @@
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <QtGui/QApplication>
-#include "routerkeygen.h"
+#include "RouterKeygen.h"
 #include <cstring>
 
 int main(int argc, char *argv[])

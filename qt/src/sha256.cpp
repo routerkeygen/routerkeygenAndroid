@@ -170,7 +170,7 @@ void SHA256::ProcessBlock(const unsigned char *block)
         this->H = TRUNCLONG(this->H + h);
 
         /* Clear the temporary state */
-        memset(W, 0 , sizeof(uint32_t) * 64);
+        memset(W, 0 , (unsigned long) sizeof(uint32_t) * 64L);
         a = b = c = d = e = f = g = h = temp = temp2 = 0;
 }
 
@@ -266,7 +266,7 @@ void SHA256::result( unsigned char hash[SHA256_HASH_SIZE])
         }
 
         /* Fill the entire context structure with zeros to blank it */
-        memset(this,0, sizeof(SHA256));
+        memset(this,0, (unsigned long)sizeof(SHA256));
 }
 //#define TEST_SHA256
 #ifdef TEST_SHA256

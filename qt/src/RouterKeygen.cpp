@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "routerkeygen.h"
+#include "RouterKeygen.h"
 #include "ui_routerkeygen.h"
 #include <QMessageBox>
 #include "WirelessMatcher.h"
@@ -144,6 +144,7 @@ void RouterKeygen::calc(QString ssid, QString mac) {
 	this->calculator = new KeygenThread(router);
 	connect(this->calculator, SIGNAL( finished() ), this, SLOT( getResults() ));
 	ui->calculateButton->setEnabled(false);
+	ui->refreshScan->setEnabled(false);
 	this->calculator->start();
 }
 
@@ -154,6 +155,7 @@ void RouterKeygen::tableRowSelected(int row, int) {
 
 void RouterKeygen::refreshNetworks() {
 	ui->refreshScan->setEnabled(false);
+	ui->calculateButton->setEnabled(false);
 	setLoadingAnimation(tr("Scanning the network"));
 	wifiManager->startScan();
 }
@@ -161,6 +163,7 @@ void RouterKeygen::refreshNetworks() {
 void RouterKeygen::scanFinished(int code) {
 	cleanLoadingAnimation();
 	ui->refreshScan->setEnabled(true);
+	ui->calculateButton->setEnabled(true);
 	switch (code) {
 	case QWifiManager::SCAN_OK: {
 		ui->networkslist->clear();
@@ -179,13 +182,13 @@ void RouterKeygen::scanFinished(int code) {
 			level.setNum(networks.at(i)->level, 10);
 			ui->networkslist->setItem(i, 2, new QTableWidgetItem(level));
 			Keygen * supported = matcher.getKeygen(networks.at(i)->ssid,
-					networks.at(i)->bssid, networks.at(i)->level, "");
+					networks.at(i)->bssid, networks.at(i)->level, networks.at(i)->capabilities);
 			if (supported != NULL) {
 				ui->networkslist->setItem(i, 3,
 						new QTableWidgetItem(tr("Yes")));
-				delete supported;
-				addNetworkToTray(networks.at(i)->ssid, networks.at(i)->level);
+				addNetworkToTray(networks.at(i)->ssid, networks.at(i)->level, supported->isLocked());
 				foundVulnerable = true;
+				delete supported;
 			} else
 				ui->networkslist->setItem(i, 3, new QTableWidgetItem(tr("No")));
 		}
@@ -232,16 +235,16 @@ void RouterKeygen::scanFinished(int code) {
 
 }
 
-void RouterKeygen::addNetworkToTray(const QString & ssid, int level) {
+void RouterKeygen::addNetworkToTray(const QString & ssid, int level, bool locked ) {
 	QIcon icon;
 	if (level >= 75)
-		icon = QIcon::fromTheme("nm-signal-100");
+		icon = locked?QIcon::fromTheme("nm-signal-100-secure"):QIcon::fromTheme("nm-signal-100");
 	else if (level >= 50)
-		icon = QIcon::fromTheme("nm-signal-75");
+		icon = locked?QIcon::fromTheme("nm-signal-75-secure"):QIcon::fromTheme("nm-signal-75");
 	else if (level >= 25)
-		icon = QIcon::fromTheme("nm-signal-50");
+		icon = locked?QIcon::fromTheme("nm-signal-50-secure"):QIcon::fromTheme("nm-signal-50");
 	else
-		icon = QIcon::fromTheme("nm-signal-25");
+		icon = locked?QIcon::fromTheme("nm-signal-25-secure"):QIcon::fromTheme("nm-signal-25");
 	QAction * net = trayMenu->addAction(icon, ssid);
 	connect(net, SIGNAL(triggered()), this, SLOT(show()));
 }
@@ -249,6 +252,7 @@ void RouterKeygen::addNetworkToTray(const QString & ssid, int level) {
 void RouterKeygen::getResults() {
 	cleanLoadingAnimation();
 	ui->calculateButton->setEnabled(true);
+	ui->refreshScan->setEnabled(true);
 	if (calculator->hadError()) {
 		ui->statusBar->showMessage(tr("Error while calculating."));
 		delete calculator;
@@ -304,7 +308,7 @@ void RouterKeygen::copyKey() {
 		return;
 	QClipboard *clipboard = QApplication::clipboard();
 	clipboard->setText(selectedItems.at(0)->text(), QClipboard::Clipboard);
-	ui->statusBar->showMessage(tr("Key copied"));
+	ui->statusBar->showMessage(tr("%1 copied").arg(selectedItems.at(0)->text()));
 }
 
 void RouterKeygen::forceRefreshToggle(int state) {

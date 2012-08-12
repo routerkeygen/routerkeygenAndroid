@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "telseykeygen.h"
+#include "TelseyKeygen.h"
 #include <stdint.h>
 #include <cstring>
 TelseyKeygen::TelseyKeygen(QString & ssid, QString & mac, int level,

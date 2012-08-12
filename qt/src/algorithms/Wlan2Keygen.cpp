@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "wlan2keygen.h"
+#include "Wlan2Keygen.h"
 
 Wlan2Keygen::Wlan2Keygen(QString & ssid, QString & mac, int level, QString enc) :
 		Keygen(ssid, mac, level, enc) {

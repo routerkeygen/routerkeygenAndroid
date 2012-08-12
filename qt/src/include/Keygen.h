@@ -37,6 +37,15 @@ public:
 	bool isStopRequested() const;
 	virtual ~Keygen() {
 	}
+	bool isLocked();
+
+	static QString getScanResultSecurity(Keygen * scanResult);
+
+	// Constants used for different security types
+	const static QString PSK;
+	const static QString WEP;
+	const static QString EAP;
+	const static QString OPEN;
 protected:
 	QVector<QString> results;
 	bool stopRequested;

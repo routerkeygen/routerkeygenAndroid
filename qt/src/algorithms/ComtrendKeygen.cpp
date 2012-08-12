@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "comtrendkeygen.h"
+#include "ComtrendKeygen.h"
 
 ComtrendKeygen::ComtrendKeygen(QString & ssid, QString & mac, int level,
 		QString enc) :

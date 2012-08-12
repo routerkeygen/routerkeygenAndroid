@@ -16,21 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "tecomkeygen.h"
-#include <QCryptographicHash>
+#include "DiscusKeygen.h"
 
-TecomKeygen::TecomKeygen(QString & ssid, QString & mac, int level,
+DiscusKeygen::DiscusKeygen(QString & ssid, QString & mac, int level,
 		QString enc) :
-		Keygen(ssid, mac, level, enc) {}
+		Keygen(ssid, mac, level, enc) {
+}
 
-QVector<QString> & TecomKeygen::getKeys() {
-    QString result;
-    result = QString::fromAscii(QCryptographicHash::hash(
-                                getSsidName().toUpper().toAscii() ,
-                                QCryptographicHash::Sha1 )
-                                      .toHex().data());
-    result.truncate(26);
-    this->results.append(result);
-    return results;
-
+QVector<QString> & DiscusKeygen::getKeys() {
+	bool status = false;
+	unsigned int routerSSIDint = getSsidName().right(6).toInt(&status, 16);
+	if (!status)
+		throw ERROR;
+	QString result;
+	result.setNum((routerSSIDint - 0xD0EC31) >> 2);
+	result = "YW0" + result;
+	results.append(result);
+	return results;
 }

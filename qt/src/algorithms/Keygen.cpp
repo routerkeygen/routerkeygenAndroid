@@ -52,8 +52,8 @@ int Keygen::getLevel() const {
 }
 
 QString Keygen::getMacAddress() const {
-    QString mac = this->macAddress;
-    return mac.replace(QChar(':') , "" );
+	QString mac = this->macAddress;
+	return mac.replace(QChar(':'), "");
 }
 
 QString Keygen::getSsidName() const {
@@ -67,3 +67,26 @@ bool Keygen::isStopRequested() const {
 void Keygen::setError(const QString & error) {
 	this->error = error;
 }
+
+bool Keygen::isLocked() {
+	return OPEN != getScanResultSecurity(this);
+}
+
+/**
+ * @return The security of a given {@link ScanResult}.
+ */
+QString Keygen::getScanResultSecurity(Keygen * scanResult) {
+	QString cap = scanResult->encryption;
+	QString securityModes[] = {WEP, PSK, EAP};
+	for (int i = sizeof(securityModes)/sizeof(QString); i >= 0; i--) {
+		if (cap.contains(securityModes[i])) {
+			return securityModes[i];
+		}
+	}
+	return OPEN;
+}
+
+const QString Keygen::PSK = "PSK";
+const QString Keygen::WEP = "WEP";
+const QString Keygen::EAP = "EAP";
+const QString Keygen::OPEN = "Open";
