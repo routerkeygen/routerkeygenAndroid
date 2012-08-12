@@ -85,7 +85,6 @@ public class Preferences extends SherlockPreferenceActivity {
 	public static final String wifiOnPref = "wifion";
 	public static final String thomson3gPref = "thomson3g";
 	public static final String nativeCalcPref = "nativethomson";
-	public static final String manualMacPref = "manual_mac";
 	public static final String PUB_DOWNLOAD = "http://android-thomson-key-solver.googlecode.com/files/RKDictionary.dic";
 	private static final String PUB_DIC_CFV = "http://android-thomson-key-solver.googlecode.com/svn/trunk/RKDictionary.cfv";
 	private static final String PUB_VERSION = "http://android-thomson-key-solver.googlecode.com/svn/trunk/RouterKeygenVersion.txt";

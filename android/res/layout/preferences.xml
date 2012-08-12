@@ -17,7 +17,9 @@
    You should have received a copy of the GNU General Public License
    along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
    -->
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content" >
+
         <PreferenceCategory
                 android:title="@string/pref_1section">
                 <CheckBoxPreference
@@ -25,13 +27,7 @@
                         android:defaultValue="true"
                         android:summaryOn="@string/pref_hinton_wifion"
                         android:summaryOff="@string/pref_hintoff_wifion"
-                        android:key="wifion" />  
-                  <CheckBoxPreference
-                        android:title="@string/pref_manual_mac"
-                        android:defaultValue="false"
-                        android:summaryOn="@string/pref_hinton_manual_mac"
-                        android:summaryOff="@string/pref_hintoff_manual_mac"
-                        android:key="manual_mac" />            
+                        android:key="wifion" />      
         </PreferenceCategory>
                         
            <PreferenceCategory

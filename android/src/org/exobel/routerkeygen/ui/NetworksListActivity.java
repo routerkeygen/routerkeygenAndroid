@@ -127,7 +127,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.manual_input:
-			ManualDialogFragment.newInstance(manualMac, networkMatcher ).show(getSupportFragmentManager(), "ManualInput");
+			ManualDialogFragment.newInstance(networkMatcher ).show(getSupportFragmentManager(), "ManualInput");
 			return true;
 		case R.id.wifi_scan:
 			scan();
@@ -221,13 +221,11 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 
 	private boolean wifi_state;
 	private boolean wifiOn;
-	private boolean manualMac;
 
 	private void getPrefs() {
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(getBaseContext());
 		wifiOn = prefs.getBoolean(Preferences.wifiOnPref, true);
-		manualMac = prefs.getBoolean(Preferences.manualMacPref, false);
 	}
 
 	public void onScanFinished(List<Keygen> networks) {

@@ -54,7 +54,6 @@
 					android:gravity="center_horizontal"
 					android:layout_below="@id/manual_autotext"
 					android:orientation="horizontal"
-					android:visibility="gone"
 					>
 			<TextView android:id="@+id/label_bssid"
 					android:layout_width="fill_parent"
