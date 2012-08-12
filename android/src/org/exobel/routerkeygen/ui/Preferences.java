@@ -43,7 +43,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
@@ -273,12 +272,8 @@ public class Preferences extends SherlockPreferenceActivity {
 	private static final int DIALOG_ASK_DOWNLOAD = 1002;
 	private static final int DIALOG_CHECK_DOWNLOAD_SERVER = 1003;
 	private static final int DIALOG_ERROR_TOO_ADVANCED = 1004;
-	private static final int DIALOG_DOWNLOAD = 1005;
-	private static final int DIALOG_ERROR = 1006;
-	private static final int DIALOG_ERROR_NOSD = 1007;
-	private static final int DIALOG_ERROR_NOMEMORYONSD = 1008;
-	private static final int DIALOG_CHECKING_DOWNLOAD = 1009;
-	private static final int DIALOG_UPDATE_NEEDED = 1011;
+	private static final int DIALOG_ERROR = 1005;
+	private static final int DIALOG_UPDATE_NEEDED = 1006;
 
 	protected Dialog onCreateDialog(int id) {
 		AlertDialog.Builder builder = new Builder(this);
@@ -321,7 +316,7 @@ public class Preferences extends SherlockPreferenceActivity {
 								showDialog(DIALOG_LOAD_FOLDER);
 							}
 						});
-			builder.setNeutralButton(R.string.bt_choose, new OnClickListener() {
+			builder.setPositiveButton(R.string.bt_choose, new OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
 					SharedPreferences customSharedPreference = PreferenceManager
 							.getDefaultSharedPreferences(getBaseContext());
@@ -459,59 +454,10 @@ public class Preferences extends SherlockPreferenceActivity {
 					R.string.msg_err_online_too_adv);
 			break;
 		}
-		case DIALOG_DOWNLOAD: {
-			pbarDialog = new ProgressDialog(Preferences.this);
-			pbarDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-			pbarDialog.setMessage(getString(R.string.msg_dl_estimating));
-			pbarDialog.setMax(100);
-			pbarDialog.setTitle(R.string.msg_dl_dlingdic);
-			pbarDialog.setCancelable(true);
-			pbarDialog.setOnDismissListener(new OnDismissListener() {
-				public void onDismiss(DialogInterface dialog) {
-					if (downloader != null)
-						downloader.setStopRequested(true);
-				}
-			});
-			pbarDialog.setButton(getString(R.string.bt_pause),
-					new OnClickListener() {
-						public void onClick(DialogInterface dialog, int which) {
-							if (downloader != null)
-								downloader.setStopRequested(true);
-							removeDialog(DIALOG_DOWNLOAD);
-						}
-					});
-			pbarDialog.setButton2(getString(R.string.bt_manual_cancel),
-					new OnClickListener() {
-						public void onClick(DialogInterface dialog, int which) {
-							if (downloader != null) {
-								downloader.setDeleteTemp(true);
-								downloader.setStopRequested(true);
-							}
-							removeDialog(DIALOG_DOWNLOAD);
-						}
-					});
-			return pbarDialog;
-		}
 		case DIALOG_ERROR: {
 			builder.setTitle(R.string.msg_error).setMessage(
 					R.string.msg_err_unkown);
 			break;
-		}
-		case DIALOG_ERROR_NOMEMORYONSD: {
-			builder.setTitle(R.string.msg_error).setMessage(
-					R.string.msg_nomemoryonsdcard);
-			break;
-		}
-		case DIALOG_ERROR_NOSD: {
-			builder.setTitle(R.string.msg_error).setMessage(
-					R.string.msg_nosdcard);
-			break;
-		}
-		case DIALOG_CHECKING_DOWNLOAD: {
-			pbarDialog = new ProgressDialog(Preferences.this);
-			pbarDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			pbarDialog.setMessage(getString(R.string.msg_wait));
-			return pbarDialog;
 		}
 		}
 		return builder.create();
@@ -530,11 +476,13 @@ public class Preferences extends SherlockPreferenceActivity {
 					removeDialog(DIALOG_ASK_DOWNLOAD);
 					showDialog(DIALOG_CHECK_DOWNLOAD_SERVER);
 				}
+
 				private final static int TOO_ADVANCED = 1;
 				private final static int OK = 0;
 				private final static int DOWNLOAD_NEEDED = -1;
 				private final static int ERROR_NETWORK = -2;
 				private final static int ERROR = -3;
+
 				protected Integer doInBackground(Void... params) {
 
 					// Comparing this version with the online
@@ -599,17 +547,21 @@ public class Preferences extends SherlockPreferenceActivity {
 						showDialog(DIALOG_ERROR);
 						break;
 					case ERROR_NETWORK:
-						Toast.makeText(Preferences.this, R.string.msg_errthomson3g,
-								Toast.LENGTH_SHORT).show();
+						Toast.makeText(Preferences.this,
+								R.string.msg_errthomson3g, Toast.LENGTH_SHORT)
+								.show();
 						break;
 					case DOWNLOAD_NEEDED:
 						startService(new Intent(getApplicationContext(),
 								DictionaryDownloadService.class).putExtra(
-								DictionaryDownloadService.URL_DOWNLOAD, PUB_DOWNLOAD));
+								DictionaryDownloadService.URL_DOWNLOAD,
+								PUB_DOWNLOAD));
 						break;
 					case OK:
-						Toast.makeText(getBaseContext(),
-								getResources().getString(R.string.msg_dic_updated),
+						Toast.makeText(
+								getBaseContext(),
+								getResources().getString(
+										R.string.msg_dic_updated),
 								Toast.LENGTH_SHORT).show();
 						break;
 					case TOO_ADVANCED:
