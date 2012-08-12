@@ -90,6 +90,9 @@ public class Preferences extends SherlockPreferenceActivity {
 
 	private static final String VERSION = "2.9.1";
 	private static final String LAUNCH_DATE = "04/01/2012";
+
+	private static final String[] DICTIONARY_NAMES = { "RouterKeygen.dic",
+			"RKDictionary.dic" };
 	private String version = "";
 
 	protected void onCreate(Bundle savedInstanceState) {
@@ -280,6 +283,22 @@ public class Preferences extends SherlockPreferenceActivity {
 		switch (id) {
 		case DIALOG_LOAD_FOLDER: {
 			loadFolderList();
+			final String path = mPath.toString();
+			try {
+				mPath = getDictionaryFile(path);
+				if (mPath != null)
+					Toast.makeText(
+							getBaseContext(),
+							getString(R.string.pref_msg_detected,
+									mPath.toString()), Toast.LENGTH_SHORT)
+							.show();
+
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+				Toast.makeText(getBaseContext(),
+						R.string.msg_no_read_permissions, Toast.LENGTH_SHORT)
+						.show();
+			}
 			builder.setTitle(getString(R.string.folder_chooser_title));
 			if (mFileList == null || mFileList.length == 0) {
 				Log.e(TAG, "Showing file picker before loading the file list");
@@ -316,46 +335,26 @@ public class Preferences extends SherlockPreferenceActivity {
 								showDialog(DIALOG_LOAD_FOLDER);
 							}
 						});
-			builder.setPositiveButton(R.string.bt_choose, new OnClickListener() {
-				public void onClick(DialogInterface dialog, int which) {
-					SharedPreferences customSharedPreference = PreferenceManager
-							.getDefaultSharedPreferences(getBaseContext());
-					SharedPreferences.Editor editor = customSharedPreference
-							.edit();
+			builder.setPositiveButton(R.string.bt_choose,
+					new OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
 
-					editor.putString(folderSelectPref, mPath.toString());
-					editor.commit();
-					String path = mPath.toString();
-					mPath = new File(path + File.separator + "RouterKeygen.dic");
-					File second = new File(path + File.separator
-							+ "RKDictionary.dic");
-					if (!mPath.exists() && !second.exists()) {
-						Toast.makeText(
-								getBaseContext(),
-								getResources().getString(
-										R.string.pref_msg_notfound)
-										+ " " + path, Toast.LENGTH_SHORT)
-								.show();
-					} else {
-						if (mPath.exists())
-							Toast.makeText(
-									getBaseContext(),
-									mPath.toString()
-											+ " "
-											+ getResources().getString(
-													R.string.pref_msg_found),
-									Toast.LENGTH_SHORT).show();
-						else
-							Toast.makeText(
-									getBaseContext(),
-									second.toString()
-											+ " "
-											+ getResources().getString(
-													R.string.pref_msg_found),
-									Toast.LENGTH_SHORT).show();
-					}
-				}
-			});
+							if (mPath == null)
+								Toast.makeText(
+										getBaseContext(),
+										getString(R.string.pref_msg_notfound,
+												path), Toast.LENGTH_SHORT)
+										.show();
+							else {
+								final SharedPreferences customSharedPreference = PreferenceManager
+										.getDefaultSharedPreferences(getApplicationContext());
+								final SharedPreferences.Editor editor = customSharedPreference
+										.edit();
+								editor.putString(folderSelectPref, mPath.toString());
+								editor.commit();
+							}
+						}
+					});
 
 			break;
 		}
@@ -464,7 +463,12 @@ public class Preferences extends SherlockPreferenceActivity {
 	}
 
 	private void checkCurrentDictionary() throws FileNotFoundException {
-		final File myDicFile = getDictionaryFile();
+		final String folderSelect = PreferenceManager
+				.getDefaultSharedPreferences(getBaseContext()).getString(
+						folderSelectPref,
+						Environment.getExternalStorageDirectory()
+								.getAbsolutePath());
+		final File myDicFile = getDictionaryFile(folderSelect);
 		if (myDicFile == null) {
 			removeDialog(DIALOG_ASK_DOWNLOAD);
 			startService(new Intent(getApplicationContext(),
@@ -574,22 +578,16 @@ public class Preferences extends SherlockPreferenceActivity {
 		}
 	}
 
-	private File getDictionaryFile() throws FileNotFoundException {
-		String folderSelect = PreferenceManager.getDefaultSharedPreferences(
-				getBaseContext()).getString(folderSelectPref,
-				Environment.getExternalStorageDirectory().getAbsolutePath());
-		String firstName = folderSelect + File.separator + "RouterKeygen.dic";
-		String secondName = folderSelect + File.separator + "RKDictionary.dic";
-		try {
-			File dic = new File(firstName);
-			if (dic.exists())
-				return dic;
-			dic = new File(secondName);
-			if (dic.exists())
-				return dic;
-		} catch (SecurityException e) {
-			e.printStackTrace();
-			throw new FileNotFoundException("Permissions Error");
+	private File getDictionaryFile(String folder) throws FileNotFoundException {
+		for (String name : DICTIONARY_NAMES) {
+			try {
+				final File dic = new File(folder + File.separator + name);
+				if (dic.exists())
+					return dic;
+			} catch (SecurityException e) {
+				e.printStackTrace();
+				throw new FileNotFoundException("Permissions Error");
+			}
 		}
 		return null;
 	}

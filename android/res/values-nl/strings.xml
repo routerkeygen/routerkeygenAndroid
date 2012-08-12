@@ -95,7 +95,7 @@
 	<string name="pref_about">Over Router Keygen</string>
 	<string name="pref_about_desc">Router Keygen berekent paswoorden voor verschillende soorten routers\n\n
 			<a href="http://code.google.com/p/android-thomson-key-solver/">Project Website</a>\n\nVersie: </string>
-	<string name="pref_msg_found">geselecteerd.</string>
+	<string name="pref_msg_detected"><xliff:g id="filename">%1$s</xliff:g> detected.</string>   <!-- UNTRANSLATED -->
 	<string name="pref_native">Primitieve Berekening</string>
 	<string name="pref_hinton_native">Berekenen op doel als de dictionary niet gevonden is.</string>
 	<string name="pref_hintoff_native">Alleen waarschuwen als de dictionary niet kan worden gevonden.</string>
@@ -120,7 +120,7 @@
 	<string name="msg_nomac">Deze sleutel kan niet gegenereerd worden zonder MAC address.</string>
 	<string name="msg_dlinkerror">Fout in de berekening van de D-Link sleutel.</string>
 	<string name="msg_dictnotfound">dictionary niet gevonden op SD-kaart</string>
-	<string name="pref_msg_notfound">dictionary niet gevonden op </string>
+	<string name="pref_msg_notfound">Dictionary not found on <xliff:g id="filename">%1$s</xliff:g></string> <!-- UNTRANSLATED -->
 	<string name="msg_nosdcard">De externe opslag is niet beschikbaar.</string>
 	<string name="msg_nomd5">Deze telefoon kan geen MD5 hash verwerken.</string>
 	<string name="msg_nosha1">Deze telefoon kan geen SHA1 hash verwerken.</string>

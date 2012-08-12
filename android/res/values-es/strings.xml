@@ -95,7 +95,7 @@
 	<string name="pref_about">Acerca de Router Keygen</string>
 	<string name="pref_about_desc">Router Keygen calcula los passwords por defecto para varios routers.\n\n
 			<a href="http://code.google.com/p/android-thomson-key-solver/">Sitio del Proyecto</a>\n\nVersion: </string>
-	<string name="pref_msg_found">Seleccionado.</string>
+	<string name="pref_msg_detected"><xliff:g id="filename">%1$s</xliff:g> detected.</string>   <!-- UNTRANSLATED -->
 	<string name="pref_native">Cálculo Nativo</string>
 	<string name="pref_hinton_native">Calcular en el objetivo si falla al encontrar el diccionario</string>
 	<string name="pref_hintoff_native">Sólo avisa si falla al encontrar el diccionario</string>
@@ -120,7 +120,7 @@
 	<string name="msg_nomac">Esta key no se puede generar sin la MAC address</string>
 	<string name="msg_dlinkerror">Error en el cálculo de la key D-Link</string>
 	<string name="msg_dictnotfound">El Diccionario no se ha encontrado en la SDCard!</string>
-	<string name="pref_msg_notfound">El Dictionario no está en la SDCard</string>
+	<string name="pref_msg_notfound">Dictionary not found on <xliff:g id="filename">%1$s</xliff:g></string> <!-- UNTRANSLATED -->
 	<string name="msg_nosdcard">La SD card esta desmontada!</string>
 	<string name="msg_nomd5">Este teléfono no puede procesar un hash MD5.</string>
 	<string name="msg_nosha1">Este teléfono no puede procesar un hash SHA1.</string>
