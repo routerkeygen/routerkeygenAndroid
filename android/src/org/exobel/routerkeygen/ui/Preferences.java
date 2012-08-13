@@ -35,6 +35,8 @@ import org.exobel.routerkeygen.DictionaryDownloadService;
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.utils.HashUtils;
 
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningServiceInfo;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
@@ -51,6 +53,7 @@ import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceManager;
@@ -78,6 +81,9 @@ public class Preferences extends SherlockPreferenceActivity {
 	public static final String wifiOnPref = "wifion";
 	public static final String thomson3gPref = "thomson3g";
 	public static final String nativeCalcPref = "nativethomson";
+	public static final String autoScanPref = "autoScan";
+	public static final String autoScanIntervalPref = "autoScanInterval";
+
 	public static final String PUB_DOWNLOAD = "http://android-thomson-key-solver.googlecode.com/files/RKDictionary.dic";
 	private static final String PUB_DIC_CFV = "http://android-thomson-key-solver.googlecode.com/svn/trunk/RKDictionary.cfv";
 	private static final String PUB_VERSION = "http://android-thomson-key-solver.googlecode.com/svn/trunk/RouterKeygenVersion.txt";
@@ -98,6 +104,14 @@ public class Preferences extends SherlockPreferenceActivity {
 		findPreference("download").setOnPreferenceClickListener(
 				new OnPreferenceClickListener() {
 					public boolean onPreferenceClick(Preference preference) {
+						// TODO: check if service is running
+						if (isDictionaryServiceRunning()) {
+							Toast.makeText(
+									getBaseContext(),
+									getString(R.string.pref_msg_download_running),
+									Toast.LENGTH_SHORT).show();
+							return true;
+						}
 						ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 						NetworkInfo netInfo = cm.getActiveNetworkInfo();
 						if (netInfo == null
@@ -217,6 +231,32 @@ public class Preferences extends SherlockPreferenceActivity {
 						return true;
 					}
 				});
+		final CheckBoxPreference autoScan = (CheckBoxPreference) findPreference("autoScan");
+		autoScan.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			public boolean onPreferenceClick(Preference preference) {
+				findPreference("autoScanInterval").setEnabled(
+						autoScan.isChecked());
+				return true;
+
+			}
+		});
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(getBaseContext());
+		findPreference("autoScanInterval").setEnabled(
+				prefs.getBoolean(Preferences.autoScanPref, getResources()
+						.getBoolean(R.bool.autoScanDefault)));
+	}
+
+	private boolean isDictionaryServiceRunning() {
+		ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+		for (RunningServiceInfo service : manager
+				.getRunningServices(Integer.MAX_VALUE)) {
+			if ("org.exobel.routerkeygen.DictionaryDownloadService"
+					.equals(service.service.getClassName())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override
@@ -333,20 +373,18 @@ public class Preferences extends SherlockPreferenceActivity {
 					new OnClickListener() {
 						public void onClick(DialogInterface dialog, int which) {
 
+							final SharedPreferences customSharedPreference = PreferenceManager
+									.getDefaultSharedPreferences(getApplicationContext());
+							final SharedPreferences.Editor editor = customSharedPreference
+									.edit();
+							editor.putString(folderSelectPref,path);
+							editor.commit();
 							if (mPath == null)
 								Toast.makeText(
 										getBaseContext(),
 										getString(R.string.pref_msg_notfound,
 												path), Toast.LENGTH_SHORT)
 										.show();
-							else {
-								final SharedPreferences customSharedPreference = PreferenceManager
-										.getDefaultSharedPreferences(getApplicationContext());
-								final SharedPreferences.Editor editor = customSharedPreference
-										.edit();
-								editor.putString(folderSelectPref, mPath.toString());
-								editor.commit();
-							}
 						}
 					});
 

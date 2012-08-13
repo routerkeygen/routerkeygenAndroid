@@ -25,6 +25,7 @@
     <string name="msg_welcome_title">Router Keygen</string>
     <string name="msg_welcome_text"> Obrigado por experimentar a aplicação Router Keygen. Se gostou da aplicação por favor considere a hipótese de comprar a versão Donativo. O link está no menu de preferências. O seu donativo irá motivar os autores a melhorar esta grande ferramenta open-source.</string>
 	<string name="msg_welcome_text_donate">Obrigado por ter comprado a versão paga de Router Keygen. O seu donativo irá motivar os autores a melhorar esta grande ferramenta open-source.</string>
+    <string name="msg_welcome_tip">Seleccione qualquer rede com uma barra verde para gerar possíveis chaves.</string>
     <string name="menu_scan">Pesquisa</string>
     <string name="menu_manual">Entrada Manual</string>
     <string name="menu_preferences">Preferências</string>
@@ -106,6 +107,12 @@
     <string name="pref_hintoff_thomson3g">Usar o dicionário para gerar as chaves.</string>
     <string name="pref_thomson_section">Opções do Thomson</string>
 	<string name="pref_update">Verificar Actualizações</string>
+    <string name="pref_msg_download_running">O dicionário já está a ser descarregado.</string>
+    <string name="pref_autoscan">Auto Scan</string> <!-- UNTRANSLATED -->
+    <string name="pref_hinton_autoscan">Scan will be repeated every few seconds.</string> <!-- UNTRANSLATED -->
+    <string name="pref_hintoff_autoscan">Scan is always manual.</string> <!-- UNTRANSLATED -->
+    <string name="pref_autoscan_interval">Auto Scan Interval</string> <!-- UNTRANSLATED -->
+    <string name="pref_hint_autoscan_interval">Period of the automatic scan.</string> <!-- UNTRANSLATED -->
     
  	<!-- ERROR MESSAGE STRINGS -->
     <string name="msg_unspported">Este ESSID não é suportado!</string>
@@ -134,6 +141,7 @@
     <string name="msg_err_native">Error no cálculo nativo.Por favor informe a equipa.</string>
 	<string name="msg_nomemoryonsdcard">O armazenamento externo não tem memória livre suficiente.</string>
 	<string name="msg_no_write_permissions">Impossible to write to the selected folder.</string>  <!-- UNTRANSLATED -->
+    <string name="msg_no_read_permissions">Impossible to read from the selected folder.</string> <!-- UNTRANSLATED -->
 	<string name="msg_error">Erro</string>
 	<string name="pref_msg_err_backup_dic">Erro ao fazer um cópia de segurança do Dicionário anterior.</string>
 	<string name="pref_msg_err_rename_dic">Erro ao mover o Dicionário descarregado.</string>

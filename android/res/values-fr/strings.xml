@@ -25,6 +25,7 @@
     <string name="msg_welcome_title">Router Keygen</string>
     <string name="msg_welcome_text">Merci d\'avoir installé Router Keygen. Si vous appréciez cette application, merci de faire un don en achetant la version Donate (le lien est dans le menu des préférences). Votre don permettra de motiver les auteurs et d\'améliorer cet outil open-source.</string>
     <string name="msg_welcome_text_donate">Merci d\'avoir fait un don en achetant la version Donate de Router Keygen. Votre don permettra de motiver les auteurs et d\'améliorer cet outil open-source.</string>
+    <string name="msg_welcome_tip">Select any network with a green bar to generate possible keys.</string>  <!-- UNTRANSLATED -->
     <string name="menu_scan">Scan</string>
     <string name="menu_manual">Saisie manuelle</string>
     <string name="menu_preferences">Préférences</string>
@@ -107,6 +108,12 @@
     <string name="pref_hintoff_thomson3g">Utilisation de dictionnaire pour générer des clés.</string>
     <string name="pref_thomson_section">Options pour Thomson</string>
 	<string name="pref_update">Vérifier les mises à jour</string>
+    <string name="pref_msg_download_running">The dictionary is already being downloaded.</string> <!-- UNTRANSLATED -->
+    <string name="pref_autoscan">Auto Scan</string> <!-- UNTRANSLATED -->
+    <string name="pref_hinton_autoscan">Scan will be repeated every few seconds.</string> <!-- UNTRANSLATED -->
+    <string name="pref_hintoff_autoscan">Scan is always manual.</string> <!-- UNTRANSLATED -->
+    <string name="pref_autoscan_interval">Auto Scan Interval</string> <!-- UNTRANSLATED -->
+    <string name="pref_hint_autoscan_interval">Period of the automatic scan.</string> <!-- UNTRANSLATED -->
 
     <!-- ERROR MESSAGE STRINGS -->
     <string name="msg_unspported">Ce ESSID n\'est pas supportée!</string>
@@ -134,7 +141,8 @@
     <string name="msg_err_essid_no_match">Le SSID calculé ne correspond pas à celui prévu.</string>
     <string name="msg_err_native">Erreur dans le calcul natif. Merci d\'informer notre équipe.</string>
     <string name="msg_nomemoryonsdcard">Le stockage externe n\'a pas assez d\'espace libre.</string>
-	<string name="msg_no_write_permissions">Impossible to write to the selected folder.</string>  <!-- UNTRANSLATED -->
+	<string name="msg_no_write_permissions">Impossible to write to the selected folder.</string> <!-- UNTRANSLATED -->
+    <string name="msg_no_read_permissions">Impossible to read from the selected folder.</string> <!-- UNTRANSLATED -->
     <string name="msg_error">Erreur</string>
     <string name="pref_msg_err_backup_dic">Erreur durant la sauvegarde du dictionnaire précédent</string>
     <string name="pref_msg_err_rename_dic">Erreur de renommage du dictionnaire téléchargé.</string>

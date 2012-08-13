@@ -115,7 +115,7 @@ public class NetworksListFragment extends SherlockListFragment implements OnScan
     }
     
     
-
+    //TODO: add long click menu to copy data and scan
 	public void onScanFinished(List<Keygen> networks) {
         this.networksFound = networks;
         if ( getActivity() != null )

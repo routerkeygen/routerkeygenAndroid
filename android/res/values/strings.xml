@@ -27,6 +27,7 @@
     <string name="msg_welcome_title">Router Keygen</string>
     <string name="msg_welcome_text">Thank you for trying Router Keygen. If you like this application, please consider buying the Donate version. The link is on the preference menu. Your donation will motivate the authors to improve on this great open-source tool.</string>
     <string name="msg_welcome_text_donate">Thank you for buying the Donate version of Router Keygen. Your donation will motivate the authors to improve on this great open-source tool.</string>
+    <string name="msg_welcome_tip">Select any network with a green bar to generate possible keys.</string>
     <string name="menu_scan">Scan</string>
     <string name="menu_manual">Manual Input</string>
     <string name="menu_preferences">Preferences</string>
@@ -45,7 +46,6 @@
     <string name="bt_choose">Open</string>
     <string name="bt_choose_back">Up</string>
     <string name="bt_close">Close</string>
-    <string name="bt_pause">Pause</string>
     <string name="bt_save_sd">Save to the SD</string>
     <string name="bt_connect">Auto connect</string>
     <string name="bt_website">Go to Website</string>
@@ -54,7 +54,6 @@
     <string name="lb_manual">Input your ESSID here:</string>
     <string name="dialog_nativecalc_msg">This can take up to 2 minutes. Please wait.</string>
     <string name="msg_dicislarge">The dictionary size is 66 MBs. It\'s advisable that you are using a wifi connection.\nAre you sure you want to continue?</string>
-    <string name="msg_dl_estimating">Estimating download speed and time left&#8230;</string>
     <string name="msg_dl_dlingdic">Downloading dictionary</string>
     <string name="msg_dic_updated">Your dictionary is already at the latest version.</string>
     <string name="msg_dic_updated_finished">Your dictionary has been updated to the latest version.</string>
@@ -93,6 +92,12 @@
     <string name="pref_hintoff_thomson3g">Using dictionary to generate keys.</string>
     <string name="pref_thomson_section">Thomson Options</string>
     <string name="pref_update">Check for Updates</string>
+    <string name="pref_msg_download_running">The dictionary is already being downloaded.</string>
+    <string name="pref_autoscan">Auto Scan</string>
+    <string name="pref_hinton_autoscan">Scan will be repeated every few seconds.</string>
+    <string name="pref_hintoff_autoscan">Scan is always manual.</string>
+    <string name="pref_autoscan_interval">Auto Scan Interval</string>
+    <string name="pref_hint_autoscan_interval">Period of the automatic scan.</string>
 
     <!-- ERROR MESSAGE STRINGS -->
     <string name="msg_unspported">That ESSID is not supported!</string>

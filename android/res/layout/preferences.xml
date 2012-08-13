@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 
+<!--
    Copyright 2012 Rui Araújo, Luís Fonseca
   
    This file is part of Router Keygen.
@@ -16,54 +16,82 @@
    
    You should have received a copy of the GNU General Public License
    along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
-   -->
+-->
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="wrap_content" >
+    xmlns:robobunny="http://robobunny.com"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:context=".ui.Preferences" >
 
-        <PreferenceCategory
-                android:title="@string/pref_1section">
-                <CheckBoxPreference
-                        android:title="@string/pref_wifion"
-                        android:defaultValue="true"
-                        android:summaryOn="@string/pref_hinton_wifion"
-                        android:summaryOff="@string/pref_hintoff_wifion"
-                        android:key="wifion" />      
-        </PreferenceCategory>
-                        
-           <PreferenceCategory
-                android:title="@string/pref_thomson_section">                
-                 <CheckBoxPreference
-                        android:title="@string/pref_thomson3g"
-                        android:defaultValue="false"
-                        android:summaryOn="@string/pref_hinton_thomson3g"
-                        android:summaryOff="@string/pref_hintoff_thomson3g"
-                        android:key="thomson3g" />
-                 <CheckBoxPreference
-                        android:title="@string/pref_native"
-                        android:defaultValue="true"
-                        android:summaryOn="@string/pref_hinton_native"
-                        android:summaryOff="@string/pref_hintoff_native"
-                        android:key="nativethomson" />         
-                <Preference
-		                android:title="@string/pref_download"
-		                android:summary="@string/pref_download_des"
-		                android:key="download" />   
-		        <Preference
-		                android:title="@string/pref_folder_select"
-		                android:summary="@string/pref_folder_select_des"
-		                android:key="folderSelect" />		                
-        </PreferenceCategory>
-        <PreferenceCategory
-                android:title="@string/pref_2section">
-                <Preference
-                android:title="@string/pref_update"
-                android:key="update" />
-                <Preference
-                android:title="@string/pref_donate"
-                android:summary="@string/pref_donate_why"
-                android:key="donate" />
-                <Preference
-                android:title="@string/pref_about"
-                android:key="about" />
-           </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_1section" >
+
+        <CheckBoxPreference
+            android:defaultValue="@bool/wifiOnDefault"
+            android:key="wifion"
+            android:summaryOff="@string/pref_hintoff_wifion"
+            android:summaryOn="@string/pref_hinton_wifion"
+            android:title="@string/pref_wifion" />
+
+        <CheckBoxPreference
+            android:defaultValue="@bool/autoScanDefault"
+            android:key="autoScan"
+            android:summaryOff="@string/pref_hintoff_autoscan"
+            android:summaryOn="@string/pref_hinton_autoscan"
+            android:title="@string/pref_autoscan" />
+    </PreferenceCategory>
+
+    <com.robobunny.SeekBarPreference
+        android:defaultValue="@integer/autoScanIntervalDefault"
+        android:key="autoScanInterval"
+        android:max="@integer/autoScanIntervalMax"
+        android:summary="@string/pref_hint_autoscan_interval"
+        android:title="@string/pref_autoscan_interval"
+        robobunny:min="@integer/autoScanIntervalMin"
+        robobunny:unitsLeft=""
+        robobunny:unitsRight="s" />
+
+    <PreferenceCategory android:title="@string/pref_thomson_section" >
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="thomson3g"
+            android:summaryOff="@string/pref_hintoff_thomson3g"
+            android:summaryOn="@string/pref_hinton_thomson3g"
+            android:title="@string/pref_thomson3g" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="nativethomson"
+            android:summaryOff="@string/pref_hintoff_native"
+            android:summaryOn="@string/pref_hinton_native"
+            android:title="@string/pref_native" />
+
+        <Preference
+            android:key="download"
+            android:summary="@string/pref_download_des"
+            android:title="@string/pref_download" />
+
+        <Preference
+            android:key="folderSelect"
+            android:summary="@string/pref_folder_select_des"
+            android:title="@string/pref_folder_select" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/pref_2section" >
+
+        <Preference
+            android:key="update"
+            android:title="@string/pref_update" />
+
+        <Preference
+            android:key="donate"
+            android:summary="@string/pref_donate_why"
+            android:title="@string/pref_donate" />
+
+        <Preference
+            android:key="about"
+            android:title="@string/pref_about" />
+    </PreferenceCategory>
+
 </PreferenceScreen>

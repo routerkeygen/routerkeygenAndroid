@@ -37,6 +37,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,7 +49,7 @@ import com.actionbarsherlock.view.MenuItem;
 
 public class NetworksListActivity extends SherlockFragmentActivity implements
 		NetworksListFragment.OnItemSelectionListener, OnScanListener {
-
+	// TODO: add auto connect.
 	private boolean mTwoPane;
 
 	private WirelessMatcher networkMatcher;
@@ -56,6 +57,9 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 	private BroadcastReceiver scanFinished;
 	private BroadcastReceiver stateChanged;
 	private static final String welcomeScreenShownPref = "welcomeScreenShown";
+	boolean welcomeScreenShown;
+
+	private Handler mHandler = new Handler();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -71,26 +75,32 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 		networkMatcher = new WirelessMatcher(getResources().openRawResource(
 				R.raw.alice));
 		wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-		
+
 		wifi_state = wifi.getWifiState() == WifiManager.WIFI_STATE_ENABLED
 				|| wifi.getWifiState() == WifiManager.WIFI_STATE_ENABLING;
-		scanFinished = new WiFiScanReceiver(networkMatcher, wifi, fragment, this);
+		scanFinished = new WiFiScanReceiver(networkMatcher, wifi, fragment,
+				this);
 		stateChanged = new WifiStateReceiver(wifi);
-		
 
-		final SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-		final boolean welcomeScreenShown = mPrefs.getBoolean( welcomeScreenShownPref, false);
+		final SharedPreferences mPrefs = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		welcomeScreenShown = mPrefs.getBoolean(welcomeScreenShownPref, false);
 
 		if (!welcomeScreenShown) {
 
 			final String whatsNewTitle = getString(R.string.msg_welcome_title);
 			final String whatsNewText = getString(R.string.msg_welcome_text);
-			new AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert).setTitle(whatsNewTitle).setMessage(whatsNewText).setPositiveButton(
-					android.R.string.ok, new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int which) {
-							dialog.dismiss();
-						}
-					}).show();
+			new AlertDialog.Builder(this)
+					.setIcon(android.R.drawable.ic_dialog_alert)
+					.setTitle(whatsNewTitle)
+					.setMessage(whatsNewText)
+					.setPositiveButton(android.R.string.ok,
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int which) {
+									dialog.dismiss();
+								}
+							}).show();
 			final SharedPreferences.Editor editor = mPrefs.edit();
 			editor.putBoolean(welcomeScreenShownPref, true);
 			editor.commit();
@@ -107,8 +117,9 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 					.replace(R.id.item_detail_container, fragment).commit();
 
 		} else {
-			if ( !keygen.isSupported() ){
-				Toast.makeText(this, R.string.msg_unspported, Toast.LENGTH_SHORT).show();
+			if (!keygen.isSupported()) {
+				Toast.makeText(this, R.string.msg_unspported,
+						Toast.LENGTH_SHORT).show();
 				return;
 			}
 			Intent detailIntent = new Intent(this, NetworkActivity.class);
@@ -127,7 +138,8 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.manual_input:
-			ManualDialogFragment.newInstance(networkMatcher ).show(getSupportFragmentManager(), "ManualInput");
+			ManualDialogFragment.newInstance(networkMatcher).show(
+					getSupportFragmentManager(), "ManualInput");
 			return true;
 		case R.id.wifi_scan:
 			scan();
@@ -150,48 +162,53 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 			else
 				wifi_state = true;
 		}
+		if (autoScan){
+			mHandler.removeCallbacks(mAutoScanTask);
+			mHandler.postDelayed(mAutoScanTask, autoScanInterval*1000L);
+		}
+		else
+			mHandler.removeCallbacks(mAutoScanTask);
 		scan();
 	}
-	
 
 	public void onStop() {
-		try{ 
+		try {
 			super.onStop();
 			unregisterReceiver(scanFinished);
 			unregisterReceiver(stateChanged);
+			mHandler.removeCallbacks(mAutoScanTask);
+		} catch (Exception e) {
 		}
-		catch (Exception e) {}
 	}
 
-    private Menu mOptionsMenu;
-    private View mRefreshIndeterminateProgressView = null;
-    public void setRefreshActionItemState(boolean refreshing) {
-        // On Honeycomb, we can set the state of the refresh button by giving it a custom
-        // action view.
-        if (mOptionsMenu == null) {
-            return;
-        }
+	private Menu mOptionsMenu;
+	private View mRefreshIndeterminateProgressView = null;
 
-        final MenuItem refreshItem = mOptionsMenu.findItem(R.id.wifi_scan);
-        if (refreshItem != null) {
-            if (refreshing) {
-                if (mRefreshIndeterminateProgressView == null) {
-                    LayoutInflater inflater = (LayoutInflater)
-                            getSystemService(
-                                    Context.LAYOUT_INFLATER_SERVICE);
-                    mRefreshIndeterminateProgressView = inflater.inflate(
-                            R.layout.actionbar_indeterminate_progress, null);
-                }
+	public void setRefreshActionItemState(boolean refreshing) {
+		// On Honeycomb, we can set the state of the refresh button by giving it
+		// a custom
+		// action view.
+		if (mOptionsMenu == null) {
+			return;
+		}
 
-                refreshItem.setActionView(mRefreshIndeterminateProgressView);
-            } else {
-                refreshItem.setActionView(null);
-            }
-        }
-    }
+		final MenuItem refreshItem = mOptionsMenu.findItem(R.id.wifi_scan);
+		if (refreshItem != null) {
+			if (refreshing) {
+				if (mRefreshIndeterminateProgressView == null) {
+					LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+					mRefreshIndeterminateProgressView = inflater.inflate(
+							R.layout.actionbar_indeterminate_progress, null);
+				}
 
-	
-	public void onResume(){
+				refreshItem.setActionView(mRefreshIndeterminateProgressView);
+			} else {
+				refreshItem.setActionView(null);
+			}
+		}
+	}
+
+	public void onResume() {
 		super.onResume();
 		getPrefs();
 	}
@@ -210,26 +227,44 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 			Toast.makeText(this, R.string.msg_wifienabling, Toast.LENGTH_SHORT)
 					.show();
 		} else {
-			if (wifi.startScan()){
+			if (wifi.startScan()) {
 				setRefreshActionItemState(true);
-			}
-			else
+			} else
 				Toast.makeText(this, R.string.msg_scanfailed,
 						Toast.LENGTH_SHORT).show();
 		}
 	}
 
+	private Runnable mAutoScanTask = new Runnable() {
+		public void run() {
+			scan();
+			mHandler.postDelayed(mAutoScanTask, autoScanInterval*1000L);
+		}
+	};
+
 	private boolean wifi_state;
 	private boolean wifiOn;
+	private boolean autoScan;
+	private long autoScanInterval;
 
 	private void getPrefs() {
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(getBaseContext());
-		wifiOn = prefs.getBoolean(Preferences.wifiOnPref, true);
+		wifiOn = prefs.getBoolean(Preferences.wifiOnPref, getResources()
+				.getBoolean(R.bool.wifiOnDefault));
+		autoScan = prefs.getBoolean(Preferences.autoScanPref, getResources()
+				.getBoolean(R.bool.autoScanDefault));
+		autoScanInterval = prefs.getInt(Preferences.autoScanIntervalPref,
+				getResources().getInteger(R.integer.autoScanIntervalDefault));
 	}
 
 	public void onScanFinished(List<Keygen> networks) {
 		setRefreshActionItemState(false);
+		if (!welcomeScreenShown) {
+			Toast.makeText(this, R.string.msg_welcome_tip, Toast.LENGTH_LONG)
+					.show();
+			welcomeScreenShown = true;
+		}
 	}
 
 }

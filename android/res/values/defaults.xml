@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <integer name="autoScanIntervalDefault">10</integer>
+    <integer name="autoScanIntervalMax">60</integer>
+    <integer name="autoScanIntervalMin">5</integer>
+
+    <bool name="wifiOnDefault">true</bool>
+    <bool name="autoScanDefault">false</bool>
+
+</resources>

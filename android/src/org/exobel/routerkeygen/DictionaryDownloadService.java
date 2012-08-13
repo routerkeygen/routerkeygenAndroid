@@ -4,6 +4,7 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -97,8 +98,7 @@ public class DictionaryDownloadService extends IntentService {
 									.getAbsolutePath());
 			
 			//Testing if we can write to the file
-			if ( !new File(folderSelect
-					+ File.separator + "RouterKeygen.dic").canWrite() ) {
+			if ( !canWrite(folderSelect) ) {
 				mNotificationManager.notify(
 						UNIQUE_ID,
 						getSimple(getString(R.string.msg_error),
@@ -173,6 +173,24 @@ public class DictionaryDownloadService extends IntentService {
 		}
 	}
 
+	private boolean canWrite(String folder){
+		File file;
+		String filename = folder
+				+ File.separator;
+		do {
+			filename += "1";
+			file = new File(filename);
+		} while (file.exists());
+		try {
+			file.createNewFile();
+			boolean ret =  file.canWrite();
+			file.delete();
+			return ret;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 
 	private boolean renameFile(String file, String toFile, boolean saveOld) {
 
@@ -198,7 +216,6 @@ public class DictionaryDownloadService extends IntentService {
 
 		return true;
 	}
-
 
 	private NotificationCompat2.Builder getSimple(CharSequence title,
 			CharSequence context) {

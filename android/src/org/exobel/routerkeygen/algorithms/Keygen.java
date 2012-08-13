@@ -32,10 +32,10 @@ public abstract class Keygen implements Comparable<Keygen>, Parcelable {
     public static final String OPEN = "Open";
     
     
-	private String ssidName;
-	private String macAddress;
-	private int level;
-	private String encryption;
+	final private String ssidName;
+	final private String macAddress;
+	final private int level;
+	final private String encryption;
 	private boolean stopRequested = false;
 	private int errorCode;
 	private List<String> pwList;
@@ -73,17 +73,11 @@ public abstract class Keygen implements Comparable<Keygen>, Parcelable {
 		return macAddress;
 	}
 
-	public void setMacAddress(String macAddress) {
-		this.macAddress = macAddress;
-	}
 
 	public String getSsidName() {
 		return ssidName;
 	}
 
-	public void setSsidName(String ssidName) {
-		this.ssidName = ssidName;
-	}
 
 	abstract public List<String> getKeys();
 
@@ -103,16 +97,8 @@ public abstract class Keygen implements Comparable<Keygen>, Parcelable {
 		return level;
 	}
 
-	public void setLevel(int level) {
-		this.level = level;
-	}
-
 	public String getEncryption() {
 		return encryption;
-	}
-
-	public void setEncryption(String encryption) {
-		this.encryption = encryption;
 	}
 
 	public int compareTo(Keygen another) {
@@ -149,8 +135,12 @@ public abstract class Keygen implements Comparable<Keygen>, Parcelable {
 		ssidName = in.readString();
 		if (in.readInt() == 1)
 			macAddress = in.readString();
+		else
+			macAddress = "";
 		if (in.readInt() == 1)
 			encryption = in.readString();
+		else
+			encryption = Keygen.OPEN;
 		level = in.readInt();
 		errorCode = in.readInt();
 		stopRequested = in.readInt() == 1;

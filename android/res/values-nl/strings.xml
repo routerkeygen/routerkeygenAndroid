@@ -24,7 +24,8 @@
     <string name="app_name">Router Keygen</string>
 	<string name="msg_welcome_title">Router Keygen</string>
 	<string name="msg_welcome_text">Bedankt voor het uitproberen van Router Keygen. Als u deze app leuk vindt, denk er dan over de donatieversie te kopen. De link is in het instellingenmenu. Uw donatie zal de ontwikkelaars aanmoedigen om deze open-source app nog beter te maken.</string>
-	<string name="msg_welcome_text_donate">Bedankt voor uw aanschaf van de donatieversie van Router Keygen. Uw donatie zal de ontwikkelaars aanmoedigen om deze open-source app nog beter te maken.</string> <!-- UNTRANSLATED -->
+	<string name="msg_welcome_text_donate">Bedankt voor uw aanschaf van de donatieversie van Router Keygen. Uw donatie zal de ontwikkelaars aanmoedigen om deze open-source app nog beter te maken.</string>
+    <string name="msg_welcome_tip">Select any network with a green bar to generate possible keys.</string>  <!-- UNTRANSLATED -->
     <string name="menu_scan">Scan</string>
     <string name="menu_manual">Handmatige Invoer</string>
     <string name="menu_preferences">Instellingen</string>
@@ -106,6 +107,12 @@
 	<string name="pref_hintoff_thomson3g">Gebruik dictionary om sleutels te genereren.</string>
     <string name="pref_thomson_section">Thomson Opties</string>
 	<string name="pref_update">Controleer op updates</string>
+    <string name="pref_msg_download_running">The dictionary is already being downloaded.</string> <!-- UNTRANSLATED -->
+    <string name="pref_autoscan">Auto Scan</string> <!-- UNTRANSLATED -->
+    <string name="pref_hinton_autoscan">Scan will be repeated every few seconds.</string> <!-- UNTRANSLATED -->
+    <string name="pref_hintoff_autoscan">Scan is always manual.</string> <!-- UNTRANSLATED -->
+    <string name="pref_autoscan_interval">Auto Scan Interval</string> <!-- UNTRANSLATED -->
+    <string name="pref_hint_autoscan_interval">Period of the automatic scan.</string> <!-- UNTRANSLATED -->
 	
 	<!-- ERROR MESSAGE STRINGS -->
 	<string name="msg_unspported">Die ESSID wordt niet ondersteund</string>
@@ -134,6 +141,7 @@
 	<string name="msg_err_native">­Fout in de primitieve berekening, neem a.u.b. contact op met de ontwikkelaar.</string>
 	<string name="msg_nomemoryonsdcard">De externe opslag heeft niet genoeg vrije ruimte.</string>
 	<string name="msg_no_write_permissions">Impossible to write to the selected folder.</string>  <!-- UNTRANSLATED -->
+    <string name="msg_no_read_permissions">Impossible to read from the selected folder.</string> <!-- UNTRANSLATED -->
 	<string name="msg_error">Fout</string>
 	<string name="pref_msg_err_backup_dic">Fout bij het verplaatsen van de vorige dictionary naar een backup</string>
 	<string name="pref_msg_err_rename_dic">Fout bij het hernoemen van de gedownloade dictionary.</string>
