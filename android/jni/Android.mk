@@ -7,7 +7,6 @@ include $(LOCAL_PATH)/android-config.mk
 LOCAL_CFLAGS :=  -DNO_WINDOWS_BRAINDEATH -DOPENSSL_BN_ASM_MONT -DSHA1_AS 
 
 ifeq ($(TARGET_ARCH),arm) 
-    LOCAL_CFLAGS :=$(LOCAL_CFLAGS) -march=armv6 
     LOCAL_SRC_FILES := sha/sha1-armv4-large.S 
 endif 
 ifeq ($(TARGET_ARCH),x86) 
