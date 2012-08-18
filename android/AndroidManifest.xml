@@ -53,6 +53,7 @@
         </activity>
 
         <service android:name=".DictionaryDownloadService" />
+        <service android:name=".AutoConnectService" />
     </application>
 
 </manifest>

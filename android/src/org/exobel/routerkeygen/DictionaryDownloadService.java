@@ -41,7 +41,7 @@ public class DictionaryDownloadService extends IntentService {
 
 	// Unique Identification Number for the Notification.
 	// We use it on Notification start, and to cancel it.
-	private final int UNIQUE_ID = R.string.app_name;
+	private final int UNIQUE_ID = R.string.app_name + DictionaryDownloadService.class.getName().hashCode();
 	private int fileLen;
 
 	@Override
@@ -243,7 +243,7 @@ public class DictionaryDownloadService extends IntentService {
 		} else {
 			RemoteViews contentView = new RemoteViews(getPackageName(),
 					R.layout.notification);
-			contentView.setTextViewText(R.id.text, content);
+			contentView.setTextViewText(android.R.id.text1, content);
 			contentView.setProgressBar(android.R.id.progress, fileLen,
 					progress, indeterminate);
 			builder.setContent(contentView);

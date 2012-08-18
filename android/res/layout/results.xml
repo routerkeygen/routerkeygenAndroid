@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 
+<!--
    Copyright 2012 Rui Araújo, Luís Fonseca
   
    This file is part of Router Keygen.
@@ -16,24 +16,33 @@
    
    You should have received a copy of the GNU General Public License
    along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
-   -->
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-				android:id="@+id/layout_root"
-				android:orientation="vertical"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				android:padding="10dp"
-              	>
-   	<TextView
-     			android:id="@+id/result_text"
-              	android:layout_width="wrap_content"
-              	android:layout_height="wrap_content" 
-              	android:text="@string/msg_results"              	
-   				/>
-  	<ListView               
-    			android:id="@+id/list_keys"   
-              	android:layout_width="match_parent"
-              	android:layout_height="wrap_content"
-				android:cacheColorHint="#00000000"
-				/>
+    android:id="@+id/layout_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp" >
+
+    <TextView
+        android:id="@+id/result_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/msg_results" />
+
+    <ListView
+        android:id="@+id/list_keys"
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:cacheColorHint="#00000000" 
+        android:layout_weight="1"/>
+
+    <Button
+        android:id="@+id/auto_connect"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/bt_auto_connect"/>
+
 </LinearLayout>

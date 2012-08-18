@@ -18,182 +18,52 @@
  */
 package org.exobel.routerkeygen;
 
-import java.util.List;
-
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.NetworkInfo;
 import android.net.NetworkInfo.DetailedState;
-import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 
 public class AutoConnectManager extends BroadcastReceiver {
-	WifiManager wifi;
-	List<String> keys;
-	Activity parent;
-	WifiNetwork router;	
-	WifiConfiguration config = null;
-	String tryingKey = "";
-	Handler mess;
-	int attempts = 0;
-	/* Since this receiver is waiting for
-	 * a broadcast that can happen anytime
-	 * I want it to wait until I need him.*/
-	boolean activated = false;
-	public AutoConnectManager(WifiManager wifi , List<String> keys , 
-						WifiNetwork router , Activity par , Handler h){
+	final WifiManager wifi;
+	final onConnectionListener listener;
+
+	public AutoConnectManager(WifiManager wifi, onConnectionListener listener) {
+		this.listener = listener;
 		this.wifi = wifi;
-		this.keys = keys;
-		this.router = router;
-		this.parent = par;
-		this.mess = h;
 	}
+
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		if ( !activated )
-			return;
-		NetworkInfo info = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
-		if ( info != null )
-		{
+		NetworkInfo info = intent
+				.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
+		if (info != null) {
 			DetailedState state = info.getDetailedState();
-			@SuppressWarnings("unused")
-			String ola = tryingKey;
-			if ( state.equals(DetailedState.CONNECTED) )
-			{
-				try{
-					parent.unregisterReceiver(this);   
-				}catch(Exception e ){}
-				activated = false;
-				mess.sendMessage(Message.obtain(mess, 3, 
-						new String(tryingKey + " is the correct key!")));
-				//TODO: victory
+			Log.d(this.getClass().getSimpleName(), state.name());
+			if (state.equals(DetailedState.CONNECTED)) {
+				listener.onSuccessfulConection();
 				return;
 			}
-			if ( state.equals(DetailedState.CONNECTING)  || 
-				 state.equals(DetailedState.OBTAINING_IPADDR) ||
-				 state.equals(DetailedState.AUTHENTICATING) )
-			{
-				return; /* Waiting for a definitive outcome*/
+			if (state.equals(DetailedState.CONNECTING)
+					|| state.equals(DetailedState.AUTHENTICATING)
+					|| state.equals(DetailedState.OBTAINING_IPADDR)) {
+				return; /* Waiting for a definitive outcome */
 			}
-			if ( state.equals(DetailedState.DISCONNECTED) && keys.isEmpty() )
-			{
-				try{
-					parent.unregisterReceiver(this);   
-				}catch(Exception e ){
-					e.toString();
-				}
-				activated = false;
-				mess.sendMessage(Message.obtain(mess, 3, new String("Failed!")));
-				return; /* Waiting for a definitive outcome*/
+			if (state.equals(DetailedState.DISCONNECTED)
+					|| state.equals(DetailedState.FAILED)) {
+				listener.onFailedConnection();
+				return; /* Failed */
 			}
-			if ( state.equals(DetailedState.FAILED) )
-			{
-				wifi.reassociate();
-				testKey();
-				return;
-			}
-		}
-		
-		if ( attempts > 2 )
-			testKey();
-		else
-		{
-			attempts++;
-			attemptConnect();
 		}
 
 	}
-	
-	public void activate(){
-		if ( !activated )
-			firstRun();
-		activated = true;
-	}
-	
-	public void firstRun(){
-		List<WifiConfiguration> saved = wifi.getConfiguredNetworks();
-		for ( WifiConfiguration w : saved )
-		{
-			if ( w.SSID.equals('"' + router.ssid +'"') )
-			{
-				wifi.disableNetwork(w.networkId);
-				wifi.removeNetwork(w.networkId);
-			}
-		}
-		testKey();
-	}
-	
-	public void attemptConnect(){
-		if ( this.config != null )
-		{
-			boolean b = wifi.disableNetwork(this.config.networkId);
-			Log.d("WifiPreference", "disableNetwork " +this.config.networkId + "  returned " + b );
-			b = wifi.removeNetwork(this.config.networkId);
-			Log.d("WifiPreference", "rmeoveNetwork " +this.config.networkId + "  returned " + b );
 
-		}
-		WifiConfiguration config = new WifiConfiguration();
-		config.priority = 90 -keys.size();  ;
-		config.status = WifiConfiguration.Status.ENABLED;
-		config.SSID = '"' + router.ssid	 + '"';
-		config.hiddenSSID = true;
-		if ( router.encryption.contains("WEP") )
-		{
-			config.allowedKeyManagement.clear();
-			config.allowedAuthAlgorithms.clear();
-			config.allowedProtocols.clear();
-			config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
-			config.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN);
-			config.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.SHARED);
-			config.wepTxKeyIndex = 0;
-			if (tryingKey.length() != 0) {
-				int length = tryingKey.length();
-				// WEP-40, WEP-104, and 256-bit WEP (WEP-232?)
-				if ((length == 10 || length == 26 || length == 58) &&
-						tryingKey.matches("[0-9A-Fa-f]*")) {
-					config.wepKeys[0] = tryingKey;
-					config.preSharedKey = null;
-				}
-				else {
-					config.wepKeys[0] = '"' + tryingKey + '"';
-					config.preSharedKey = null;
-				}
-			}
-		}
-		else
-			if ( router.encryption.contains("PSK") )
-			{
-				config.allowedKeyManagement.clear();
-				config.allowedAuthAlgorithms.clear();
-				config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
-				config.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN);
-				config.preSharedKey  = '"' + tryingKey +'"';
-			}
+	public interface onConnectionListener {
+		public void onFailedConnection();
 
-		int res = 0;
-		res = wifi.addNetwork(config);
-		config.networkId = res;
-		this.config = config;
-		Log.d("WifiPreference", "add Network returned " + res );
-		boolean b = wifi.enableNetwork(res, true);        
-		Log.d("WifiPreference", "enableNetwork returned " + b );
-		
-	}
-	
-	public void testKey(){
-		attempts = 0;
-		if ( !keys.isEmpty() )
-		{
-			tryingKey = keys.get(0);
-			keys.remove(0);	
-			mess.sendEmptyMessage(2);
-		}
-		attemptConnect();
+		public void onSuccessfulConection();
 	}
 
 }

@@ -21,6 +21,7 @@ package org.exobel.routerkeygen.algorithms;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.net.wifi.ScanResult;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -31,7 +32,7 @@ public abstract class Keygen implements Comparable<Keygen>, Parcelable {
     public static final String EAP = "EAP";
     public static final String OPEN = "Open";
     
-    
+    private ScanResult scanResult;
 	final private String ssidName;
 	final private String macAddress;
 	final private int level;
@@ -101,6 +102,14 @@ public abstract class Keygen implements Comparable<Keygen>, Parcelable {
 		return encryption;
 	}
 
+	public ScanResult getScanResult() {
+		return scanResult;
+	}
+
+	public void setScanResult(ScanResult scanResult) {
+		this.scanResult = scanResult;
+	}
+
 	public int compareTo(Keygen another) {
 		if (isSupported() && another.isSupported()) {
 			if (another.level == this.level)
@@ -129,6 +138,9 @@ public abstract class Keygen implements Comparable<Keygen>, Parcelable {
 		dest.writeInt(errorCode);
 		dest.writeInt(stopRequested ? 1 : 0);
 		dest.writeStringList(pwList);
+		dest.writeInt(scanResult != null ? 1 : 0);
+		if (scanResult != null)
+			dest.writeParcelable(scanResult, flags);
 	}
 
 	protected Keygen(Parcel in) {
@@ -145,6 +157,8 @@ public abstract class Keygen implements Comparable<Keygen>, Parcelable {
 		errorCode = in.readInt();
 		stopRequested = in.readInt() == 1;
 		pwList = in.createStringArrayList();
+		if (in.readInt() == 1)
+			scanResult = in.readParcelable(ScanResult.class.getClassLoader());
 
 	}
 	

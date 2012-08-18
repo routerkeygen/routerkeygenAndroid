@@ -38,7 +38,10 @@
     <string name="msg_wifienabling">Enabling Wifi</string>
     <string name="msg_results">Click on one of the keys to copy it.\nThen the Wifi Settings will open where you can test it.</string>
     <string name="manual_mac_separator">:</string>
-
+    <string name="not_auto_connect_waiting">Waiting for the current network to disconnect</string>
+	<string name="not_auto_connect_key_testing">Testing <xliff:g id="key">%1$s</xliff:g></string>
+	<string name="not_correct_key_testing"><xliff:g id="key">%1$s</xliff:g> is the correct key.</string>
+	
     <!-- BUTTONS STRINGS -->
     <string name="bt_manual_cancel">Cancel</string>
     <string name="bt_manual_calc">Calculate</string>
@@ -47,7 +50,7 @@
     <string name="bt_choose_back">Up</string>
     <string name="bt_close">Close</string>
     <string name="bt_save_sd">Save to the SD</string>
-    <string name="bt_connect">Auto connect</string>
+    <string name="bt_auto_connect">Test key(s)</string>
     <string name="bt_website">Go to Website</string>
 
     <!-- DIALOG STRINGS -->
@@ -143,6 +146,9 @@
     <string name="msg_err_webdic_table">Error while processing online keys.</string>
     <string name="msg_unspported_network">A valid network was not recognized. Please check the SSID and the MAC address.</string>
     <string name="msg_invalid_mac">A valid MAC address wasn\'t entered so it will be ignored.</string>
+	<string name="msg_error_key_testing">Error trying to test the key.</string>
+    <string name="msg_no_correct_keys">No correct keys.</string>
+    <string name="msg_auto_connect_running">The auto connect process is already running.</string>
 
     <!-- AUTOCOMPLETE SUPPORT -->
     <string-array name="supported_routers">

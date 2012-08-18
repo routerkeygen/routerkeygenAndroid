@@ -23,13 +23,17 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.exobel.routerkeygen.AutoConnectService;
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.algorithms.Keygen;
 import org.exobel.routerkeygen.algorithms.NativeThomson;
 import org.exobel.routerkeygen.algorithms.ThomsonKeygen;
 
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningServiceInfo;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -42,6 +46,7 @@ import android.text.ClipboardManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -86,7 +91,45 @@ public class NetworkFragment extends SherlockFragment {
 		root = (ViewSwitcher) inflater.inflate(R.layout.fragment_network,
 				container, false);
 		messages = (TextView) root.findViewById(R.id.loading_text);
+		final View autoConnect = root.findViewById(R.id.auto_connect);
+		if (keygen.getScanResult() == null)
+			autoConnect.setVisibility(View.GONE);
+		else
+			autoConnect.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					if (passwordList == null)
+						return;
+					if (isAutoConnectServiceRunning()) {
+						Toast.makeText(getActivity(),
+								R.string.msg_auto_connect_running,
+								Toast.LENGTH_SHORT).show();
+						return;
+					}
+					Intent i = new Intent(getActivity(),
+							AutoConnectService.class);
+					i.putStringArrayListExtra(AutoConnectService.KEY_LIST,
+							(ArrayList<String>) passwordList);
+					i.putExtra(AutoConnectService.SCAN_RESULT,
+							keygen.getScanResult());
+					getActivity().startService(i);
+				}
+			});
 		return root;
+	}
+
+	private boolean isAutoConnectServiceRunning() {
+		if (getActivity() == null)
+			return false;
+		final ActivityManager manager = (ActivityManager) getActivity()
+				.getSystemService(Context.ACTIVITY_SERVICE);
+		for (RunningServiceInfo service : manager
+				.getRunningServices(Integer.MAX_VALUE)) {
+			if ("org.exobel.routerkeygen.AutoConnectService"
+					.equals(service.service.getClassName())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -118,48 +161,54 @@ public class NetworkFragment extends SherlockFragment {
 				i.setType("text/plain");
 				i.putExtra(Intent.EXTRA_SUBJECT, keygen.getSsidName()
 						+ getString(R.string.share_msg_begin));
-				final StringBuilder message = new StringBuilder(keygen.getSsidName());
+				final StringBuilder message = new StringBuilder(
+						keygen.getSsidName());
 				message.append(getString(R.string.share_msg_begin));
 				message.append(":\n");
-				for (String password : passwordList){
+				for (String password : passwordList) {
 					message.append(password);
 					message.append('\n');
 				}
 				i.putExtra(Intent.EXTRA_TEXT, message.toString());
-				startActivity(Intent.createChooser(i, getString(R.string.share_title)));
+				startActivity(Intent.createChooser(i,
+						getString(R.string.share_title)));
 			} catch (Exception e) {
 				Toast.makeText(getActivity(), R.string.msg_err_sendto,
 						Toast.LENGTH_SHORT).show();
 			}
 			return true;
 		case R.id.menu_save_sd:
-			if ( !Environment.getExternalStorageState().equals("mounted")  && 
-				     !Environment.getExternalStorageState().equals("mounted_ro")	)
-			{
-				Toast.makeText( getActivity() , R.string.msg_nosdcard,
-					Toast.LENGTH_SHORT).show();
+			if (!Environment.getExternalStorageState().equals("mounted")
+					&& !Environment.getExternalStorageState().equals(
+							"mounted_ro")) {
+				Toast.makeText(getActivity(), R.string.msg_nosdcard,
+						Toast.LENGTH_SHORT).show();
 				return true;
 			}
-			final StringBuilder message = new StringBuilder(keygen.getSsidName());
+			final StringBuilder message = new StringBuilder(
+					keygen.getSsidName());
 			message.append(" KEYS\n");
-			for (String password : passwordList){
+			for (String password : passwordList) {
 				message.append(password);
 				message.append('\n');
 			}
 			try {
-				
-				final BufferedWriter out = new BufferedWriter(
-						new FileWriter(folderSelect + File.separator + keygen.getSsidName() + ".txt"));
+
+				final BufferedWriter out = new BufferedWriter(new FileWriter(
+						folderSelect + File.separator + keygen.getSsidName()
+								+ ".txt"));
 				out.write(message.toString());
 				out.close();
-			}
-			catch (IOException e)
-			{
-				Toast.makeText( getActivity() , getString(R.string.msg_err_saving_key_file),
+			} catch (IOException e) {
+				Toast.makeText(getActivity(),
+						getString(R.string.msg_err_saving_key_file),
 						Toast.LENGTH_SHORT).show();
 				return true;
 			}
-			Toast.makeText( getActivity() , keygen.getSsidName() + ".txt " + getString(R.string.msg_saved_key_file),
+			Toast.makeText(
+					getActivity(),
+					keygen.getSsidName() + ".txt "
+							+ getString(R.string.msg_saved_key_file),
 					Toast.LENGTH_SHORT).show();
 			return true;
 		}
@@ -177,7 +226,7 @@ public class NetworkFragment extends SherlockFragment {
 		protected void onPostExecute(List<String> result) {
 			if (getActivity() == null)
 				return;
-			if ( result == null )
+			if (result == null)
 				return;
 			passwordList = result;
 			final ListView list = (ListView) root.findViewById(R.id.list_keys);
@@ -211,7 +260,8 @@ public class NetworkFragment extends SherlockFragment {
 			if (keygen instanceof ThomsonKeygen) {
 				((ThomsonKeygen) keygen).setFolder(folderSelect);
 				((ThomsonKeygen) keygen).setInternetAlgorithm(thomson3g);
-				((ThomsonKeygen) keygen).setWebdic(getActivity().getResources().openRawResource(R.raw.webdic));
+				((ThomsonKeygen) keygen).setWebdic(getActivity().getResources()
+						.openRawResource(R.raw.webdic));
 			}
 		}
 

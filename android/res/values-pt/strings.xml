@@ -36,6 +36,9 @@
     <string name="msg_wifienabling">Activando Wifi</string>
     <string name="msg_results">Seleccione uma das senhas para copiá-la.\nAs Preferências de Wifi irão abrir onde pode usá-la para teste.</string>
     <string name="manual_mac_separator">:</string>
+    <string name="not_auto_connect_waiting">Waiting for the current network to disconnect</string>  <!-- UNTRANSLATED -->
+	<string name="not_auto_connect_key_testing">Testing <xliff:g id="key">%1$s</xliff:g></string>  <!-- UNTRANSLATED -->
+	<string name="not_correct_key_testing"><xliff:g id="key">%1$s</xliff:g> is the correct key.</string>  <!-- UNTRANSLATED -->
     
     <!-- BUTTONS STRINGS -->
     <string name="bt_manual_cancel">Cancelar</string>
@@ -44,16 +47,14 @@
     <string name="bt_choose">Abrir</string>
     <string name="bt_choose_back">Subir</string>
     <string name="bt_close">Fechar</string>
-    <string name="bt_pause">Pausar</string>
 	<string name="bt_save_sd">Guardar no SD</string>
-	<string name="bt_connect">Auto connectar</string>
+	<string name="bt_auto_connect">Testar senhas</string>
 	<string name="bt_website">Abrir Website</string>
  
 	<!-- DIALOG STRINGS -->
 	<string name="lb_manual">Introduza o ESSID:</string>
     <string name="dialog_nativecalc_msg">Isto pode durar cerca de 2 minutos. Por favor, aguarde.</string>
 	<string name="msg_dicislarge">O Dicionário tem 66 MB. É aconselhado que esteja a usar uma ligação Wifi.\nTem a certeza que deseja continuar?</string>
-	<string name="msg_dl_estimating">Estimando velocidade de descarregamento e tempo restante&#8230;</string>
 	<string name="msg_dl_dlingdic">Descarregando Dicionário</string>
     <string name="msg_dic_updated">O seu dicionário já está na versão mais recente.</string>
     <string name="msg_dic_updated_finished">O seu dicionário foi actualizado para a versão mais recente.</string>
@@ -157,6 +158,9 @@
     <string name="msg_err_webdic_table">Erro ao processor senhas online.</string>
     <string name="msg_unspported_network">A valid network was not recognized. Please check the SSID and the MAC address.</string> <!-- UNTRANSLATED -->
     <string name="msg_invalid_mac">A valid MAC address wasn\'t entered so it will be ignored.</string>  <!-- UNTRANSLATED -->
+	<string name="msg_error_key_testing">Error trying to test the key.</string>  <!-- UNTRANSLATED -->
+    <string name="msg_no_correct_keys">No correct keys.</string>  <!-- UNTRANSLATED -->
+    <string name="msg_auto_connect_running">The auto connect process is already running.</string>  <!-- UNTRANSLATED -->
     
     <!-- AUTOCOMPLETE SUPPORT -->
 	<string-array name="supported_routers">

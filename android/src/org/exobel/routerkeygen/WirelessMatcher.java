@@ -12,6 +12,7 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.exobel.routerkeygen.algorithms.AliceKeygen;
 import org.exobel.routerkeygen.algorithms.AndaredKeygen;
+import org.exobel.routerkeygen.algorithms.ComtrendKeygen;
 import org.exobel.routerkeygen.algorithms.ConnKeygen;
 import org.exobel.routerkeygen.algorithms.DiscusKeygen;
 import org.exobel.routerkeygen.algorithms.DlinkKeygen;
@@ -32,10 +33,11 @@ import org.exobel.routerkeygen.algorithms.ThomsonKeygen;
 import org.exobel.routerkeygen.algorithms.UnsupportedKeygen;
 import org.exobel.routerkeygen.algorithms.VerizonKeygen;
 import org.exobel.routerkeygen.algorithms.Wlan2Keygen;
-import org.exobel.routerkeygen.algorithms.ComtrendKeygen;
 import org.exobel.routerkeygen.algorithms.Wlan6Keygen;
 import org.exobel.routerkeygen.algorithms.ZyxelKeygen;
 
+import android.net.wifi.ScanResult;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -55,6 +57,13 @@ public class WirelessMatcher implements Parcelable {
 			e.printStackTrace();
 		}
 		supportedAlices = aliceReader.getSupportedAlices();
+	}
+	
+	public Keygen getKeygen(ScanResult result) {
+		final Keygen keygen = getKeygen(result.SSID, result.BSSID.toUpperCase(),
+				WifiManager.calculateSignalLevel(result.level,4), result.capabilities);
+		keygen.setScanResult(result);
+		return keygen;
 	}
 
 	public Keygen getKeygen(String ssid, String mac, int level, String enc) {
