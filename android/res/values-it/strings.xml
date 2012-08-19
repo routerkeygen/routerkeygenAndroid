@@ -29,9 +29,12 @@
     <string name="menu_scan">Scansiona</string>
     <string name="menu_manual">Immetti manualmente</string>
     <string name="menu_preferences">Preferenze</string>
+    <string name="context_menu_copy_ssid">Copy SSID</string>  <!-- UNTRANSLATED -->
+    <string name="context_menu_copy_mac">Copy MAC address</string>  <!-- UNTRANSLATED -->
+    <string name="context_menu_use_mac">Use MAC address in Manual Input Dialog</string>  <!-- UNTRANSLATED -->
     <string name="share_msg_begin">Chiavi</string>
 	<string name="share_title">Condividi le chiavi</string>
-	<string name="msg_copied">  è stato copiato negli appunti!</string>
+	<string name="msg_copied"><xliff:g id="arg">%1$s</xliff:g>  è stato copiato negli appunti!</string>
  	<string name="msg_scanstarted">La scansione è iniziata</string>
 	<string name="msg_wifienabling">Sto abilitando il Wifi</string>
 	<string name="msg_results">Clicca su una delle chiavi per copiarla. Appariranno le opzioni del Wifi dove potrai usarla per fare dei test.</string>

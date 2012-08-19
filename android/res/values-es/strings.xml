@@ -29,9 +29,12 @@
 	<string name="menu_scan">Scanear</string>
 	<string name="menu_manual">Introducción Manual</string>
 	<string name="menu_preferences">Preferencias</string>
+    <string name="context_menu_copy_ssid">Copy SSID</string>  <!-- UNTRANSLATED -->
+    <string name="context_menu_copy_mac">Copy MAC address</string>  <!-- UNTRANSLATED -->
+    <string name="context_menu_use_mac">Use MAC address in Manual Input Dialog</string>  <!-- UNTRANSLATED -->
 	<string name="share_msg_begin">Keys</string>
 	<string name="share_title">Compartir Keys</string>
-	<string name="msg_copied">Se ha copiado en el portapapeles!</string>
+	<string name="msg_copied"><xliff:g id="arg">%1$s</xliff:g> se ha copiado en el portapapeles!</string>
 	<string name="msg_scanstarted">Inicio de Scanneo</string>
 	<string name="msg_wifienabling">Habilitando Wifi</string>
 	<string name="msg_results">Haz Click en una de las keys para copiarla. Después se abrira la configuración de WIFI donde las puedes "probar" ;).</string>

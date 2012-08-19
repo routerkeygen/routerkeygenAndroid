@@ -57,7 +57,7 @@ public class WifiListAdapter extends BaseAdapter {
 	}
 
 	public long getItemId(int position) {
-		return listNetworks.get(position).hashCode();
+		return position;
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {

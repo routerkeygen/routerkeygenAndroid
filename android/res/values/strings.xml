@@ -31,9 +31,14 @@
     <string name="menu_scan">Scan</string>
     <string name="menu_manual">Manual Input</string>
     <string name="menu_preferences">Preferences</string>
+    <string name="context_menu_copy_ssid">Copy SSID</string>
+    <string name="context_menu_copy_mac">Copy MAC address</string>
+    <string name="context_menu_use_mac">Use MAC address in Manual Input Dialog</string>
+    <string name="menu_preferences">Preferences</string>
+    <string name="menu_preferences">Preferences</string>
     <string name="share_msg_begin">Keys</string>
     <string name="share_title">Share Keys</string>
-    <string name="msg_copied"> was copied to clipboard!</string>
+    <string name="msg_copied"><xliff:g id="arg">%1$s</xliff:g> was copied to clipboard!</string>
     <string name="msg_scanstarted">Scanning started</string>
     <string name="msg_wifienabling">Enabling Wifi</string>
     <string name="msg_results">Click on one of the keys to copy it.\nThen the Wifi Settings will open where you can test it.</string>

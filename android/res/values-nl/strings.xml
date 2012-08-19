@@ -29,9 +29,12 @@
     <string name="menu_scan">Scan</string>
     <string name="menu_manual">Handmatige Invoer</string>
     <string name="menu_preferences">Instellingen</string>
+    <string name="context_menu_copy_ssid">Copy SSID</string>  <!-- UNTRANSLATED -->
+    <string name="context_menu_copy_mac">Copy MAC address</string>  <!-- UNTRANSLATED -->
+    <string name="context_menu_use_mac">Use MAC address in Manual Input Dialog</string>  <!-- UNTRANSLATED -->
 	<string name="share_msg_begin">Sleutels</string>
 	<string name="share_title">Deel Sleutels</string>
-	<string name="msg_copied"> is gekopieerd naar het klipbord</string>
+	<string name="msg_copied"><xliff:g id="arg">%1$s</xliff:g> is gekopieerd naar het klipbord</string>
 	<string name="msg_scanstarted">Gestart met scannen</string>
 	<string name="msg_wifienabling">WiFi aanzetten&#8230;</string>
 	<string name="msg_results">Klik op 1 van de sleutels om die te kopieren.\nVervolgens zullen de WiFi instellingen openen zodat u de sleutel kan testen.</string>

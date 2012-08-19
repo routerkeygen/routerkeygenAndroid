@@ -29,9 +29,12 @@
     <string name="menu_scan">Pesquisa</string>
     <string name="menu_manual">Entrada Manual</string>
     <string name="menu_preferences">Preferências</string>
+    <string name="context_menu_copy_ssid">Copy SSID</string>  <!-- UNTRANSLATED -->
+    <string name="context_menu_copy_mac">Copy MAC address</string>  <!-- UNTRANSLATED -->
+    <string name="context_menu_use_mac">Use MAC address in Manual Input Dialog</string>  <!-- UNTRANSLATED -->
     <string name="share_msg_begin">Senhas</string>
     <string name="share_title">Partilhar Senhas</string>
-    <string name="msg_copied"> foi copiado para a Área de Transferência!</string>
+    <string name="msg_copied"><xliff:g id="arg">%1$s</xliff:g> foi copiado para a Área de Transferência!</string>
     <string name="msg_scanstarted">Pesquisa iniciada</string>
     <string name="msg_wifienabling">Activando Wifi</string>
     <string name="msg_results">Seleccione uma das senhas para copiá-la.\nAs Preferências de Wifi irão abrir onde pode usá-la para teste.</string>

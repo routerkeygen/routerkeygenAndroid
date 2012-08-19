@@ -49,7 +49,7 @@ import com.actionbarsherlock.view.MenuItem;
 
 public class NetworksListActivity extends SherlockFragmentActivity implements
 		NetworksListFragment.OnItemSelectionListener, OnScanListener {
-	// TODO: add auto connect.
+
 	private boolean mTwoPane;
 
 	private WirelessMatcher networkMatcher;
@@ -265,6 +265,12 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 					.show();
 			welcomeScreenShown = true;
 		}
+	}
+
+	public void onItemSelected(String mac) {
+
+		ManualDialogFragment.newInstance(networkMatcher, mac).show(
+				getSupportFragmentManager(), "ManualInput");
 	}
 
 }

@@ -32,6 +32,7 @@ import com.actionbarsherlock.app.SherlockDialogFragment;
 
 public class ManualDialogFragment extends SherlockDialogFragment {
 	private final static String WIRELESS_MATCHER_ARG = "wirelessMatcher";
+	private final static String MAC_ADDRESS_ARG = "mac_address";
 
 	private WirelessMatcher matcher;
 
@@ -42,9 +43,23 @@ public class ManualDialogFragment extends SherlockDialogFragment {
 		frag.setArguments(args);
 		return frag;
 	}
+	
+	public static ManualDialogFragment newInstance(WirelessMatcher matcher, String mac) {
+		Bundle args = new Bundle();
+		args.putParcelable(WIRELESS_MATCHER_ARG, matcher);
+		args.putString(MAC_ADDRESS_ARG, mac);
+		ManualDialogFragment frag = new ManualDialogFragment();
+		frag.setArguments(args);
+		return frag;
+	}
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
+		final String macAddress;
+		if ( getArguments().containsKey(MAC_ADDRESS_ARG) )
+			macAddress = getArguments().getString(MAC_ADDRESS_ARG);
+		else
+			macAddress = null;
 		matcher = getArguments().getParcelable(WIRELESS_MATCHER_ARG);
 		AlertDialog.Builder builder = new Builder(getActivity());
 		final LayoutInflater inflater = (LayoutInflater) getActivity()
@@ -89,6 +104,14 @@ public class ManualDialogFragment extends SherlockDialogFragment {
 		macs[3] = (EditText) layout.findViewById(R.id.input_mac_pair4);
 		macs[4] = (EditText) layout.findViewById(R.id.input_mac_pair5);
 		macs[5] = (EditText) layout.findViewById(R.id.input_mac_pair6);
+		if ( macAddress != null ) {
+			macs[0].setText(macAddress.substring(0, 2));
+			macs[1].setText(macAddress.substring(2, 4));
+			macs[2].setText(macAddress.substring(4, 6));
+			macs[3].setText(macAddress.substring(6, 8));
+			macs[4].setText(macAddress.substring(8, 10));
+			macs[5].setText(macAddress.substring(10, 12));
+		}	
 		InputFilter filterMac = new InputFilter() {
 			public CharSequence filter(CharSequence source, int start, int end,
 					Spanned dest, int dstart, int dend) {
@@ -185,6 +208,9 @@ public class ManualDialogFragment extends SherlockDialogFragment {
 
 	private static OnItemSelectionListener sDummyCallbacks = new OnItemSelectionListener() {
 		public void onItemSelected(Keygen id) {
+		}
+
+		public void onItemSelected(String mac) {		
 		}
 	};
 

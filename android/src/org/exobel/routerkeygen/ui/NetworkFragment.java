@@ -235,7 +235,7 @@ public class NetworkFragment extends SherlockFragment {
 						int position, long id) {
 					final String key = ((TextView) view).getText().toString();
 					Toast.makeText(getActivity(),
-							key + " " + getString(R.string.msg_copied),
+							getString(R.string.msg_copied, key),
 							Toast.LENGTH_SHORT).show();
 					ClipboardManager clipboard = (ClipboardManager) getActivity()
 							.getSystemService(Context.CLIPBOARD_SERVICE);
