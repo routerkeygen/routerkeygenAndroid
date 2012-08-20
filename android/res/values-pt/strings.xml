@@ -5,7 +5,7 @@
    This file is part of Router Keygen.
   
    Router Keygen is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
+   it under \ terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
    
@@ -29,9 +29,9 @@
     <string name="menu_scan">Pesquisa</string>
     <string name="menu_manual">Entrada Manual</string>
     <string name="menu_preferences">Preferências</string>
-    <string name="context_menu_copy_ssid">Copy SSID</string>  <!-- UNTRANSLATED -->
-    <string name="context_menu_copy_mac">Copy MAC address</string>  <!-- UNTRANSLATED -->
-    <string name="context_menu_use_mac">Use MAC address in Manual Input Dialog</string>  <!-- UNTRANSLATED -->
+    <string name="context_menu_copy_ssid">Copiar SSID</string>
+    <string name="context_menu_copy_mac">Copiar endereço MAC</string>
+    <string name="context_menu_use_mac">Usar endereço MAC no diálogo de Entrada Manual</string>
     <string name="share_msg_begin">Senhas</string>
     <string name="share_title">Partilhar Senhas</string>
     <string name="msg_copied"><xliff:g id="arg">%1$s</xliff:g> foi copiado para a Área de Transferência!</string>
@@ -39,9 +39,9 @@
     <string name="msg_wifienabling">Activando Wifi</string>
     <string name="msg_results">Seleccione uma das senhas para copiá-la.\nAs Preferências de Wifi irão abrir onde pode usá-la para teste.</string>
     <string name="manual_mac_separator">:</string>
-    <string name="not_auto_connect_waiting">Waiting for the current network to disconnect</string>  <!-- UNTRANSLATED -->
-	<string name="not_auto_connect_key_testing">Testing <xliff:g id="key">%1$s</xliff:g></string>  <!-- UNTRANSLATED -->
-	<string name="not_correct_key_testing"><xliff:g id="key">%1$s</xliff:g> is the correct key.</string>  <!-- UNTRANSLATED -->
+    <string name="not_auto_connect_waiting">A esperar pela disconecção da ligação atual</string>
+	<string name="not_auto_connect_key_testing">A testar <xliff:g id="key">%1$s</xliff:g></string>
+	<string name="not_correct_key_testing"><xliff:g id="key">%1$s</xliff:g> é a senha correta.</string>
     
     <!-- BUTTONS STRINGS -->
     <string name="bt_manual_cancel">Cancelar</string>
@@ -112,11 +112,11 @@
     <string name="pref_thomson_section">Opções do Thomson</string>
 	<string name="pref_update">Verificar Actualizações</string>
     <string name="pref_msg_download_running">O dicionário já está a ser descarregado.</string>
-    <string name="pref_autoscan">Auto Scan</string> <!-- UNTRANSLATED -->
-    <string name="pref_hinton_autoscan">Scan will be repeated every few seconds.</string> <!-- UNTRANSLATED -->
-    <string name="pref_hintoff_autoscan">Scan is always manual.</string> <!-- UNTRANSLATED -->
-    <string name="pref_autoscan_interval">Auto Scan Interval</string> <!-- UNTRANSLATED -->
-    <string name="pref_hint_autoscan_interval">Period of the automatic scan.</string> <!-- UNTRANSLATED -->
+    <string name="pref_autoscan">Auto Scan</string>
+    <string name="pref_hinton_autoscan">Scan será repetido com um período fixo.</string>
+    <string name="pref_hintoff_autoscan">Scan é sempre manual.</string>
+    <string name="pref_autoscan_interval">Intervalo do Auto Scan</string>
+    <string name="pref_hint_autoscan_interval">Período do scan automático.</string>
     
  	<!-- ERROR MESSAGE STRINGS -->
     <string name="msg_unspported">Este ESSID não é suportado!</string>
@@ -144,8 +144,8 @@
     <string name="msg_err_essid_no_match">O SSID calculado não corresponde ao previsto.</string>
     <string name="msg_err_native">Error no cálculo nativo.Por favor informe a equipa.</string>
 	<string name="msg_nomemoryonsdcard">O armazenamento externo não tem memória livre suficiente.</string>
-	<string name="msg_no_write_permissions">Impossible to write to the selected folder.</string>  <!-- UNTRANSLATED -->
-    <string name="msg_no_read_permissions">Impossible to read from the selected folder.</string> <!-- UNTRANSLATED -->
+	<string name="msg_no_write_permissions">Impossível escrever na pasta selecionada.</string>
+    <string name="msg_no_read_permissions">Impossível ler da pasta selecionada.</string>
 	<string name="msg_error">Erro</string>
 	<string name="pref_msg_err_backup_dic">Erro ao fazer um cópia de segurança do Dicionário anterior.</string>
 	<string name="pref_msg_err_rename_dic">Erro ao mover o Dicionário descarregado.</string>
@@ -159,11 +159,11 @@
     <string name="msg_saved_key_file">guardado no cartão SD.</string>
     <string name="pref_msg_no_network">Não há acesso à rede.</string>
     <string name="msg_err_webdic_table">Erro ao processor senhas online.</string>
-    <string name="msg_unspported_network">A valid network was not recognized. Please check the SSID and the MAC address.</string> <!-- UNTRANSLATED -->
-    <string name="msg_invalid_mac">A valid MAC address wasn\'t entered so it will be ignored.</string>  <!-- UNTRANSLATED -->
-	<string name="msg_error_key_testing">Error trying to test the key.</string>  <!-- UNTRANSLATED -->
-    <string name="msg_no_correct_keys">No correct keys.</string>  <!-- UNTRANSLATED -->
-    <string name="msg_auto_connect_running">The auto connect process is already running.</string>  <!-- UNTRANSLATED -->
+    <string name="msg_unspported_network">Não foi reconhecida uma rede válida. Verifique o SSID e o endereço MAC, por favor.</string> 
+    <string name="msg_invalid_mac">O endereço insirido vai ser ignorado pois não era válido.</string>
+	<string name="msg_error_key_testing">Erro ao testar a senha.</string>
+    <string name="msg_no_correct_keys">Todas as senhas estão incorretas.</string>
+    <string name="msg_auto_connect_running">O processo de teste já esta a correr.</string>
     
     <!-- AUTOCOMPLETE SUPPORT -->
 	<string-array name="supported_routers">
