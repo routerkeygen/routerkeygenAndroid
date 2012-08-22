@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!-- 
    Copyright 2012 Rui Araújo, Luís Fonseca
   
@@ -25,28 +25,28 @@
 	<string name="msg_welcome_title">Router Keygen</string>
 	<string name="msg_welcome_text">Si te gusta, hazme una donación. El link esta en el menú de preferencias. Tu donación hará que piense en seguir desarrollando esta estupenda herramienta de código abierto.</string>
 	<string name="msg_welcome_text_donate">Gracias por comprar la versión de pago de Router Keygen.  Tu donación hará que piense en seguir desarrollando esta estupenda herramienta de código abierto.</string>
-    <string name="msg_welcome_tip">Select any network with a green bar to generate possible keys.</string>  <!-- UNTRANSLATED -->
+    <string name="msg_welcome_tip">Seleccione una red con una barra verde para generar las posibles claves.</string>  
 	<string name="menu_scan">Scanear</string>
 	<string name="menu_manual">Introducción Manual</string>
 	<string name="menu_preferences">Preferencias</string>
-    <string name="context_menu_copy_ssid">Copy SSID</string>   <!-- UNTRANSLATED -->
-    <string name="context_menu_copy_mac">Copy MAC address</string>  <!-- UNTRANSLATED -->
-    <string name="context_menu_use_mac">Use MAC address in Manual Input Dialog</string>  <!-- UNTRANSLATED -->
-	<string name="share_msg_begin">Keys</string>
-	<string name="share_title">Compartir Keys</string>
+    <string name="context_menu_copy_ssid">Copiar ESSID</string>   
+    <string name="context_menu_copy_mac">Copiar la dirección MAC</string>  
+    <string name="context_menu_use_mac">Usar la dirección MAC en el diálogo de introducción manual</string>  
+	<string name="share_msg_begin">Claves</string>
+	<string name="share_title">Compartir Claves</string>
 	<string name="msg_copied">¡<xliff:g id="arg">%1$s</xliff:g> se ha copiado en el portapapeles!</string>
 	<string name="msg_scanstarted">Inicio de Scanneo</string>
 	<string name="msg_wifienabling">Habilitando Wifi</string>
-	<string name="msg_results">Haz Click en una de las keys para copiarla. Después se abrira la configuración de WIFI donde las puedes "probar" ;).</string>
+	<string name="msg_results">Haz Click en una de las claves para copiarla. Después se abrira la configuración de WIFI donde las puedes "probar" ;).</string>
     <string name="manual_mac_separator">:</string>
-    <string name="not_auto_connect_waiting">Waiting for the current network to disconnect</string>  <!-- UNTRANSLATED -->
-	<string name="not_auto_connect_key_testing">Testing <xliff:g id="key">%1$s</xliff:g></string>  <!-- UNTRANSLATED -->
-	<string name="not_correct_key_testing"><xliff:g id="key">%1$s</xliff:g> is the correct key.</string>  <!-- UNTRANSLATED -->
+    <string name="not_auto_connect_waiting">Esperando a que la red actual se desconecte</string>  
+	<string name="not_auto_connect_key_testing">Probando <xliff:g id="key">%1$s</xliff:g></string>  
+	<string name="not_correct_key_testing"><xliff:g id="key">%1$s</xliff:g> es la clave correcta.</string>  
     
     <!-- BUTTONS STRINGS -->
 	<string name="bt_manual_cancel">Cancelar</string>
 	<string name="bt_manual_calc">Calcular</string>
-	<string name="bt_share">Compartir Keys</string>
+	<string name="bt_share">Compartir Claves</string>
 	<string name="bt_choose">Abrir</string>
 	<string name="bt_choose_back">Arriba</string>
 	<string name="bt_close">Cerrar</string>
@@ -100,23 +100,23 @@
 	<string name="pref_about">Acerca de Router Keygen</string>
 	<string name="pref_about_desc">Router Keygen calcula los passwords por defecto para varios routers.\n\n
 			<a href="http://code.google.com/p/android-thomson-key-solver/">Sitio del Proyecto</a>\n\nVersion: </string>
-	<string name="pref_msg_detected"><xliff:g id="filename">%1$s</xliff:g> detected.</string>   <!-- UNTRANSLATED -->
+	<string name="pref_msg_detected"><xliff:g id="filename">%1$s</xliff:g> detectado.</string>   
 	<string name="pref_native">Cálculo Nativo</string>
 	<string name="pref_hinton_native">Calcular en el objetivo si falla al encontrar el diccionario</string>
 	<string name="pref_hintoff_native">Sólo avisa si falla al encontrar el diccionario</string>
-	<string name="pref_download_des">Se necesita el Diccionario para las keys del Thomson</string>
+	<string name="pref_download_des">Se necesita el Diccionario para las claves del Thomson</string>
 	<string name="pref_download">Descargar el Diccionario</string>
 	<string name="pref_thomson3g">Usar 3G para los Thomson</string>
-	<string name="pref_hinton_thomson3g">Recogiendo keys desde Internet</string>
-	<string name="pref_hintoff_thomson3g">Usar el diccionario para generar las keys.</string>
+	<string name="pref_hinton_thomson3g">Recogiendo claves desde Internet</string>
+	<string name="pref_hintoff_thomson3g">Usar el diccionario para generar las claves.</string>
     <string name="pref_thomson_section">Opciones para el Thomson</string>
 	<string name="pref_update">Verificar actualizaciones</string> 
     <string name="pref_msg_download_running">Ya se está descargando el diccionario.</string>
-    <string name="pref_autoscan">Auto Scan</string> <!-- UNTRANSLATED -->
-    <string name="pref_hinton_autoscan">Scan will be repeated every few seconds.</string> <!-- UNTRANSLATED -->
-    <string name="pref_hintoff_autoscan">Scan is always manual.</string> <!-- UNTRANSLATED -->
-    <string name="pref_autoscan_interval">Auto Scan Interval</string> <!-- UNTRANSLATED -->
-    <string name="pref_hint_autoscan_interval">Period of the automatic scan.</string> <!-- UNTRANSLATED -->
+    <string name="pref_autoscan">Auto Escaneo</string> 
+    <string name="pref_hinton_autoscan">Se repetirá el escaneo cada pocos segundos.</string> 
+    <string name="pref_hintoff_autoscan">Escaneo siempre en manual.</string> 
+    <string name="pref_autoscan_interval">Intervalo de Auto Escaneo</string> 
+    <string name="pref_hint_autoscan_interval">Periodo de escaneo automático.</string> 
 
 	<!-- ERROR MESSAGE STRINGS -->
 	<string name="msg_unspported">¡Este ESSID no esta soportado!</string>
@@ -128,8 +128,8 @@
 	<string name="msg_errordict">¡Error leyendo el diccionario!</string>
 	<string name="msg_errnomatches">¡No se encontraron coincidencias!</string>
 	<string name="msg_shortessid5">¡ESSID inválido! Debe tener 6 caracteres.</string>
-	<string name="msg_nomac">Esta key no se puede generar sin la MAC address</string>
-	<string name="msg_dlinkerror">Error en el cálculo de la key D-Link</string>
+	<string name="msg_nomac">Esta clave no se puede generar sin la MAC address</string>
+	<string name="msg_dlinkerror">Error en el cálculo de la clave D-Link</string>
 	<string name="msg_dictnotfound">¡El Diccionario no se ha encontrado en la SDCard!</string>
 	<string name="pref_msg_notfound">No se encontró el diccionario en <xliff:g id="filename">%1$s</xliff:g></string>
 	<string name="msg_nosdcard">¡La SD card esta desmontada!</string>
@@ -141,29 +141,29 @@
 	<string name="msg_erralicenotsupported">¡Esta serie de Alice no esta soportada todavía!</string>
 	<string name="msg_errversion">Version desconocida del Diccionario.</string>
 	<string name="msg_startingnativecalc">Error con el Diccionario. Comienza Cálculo en modo Nativo</string>
-	<string name="msg_err_essid_no_match">El SSID calculado no concuerda con el proporcionado.</string>
+	<string name="msg_err_essid_no_match">El ESSID calculado no concuerda con el proporcionado.</string>
 	<string name="msg_err_native">Error en el Cáculo Nativo. Informa al KnD Taldea.</string>
 	<string name="msg_nomemoryonsdcard">La tarjeta de memoria externa no tiene suficiente espacio libre</string>
-	<string name="msg_no_write_permissions">Impossible to write to the selected folder.</string>  <!-- UNTRANSLATED -->
-    <string name="msg_no_read_permissions">Impossible to read from the selected folder.</string> <!-- UNTRANSLATED -->
+	<string name="msg_no_write_permissions">Imposible escribir en el folder seleccionado.</string>  
+    <string name="msg_no_read_permissions">Imposible leer del folder seleccionado.</string> 
 	<string name="msg_error">Error</string>
 	<string name="pref_msg_err_backup_dic">Error moviendo el anterior Diccionario a la copia de seguridad</string>
 	<string name="pref_msg_err_rename_dic">Error renombrando el Diccionario descargado.</string>
-	<string name="msg_err_sendto">Ha ocurrido un error tratando de compartir las Keys.</string>
+	<string name="msg_err_sendto">Ha ocurrido un error tratando de compartir las claves.</string>
     <string name="msg_shortessid13">¡ESSID inválido! Debe tener 13 caracteres.</string>
     <string name="msg_err_unkown">Ha ocurrido un error desconocido.</string>
     <string name="msg_err_online_too_adv">La versión Online del diccionario es demasiado avanzada para este programa.\nPiensa en actualizarlo.</string>
     <string name="err_misbuilt_apk">Tu APK no ha sido correctamente construida. Recuerda construir la parte Nativa antes.</string>
-    <string name="msg_err_verizon_ssid">Error procesando este SSID.</string>
-    <string name="msg_err_saving_key_file">Error al grabar el fichero con las keys.</string>
+    <string name="msg_err_verizon_ssid">Error procesando este ESSID.</string>
+    <string name="msg_err_saving_key_file">Error al grabar el fichero con las claves.</string>
     <string name="msg_saved_key_file">Guardado en la tarjeta SD.</string>
     <string name="pref_msg_no_network">No hay acceso a la red.</string>
-    <string name="msg_err_webdic_table">Error while processing online keys.</string>
-    <string name="msg_unspported_network">A valid network was not recognized. Please check the SSID and the MAC address.</string> <!-- UNTRANSLATED -->
-    <string name="msg_invalid_mac">A valid MAC address wasn\'t entered so it will be ignored.</string>  <!-- UNTRANSLATED -->
-	<string name="msg_error_key_testing">Error trying to test the key.</string>  <!-- UNTRANSLATED -->
-    <string name="msg_no_correct_keys">No correct keys.</string>  <!-- UNTRANSLATED -->
-    <string name="msg_auto_connect_running">The auto connect process is already running.</string>  <!-- UNTRANSLATED -->
+    <string name="msg_err_webdic_table">Error mientras se procesaban las claves en línea.</string>
+    <string name="msg_unspported_network">No se reconoció una red válida. Por favor revise la ESSID y la dirreción MAC.</string> 
+    <string name="msg_invalid_mac">No se introdujo una dirección MAC válida así que se será ignorada.</string>  
+	<string name="msg_error_key_testing">Error tratando de porbar la clave.</string>  
+    <string name="msg_no_correct_keys">Sin claves correctas.</string>  
+    <string name="msg_auto_connect_running">El proceso de auto conectar ya se encuentra ejecutándose.</string>  
     
     <!-- AUTOCOMPLETE SUPPORT -->
 	<string-array name="supported_routers">
