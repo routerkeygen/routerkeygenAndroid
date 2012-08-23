@@ -104,7 +104,6 @@ public class Preferences extends SherlockPreferenceActivity {
 		findPreference("download").setOnPreferenceClickListener(
 				new OnPreferenceClickListener() {
 					public boolean onPreferenceClick(Preference preference) {
-						// TODO: check if service is running
 						if (isDictionaryServiceRunning()) {
 							Toast.makeText(
 									getBaseContext(),
