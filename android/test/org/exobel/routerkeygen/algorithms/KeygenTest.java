@@ -15,7 +15,7 @@ public class KeygenTest {
 	static WirelessMatcher matcher;
 	@BeforeClass
 	public static void initMatcher() throws FileNotFoundException{
-		matcher = new WirelessMatcher(new FileInputStream("res/raw/alice.xml"));
+		matcher = new WirelessMatcher(new FileInputStream("../res/raw/alice.xml"));
 	}
 	
 	@Test
@@ -82,7 +82,7 @@ public class KeygenTest {
 
 	@Test
 	public void testCONN() {
-		Keygen keygen = matcher.getKeygen("CONN-1", "", 0, "");
+		Keygen keygen = matcher.getKeygen("CONN-X", "", 0, "");
 		assertTrue("Keygen should be Conn",keygen instanceof ConnKeygen);
 		List<String> results = keygen.getKeys();
 		assertEquals("Errors should not happen",0, keygen.getErrorCode());
