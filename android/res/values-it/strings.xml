@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<!-- 
+<?xml version="1.0" encoding="utf-8"?>
+<!--
    Copyright 2012 Rui Araújo, Luís Fonseca
   
    This file is part of Router Keygen.
@@ -15,141 +15,128 @@
    GNU General Public License for more details.
    
    You should have received a copy of the GNU General Public License
-   along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
-   -->
+   along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
+-->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
-    <!-- Translation proudly done by Simone "lostrozzacavalli" Guidi-->
-    
+
+    <!-- Translation proudly done by Simone "lostrozzacavalli" Guidi e Mauro "Briareos" Manera -->
+
+
     <!-- MISC STRINGS -->
     <string name="app_name">Router Keygen</string>
-	<string name="msg_welcome_title">Router Keygen</string>
-	<string name="msg_welcome_text">Grazie per aver provato Router Keygen. Se ti piace questa applicazione, per favore considera il fatto di comprare la versione Dona. Il link è nel menù delle preferenze. La tua donazione motiverà gli autori a migliorare questo fantastico programma open-source.</string>
-	<string name="msg_welcome_text_donate">Thank you for buying the Donate version of Router Keygen. La tua donazione motiverà gli autori a migliorare questo fantastico programma open-source.</string>
-    <string name="msg_welcome_tip">Select any network with a green bar to generate possible keys.</string>  <!-- UNTRANSLATED -->
+    <string name="msg_welcome_title">Router Keygen</string>
+    <string name="msg_welcome_text">Grazie per aver provato Router Keygen. Se ti piace questa applicazione, per favore considera il fatto di comprare la versione Dona. Il link è nel menù delle preferenze. La tua donazione motiverà gli autori a migliorare questo fantastico programma open-source.</string>
+    <string name="msg_welcome_text_donate">Thank you for buying the Donate version of Router Keygen. La tua donazione motiverà gli autori a migliorare questo fantastico programma open-source.</string>
+    <string name="msg_welcome_tip">Seleziona una rete con la barra verde per generare le chiavi possibili.</string>
     <string name="menu_scan">Scansiona</string>
     <string name="menu_manual">Immetti manualmente</string>
     <string name="menu_preferences">Preferenze</string>
-    <string name="context_menu_copy_ssid">Copy SSID</string>  <!-- UNTRANSLATED -->
-    <string name="context_menu_copy_mac">Copy MAC address</string>  <!-- UNTRANSLATED -->
-    <string name="context_menu_use_mac">Use MAC address in Manual Input Dialog</string>  <!-- UNTRANSLATED -->
+    <string name="context_menu_copy_ssid">Copia SSID</string>
+    <string name="context_menu_copy_mac">Copia indirizzo MAC</string>
+    <string name="context_menu_use_mac">Usa indirizzo MAC nella finestra di dialogo Manuale</string>
     <string name="share_msg_begin">Chiavi</string>
-	<string name="share_title">Condividi le chiavi</string>
-	<string name="msg_copied"><xliff:g id="arg">%1$s</xliff:g>  è stato copiato negli appunti!</string>
- 	<string name="msg_scanstarted">La scansione è iniziata</string>
-	<string name="msg_wifienabling">Sto abilitando il Wifi</string>
-	<string name="msg_results">Clicca su una delle chiavi per copiarla. Appariranno le opzioni del Wifi dove potrai usarla per fare dei test.</string>
+    <string name="share_title">Condividi le chiavi</string>
+    <string name="msg_copied"><xliff:g id="arg">%1$s</xliff:g>  è stato copiato negli appunti!</string>
+    <string name="msg_scanstarted">La scansione è iniziata</string>
+    <string name="msg_wifienabling">Sto abilitando il Wifi</string>
+    <string name="msg_results">Clicca su una delle chiavi per copiarla. Appariranno le opzioni del Wifi dove potrai usarla per fare dei test.</string>
     <string name="manual_mac_separator">:</string>
-    <string name="not_auto_connect_waiting">Waiting for the current network to disconnect</string>  <!-- UNTRANSLATED -->
-	<string name="not_auto_connect_key_testing">Testing <xliff:g id="key">%1$s</xliff:g></string>  <!-- UNTRANSLATED -->
-	<string name="not_correct_key_testing"><xliff:g id="key">%1$s</xliff:g> is the correct key.</string>  <!-- UNTRANSLATED -->
-    
+    <string name="not_auto_connect_waiting">In attesa di disconnettersi dalla rete attuale</string>
+    <string name="not_auto_connect_key_testing">Prova in corso <xliff:g id="key">%1$s</xliff:g></string>
+    <string name="not_correct_key_testing"><xliff:g id="key">%1$s</xliff:g> è la chiave corretta.</string>
+
     <!-- BUTTONS STRINGS -->
-	<string name="bt_manual_cancel">Annulla</string>
-	<string name="bt_manual_calc">Calcola</string>
-	<string name="bt_share">Condividi le chiavi</string>
-	<string name="bt_choose">Apri</string>
-	<string name="bt_choose_back">Su</string>
-	<string name="bt_close">Chiudi</string>
-	<string name="bt_save_sd">Salva nella scheda SD</string>
-	<string name="bt_auto_connect">Connetti automaticamente</string>
-	<string name="bt_website">Go to Website</string> <!-- UNTRANSLATED -->
-		
-	<!-- DIALOG STRINGS -->
-	<string name="lb_manual">Inserisci qui il tuo ESSID:</string>
-	<string name="dialog_nativecalc_msg">Questo può richiedere fino a 2 minuti. Per favore attendi.</string>
-	<string name="msg_dicislarge">Il dizionario occupa 66 MB. È consigliabile usare una connessione wifi.\nSei sicuro di voler continuare?</string>
+    <string name="bt_manual_cancel">Annulla</string>
+    <string name="bt_manual_calc">Calcola</string>
+    <string name="bt_share">Condividi le chiavi</string>
+    <string name="bt_choose">Apri</string>
+    <string name="bt_choose_back">Su</string>
+    <string name="bt_close">Chiudi</string>
+    <string name="bt_save_sd">Salva nella scheda SD</string>
+    <string name="bt_auto_connect">Connetti automaticamente</string>
+    <string name="bt_website">Vai al sito web</string>
+
+    <!-- DIALOG STRINGS -->
+    <string name="lb_manual">Inserisci qui il tuo ESSID:</string>
+    <string name="dialog_nativecalc_msg">Questo può richiedere fino a 2 minuti. Per favore attendi.</string>
+    <string name="msg_dicislarge">Il dizionario occupa 66 MB. È consigliabile usare una connessione wifi.\nSei sicuro di voler continuare?</string>
     <string name="msg_dl_dlingdic">Scaricando il dizionario</string>
     <string name="msg_dic_updated">Il tuo dizionario è già aggiornato all\'ultima versione.</string>
     <string name="msg_dic_updated_finished">Il tuo dizionario è stato aggiornato all\'ultima versione.</string>
     <string name="msg_wait">Per favore attendi&#8230;</string>
-	<string name="lb_manual_bssid">MAC address (optional):</string> <!-- UNTRANSLATED -->
-	<string name="dialog_about_credits">Crediti</string>
-	<string name="dialog_about_credits_desc">Router Keygen è il risultato dell\'inestimabile contributo da parte delle seguenti persone/organizzazioni:\n\n
-				                <b>Luís Fonseca</b> - membro del Team Exobel\n
-								<b>Rui Araújo</b> - membro del Team Exobel\n
-				                <b>Ângela Igreja</b> per la traduzione Portoghese\n
-								<b>Simone Guidi</b> per la traduzione Italiana\n
-				                <b>Matthijs de Rijk</b> e <b>Van Hove Sven</b> per la traduzione Tedesca\n
-				                <b>Jon Uriarte</b> per la traduzione Spagnola e l\'attuazione del WLAN_XX\n
-				                <b><a href="http://www.gnucitizen.org/">GNUCITIZEN</a></b> per l\'algoritmo di Thomson\n
-				                <b><a href="http://wifiresearchers.wordpress.com/">White Hats Crew</a></b> per gli algoritmi di Alice e FASTWEB\n
-								<b>Fred Williams</b> per l\'algoritmo Verizon FiOS\n
-								<b>Muris Kurgaš </b> per l\'algoritmo Discus\n
-								<b><a href="http://websec.ca/">Pedro Joaquim</a></b> per l\'algoritmo di Huawei\n
-								<b>chaeo</b> per l\'algoritmo di SKY V1.
-								</string>
-	<string name="dialog_about_license">Licenza</string>
-	<string name="dialog_about_license_desc">Questa applicazione è sotto licenza GPLv3.\n\nPuoi leggere le sue condizioni 
-								<a href="http://www.gnu.org/licenses/gpl-3.0.html">qui</a>.</string>									
-	<string name="msg_app_updated">The application is already at the latest version.</string> <!-- UNTRANSLATED -->
-	<string name="folder_chooser_title">Choose your folder</string> <!-- UNTRANSLATED -->
-	<string name="folder_chooser_no_dir">(There are no more directories)</string> <!-- UNTRANSLATED -->
-	<string name="update_title">Update Available</string> <!-- UNTRANSLATED -->
-	<string name="update_message">There is version <xliff:g id="version">%1$s</xliff:g> available. Go to the website to download the latest version.</string> <!-- UNTRANSLATED -->
-    
+    <string name="lb_manual_bssid">Indirizzo MAC (opzionale):</string>
+    <string name="dialog_about_credits">Crediti</string>
+    <string name="dialog_about_credits_desc">Router Keygen è il risultato dell\'inestimabile contributo da parte delle seguenti persone/organizzazioni:\n\n<b>Luís Fonseca</b> - membro del Team Exobel\n<b>Rui Araújo</b> - membro del Team Exobel\n<b>Ângela Igreja</b> per la traduzione Portoghese\n<b>Simone Guidi</b> e <b>Mauro Manera</b> per la traduzione Italiana\n<b>Matthijs de Rijk</b> e <b>Van Hove Sven</b> per la traduzione Tedesca\n<b>Jon Uriarte</b> per la traduzione Spagnola e l\'attuazione del WLAN_XX\n<b><a href="http://www.gnucitizen.org/">GNUCITIZEN</a></b> per l\'algoritmo di Thomson\n<b><a href="http://wifiresearchers.wordpress.com/">White Hats Crew</a></b> per gli algoritmi di Alice e FASTWEB\n<b>Fred Williams</b> per l\'algoritmo Verizon FiOS\n<b>Muris Kurga </b> per l\'algoritmo Discus\n<b><a href="http://websec.ca/">Pedro Joaquim</a></b> per l\'algoritmo di Huawei\n<b>chaeo</b> per l\'algoritmo di SKY V1.</string>
+    <string name="dialog_about_license">Licenza</string>
+    <string name="dialog_about_license_desc">Questa applicazione è sotto licenza GPLv3.\n\nPuoi leggere le sue condizioni <a href="http://www.gnu.org/licenses/gpl-3.0.html">qui</a>.</string>
+    <string name="msg_app_updated">Applicazione già aggiornata all\'ultima versione.</string>
+    <string name="folder_chooser_title">Seleziona la directory</string>
+    <string name="folder_chooser_no_dir">(Non ci sono altre directory)</string>
+    <string name="update_title">Aggiornamento disponibile</string>
+    <string name="update_message">La versione <xliff:g id="version">%1$s</xliff:g> è disponibile. Vai al sito web per scaricare la nuova versione.</string>
+
     <!-- PREFERENCES STRINGS -->
-	<string name="pref_hinton_wifion">Attivare il wifi automaticamente</string>
-	<string name="pref_hintoff_wifion">Non attivare il wifi automaticamente</string>
-	<string name="pref_wifion">Auto Wifi On</string>
-	<string name="pref_folder_select">Seleziona la cartella</string>
-	<string name="pref_folder_select_des">Seleziona la cartella del dizionario</string>
-	<string name="pref_1section">Opzioni Generali</string>
-	<string name="pref_2section">Riguardo</string>
-	<string name="pref_donate">Dona</string>
-	<string name="pref_donate_why">Comprami un caffè se ti è piaciuta quest\'applicazione</string>
-	<string name="pref_about">Riguardo a Router Keygen</string>
-	<string name="pref_about_desc">Router Keygen calcola le password di default per molti router di uso comune.\n\n
-			<a href="http://code.google.com/p/android-thomson-key-solver/">Sito del Progetto</a>\n\nVersione: </string>
-	<string name="pref_msg_detected"><xliff:g id="filename">%1$s</xliff:g> detected.</string>   <!-- UNTRANSLATED -->
-	<string name="pref_native">Calcolo nativo</string>
-	<string name="pref_hinton_native">Calcola in altro modo se fallisce nel trovare il dizionario</string>
-	<string name="pref_hintoff_native">Avverti solo se fallisce nel trovare il dizionario</string>
-	<string name="pref_download_des">Il dizionario è richiesto per le chiavi Thomson</string>
-	<string name="pref_download">Scarica il dizionario</string>
-	<string name="pref_thomson3g">utilizza 3G per Thomson</string>
-	<string name="pref_hinton_thomson3g">Recuperando le chiavi da Internet</string>
-	<string name="pref_hintoff_thomson3g">Usando il dizionario per generare chiavi.</string>
+    <string name="pref_hinton_wifion">Attivare il wifi automaticamente</string>
+    <string name="pref_hintoff_wifion">Non attivare il wifi automaticamente</string>
+    <string name="pref_wifion">Auto Wifi On</string>
+    <string name="pref_folder_select">Seleziona la cartella</string>
+    <string name="pref_folder_select_des">Seleziona la cartella del dizionario</string>
+    <string name="pref_1section">Opzioni Generali</string>
+    <string name="pref_2section">Riguardo</string>
+    <string name="pref_donate">Dona</string>
+    <string name="pref_donate_why">Comprami un caffè se ti è piaciuta quest\'applicazione</string>
+    <string name="pref_about">Riguardo a Router Keygen</string>
+    <string name="pref_about_desc">Router Keygen calcola le password di default per molti router di uso comune.\n\n<a href="http://code.google.com/p/android-thomson-key-solver/">Sito del Progetto</a>\n\nVersione: </string>
+    <string name="pref_msg_detected"><xliff:g id="filename">%1$s</xliff:g> rilevato.</string>
+    <string name="pref_native">Calcolo nativo</string>
+    <string name="pref_hinton_native">Calcola in altro modo se fallisce nel trovare il dizionario</string>
+    <string name="pref_hintoff_native">Avverti solo se fallisce nel trovare il dizionario</string>
+    <string name="pref_download_des">Il dizionario è richiesto per le chiavi Thomson</string>
+    <string name="pref_download">Scarica il dizionario</string>
+    <string name="pref_thomson3g">utilizza 3G per Thomson</string>
+    <string name="pref_hinton_thomson3g">Recuperando le chiavi da Internet</string>
+    <string name="pref_hintoff_thomson3g">Usando il dizionario per generare chiavi.</string>
     <string name="pref_thomson_section">Opzioni Thomson</string>
-	<string name="pref_update">Check for Updates</string> <!-- UNTRANSLATED -->
-    <string name="pref_msg_download_running">The dictionary is already being downloaded.</string> <!-- UNTRANSLATED -->
-    <string name="pref_autoscan">Auto Scan</string> <!-- UNTRANSLATED -->
-    <string name="pref_hinton_autoscan">Scan will be repeated every few seconds.</string> <!-- UNTRANSLATED -->
-    <string name="pref_hintoff_autoscan">Scan is always manual.</string> <!-- UNTRANSLATED -->
-    <string name="pref_autoscan_interval">Auto Scan Interval</string> <!-- UNTRANSLATED -->
-    <string name="pref_hint_autoscan_interval">Period of the automatic scan.</string> <!-- UNTRANSLATED -->
-	
-	<!-- ERROR MESSAGE STRINGS -->
-	<string name="msg_unspported">Questo ESSID non è supportato!</string>
-	<string name="msg_nowifidetected">Nessuna rete wifi trovata!</string>
-	<string name="msg_nowifi">Il Wifi non è attivo! Per favore attiva il Wifi!</string>
-	<string name="msg_scanfailed">La scansione non è riuscita!</string>
-	<string name="msg_wifibroken">Inabilitato ad attivare il Wifi</string>
-	<string name="msg_shortessid6">ESSID non valido! Deve essere composto da almeno 6 caratteri.</string>
-	<string name="msg_errordict">Errore nel leggere il dizionario!</string>
-	<string name="msg_errnomatches">Non sono state trovate corrispondenze!</string>
-	<string name="msg_shortessid5">ESSID non valido! Deve essere composto da almeno 5 caratteri.</string>
-	<string name="msg_nomac">Questa chiave non può essere generata senza un indirizzo MAC</string>
-	<string name="msg_dlinkerror">Errore nel calcolo della chiave D-Link</string>
-	<string name="msg_dictnotfound">Dizionario non trovato nella scheda SD!</string>
-	<string name="pref_msg_notfound">Dictionary not found on <xliff:g id="filename">%1$s</xliff:g></string> <!-- UNTRANSLATED -->
-	<string name="msg_nosdcard">La memoria esterna non è disponibile.</string>
-	<string name="msg_nomd5">Questo cellulare non può processare un hash MD5.</string>
-	<string name="msg_nosha1">Questo cellulare non può processare un hash SHA1.</string>
-	<string name="msg_nosha256">Questo cellulare non può processare un hash SHA256.</string>
-	<string name="msg_errpirelli">L\'indirizzo MAC non è valido.</string>
-	<string name="msg_errthomson3g">Errore nel connettere con il sito web.</string>
-	<string name="msg_erralicenotsupported">Questa serie Alice non è ancora supportata!</string>
-	<string name="msg_errversion">Versione sconosciuta del dizionario.</string>
-	<string name="msg_startingnativecalc">Errore con il dizionario. Inizio del calcolo nativo.</string>
-	<string name="msg_err_essid_no_match">L\'SSID calcolato non corrisponde a quello inserito.</string>
-	<string name="msg_err_native">Errore nel calcolo nativo. Per favore informa il team.</string>
-	<string name="msg_nomemoryonsdcard">Lo spazio esterno non ha sufficiente memoria.</string>
-	<string name="msg_no_write_permissions">Impossible to write to the selected folder.</string>  <!-- UNTRANSLATED -->
-    <string name="msg_no_read_permissions">Impossible to read from the selected folder.</string> <!-- UNTRANSLATED -->
-	<string name="msg_error">Errore</string>
-	<string name="pref_msg_err_backup_dic">Errore nello spostare il dizionario nel backup</string>
-	<string name="pref_msg_err_rename_dic">Errore nel rinominare il dizionario scaricato.</string>
-	<string name="msg_err_sendto">È accaduto un errore nella condivisione delle chiavi.</string>
+    <string name="pref_update">Controlla aggiornamenti</string>
+    <string name="pref_msg_download_running">Il dizionario è stato già scaricato.</string>
+    <string name="pref_autoscan">Scansione Automatica</string>
+    <string name="pref_hinton_autoscan">La scansione sarà ripetuta in pochi secondi.</string>
+    <string name="pref_hintoff_autoscan">Scansione sempre manuale.</string>
+    <string name="pref_autoscan_interval">Intervallo di Scansione Automatica</string>
+    <string name="pref_hint_autoscan_interval">Lunghezza della scansione automatica.</string>
+
+    <!-- ERROR MESSAGE STRINGS -->
+    <string name="msg_unspported">Questo ESSID non è supportato!</string>
+    <string name="msg_nowifidetected">Nessuna rete wifi trovata!</string>
+    <string name="msg_nowifi">Il Wifi non è attivo! Per favore attiva il Wifi!</string>
+    <string name="msg_scanfailed">La scansione non è riuscita!</string>
+    <string name="msg_wifibroken">Inabilitato ad attivare il Wifi</string>
+    <string name="msg_shortessid6">ESSID non valido! Deve essere composto da almeno 6 caratteri.</string>
+    <string name="msg_errordict">Errore nel leggere il dizionario!</string>
+    <string name="msg_errnomatches">Non sono state trovate corrispondenze!</string>
+    <string name="msg_shortessid5">ESSID non valido! Deve essere composto da almeno 5 caratteri.</string>
+    <string name="msg_nomac">Questa chiave non può essere generata senza un indirizzo MAC</string>
+    <string name="msg_dlinkerror">Errore nel calcolo della chiave D-Link</string>
+    <string name="msg_dictnotfound">Dizionario non trovato nella scheda SD!</string>
+    <string name="pref_msg_notfound">Dictionary non trovata su <xliff:g id="filename">%1$s</xliff:g></string>
+    <string name="msg_nosdcard">La memoria esterna non è disponibile.</string>
+    <string name="msg_nomd5">Questo cellulare non può processare un hash MD5.</string>
+    <string name="msg_nosha1">Questo cellulare non può processare un hash SHA1.</string>
+    <string name="msg_nosha256">Questo cellulare non può processare un hash SHA256.</string>
+    <string name="msg_errpirelli">L\'indirizzo MAC non è valido.</string>
+    <string name="msg_errthomson3g">Errore nel connettere con il sito web.</string>
+    <string name="msg_erralicenotsupported">Questa serie Alice non è ancora supportata!</string>
+    <string name="msg_errversion">Versione sconosciuta del dizionario.</string>
+    <string name="msg_startingnativecalc">Errore con il dizionario. Inizio del calcolo nativo.</string>
+    <string name="msg_err_essid_no_match">L\'SSID calcolato non corrisponde a quello inserito.</string>
+    <string name="msg_err_native">Errore nel calcolo nativo. Per favore informa il team.</string>
+    <string name="msg_nomemoryonsdcard">Lo spazio esterno non ha sufficiente memoria.</string>
+    <string name="msg_no_write_permissions">Impossibile scrivere nella directory selezionata.</string>
+    <string name="msg_no_read_permissions">Impossibile leggere dalla directory selezionata.</string>
+    <string name="msg_error">Errore</string>
+    <string name="pref_msg_err_backup_dic">Errore nello spostare il dizionario nel backup</string>
+    <string name="pref_msg_err_rename_dic">Errore nel rinominare il dizionario scaricato.</string>
+    <string name="msg_err_sendto">È accaduto un errore nella condivisione delle chiavi.</string>
     <string name="msg_shortessid13">ESSID non valido! Deve essere composto di almeno 13 caratteri.</string>
     <string name="msg_err_unkown">È accaduto un errore sconosciuto.</string>
     <string name="msg_err_online_too_adv">La versione online di questo dizionario è troppo avanzata.\nPer favore esegui un update.</string>
@@ -159,14 +146,14 @@
     <string name="msg_saved_key_file">salvato nella scheda SD.</string>
     <string name="pref_msg_no_network">Nessun accesso alla rete.</string>
     <string name="msg_err_webdic_table">Error while processing online keys.</string>
-    <string name="msg_unspported_network">A valid network was not recognized. Please check the SSID and the MAC address.</string> <!-- UNTRANSLATED -->
-    <string name="msg_invalid_mac">A valid MAC address wasn\'t entered so it will be ignored.</string>  <!-- UNTRANSLATED -->
-	<string name="msg_error_key_testing">Error trying to test the key.</string>  <!-- UNTRANSLATED -->
-    <string name="msg_no_correct_keys">No correct keys.</string>  <!-- UNTRANSLATED -->
-    <string name="msg_auto_connect_running">The auto connect process is already running.</string>  <!-- UNTRANSLATED -->
-    
+    <string name="msg_unspported_network">Non è stata rilevata una rete valida. Per favore controlla il parametro SSID e l\'indirizzo MAC.</string>
+    <string name="msg_invalid_mac">Non è stato inserito un indirizzo MAC valido e pertanto sarà ignorato.</string>
+    <string name="msg_error_key_testing">Errore nella verifica della chiave.</string>
+    <string name="msg_no_correct_keys">Nessuna chiave corretta.</string>
+    <string name="msg_auto_connect_running">La procedura di connessione automatica è già avviata.</string>
+
     <!-- AUTOCOMPLETE SUPPORT -->
-	<string-array name="supported_routers">
+    <string-array name="supported_routers">
         <item>Thomson</item>
         <item>Blink</item>
         <item>SpeedTouch</item>
@@ -185,9 +172,9 @@
         <item>Alice-</item>
         <item>WLAN_</item>
         <item>WLAN</item>
-		<item>JAZZTEL_</item>
-		<item>WiFi</item>
-		<item>YaCom</item>
+        <item>JAZZTEL_</item>
+        <item>WiFi</item>
+        <item>YaCom</item>
         <item>SKY</item>
         <item>TECOM-AH4222-</item>
         <item>TECOM-AH4021-</item>
@@ -205,4 +192,5 @@
         <item>Optimus</item>
         <item>OptimusFibra</item>
     </string-array>
+
 </resources>
