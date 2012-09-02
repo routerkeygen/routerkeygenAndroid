@@ -15,7 +15,7 @@
    GNU General Public License for more details.
    
    You should have received a copy of the GNU General Public License
-   along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
+   along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
 
@@ -74,6 +74,8 @@
     <string name="folder_chooser_no_dir">(No hay mas carpetas)</string>
     <string name="update_title">Actualización disponible</string>
     <string name="update_message">La versión <xliff:g id="version">%1$s</xliff:g> está disponible. Vaya al Website para descargar la más nueva.</string>
+    <string name="cancel_download">Do you want to cancel the dictionary download?</string>  <!-- UNTRANSLATED -->
+    <string name="cancel_auto_test">Do you want to cancel the keys testing?</string>  <!-- UNTRANSLATED -->
 
     <!-- PREFERENCES STRINGS -->
     <string name="pref_hinton_wifion">Activar la Wifi Automaticamente</string>

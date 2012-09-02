@@ -54,6 +54,11 @@
 
         <service android:name=".DictionaryDownloadService" />
         <service android:name=".AutoConnectService" />
+
+        <activity
+            android:name=".CancelOperationActivity"
+            android:excludeFromRecents="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
     </application>
 
 </manifest>

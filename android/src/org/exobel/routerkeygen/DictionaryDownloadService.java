@@ -11,6 +11,7 @@ import java.net.URLConnection;
 import org.exobel.routerkeygen.ui.Preferences;
 import org.exobel.routerkeygen.utils.HashUtils;
 
+import android.annotation.TargetApi;
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -41,8 +42,14 @@ public class DictionaryDownloadService extends IntentService {
 
 	// Unique Identification Number for the Notification.
 	// We use it on Notification start, and to cancel it.
-	private final int UNIQUE_ID = R.string.app_name + DictionaryDownloadService.class.getName().hashCode();
+	private final int UNIQUE_ID = R.string.app_name
+			+ DictionaryDownloadService.class.getName().hashCode();
 	private int fileLen;
+	private boolean stopRequested = false;
+
+	public void onDestroy() {
+		stopRequested = true;
+	}
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
@@ -66,7 +73,6 @@ public class DictionaryDownloadService extends IntentService {
 		final String dicTemp = Environment.getExternalStorageDirectory()
 				.getPath() + File.separator + "DicTemp.dic";
 		try {
-			
 
 			final String urlDownload = intent.getStringExtra(URL_DOWNLOAD);
 
@@ -96,9 +102,9 @@ public class DictionaryDownloadService extends IntentService {
 							Preferences.folderSelectPref,
 							Environment.getExternalStorageDirectory()
 									.getAbsolutePath());
-			
-			//Testing if we can write to the file
-			if ( !canWrite(folderSelect) ) {
+
+			// Testing if we can write to the file
+			if (!canWrite(folderSelect)) {
 				mNotificationManager.notify(
 						UNIQUE_ID,
 						getSimple(getString(R.string.msg_error),
@@ -106,7 +112,7 @@ public class DictionaryDownloadService extends IntentService {
 								.build());
 				return;
 			}
-			
+
 			mNotificationManager.notify(
 					UNIQUE_ID,
 					createProgressBar(getString(R.string.msg_dl_dlingdic), "",
@@ -114,6 +120,11 @@ public class DictionaryDownloadService extends IntentService {
 			long lastNotificationTime = System.currentTimeMillis();
 			buf = new byte[1024 * 512];
 			while (myProgress < fileLen) {
+				if (stopRequested) {
+					mNotificationManager.cancel(UNIQUE_ID);
+					myDicFile.delete();
+					return;
+				}
 				if ((byteRead = dis.read(buf)) != -1) {
 					fos.write(buf, 0, byteRead);
 					myProgress += byteRead;
@@ -128,7 +139,6 @@ public class DictionaryDownloadService extends IntentService {
 					lastNotificationTime = System.currentTimeMillis();
 				}
 			}
-
 
 			mNotificationManager.notify(
 					UNIQUE_ID,
@@ -164,7 +174,7 @@ public class DictionaryDownloadService extends IntentService {
 					getSimple(getString(R.string.msg_error),
 							getString(R.string.msg_nosdcard)).build());
 			e.printStackTrace();
-		}  catch (Exception e) {
+		} catch (Exception e) {
 			mNotificationManager.notify(
 					UNIQUE_ID,
 					getSimple(getString(R.string.msg_error),
@@ -173,17 +183,16 @@ public class DictionaryDownloadService extends IntentService {
 		}
 	}
 
-	private boolean canWrite(String folder){
+	private boolean canWrite(String folder) {
 		File file;
-		String filename = folder
-				+ File.separator;
+		String filename = folder + File.separator;
 		do {
 			filename += "1";
 			file = new File(filename);
 		} while (file.exists());
 		try {
 			file.createNewFile();
-			boolean ret =  file.canWrite();
+			boolean ret = file.canWrite();
 			file.delete();
 			return ret;
 		} catch (IOException e) {
@@ -227,18 +236,38 @@ public class DictionaryDownloadService extends IntentService {
 
 	private Notification update;
 
+	@TargetApi(16)
 	private Notification updateProgressBar(int progress, boolean indeterminate) {
 		update.contentView.setProgressBar(android.R.id.progress, fileLen,
 				progress, indeterminate);
+		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN )
+			update.bigContentView.setProgressBar(android.R.id.progress, fileLen,
+					progress, indeterminate);
 		return update;
 	}
 
 	private Notification createProgressBar(CharSequence title,
 			CharSequence content, int progress, boolean indeterminate) {
 		final NotificationCompat2.Builder builder = getSimple(title, content);
+		final PendingIntent i = PendingIntent.getActivity(
+				getApplicationContext(),
+				0,
+				new Intent(this, CancelOperationActivity.class).putExtra(
+						CancelOperationActivity.SERVICE_TO_TERMINATE,
+						DictionaryDownloadService.class.getName()).putExtra(
+						CancelOperationActivity.MESSAGE,
+						getString(R.string.cancel_download)),
+				PendingIntent.FLAG_UPDATE_CURRENT);
+		builder.setContentIntent(i);
 		builder.setOngoing(true);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
 			builder.setProgress(fileLen, progress, indeterminate);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN
+					&& !indeterminate) {
+				builder.addAction(
+						android.R.drawable.ic_menu_close_clear_cancel,
+						getString(android.R.string.cancel), i);
+			}
 			update = builder.build();
 		} else {
 			RemoteViews contentView = new RemoteViews(getPackageName(),
@@ -255,8 +284,8 @@ public class DictionaryDownloadService extends IntentService {
 	private PendingIntent getPendingIntent() {
 		return PendingIntent.getActivity(getApplicationContext(), 0,
 				new Intent(), // add this
-								// pass null
-								// to intent
+				// pass null
+				// to intent
 				PendingIntent.FLAG_UPDATE_CURRENT);
 	}
 

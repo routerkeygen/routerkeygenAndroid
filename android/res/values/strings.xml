@@ -76,6 +76,9 @@
     <string name="folder_chooser_no_dir">(There are no more directories)</string>
     <string name="update_title">Update Available</string>
     <string name="update_message">There is version <xliff:g id="version">%1$s</xliff:g> available. Go to the website to download the latest version.</string>
+    <string name="cancel_download">Do you want to cancel the dictionary download?</string>
+    <string name="cancel_auto_test">Do you want to cancel the keys testing?</string>
+    
 
     <!-- PREFERENCES STRINGS -->
     <string name="pref_hinton_wifion">Activate the Wifi Automatically</string>
@@ -195,5 +198,4 @@
         <item>Optimus</item>
         <item>OptimusFibra</item>
     </string-array>
-
 </resources>

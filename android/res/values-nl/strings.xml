@@ -75,6 +75,8 @@
     <string name="folder_chooser_no_dir">(Er zijn geen dictionaries meer)</string>
     <string name="update_title">Update beschikbaar</string>
     <string name="update_message">Versie <xliff:g id="version">%1$s</xliff:g> is beschikbaar. Ga naar de website om deze te downloaden</string>
+    <string name="cancel_download">Do you want to cancel the dictionary download?</string>  <!-- UNTRANSLATED -->
+    <string name="cancel_auto_test">Do you want to cancel the keys testing?</string>  <!-- UNTRANSLATED -->
 
     <!-- PREFERENCES STRINGS -->
     <string name="pref_hinton_wifion">Activeer WiFi automatisch</string>

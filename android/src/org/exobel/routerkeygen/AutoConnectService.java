@@ -111,11 +111,12 @@ public class AutoConnectService extends Service implements onConnectionListener 
 				// besides disconnecting, we clean any previous configuration
 				Wifi.cleanPreviousConfiguration(wifi, network,
 						network.capabilities);
-				mNotificationManager.notify(
-						UNIQUE_ID,
-						createProgressBar(getString(R.string.app_name),
-								getString(R.string.not_auto_connect_waiting),
-								0, false));
+				mNotificationManager
+						.notify(UNIQUE_ID,
+								createProgressBar(
+										getString(R.string.app_name),
+										getString(R.string.not_auto_connect_waiting),
+										0));
 				final Handler handler = new Handler();
 				handler.postDelayed(new Runnable() {
 					public void run() {
@@ -151,7 +152,7 @@ public class AutoConnectService extends Service implements onConnectionListener 
 					createProgressBar(
 							getString(R.string.app_name),
 							getString(R.string.not_auto_connect_key_testing,
-									keys.get(attempts - 1)), attempts, false));
+									keys.get(attempts - 1)), attempts));
 		} else {
 			mNotificationManager.notify(
 					UNIQUE_ID,
@@ -222,23 +223,35 @@ public class AutoConnectService extends Service implements onConnectionListener 
 	}
 
 	private Notification createProgressBar(CharSequence title,
-			CharSequence content, int progress, boolean indeterminate) {
+			CharSequence content, int progress) {
 		final NotificationCompat2.Builder builder = getSimple(title, content);
+		final PendingIntent i = PendingIntent.getActivity(
+				getApplicationContext(),
+				0,
+				new Intent(this, CancelOperationActivity.class).putExtra(
+						CancelOperationActivity.SERVICE_TO_TERMINATE,
+						DictionaryDownloadService.class.getName()).putExtra(
+						CancelOperationActivity.MESSAGE,
+						getString(R.string.cancel_download)),
+				PendingIntent.FLAG_UPDATE_CURRENT);
+		builder.setContentIntent(i);
 		builder.setOngoing(true);
-		final Notification update;
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-			builder.setProgress(keys.size(), progress, indeterminate);
-			update = builder.build();
+			builder.setProgress(keys.size(), progress, false);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+				builder.addAction(
+						android.R.drawable.ic_menu_close_clear_cancel,
+						getString(android.R.string.cancel), i);
+			}
 		} else {
 			RemoteViews contentView = new RemoteViews(getPackageName(),
 					R.layout.notification);
 			contentView.setTextViewText(android.R.id.text1, content);
 			contentView.setProgressBar(android.R.id.progress, keys.size(),
-					progress, indeterminate);
+					progress, false);
 			builder.setContent(contentView);
-			update = builder.build();
 		}
-		return update;
+		return builder.build();
 	}
 
 	private PendingIntent getPendingIntent() {

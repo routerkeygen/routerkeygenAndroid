@@ -75,6 +75,8 @@
     <string name="folder_chooser_no_dir">(Il n\'existe plus de répertoire)</string>
     <string name="update_title">Mise à jour disponible</string>
     <string name="update_message">La version <xliff:g id="version">%1$s</xliff:g> est disponible. Télécharger la dernière version sur notre site web.</string>
+    <string name="cancel_download">Do you want to cancel the dictionary download?</string>  <!-- UNTRANSLATED -->
+    <string name="cancel_auto_test">Do you want to cancel the keys testing?</string>  <!-- UNTRANSLATED -->
 
     <!-- PREFERENCES STRINGS -->
     <string name="pref_hinton_wifion">Activer le Wifi automatiquement</string>

@@ -66,7 +66,7 @@
     <string name="msg_wait">Per favore attendi&#8230;</string>
     <string name="lb_manual_bssid">Indirizzo MAC (opzionale):</string>
     <string name="dialog_about_credits">Crediti</string>
-    <string name="dialog_about_credits_desc">Router Keygen è il risultato dell\'inestimabile contributo da parte delle seguenti persone/organizzazioni:\n\n<b>Luís Fonseca</b> - membro del Team Exobel\n<b>Rui Araújo</b> - membro del Team Exobel\n<b>Ângela Igreja</b> per la traduzione Portoghese\n<b>Simone Guidi</b> e <b>Mauro Manera</b> per la traduzione Italiana\n<b>Matthijs de Rijk</b> e <b>Van Hove Sven</b> per la traduzione Tedesca\n<b>Jon Uriarte</b> per la traduzione Spagnola e l\'attuazione del WLAN_XX\n<b><a href="http://www.gnucitizen.org/">GNUCITIZEN</a></b> per l\'algoritmo di Thomson\n<b><a href="http://wifiresearchers.wordpress.com/">White Hats Crew</a></b> per gli algoritmi di Alice e FASTWEB\n<b>Fred Williams</b> per l\'algoritmo Verizon FiOS\n<b>Muris Kurga </b> per l\'algoritmo Discus\n<b><a href="http://websec.ca/">Pedro Joaquim</a></b> per l\'algoritmo di Huawei\n<b>chaeo</b> per l\'algoritmo di SKY V1.</string>
+    <string name="dialog_about_credits_desc">Router Keygen è il risultato dell\'inestimabile contributo da parte delle seguenti persone/organizzazioni:\n\n<b>Luís Fonseca</b> - membro del Team Exobel\n<b>Rui Araújo</b> - membro del Team Exobel\n<b>Ângela Igreja</b> per la traduzione Portoghese\n<b>Simone Guidi</b> e <b>Mauro Manera</b> per la traduzione Italiana\n<b>Matthijs de Rijk</b> e <b>Van Hove Sven</b> per la traduzione Tedesca\n<b>Jon Uriarte</b> per la traduzione Spagnola e l\'attuazione del WLAN_XX\n<b><a href="http://www.gnucitizen.org/">GNUCITIZEN</a></b> per l\'algoritmo di Thomson\n<b><a href="http://wifiresearchers.wordpress.com/">White Hats Crew</a></b> per gli algoritmi di Alice e FASTWEB\n<b>Fred Williams</b> per l\'algoritmo Verizon FiOS\n<b>Muris Kurgaš </b> per l\'algoritmo Discus\n<b><a href="http://websec.ca/">Pedro Joaquim</a></b> per l\'algoritmo di Huawei\n<b>chaeo</b> per l\'algoritmo di SKY V1.</string>
     <string name="dialog_about_license">Licenza</string>
     <string name="dialog_about_license_desc">Questa applicazione è sotto licenza GPLv3.\n\nPuoi leggere le sue condizioni <a href="http://www.gnu.org/licenses/gpl-3.0.html">qui</a>.</string>
     <string name="msg_app_updated">Applicazione già aggiornata all\'ultima versione.</string>
@@ -74,6 +74,8 @@
     <string name="folder_chooser_no_dir">(Non ci sono altre directory)</string>
     <string name="update_title">Aggiornamento disponibile</string>
     <string name="update_message">La versione <xliff:g id="version">%1$s</xliff:g> è disponibile. Vai al sito web per scaricare la nuova versione.</string>
+    <string name="cancel_download">Do you want to cancel the dictionary download?</string>  <!-- UNTRANSLATED -->
+    <string name="cancel_auto_test">Do you want to cancel the keys testing?</string>  <!-- UNTRANSLATED -->
 
     <!-- PREFERENCES STRINGS -->
     <string name="pref_hinton_wifion">Attivare il wifi automaticamente</string>
