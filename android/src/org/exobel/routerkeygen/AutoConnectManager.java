@@ -21,8 +21,7 @@ package org.exobel.routerkeygen;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.net.NetworkInfo;
-import android.net.NetworkInfo.DetailedState;
+import android.net.wifi.SupplicantState;
 import android.net.wifi.WifiManager;
 import android.util.Log;
 
@@ -37,22 +36,15 @@ public class AutoConnectManager extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		NetworkInfo info = intent
-				.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
-		if (info != null) {
-			DetailedState state = info.getDetailedState();
+		SupplicantState state = intent
+				.getParcelableExtra(WifiManager.EXTRA_NEW_STATE);
+		if (state != null) {
 			Log.d(this.getClass().getSimpleName(), state.name());
-			if (state.equals(DetailedState.CONNECTED)) {
+			if (state.equals(SupplicantState.COMPLETED)) {
 				listener.onSuccessfulConection();
 				return;
 			}
-			if (state.equals(DetailedState.CONNECTING)
-					|| state.equals(DetailedState.AUTHENTICATING)
-					|| state.equals(DetailedState.OBTAINING_IPADDR)) {
-				return; /* Waiting for a definitive outcome */
-			}
-			if (state.equals(DetailedState.DISCONNECTED)
-					|| state.equals(DetailedState.FAILED)) {
+			if (state.equals(SupplicantState.DISCONNECTED)) {
 				listener.onFailedConnection();
 				return; /* Failed */
 			}

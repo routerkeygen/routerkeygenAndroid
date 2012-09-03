@@ -50,7 +50,7 @@ public class AutoConnectService extends Service implements onConnectionListener 
 	public final static String SCAN_RESULT = "org.exobel.routerkeygen.SCAN_RESULT";
 	public final static String KEY_LIST = "org.exobel.routerkeygen.KEY_LIST";
 
-	private final static int DISCONNECT_WAINTING_TIME = 10000;
+	private final static int DISCONNECT_WAITING_TIME = 10000;
 
 	private final static int FAILING_MINIMUM_TIME = 1500;
 	private final int UNIQUE_ID = R.string.app_name
@@ -122,7 +122,7 @@ public class AutoConnectService extends Service implements onConnectionListener 
 					public void run() {
 						tryingConnection();
 					}
-				}, DISCONNECT_WAINTING_TIME);
+				}, DISCONNECT_WAITING_TIME);
 			} else {
 				mNotificationManager.notify(
 						UNIQUE_ID,
@@ -133,7 +133,6 @@ public class AutoConnectService extends Service implements onConnectionListener 
 				return START_NOT_STICKY;
 			}
 		} else {
-
 			Wifi.cleanPreviousConfiguration(wifi, network, network.capabilities);
 			tryingConnection();
 		}
@@ -143,10 +142,12 @@ public class AutoConnectService extends Service implements onConnectionListener 
 	private void tryingConnection() {
 		currentNetworkId = Wifi.connectToNewNetwork(this, wifi, network,
 				keys.get(attempts++), mNumOpenNetworksKept);
+		Log.d(AutoConnectManager.class.getSimpleName(), "Trying " + keys.get(attempts - 1));
+
 		if (currentNetworkId != -1) {
 			lastTimeDisconnected = System.currentTimeMillis();
 			registerReceiver(mReceiver, new IntentFilter(
-					WifiManager.NETWORK_STATE_CHANGED_ACTION));
+					WifiManager.SUPPLICANT_STATE_CHANGED_ACTION));
 			mNotificationManager.notify(
 					UNIQUE_ID,
 					createProgressBar(
@@ -230,9 +231,9 @@ public class AutoConnectService extends Service implements onConnectionListener 
 				0,
 				new Intent(this, CancelOperationActivity.class).putExtra(
 						CancelOperationActivity.SERVICE_TO_TERMINATE,
-						DictionaryDownloadService.class.getName()).putExtra(
+						AutoConnectService.class.getName()).putExtra(
 						CancelOperationActivity.MESSAGE,
-						getString(R.string.cancel_download)),
+						getString(R.string.cancel_auto_test)),
 				PendingIntent.FLAG_UPDATE_CURRENT);
 		builder.setContentIntent(i);
 		builder.setOngoing(true);
