@@ -155,7 +155,14 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 	
 	
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-		int newValue = progress + mMinValue;
+	}
+
+	
+	public void onStartTrackingTouch(SeekBar seekBar) {}
+
+	
+	public void onStopTrackingTouch(SeekBar seekBar) {
+		int newValue = seekBar.getProgress() + mMinValue;
 		
 		if(newValue > mMaxValue)
 			newValue = mMaxValue;
@@ -174,14 +181,6 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 		mCurrentValue = newValue;
 		mStatusText.setText(String.valueOf(newValue));
 		persistInt(newValue);
-
-	}
-
-	
-	public void onStartTrackingTouch(SeekBar seekBar) {}
-
-	
-	public void onStopTrackingTouch(SeekBar seekBar) {
 		notifyChanged();
 	}
 
