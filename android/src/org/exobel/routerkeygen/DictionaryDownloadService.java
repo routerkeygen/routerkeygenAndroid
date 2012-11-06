@@ -5,8 +5,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 
 import org.exobel.routerkeygen.ui.Preferences;
 import org.exobel.routerkeygen.utils.HashUtils;
@@ -54,7 +54,7 @@ public class DictionaryDownloadService extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		File myDicFile;
-		URLConnection con;
+		HttpURLConnection con;
 		DataInputStream dis;
 		FileOutputStream fos;
 		int myProgress = 0;
@@ -76,7 +76,7 @@ public class DictionaryDownloadService extends IntentService {
 
 			final String urlDownload = intent.getStringExtra(URL_DOWNLOAD);
 
-			con = new URL(urlDownload).openConnection();
+			con = (HttpURLConnection) new URL(urlDownload).openConnection();
 			myDicFile = new File(dicTemp);
 
 			fos = new FileOutputStream(myDicFile, false);
@@ -94,6 +94,9 @@ public class DictionaryDownloadService extends IntentService {
 						getSimple(getString(R.string.msg_error),
 								getString(R.string.msg_nomemoryonsdcard))
 								.build());
+				fos.close();
+				dis.close();
+				con.disconnect();
 				return;
 			}
 
@@ -110,6 +113,9 @@ public class DictionaryDownloadService extends IntentService {
 						getSimple(getString(R.string.msg_error),
 								getString(R.string.msg_no_write_permissions))
 								.build());
+				dis.close();
+				fos.close();
+				con.disconnect();
 				return;
 			}
 
@@ -122,6 +128,9 @@ public class DictionaryDownloadService extends IntentService {
 			while (myProgress < fileLen) {
 				if (stopRequested) {
 					mNotificationManager.cancel(UNIQUE_ID);
+					dis.close();
+					fos.close();
+					con.disconnect();
 					myDicFile.delete();
 					return;
 				}
@@ -131,6 +140,7 @@ public class DictionaryDownloadService extends IntentService {
 				} else {
 					dis.close();
 					fos.close();
+					con.disconnect();
 					myProgress = fileLen;
 				}
 				if ((System.currentTimeMillis() - lastNotificationTime) > MIN_TIME_BETWWEN_UPDATES) {
@@ -240,9 +250,9 @@ public class DictionaryDownloadService extends IntentService {
 	private Notification updateProgressBar(int progress, boolean indeterminate) {
 		update.contentView.setProgressBar(android.R.id.progress, fileLen,
 				progress, indeterminate);
-		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN )
-			update.bigContentView.setProgressBar(android.R.id.progress, fileLen,
-					progress, indeterminate);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+			update.bigContentView.setProgressBar(android.R.id.progress,
+					fileLen, progress, indeterminate);
 		return update;
 	}
 

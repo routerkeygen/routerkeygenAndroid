@@ -25,6 +25,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
@@ -376,7 +377,7 @@ public class Preferences extends SherlockPreferenceActivity {
 									.getDefaultSharedPreferences(getApplicationContext());
 							final SharedPreferences.Editor editor = customSharedPreference
 									.edit();
-							editor.putString(folderSelectPref,path);
+							editor.putString(folderSelectPref, path);
 							editor.commit();
 							if (mPath == null)
 								Toast.makeText(
@@ -523,21 +524,21 @@ public class Preferences extends SherlockPreferenceActivity {
 					// Comparing this version with the online
 					// version
 					try {
-						InputStream is = new FileInputStream(myDicFile);
-						URLConnection con = new URL(PUB_DIC_CFV)
-								.openConnection();
+						HttpURLConnection con = (HttpURLConnection) new URL(
+								PUB_DIC_CFV).openConnection();
 						DataInputStream dis = new DataInputStream(
 								con.getInputStream());
-						if (con.getContentLength() != 18)
-							throw new Exception();
 
 						byte[] cfvTable = new byte[18];
 						dis.read(cfvTable);
+						dis.close();
+						con.disconnect();
 
+						InputStream is = new FileInputStream(myDicFile);
 						byte[] dicVersion = new byte[2];
 						// Check our version
 						is.read(dicVersion);
-
+						is.close();
 						int thisVersion, onlineVersion;
 						thisVersion = dicVersion[0] << 8 | dicVersion[1];
 						onlineVersion = cfvTable[0] << 8 | cfvTable[1];
@@ -556,7 +557,7 @@ public class Preferences extends SherlockPreferenceActivity {
 						}
 						if (onlineVersion > thisVersion
 								&& onlineVersion > MAX_DIC_VERSION) {
-							// Online version is too advanced
+							// Online version is too advancedv
 							return TOO_ADVANCED;
 						}
 						return DOWNLOAD_NEEDED;

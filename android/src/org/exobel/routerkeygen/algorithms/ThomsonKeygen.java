@@ -30,6 +30,7 @@ import java.net.URLConnection;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.Locale;
 import java.util.zip.ZipInputStream;
 
 import org.exobel.routerkeygen.R;
@@ -221,6 +222,7 @@ public class ThomsonKeygen extends Keygen {
 			{
 				setErrorCode(R.string.msg_errordict);
 				errorDict = true;
+				fis.close();
 				return false;
 			}
 			version = table[0] << 8 | table[1];
@@ -242,6 +244,7 @@ public class ThomsonKeygen extends Keygen {
 			{
 				setErrorCode(R.string.msg_errordict);
 				errorDict = true;
+				fis.close();
 				return false;
 			}	
 			if ( table[( 0xFF &routerESSID[1] )*4] == routerESSID[1] )
@@ -281,13 +284,14 @@ public class ThomsonKeygen extends Keygen {
 					break;
 				len += bytesRead;
 			}
-			
 			if ( len == -1 )
 			{
 				setErrorCode(R.string.msg_errordict);
 				errorDict = true;
+				fis.close();
 				return false;
 			}
+			fis.close();
 		} catch (IOException e1) {
 			errorDict = true;
 			setErrorCode(R.string.msg_errordict);
@@ -394,7 +398,7 @@ public class ThomsonKeygen extends Keygen {
 					continue;
 				
 				try {
-					addPassword(StringUtils.getHexString(hash).substring(0, 10).toUpperCase());
+					addPassword(StringUtils.getHexString(hash).substring(0, 10).toUpperCase(Locale.getDefault()));
 				} catch (UnsupportedEncodingException e) {
 					e.printStackTrace();
 				}
@@ -437,7 +441,7 @@ public class ThomsonKeygen extends Keygen {
 				continue;
 			
 			try {
-				addPassword(StringUtils.getHexString(hash).substring(0, 10).toUpperCase());
+				addPassword(StringUtils.getHexString(hash).substring(0, 10).toUpperCase(Locale.getDefault()));
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
@@ -475,7 +479,7 @@ public class ThomsonKeygen extends Keygen {
 			final byte[] hash = md.digest();
 			
 			try {
-				addPassword(StringUtils.getHexString(hash).substring(0, 10).toUpperCase());
+				addPassword(StringUtils.getHexString(hash).substring(0, 10).toUpperCase(Locale.getDefault()));
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
