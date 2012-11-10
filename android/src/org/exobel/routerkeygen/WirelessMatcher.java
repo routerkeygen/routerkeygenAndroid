@@ -13,6 +13,7 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.exobel.routerkeygen.algorithms.AliceKeygen;
 import org.exobel.routerkeygen.algorithms.AndaredKeygen;
+import org.exobel.routerkeygen.algorithms.AxtelKeygen;
 import org.exobel.routerkeygen.algorithms.ComtrendKeygen;
 import org.exobel.routerkeygen.algorithms.ConnKeygen;
 import org.exobel.routerkeygen.algorithms.DiscusKeygen;
@@ -73,7 +74,14 @@ public class WirelessMatcher implements Parcelable {
 	public Keygen getKeygen(String ssid, String mac, int level, String enc) {
 		if (enc.equals(""))
 			enc = Keygen.OPEN;
-		if(ssid.startsWith("InterCable")&& mac.startsWith("00:15"))
+		if (ssid.matches("AXTEL-[0-9a-fA-F]{4}")) {
+			final String ssidSubpart = ssid.substring(ssid.length() - 4);
+			final String macShort = mac.replace(":", "");
+			if (macShort.length() < 12
+					|| ssidSubpart.equalsIgnoreCase(macShort.substring(8)))
+				return new AxtelKeygen(ssid, mac, level, enc);
+		}
+		if (ssid.startsWith("InterCable") && mac.startsWith("00:15"))
 			return new InterCableKeygen(ssid, mac, level, enc);
 		if (ssid.matches("Discus--?[0-9a-fA-F]{6}"))
 			return new DiscusKeygen(ssid, mac, level, enc);
