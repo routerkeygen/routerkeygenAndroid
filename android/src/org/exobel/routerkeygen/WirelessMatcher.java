@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -20,6 +21,7 @@ import org.exobel.routerkeygen.algorithms.EasyBoxKeygen;
 import org.exobel.routerkeygen.algorithms.EircomKeygen;
 import org.exobel.routerkeygen.algorithms.HuaweiKeygen;
 import org.exobel.routerkeygen.algorithms.InfostradaKeygen;
+import org.exobel.routerkeygen.algorithms.InterCableKeygen;
 import org.exobel.routerkeygen.algorithms.Keygen;
 import org.exobel.routerkeygen.algorithms.MegaredKeygen;
 import org.exobel.routerkeygen.algorithms.OnoKeygen;
@@ -58,10 +60,12 @@ public class WirelessMatcher implements Parcelable {
 		}
 		supportedAlices = aliceReader.getSupportedAlices();
 	}
-	
+
 	public Keygen getKeygen(ScanResult result) {
-		final Keygen keygen = getKeygen(result.SSID, result.BSSID.toUpperCase(),
-				WifiManager.calculateSignalLevel(result.level,4), result.capabilities);
+		final Keygen keygen = getKeygen(result.SSID,
+				result.BSSID.toUpperCase(Locale.getDefault()),
+				WifiManager.calculateSignalLevel(result.level, 4),
+				result.capabilities);
 		keygen.setScanResult(result);
 		return keygen;
 	}
@@ -69,6 +73,8 @@ public class WirelessMatcher implements Parcelable {
 	public Keygen getKeygen(String ssid, String mac, int level, String enc) {
 		if (enc.equals(""))
 			enc = Keygen.OPEN;
+		if(ssid.startsWith("InterCable")&& mac.startsWith("00:15"))
+			return new InterCableKeygen(ssid, mac, level, enc);
 		if (ssid.matches("Discus--?[0-9a-fA-F]{6}"))
 			return new DiscusKeygen(ssid, mac, level, enc);
 
