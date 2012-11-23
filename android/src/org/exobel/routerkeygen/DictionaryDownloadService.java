@@ -21,10 +21,9 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
 import android.widget.RemoteViews;
 import android.widget.Toast;
-
-import com.jakewharton.notificationcompat2.NotificationCompat2;
 
 public class DictionaryDownloadService extends IntentService {
 
@@ -236,9 +235,9 @@ public class DictionaryDownloadService extends IntentService {
 		return true;
 	}
 
-	private NotificationCompat2.Builder getSimple(CharSequence title,
+	private NotificationCompat.Builder getSimple(CharSequence title,
 			CharSequence context) {
-		return new NotificationCompat2.Builder(this)
+		return new NotificationCompat.Builder(this)
 				.setSmallIcon(R.drawable.icon).setTicker(title)
 				.setContentTitle(title).setContentText(context)
 				.setContentIntent(getPendingIntent());
@@ -258,7 +257,7 @@ public class DictionaryDownloadService extends IntentService {
 
 	private Notification createProgressBar(CharSequence title,
 			CharSequence content, int progress, boolean indeterminate) {
-		final NotificationCompat2.Builder builder = getSimple(title, content);
+		final NotificationCompat.Builder builder = getSimple(title, content);
 		final PendingIntent i = PendingIntent.getActivity(
 				getApplicationContext(),
 				0,
@@ -285,8 +284,8 @@ public class DictionaryDownloadService extends IntentService {
 			contentView.setTextViewText(android.R.id.text1, content);
 			contentView.setProgressBar(android.R.id.progress, fileLen,
 					progress, indeterminate);
-			builder.setContent(contentView);
 			update = builder.build();
+			update.contentView = contentView;
 		}
 		return update;
 	}

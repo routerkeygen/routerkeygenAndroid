@@ -39,11 +39,11 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.provider.Settings;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.farproc.wifi.connecter.Wifi;
-import com.jakewharton.notificationcompat2.NotificationCompat2;
 
 public class AutoConnectService extends Service implements onConnectionListener {
 
@@ -142,7 +142,8 @@ public class AutoConnectService extends Service implements onConnectionListener 
 	private void tryingConnection() {
 		currentNetworkId = Wifi.connectToNewNetwork(this, wifi, network,
 				keys.get(attempts++), mNumOpenNetworksKept);
-		Log.d(AutoConnectManager.class.getSimpleName(), "Trying " + keys.get(attempts - 1));
+		Log.d(AutoConnectManager.class.getSimpleName(),
+				"Trying " + keys.get(attempts - 1));
 
 		if (currentNetworkId != -1) {
 			lastTimeDisconnected = System.currentTimeMillis();
@@ -215,9 +216,9 @@ public class AutoConnectService extends Service implements onConnectionListener 
 		}
 	}
 
-	private NotificationCompat2.Builder getSimple(CharSequence title,
+	private NotificationCompat.Builder getSimple(CharSequence title,
 			CharSequence context) {
-		return new NotificationCompat2.Builder(this)
+		return new NotificationCompat.Builder(this)
 				.setSmallIcon(R.drawable.icon).setTicker(title)
 				.setContentTitle(title).setContentText(context)
 				.setContentIntent(getPendingIntent());
@@ -225,7 +226,7 @@ public class AutoConnectService extends Service implements onConnectionListener 
 
 	private Notification createProgressBar(CharSequence title,
 			CharSequence content, int progress) {
-		final NotificationCompat2.Builder builder = getSimple(title, content);
+		final NotificationCompat.Builder builder = getSimple(title, content);
 		final PendingIntent i = PendingIntent.getActivity(
 				getApplicationContext(),
 				0,
@@ -245,12 +246,14 @@ public class AutoConnectService extends Service implements onConnectionListener 
 						getString(android.R.string.cancel), i);
 			}
 		} else {
-			RemoteViews contentView = new RemoteViews(getPackageName(),
+			final RemoteViews contentView = new RemoteViews(getPackageName(),
 					R.layout.notification);
 			contentView.setTextViewText(android.R.id.text1, content);
 			contentView.setProgressBar(android.R.id.progress, keys.size(),
 					progress, false);
-			builder.setContent(contentView);
+			final Notification not = builder.build();
+			not.contentView = contentView;
+			return not;
 		}
 		return builder.build();
 	}
