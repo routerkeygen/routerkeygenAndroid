@@ -185,14 +185,21 @@ public class ThomsonKeygen extends Keygen {
 			con.setRequestProperty("Range", "bytes=" + totalOffset + "-");
 			onlineFile = new DataInputStream(con.getInputStream());
 			len = 0;
-			this.entry = new byte[lenght];
-			if ((len = onlineFile.read(this.entry, 0, lenght)) != -1) {
-				lenght = len;
-			}
 
+			this.entry = new byte[lenght];
+			while (len != lenght) {
+				ret = onlineFile.read(this.entry, len, lenght - len);
+				if (ret == -1) {
+					setErrorCode(R.string.msg_err_webdic_table);
+					errorDict = true;
+					return false;
+				} else
+					len += ret;
+			}
 			onlineFile.close();
 			fis.close();
-			return thirdDic();
+			forthDic();
+			return true;
 		} catch (IOException e) {
 			setErrorCode(R.string.msg_err_webdic_table);
 			errorDict = true;
