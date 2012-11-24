@@ -46,6 +46,7 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.google.analytics.tracking.android.EasyTracker;
 
 public class NetworksListActivity extends SherlockFragmentActivity implements
 		NetworksListFragment.OnItemSelectionListener, OnScanListener {
@@ -64,6 +65,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		EasyTracker.getInstance().setContext(getApplicationContext());
 		setContentView(R.layout.activity_networks_list);
 
 		final NetworksListFragment fragment = ((NetworksListFragment) getSupportFragmentManager()
@@ -154,6 +156,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 
 	public void onStart() {
 		super.onStart();
+		EasyTracker.getInstance().activityStart(this); // Add this method.
 		getPrefs();
 		if (wifiOn) {
 			if (!wifi.setWifiEnabled(true))
@@ -174,6 +177,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 	public void onStop() {
 		try {
 			super.onStop();
+			EasyTracker.getInstance().activityStop(this); // Add this method.
 			unregisterReceiver(scanFinished);
 			unregisterReceiver(stateChanged);
 			mHandler.removeCallbacks(mAutoScanTask);
