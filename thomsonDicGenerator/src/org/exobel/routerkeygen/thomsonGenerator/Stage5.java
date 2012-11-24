@@ -23,7 +23,7 @@ public class Stage5 {
 			is.close();
 
 			FileOutputStream fos = new FileOutputStream("RouterKeygen.cfv");
-			fos.write(new byte[]{0, 3});
+			fos.write(Stage4.version);
 			fos.write(digest);
 			fos.close();
 		}

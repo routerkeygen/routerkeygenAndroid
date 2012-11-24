@@ -32,10 +32,11 @@ public class DictionaryDownloadService extends IntentService {
 	private final static String DEFAULT_DIC_NAME = "RouterKeygen.dic";
 
 	private static final long MIN_TIME_BETWWEN_UPDATES = 500;
-
-	private static final byte[] DICTIONARY_HASH = { (byte) 0x98, 0x5f, 0x50,
-			(byte) 0xdc, (byte) 0x96, (byte) 0xdb, (byte) 0x83, (byte) 0xe5,
-			0x71, (byte) 0x8e, 0x14, (byte) 0xe8, 0x1d, 0x7f, (byte) 0xc5, 0x7f };
+	
+	private static final byte[] DICTIONARY_HASH = { (byte) 0x8c, (byte) 0xcf, 0x2c,
+			(byte) 0xb2, (byte) 0xe8, (byte) 0xda, (byte) 0x13, (byte) 0xc2,
+ (byte) 0xd8, (byte) 0xc7, (byte) 0xbb, (byte) 0x08,
+			0x2c, (byte) 0xc2, (byte) 0x1f, (byte) 0xe6 };
 
 	public DictionaryDownloadService() {
 		super("DictionaryDownloadService");
@@ -100,7 +101,6 @@ public class DictionaryDownloadService extends IntentService {
 				con.disconnect();
 				return;
 			}
-
 			String dicFile = PreferenceManager.getDefaultSharedPreferences(
 					getBaseContext()).getString(Preferences.dicLocalPref, null);
 			if (dicFile == null) {
