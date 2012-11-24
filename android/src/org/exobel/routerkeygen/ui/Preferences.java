@@ -85,9 +85,9 @@ public class Preferences extends SherlockPreferenceActivity {
 	public static final String autoScanPref = "autoScan";
 	public static final String autoScanIntervalPref = "autoScanInterval";
 
-	public static final String PUB_DOWNLOAD = "http://android-thomson-key-solver.googlecode.com/files/RKDictionary.dic";
-	private static final String PUB_DIC_CFV = "http://android-thomson-key-solver.googlecode.com/svn/trunk/RKDictionary.cfv";
-	private static final String PUB_VERSION = "http://android-thomson-key-solver.googlecode.com/svn/trunk/RouterKeygenVersion.txt";
+	public static final String PUB_DOWNLOAD = "http://android-thomson-key-solver.googlecode.com/files/RouterKeygen_v3.dic";
+	private static final String PUB_DIC_CFV = "http://android-thomson-key-solver.googlecode.com/files/RouterKeygen.cfv";
+	private static final String PUB_VERSION = "http://android-thomson-key-solver.googlecode.com/files/RouterKeygenVersion.txt";
 
 	private static final String VERSION = "3.0.0";
 	private static final String LAUNCH_DATE = "04/01/2012";
