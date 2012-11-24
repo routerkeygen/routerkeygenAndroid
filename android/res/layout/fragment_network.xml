@@ -20,7 +20,7 @@
 	        android:layout_gravity="center"
 	        android:paddingLeft="10dip"
 	        android:gravity="center"
-	        android:textSize="20dip"/>
+	        android:textSize="20sp"/>
 	</LinearLayout>
 	<include layout="@layout/results"/>
 </ViewSwitcher>

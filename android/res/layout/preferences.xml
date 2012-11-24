@@ -24,9 +24,14 @@
     android:layout_height="wrap_content"
     tools:context=".ui.Preferences" >
 
-    <PreferenceCategory android:title="@string/pref_1section" >
+    <PreferenceCategory
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="@string/pref_1section" >
 
         <CheckBoxPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:defaultValue="@bool/wifiOnDefault"
             android:key="wifion"
             android:summaryOff="@string/pref_hintoff_wifion"
@@ -34,6 +39,8 @@
             android:title="@string/pref_wifion" />
 
         <CheckBoxPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:defaultValue="@bool/autoScanDefault"
             android:key="autoScan"
             android:summaryOff="@string/pref_hintoff_autoscan"
@@ -42,6 +49,8 @@
     </PreferenceCategory>
 
     <com.robobunny.SeekBarPreference
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:defaultValue="@integer/autoScanIntervalDefault"
         android:key="autoScanInterval"
         android:max="@integer/autoScanIntervalMax"
@@ -51,9 +60,14 @@
         robobunny:unitsLeft=""
         robobunny:unitsRight="s" />
 
-    <PreferenceCategory android:title="@string/pref_thomson_section" >
+    <PreferenceCategory
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="@string/pref_thomson_section" >
 
         <CheckBoxPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:defaultValue="false"
             android:key="thomson3g"
             android:summaryOff="@string/pref_hintoff_thomson3g"
@@ -61,6 +75,8 @@
             android:title="@string/pref_thomson3g" />
 
         <CheckBoxPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:defaultValue="true"
             android:key="nativethomson"
             android:summaryOff="@string/pref_hintoff_native"
@@ -68,28 +84,41 @@
             android:title="@string/pref_native" />
 
         <Preference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:key="download"
             android:summary="@string/pref_download_des"
             android:title="@string/pref_download" />
 
         <Preference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:key="folderSelect"
             android:summary="@string/pref_folder_select_des"
             android:title="@string/pref_folder_select" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/pref_2section" >
+    <PreferenceCategory
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="@string/pref_2section" >
 
         <Preference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:key="update"
             android:title="@string/pref_update" />
 
         <Preference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:key="donate"
             android:summary="@string/pref_donate_why"
             android:title="@string/pref_donate" />
 
         <Preference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:key="about"
             android:title="@string/pref_about" />
     </PreferenceCategory>
