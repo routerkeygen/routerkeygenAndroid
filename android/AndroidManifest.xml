@@ -16,6 +16,10 @@
         android:smallScreens="true"
         android:xlargeScreens="true" />
 
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
@@ -24,8 +28,8 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
-        android:backupAgent="true"
         android:allowClearUserData="true"
+        android:backupAgent="true"
         android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:theme="@style/Theme.Sherlock" >
