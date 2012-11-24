@@ -76,8 +76,8 @@
     <string name="pref_hinton_wifion">Wi-Fi automatisch inschakelen</string>
     <string name="pref_hintoff_wifion">Wi-Fi handmatig inschakelen</string>
     <string name="pref_wifion">Wi-Fi autom. aan</string>
-    <string name="pref_folder_select">Map kiezen</string>
-    <string name="pref_folder_select_des">Kies een map voor het woordenboek</string>
+    <string name="pref_dict_select">Select Dictionary</string>  <!-- UNTRANSLATED -->
+    <string name="pref_dict_select_des">Select the dictionary file</string>  <!-- UNTRANSLATED -->
     <string name="pref_1section">Algemeen</string>
     <string name="pref_2section">Over</string>
     <string name="pref_donate">Doneren</string>

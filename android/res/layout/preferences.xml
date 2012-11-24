@@ -94,8 +94,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:key="dictionaryPath"
-            android:summary="@string/pref_folder_select_des"
-            android:title="@string/pref_folder_select" />
+            android:summary="@string/pref_dict_select_des"
+            android:title="@string/pref_dict_select" />
     </PreferenceCategory>
 
     <PreferenceCategory

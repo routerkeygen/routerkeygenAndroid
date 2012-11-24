@@ -79,8 +79,8 @@
     <string name="pref_hinton_wifion">Attivare il wifi automaticamente</string>
     <string name="pref_hintoff_wifion">Non attivare il wifi automaticamente</string>
     <string name="pref_wifion">Auto Wifi On</string>
-    <string name="pref_folder_select">Seleziona la cartella</string>
-    <string name="pref_folder_select_des">Seleziona la cartella del dizionario</string>
+    <string name="pref_dict_select">Select Dictionary</string>  <!-- UNTRANSLATED -->
+    <string name="pref_dict_select_des">Select the dictionary file</string>  <!-- UNTRANSLATED -->
     <string name="pref_1section">Opzioni Generali</string>
     <string name="pref_2section">Riguardo</string>
     <string name="pref_donate">Dona</string>
