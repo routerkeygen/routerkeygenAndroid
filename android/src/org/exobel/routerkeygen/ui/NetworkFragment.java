@@ -178,13 +178,14 @@ public class NetworkFragment extends SherlockFragment {
 			}
 			return true;
 		case R.id.menu_save_sd:
-			if (!Environment.getExternalStorageState().equals("mounted")
-					&& !Environment.getExternalStorageState().equals(
-							"mounted_ro")) {
+			if (!Environment.getExternalStorageState().equals(
+					Environment.MEDIA_MOUNTED)) {
 				Toast.makeText(getActivity(), R.string.msg_nosdcard,
 						Toast.LENGTH_SHORT).show();
 				return true;
 			}
+			if (passwordList == null)
+				return true;
 			final StringBuilder message = new StringBuilder(
 					keygen.getSsidName());
 			message.append(" KEYS\n");
@@ -350,8 +351,8 @@ public class NetworkFragment extends SherlockFragment {
 				.getDefaultSharedPreferences(getActivity());
 		thomson3g = prefs.getBoolean(Preferences.thomson3gPref, false);
 		nativeCalc = prefs.getBoolean(Preferences.nativeCalcPref, true);
-		folderSelect = prefs.getString(Preferences.dicLocalPref,
-				Environment.getExternalStorageDirectory().getAbsolutePath());
+		folderSelect = prefs.getString(Preferences.dicLocalPref, Environment
+				.getExternalStorageDirectory().getAbsolutePath());
 	}
 
 }
