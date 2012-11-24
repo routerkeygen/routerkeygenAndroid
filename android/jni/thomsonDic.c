@@ -63,7 +63,7 @@ JNIEXPORT jobjectArray JNICALL Java_org_exobel_routerkeygen_algorithms_ThomsonKe
     jclass cls = (*env)->GetObjectClass(env, obj);
     jfieldID fid_s = (*env)->GetFieldID(env, cls, "stopRequested", "Z");
     if ( fid_s == NULL ) {
-        return; /* exception already thrown */
+        return NULL; /* exception already thrown */
     }
     unsigned char stop = (*env)->GetBooleanField(env, obj, fid_s);
     int len = size;
