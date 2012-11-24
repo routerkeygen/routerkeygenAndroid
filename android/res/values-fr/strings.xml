@@ -26,7 +26,6 @@
     <string name="app_name">Router Keygen</string>
     <string name="msg_welcome_title">Router Keygen</string>
     <string name="msg_welcome_text">Merci d\'avoir installé Router Keygen. Si vous appréciez cette application, merci de faire un don en achetant la version Donate (le lien est dans le menu des préférences). Votre don permettra de motiver les auteurs et d\'améliorer cet outil open-source.</string>
-    <string name="msg_welcome_text_donate">Merci d\'avoir fait un don en achetant la version Donate de Router Keygen. Votre don permettra de motiver les auteurs et d\'améliorer cet outil open-source.</string>
     <string name="msg_welcome_tip">Select any network with a green bar to generate possible keys.</string> <!-- UNTRANSLATED -->
     <string name="menu_scan">Scan</string>
     <string name="menu_manual">Saisie manuelle</string>
@@ -50,8 +49,6 @@
     <string name="bt_manual_cancel">Annuler</string>
     <string name="bt_manual_calc">Calculer</string>
     <string name="bt_share">Clés partagées</string>
-    <string name="bt_choose">Ouvrir</string>
-    <string name="bt_choose_back">Haut</string>
     <string name="bt_close">Fermer</string>
     <string name="bt_save_sd">Sauvegarder sur SD</string>
     <string name="bt_auto_connect">Connexion Auto</string>
@@ -71,8 +68,6 @@
     <string name="dialog_about_license">Licence</string>
     <string name="dialog_about_license_desc">Cette application est sous GPLv3.\n\nVous pouvez lire les termes <a href="http://www.gnu.org/licenses/gpl-3.0.html">ici</a>.</string>
     <string name="msg_app_updated">Cette application est à la dernière version.</string>
-    <string name="folder_chooser_title">Choisir le dossier</string>
-    <string name="folder_chooser_no_dir">(Il n\'existe plus de répertoire)</string>
     <string name="update_title">Mise à jour disponible</string>
     <string name="update_message">La version <xliff:g id="version">%1$s</xliff:g> est disponible. Télécharger la dernière version sur notre site web.</string>
     <string name="cancel_download">Do you want to cancel the dictionary download?</string>  <!-- UNTRANSLATED -->
@@ -90,7 +85,6 @@
     <string name="pref_donate_why">Acheter moi un café si vous aimez l\'application</string>
     <string name="pref_about">A propos de Router Keygen</string>
     <string name="pref_about_desc">Router Keygen calcule les clés par défaut de nombreux routerus.\n\n<a href="http://code.google.com/p/android-thomson-key-solver/">Site web</a>\n\nVersion: </string>
-    <string name="pref_msg_detected"><xliff:g id="filename">%1$s</xliff:g> detected.</string> <!-- UNTRANSLATED -->
     <string name="pref_native">Calcule natif</string>
     <string name="pref_hinton_native">Calcul sur la cible si elle ne parvient pas à trouver le dictionnaire</string>
     <string name="pref_hintoff_native">Avertir si la clé n\'est pas trouvée dans le dictionnaire</string>
@@ -122,7 +116,6 @@
     <string name="msg_nomac">Cette clé ne peut être générée sans l\'adresse MAC</string>
     <string name="msg_dlinkerror">Erreur dans le calcul de la clé D-Link</string>
     <string name="msg_dictnotfound">Dictionnaire non trouvé sur la SDCard.</string>
-    <string name="pref_msg_notfound">Dictionary not found on <xliff:g id="filename">%1$s</xliff:g></string> <!-- UNTRANSLATED -->
     <string name="msg_nosdcard">Le stockage externe n\'est pas disponible.</string>
     <string name="msg_nomd5">Ce téléphone ne peut pas traiter un hachage MD5.</string>
     <string name="msg_nosha1">Ce téléphone ne peut pas traiter un hachage SHA1.</string>
@@ -135,8 +128,7 @@
     <string name="msg_err_essid_no_match">Le SSID calculé ne correspond pas à celui prévu.</string>
     <string name="msg_err_native">Erreur dans le calcul natif. Merci d\'informer notre équipe.</string>
     <string name="msg_nomemoryonsdcard">Le stockage externe n\'a pas assez d\'espace libre.</string>
-    <string name="msg_no_write_permissions">Impossible to write to the selected folder.</string> <!-- UNTRANSLATED -->
-    <string name="msg_no_read_permissions">Impossible to read from the selected folder.</string> <!-- UNTRANSLATED -->
+    <string name="msg_no_write_permissions">Impossible to write to the selected file.</string> <!-- UNTRANSLATED -->
     <string name="msg_error">Erreur</string>
     <string name="pref_msg_err_backup_dic">Erreur durant la sauvegarde du dictionnaire précédent</string>
     <string name="pref_msg_err_rename_dic">Erreur de renommage du dictionnaire téléchargé.</string>
@@ -155,6 +147,12 @@
     <string name="msg_error_key_testing">Error trying to test the key.</string> <!-- UNTRANSLATED -->
     <string name="msg_no_correct_keys">No correct keys.</string> <!-- UNTRANSLATED -->
     <string name="msg_auto_connect_running">The auto connect process is already running.</string> <!-- UNTRANSLATED -->
+
+    <!-- FILE CHOOSER -->
+    <string name="empty_directory">Empty Directory</string><!-- UNTRANSLATED -->
+    <string name="storage_removed">Storage was removed or unmounted.</string><!-- UNTRANSLATED -->
+    <string name="choose_file">Select a file</string><!-- UNTRANSLATED -->
+    <string name="error_selecting_file">Error selecting File</string><!-- UNTRANSLATED -->
 
 
     <!-- AUTOCOMPLETE SUPPORT -->

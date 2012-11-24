@@ -79,7 +79,7 @@
 					android:layout_toRightOf="@id/input_mac_pair1"
 				    android:layout_below="@id/label_bssid"
 					android:clickable="false"
-					android:textSize="30dip"
+					android:textSize="30sp"
 					/>
 			<EditText android:id="@+id/input_mac_pair2"	
 				    android:inputType="textFilter"
@@ -98,7 +98,7 @@
 					android:layout_toRightOf="@id/input_mac_pair2"
 				    android:layout_below="@id/label_bssid"
 					android:clickable="false"
-					android:textSize="30dip"
+					android:textSize="30sp"
 					/>	
 			<EditText android:id="@+id/input_mac_pair3"	
 				    android:inputType="textFilter"
@@ -117,7 +117,7 @@
 					android:layout_toRightOf="@id/input_mac_pair3"
 				    android:layout_below="@id/label_bssid"
 					android:clickable="false"
-					android:textSize="30dip"				
+					android:textSize="30sp"				
 					/>	
 			<EditText android:id="@+id/input_mac_pair4"	
 				    android:layout_below="@id/label_bssid"
@@ -136,7 +136,7 @@
 					android:layout_toRightOf="@id/input_mac_pair4"
 				    android:layout_below="@id/label_bssid"
 					android:clickable="false"
-					android:textSize="30dip"
+					android:textSize="30sp"
 					/>
 			<EditText android:id="@+id/input_mac_pair5"	
 				    android:inputType="textFilter"
@@ -156,7 +156,7 @@
 					android:layout_toRightOf="@id/input_mac_pair5"
 				    android:layout_below="@id/label_bssid"
 					android:clickable="false"
-					android:textSize="30dip"
+					android:textSize="30sp"
 					/>	
 			<EditText android:id="@+id/input_mac_pair6"	
 				    android:inputType="textFilter"

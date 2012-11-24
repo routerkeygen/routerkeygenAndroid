@@ -26,7 +26,6 @@
     <string name="app_name">Router Keygen</string>
     <string name="msg_welcome_title">Router Keygen</string>
     <string name="msg_welcome_text">Thank you for trying Router Keygen. If you like this application, please consider buying the Donate version. The link is on the preference menu. Your donation will motivate the authors to improve on this great open-source tool.</string>
-    <string name="msg_welcome_text_donate">Thank you for buying the Donate version of Router Keygen. Your donation will motivate the authors to improve on this great open-source tool.</string>
     <string name="msg_welcome_tip">Select any network with a green bar to generate possible keys.</string>
     <string name="menu_scan">Scan</string>
     <string name="menu_manual">Manual Input</string>
@@ -51,8 +50,6 @@
     <string name="bt_manual_cancel">Cancel</string>
     <string name="bt_manual_calc">Calculate</string>
     <string name="bt_share">Share Keys</string>
-    <string name="bt_choose">Open</string>
-    <string name="bt_choose_back">Up</string>
     <string name="bt_close">Close</string>
     <string name="bt_save_sd">Save to the SD</string>
     <string name="bt_auto_connect">Test key(s)</string>
@@ -72,13 +69,10 @@
     <string name="dialog_about_license">License</string>
     <string name="dialog_about_license_desc">This application is under the GPLv3.\n\nYou can read its terms <a href="http://www.gnu.org/licenses/gpl-3.0.html">here</a>.</string>
     <string name="msg_app_updated">The application is already at the latest version.</string>
-    <string name="folder_chooser_title">Choose your folder</string>
-    <string name="folder_chooser_no_dir">(There are no more directories)</string>
     <string name="update_title">Update Available</string>
     <string name="update_message">There is version <xliff:g id="version">%1$s</xliff:g> available. Go to the website to download the latest version.</string>
     <string name="cancel_download">Do you want to cancel the dictionary download?</string>
     <string name="cancel_auto_test">Do you want to cancel the keys testing?</string>
-    
 
     <!-- PREFERENCES STRINGS -->
     <string name="pref_hinton_wifion">Activate the Wifi Automatically</string>
@@ -92,7 +86,6 @@
     <string name="pref_donate_why">Buy me a coffee if you liked this application</string>
     <string name="pref_about">About Router Keygen</string>
     <string name="pref_about_desc">Router Keygen calculates default passwords for several common routers.\n\n<a href="http://code.google.com/p/android-thomson-key-solver/">Project\'s Website</a>\n\nVersion: </string>
-    <string name="pref_msg_detected"><xliff:g id="filename">%1$s</xliff:g> detected.</string>
     <string name="pref_native">Native Calculation</string>
     <string name="pref_hinton_native">Calculating on target if it fails to find the dictionary</string>
     <string name="pref_hintoff_native">Only warns if it fails to find the dictionary</string>
@@ -123,7 +116,6 @@
     <string name="msg_nomac">This key cannot be generated without MAC address</string>
     <string name="msg_dlinkerror">Error in the calculation of the D-Link key</string>
     <string name="msg_dictnotfound">Dictionary not found on SDCard.</string>
-    <string name="pref_msg_notfound">Dictionary not found on <xliff:g id="filename">%1$s</xliff:g></string>
     <string name="msg_nosdcard">The external storage is not available.</string>
     <string name="msg_nomd5">This phone cannot process a MD5 hash.</string>
     <string name="msg_nosha1">This phone cannot process a SHA1 hash.</string>
@@ -137,7 +129,6 @@
     <string name="msg_err_native">Error in the Native Calculation.Please inform the team.</string>
     <string name="msg_nomemoryonsdcard">The external storage has not enough free memory.</string>
     <string name="msg_no_write_permissions">Impossible to write to the selected folder.</string>
-    <string name="msg_no_read_permissions">Impossible to read from the selected folder.</string>
     <string name="msg_error">Error</string>
     <string name="pref_msg_err_backup_dic">Error moving the previous Dictionary to a backup</string>
     <string name="pref_msg_err_rename_dic">Error renaming downloaded Dictionary.</string>
@@ -157,6 +148,12 @@
     <string name="msg_error_key_testing">Error trying to test the key.</string>
     <string name="msg_no_correct_keys">No correct keys.</string>
     <string name="msg_auto_connect_running">The auto connect process is already running.</string>
+
+    <!-- FILE CHOOSER -->
+    <string name="empty_directory">Empty Directory</string>
+    <string name="storage_removed">Storage was removed or unmounted.</string>
+    <string name="choose_file">Select a file</string>
+    <string name="error_selecting_file">Error selecting File</string>
 
     <!-- AUTOCOMPLETE SUPPORT -->
     <string-array name="supported_routers">
@@ -198,4 +195,5 @@
         <item>Optimus</item>
         <item>OptimusFibra</item>
     </string-array>
+
 </resources>

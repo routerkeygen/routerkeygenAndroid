@@ -26,7 +26,6 @@
     <string name="app_name">Router Keygen</string>
     <string name="msg_welcome_title">Router Keygen</string>
     <string name="msg_welcome_text"> Obrigado por experimentar a aplicação Router Keygen. Se gostou da aplicação por favor considere a hipótese de comprar a versão Donativo. O link está no menu de preferências. O seu donativo irá motivar os autores a melhorar esta grande ferramenta open-source.</string>
-    <string name="msg_welcome_text_donate">Obrigado por ter comprado a versão paga de Router Keygen. O seu donativo irá motivar os autores a melhorar esta grande ferramenta open-source.</string>
     <string name="msg_welcome_tip">Seleccione qualquer rede com uma barra verde para gerar possíveis chaves.</string>
     <string name="menu_scan">Pesquisa</string>
     <string name="menu_manual">Entrada Manual</string>
@@ -49,8 +48,6 @@
     <string name="bt_manual_cancel">Cancelar</string>
     <string name="bt_manual_calc">Calcular</string>
     <string name="bt_share">Partilhar Senhas</string>
-    <string name="bt_choose">Abrir</string>
-    <string name="bt_choose_back">Subir</string>
     <string name="bt_close">Fechar</string>
     <string name="bt_save_sd">Guardar no SD</string>
     <string name="bt_auto_connect">Testar senhas</string>
@@ -70,9 +67,7 @@
     <string name="dialog_about_license">Licença</string>
     <string name="dialog_about_license_desc">Esta aplicação está sobre a GPLv3.\n\nPode ler os termos desta <a href="http://www.gnu.org/licenses/gpl-3.0.html">aqui</a>.</string>
     <string name="msg_app_updated">A aplicação já está na última versão.</string>
-    <string name="folder_chooser_title">Escolha a pasta</string>
-    <string name="folder_chooser_no_dir">(Não há pastas)</string>
-    <string name="update_title">Actualização Disponivel</string>
+    <string name="update_title">Actualização Disponível</string>
     <string name="update_message">Está disponível a versão <xliff:g id="version">%1$s</xliff:g>. Abra o Website para descarregar a última versão.</string>
     <string name="cancel_download">Deseja cancelar a transferência do dicionário?</string>
     <string name="cancel_auto_test">Deseja cancelar o teste das senhas?</string>
@@ -89,7 +84,6 @@
     <string name="pref_donate_why">Ofereça-me um café se gostou desta aplicação</string>
     <string name="pref_about">Sobre Router Keygen</string>
     <string name="pref_about_desc">Router Keygen calcula senhas de origem para vários routers.\n\n<a href="http://code.google.com/p/android-thomson-key-solver/">Website do Projecto</a>\n\nVersão: </string>
-    <string name="pref_msg_detected"><xliff:g id="filename">%1$s</xliff:g> detetado.</string>
     <string name="pref_native">Cálculo Nativo</string>
     <string name="pref_hinton_native">Calcular no telemóvel se falhar ao procurar o dicionário</string>
     <string name="pref_hintoff_native">Só avisa se não conseguir encontrar no dicionário</string>
@@ -120,7 +114,6 @@
     <string name="msg_nomac">Esta chave não pode ser gerada sem o endereço MAC</string>
     <string name="msg_dlinkerror">Erro no cálculo da chave D-Link</string>
     <string name="msg_dictnotfound">Dicionário não encontrado no SDCard.</string>
-    <string name="pref_msg_notfound">Dicionário não encontrado no <xliff:g id="filename">%1$s</xliff:g></string>
     <string name="msg_nosdcard">O armazenamento externo não está disponível.</string>
     <string name="msg_nomd5">Este telefone não consegue produzir uma hash MD5.</string>
     <string name="msg_nosha1">Este telefone não consegue produzir uma hash SHA1.</string>
@@ -133,8 +126,7 @@
     <string name="msg_err_essid_no_match">O SSID calculado não corresponde ao previsto.</string>
     <string name="msg_err_native">Error no cálculo nativo.Por favor informe a equipa.</string>
     <string name="msg_nomemoryonsdcard">O armazenamento externo não tem memória livre suficiente.</string>
-    <string name="msg_no_write_permissions">Impossível escrever na pasta selecionada.</string>
-    <string name="msg_no_read_permissions">Impossível ler da pasta selecionada.</string>
+    <string name="msg_no_write_permissions">Impossível escrever no ficheiro selecionado.</string>
     <string name="msg_error">Erro</string>
     <string name="pref_msg_err_backup_dic">Erro ao fazer um cópia de segurança do Dicionário anterior.</string>
     <string name="pref_msg_err_rename_dic">Erro ao mover o Dicionário descarregado.</string>
@@ -153,6 +145,12 @@
     <string name="msg_error_key_testing">Erro ao testar a senha.</string>
     <string name="msg_no_correct_keys">Todas as senhas estão incorretas.</string>
     <string name="msg_auto_connect_running">O processo de teste já esta a correr.</string>
+
+    <!-- FILE CHOOSER -->
+    <string name="empty_directory">Diretoria vazia</string>
+    <string name="storage_removed">Armanezamento foi removido ou desmontado.</string>
+    <string name="choose_file">Seleccione um ficheiro</string>
+    <string name="error_selecting_file">Erro a seleccionar um ficheiro</string>    
 
     <!-- AUTOCOMPLETE SUPPORT -->
     <string-array name="supported_routers">

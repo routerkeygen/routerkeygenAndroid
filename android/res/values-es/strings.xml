@@ -26,7 +26,6 @@
     <string name="app_name">Router Keygen</string>
     <string name="msg_welcome_title">Router Keygen</string>
     <string name="msg_welcome_text">Si te gusta, hazme una donación. El link esta en el menú de preferencias. Tu donación hará que piense en seguir desarrollando esta estupenda herramienta de código abierto.</string>
-    <string name="msg_welcome_text_donate">Gracias por comprar la versión de pago de Router Keygen.  Tu donación hará que piense en seguir desarrollando esta estupenda herramienta de código abierto.</string>
     <string name="msg_welcome_tip">Seleccione una red con una barra verde para generar las posibles claves.</string>
     <string name="menu_scan">Scanear</string>
     <string name="menu_manual">Introducción Manual</string>
@@ -49,8 +48,6 @@
     <string name="bt_manual_cancel">Cancelar</string>
     <string name="bt_manual_calc">Calcular</string>
     <string name="bt_share">Compartir Claves</string>
-    <string name="bt_choose">Abrir</string>
-    <string name="bt_choose_back">Arriba</string>
     <string name="bt_close">Cerrar</string>
     <string name="bt_save_sd">Guardar en la SD</string>
     <string name="bt_auto_connect">Auto conectar</string>
@@ -70,8 +67,6 @@
     <string name="dialog_about_license">Licencia</string>
     <string name="dialog_about_license_desc">Esta aplicación está bajo licencia GPLv3.\n\nPuedes leer los téminos <a href="http://www.gnu.org/licenses/gpl-3.0.html">aquí</a>.</string>
     <string name="msg_app_updated">Esta aplicación ya es la mas nueva.</string>
-    <string name="folder_chooser_title">Escoja la carpeta</string>
-    <string name="folder_chooser_no_dir">(No hay mas carpetas)</string>
     <string name="update_title">Actualización disponible</string>
     <string name="update_message">La versión <xliff:g id="version">%1$s</xliff:g> está disponible. Vaya al Website para descargar la más nueva.</string>
     <string name="cancel_download">Do you want to cancel the dictionary download?</string>  <!-- UNTRANSLATED -->
@@ -89,7 +84,6 @@
     <string name="pref_donate_why">Dóname para un café si te gusta la aplicación</string>
     <string name="pref_about">Acerca de Router Keygen</string>
     <string name="pref_about_desc">Router Keygen calcula los passwords por defecto para varios routers.\n\n<a href="http://code.google.com/p/android-thomson-key-solver/">Sitio del Proyecto</a>\n\nVersion: </string>
-    <string name="pref_msg_detected"><xliff:g id="filename">%1$s</xliff:g> detectado.</string>
     <string name="pref_native">Cálculo Nativo</string>
     <string name="pref_hinton_native">Calcular en el objetivo si falla al encontrar el diccionario</string>
     <string name="pref_hintoff_native">Sólo avisa si falla al encontrar el diccionario</string>
@@ -120,7 +114,6 @@
     <string name="msg_nomac">Esta clave no se puede generar sin la MAC address</string>
     <string name="msg_dlinkerror">Error en el cálculo de la clave D-Link</string>
     <string name="msg_dictnotfound">¡El Diccionario no se ha encontrado en la SDCard!</string>
-    <string name="pref_msg_notfound">No se encontró el diccionario en <xliff:g id="filename">%1$s</xliff:g></string>
     <string name="msg_nosdcard">¡La SD card esta desmontada!</string>
     <string name="msg_nomd5">Este teléfono no puede procesar un hash MD5.</string>
     <string name="msg_nosha1">Este teléfono no puede procesar un hash SHA1.</string>
@@ -134,7 +127,6 @@
     <string name="msg_err_native">Error en el Cáculo Nativo. Informa al KnD Taldea.</string>
     <string name="msg_nomemoryonsdcard">La tarjeta de memoria externa no tiene suficiente espacio libre</string>
     <string name="msg_no_write_permissions">Imposible escribir en el folder seleccionado.</string>
-    <string name="msg_no_read_permissions">Imposible leer del folder seleccionado.</string>
     <string name="msg_error">Error</string>
     <string name="pref_msg_err_backup_dic">Error moviendo el anterior Diccionario a la copia de seguridad</string>
     <string name="pref_msg_err_rename_dic">Error renombrando el Diccionario descargado.</string>
@@ -153,6 +145,12 @@
     <string name="msg_error_key_testing">Error tratando de porbar la clave.</string>
     <string name="msg_no_correct_keys">Sin claves correctas.</string>
     <string name="msg_auto_connect_running">El proceso de auto conectar ya se encuentra ejecutándose.</string>
+
+    <!-- FILE CHOOSER -->
+    <string name="empty_directory">Empty Directory</string><!-- UNTRANSLATED -->
+    <string name="storage_removed">Storage was removed or unmounted.</string><!-- UNTRANSLATED -->
+    <string name="choose_file">Select a file</string><!-- UNTRANSLATED -->
+    <string name="error_selecting_file">Error selecting File</string><!-- UNTRANSLATED -->
 
     <!-- AUTOCOMPLETE SUPPORT -->
     <string-array name="supported_routers">
