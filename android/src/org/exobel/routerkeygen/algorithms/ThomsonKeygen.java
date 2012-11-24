@@ -188,7 +188,6 @@ public class ThomsonKeygen extends Keygen {
 			this.entry = new byte[lenght];
 			if ((len = onlineFile.read(this.entry, 0, lenght)) != -1) {
 				lenght = len;
-				;
 			}
 
 			onlineFile.close();
