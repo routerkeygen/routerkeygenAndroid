@@ -75,19 +75,33 @@ HEADERS += src/include/ZyxelKeygen.h \
     src/include/WirelessMatcher.h \
     src/include/unknown.h
 INCLUDEPATH += src/include/
-win32:SOURCES += src/wifi/QWifiManagerPrivateWin.cpp \
-    src/sha1/sha1dgst.c \
-    src/sha1/sha1-586.win32.S
-win32:HEADERS += src/wifi/QWifiManagerPrivateWin.h \
-    src/include/sha_locl.h \
-    src/include/sha.h \
-    src/include/opensslconf.h \
-    src/include/md32_common.h
-unix:SOURCES += src/wifi/QWifiManagerPrivateUnix.cpp
-unix:HEADERS += src/wifi/QWifiManagerPrivateUnix.h
-unix:INCLUDEPATH += /usr/include/NetworkManager
-unix:LIBS += -lcrypto
-unix:QT += dbus
+win32{
+    SOURCES += src/wifi/QWifiManagerPrivateWin.cpp \
+        src/sha1/sha1dgst.c \
+        src/sha1/sha1-586.win32.S
+    HEADERS += src/wifi/QWifiManagerPrivateWin.h \
+        src/include/sha_locl.h \
+        src/include/sha.h \
+        src/include/opensslconf.h \
+        src/include/md32_common.h
+}
+unix:!macx{
+    QT += dbus
+    SOURCES += src/wifi/QWifiManagerPrivateUnix.cpp
+    HEADERS += src/wifi/QWifiManagerPrivateUnix.h
+    INCLUDEPATH += /usr/include/NetworkManager
+    LIBS += -lcrypto
+}
+
+
+macx{
+    SOURCES += src/wifi/QWifiManagerPrivateMac.cpp
+    OBJECTIVE_SOURCES += src/mac/macloginitemsmanager.mm
+    HEADERS += src/wifi/QWifiManagerPrivateMac.h\
+    src/include/macloginitemsmanager.h
+    LIBS += -lcrypto -framework Cocoa
+}
+
 FORMS += forms/routerkeygen.ui
 symbian { 
     TARGET.UID3 = 0xed94ef91

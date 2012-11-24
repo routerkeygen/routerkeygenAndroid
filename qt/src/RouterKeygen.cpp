@@ -20,6 +20,7 @@
 #include "ui_routerkeygen.h"
 #include <QMessageBox>
 #include "WirelessMatcher.h"
+#include "macloginitemsmanager.h"
 #include <QCompleter>
 #include <QStringList>
 #include <QMovie>
@@ -44,7 +45,7 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
 			SLOT( refreshNetworks() ));
 	connect(ui->networkslist, SIGNAL( cellClicked(int,int) ), this,
 			SLOT( tableRowSelected(int,int) ));
-#ifdef Q_OS_UNIX
+#if !defined(Q_OS_WIN) && !defined(Q_OS_MAC)
 	connect(ui->forceRefresh, SIGNAL( stateChanged(int) ), this,
 			SLOT( forceRefreshToggle(int) ));
 #else
@@ -95,6 +96,7 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
 	runInBackground = settings->value(RUN_IN_BACKGROUND, true).toBool();
 	runOnStartUp = settings->value(RUN_ON_START_UP, false).toBool();
 	qApp->setQuitOnLastWindowClosed(!runInBackground);
+    scanFinished(QWifiManager::SCAN_OK);
 	wifiManager->startScan();
 
 }
@@ -192,8 +194,8 @@ void RouterKeygen::scanFinished(int code) {
 			} else
 				ui->networkslist->setItem(i, 3, new QTableWidgetItem(tr("No")));
 		}
-		if (!foundVulnerable) {
-			trayMenu->addAction(tr("\tNone were detected"))->setEnabled(false);
+        if (!foundVulnerable) {
+            trayMenu->addAction(tr("\tNone were detected"))->setEnabled(false);
 		}
 		trayMenu->addSeparator();
 		QAction * startUp = trayMenu->addAction(tr("Run on Start up"));
@@ -326,6 +328,21 @@ void RouterKeygen::startUpRunToggle(bool state) {
 	runOnStartUp = state;
 	settings->setValue(RUN_ON_START_UP, runOnStartUp);
 #ifdef Q_OS_UNIX
+#ifdef Q_OS_MAC
+    MacLoginItemsManager loginManager;
+    if ( runOnStartUp ){
+        if ( !loginManager.containsRunningApplication() ){
+            if (!loginManager.appendRunningApplication())
+                qDebug() << "Error setting startup state";
+        }
+    }
+    else{
+        if ( loginManager.containsRunningApplication() ){
+            if (!loginManager.removeRunningApplication() )
+                qDebug() << "Error setting startup state";
+        }
+    }
+#else
 	QString newFile = "/home/" + QString(getenv("USER"))
 			+ "/.config/autostart/routerkeygen.desktop";
 	qDebug() << newFile;
@@ -342,6 +359,7 @@ void RouterKeygen::startUpRunToggle(bool state) {
 			if (!QFile::remove(newFile))
 				qDebug() << "Error while removing file";
 	}
+#endif
 #endif
 #ifdef Q_OS_WIN
 	 QSettings settings("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",QSettings::NativeFormat);

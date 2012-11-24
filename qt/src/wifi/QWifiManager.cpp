@@ -10,12 +10,19 @@
 
 
 #ifdef Q_OS_UNIX
+#ifdef Q_OS_MACX
+#include "QWifiManagerPrivateMac.h"
+QWifiManager::QWifiManager() :
+        forceRefresh(false) , scan(NULL), impl(new QWifiManagerPrivateMac()){
+
+    connect(impl, SIGNAL(scanFinished(int)), this, SLOT(implScanFinished(int)));}
+#else
 #include "QWifiManagerPrivateUnix.h"
 QWifiManager::QWifiManager() :
         forceRefresh(false) , scan(NULL), impl(new QWifiManagerPrivateUnix()){
 
     connect(impl, SIGNAL(scanFinished(int)), this, SLOT(implScanFinished(int)));}
-
+#endif
 #endif
 
 #ifdef Q_OS_WIN
