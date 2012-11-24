@@ -18,6 +18,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -28,6 +29,7 @@ import android.widget.Toast;
 public class DictionaryDownloadService extends IntentService {
 
 	public final static String URL_DOWNLOAD = "org.exobel.routerkeygen.DictionaryDownloadService.URL_DOWNLOAD";
+	private final static String DEFAULT_DIC_NAME = "RouterKeygen.dic";
 
 	private static final long MIN_TIME_BETWWEN_UPDATES = 500;
 
@@ -99,14 +101,19 @@ public class DictionaryDownloadService extends IntentService {
 				return;
 			}
 
-			final String folderSelect = PreferenceManager
-					.getDefaultSharedPreferences(getBaseContext()).getString(
-							Preferences.folderSelectPref,
-							Environment.getExternalStorageDirectory()
-									.getAbsolutePath());
+			String dicFile = PreferenceManager.getDefaultSharedPreferences(
+					getBaseContext()).getString(Preferences.dicLocalPref, null);
+			if (dicFile == null) {
+				dicFile = Environment.getExternalStorageDirectory().getPath()
+						+ File.separator + DEFAULT_DIC_NAME;
+				final SharedPreferences.Editor editor = PreferenceManager
+						.getDefaultSharedPreferences(getBaseContext()).edit();
+				editor.putString(Preferences.dicLocalPref, dicFile);
+				editor.commit();
+			}
 
 			// Testing if we can write to the file
-			if (!canWrite(folderSelect)) {
+			if (!canWrite(dicFile)) {
 				mNotificationManager.notify(
 						UNIQUE_ID,
 						getSimple(getString(R.string.msg_error),
@@ -161,9 +168,7 @@ public class DictionaryDownloadService extends IntentService {
 								getString(R.string.msg_err_unkown)).build());
 				return;
 			}
-			if (!renameFile(Environment.getExternalStorageDirectory().getPath()
-					+ File.separator + "DicTemp.dic", folderSelect
-					+ File.separator + "RouterKeygen.dic", true)) {
+			if (!renameFile(dicTemp, dicFile, true)) {
 
 				mNotificationManager.notify(
 						UNIQUE_ID,
@@ -192,13 +197,11 @@ public class DictionaryDownloadService extends IntentService {
 		}
 	}
 
-	private boolean canWrite(String folder) {
+	private boolean canWrite(String filename) {
 		File file;
-		String filename = folder + File.separator;
-		do {
+		while ((file = new File(filename)).exists()) {
 			filename += "1";
-			file = new File(filename);
-		} while (file.exists());
+		}
 		try {
 			file.createNewFile();
 			boolean ret = file.canWrite();

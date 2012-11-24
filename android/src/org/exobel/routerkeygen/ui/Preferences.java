@@ -23,19 +23,17 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FilenameFilter;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
-import java.util.Stack;
-import java.util.TreeSet;
 
 import org.exobel.routerkeygen.DictionaryDownloadService;
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.utils.HashUtils;
 
+import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.app.AlertDialog;
@@ -52,15 +50,14 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,6 +68,8 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.MenuItem;
+import com.ipaulpro.afilechooser.FileChooserActivity;
+import com.ipaulpro.afilechooser.utils.FileUtils;
 
 @SuppressWarnings("deprecation")
 public class Preferences extends SherlockPreferenceActivity {
@@ -78,7 +77,7 @@ public class Preferences extends SherlockPreferenceActivity {
 	/** The maximum supported dictionary version */
 	public static final int MAX_DIC_VERSION = 4;
 
-	public static final String folderSelectPref = "folderSelect";
+	public static final String dicLocalPref = "dictionaryPath";
 	public static final String wifiOnPref = "wifion";
 	public static final String thomson3gPref = "thomson3g";
 	public static final String nativeCalcPref = "nativethomson";
@@ -89,11 +88,9 @@ public class Preferences extends SherlockPreferenceActivity {
 	private static final String PUB_DIC_CFV = "http://android-thomson-key-solver.googlecode.com/svn/trunk/RKDictionary.cfv";
 	private static final String PUB_VERSION = "http://android-thomson-key-solver.googlecode.com/svn/trunk/RouterKeygenVersion.txt";
 
-	private static final String VERSION = "2.9.1";
+	private static final String VERSION = "3.0.0";
 	private static final String LAUNCH_DATE = "04/01/2012";
 
-	private static final String[] DICTIONARY_NAMES = { "RouterKeygen.dic",
-			"RKDictionary.dic" };
 	private String version = "";
 
 	protected void onCreate(Bundle savedInstanceState) {
@@ -220,14 +217,12 @@ public class Preferences extends SherlockPreferenceActivity {
 						return true;
 					}
 				});
-		findPreference("folderSelect").setOnPreferenceClickListener(
+		findPreference(dicLocalPref).setOnPreferenceClickListener(
 				new OnPreferenceClickListener() {
 					public boolean onPreferenceClick(Preference preference) {
-						mPath = new File(Environment
-								.getExternalStorageDirectory() + File.separator);
-						mChosenFile = File.separator;
-						directoryTree.clear();
-						showDialog(DIALOG_LOAD_FOLDER);
+						startActivityForResult(new Intent(
+								getApplicationContext(),
+								FileChooserActivity.class), 0);
 						return true;
 					}
 				});
@@ -245,6 +240,33 @@ public class Preferences extends SherlockPreferenceActivity {
 		findPreference("autoScanInterval").setEnabled(
 				prefs.getBoolean(Preferences.autoScanPref, getResources()
 						.getBoolean(R.bool.autoScanDefault)));
+	}
+
+	@TargetApi(Build.VERSION_CODES.GINGERBREAD)
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch (requestCode) {
+		case 0:
+			if (resultCode == RESULT_OK) {
+				// The URI of the selected file
+				final Uri uri = data.getData();
+				// Create a File from this Uri
+				File file = FileUtils.getFile(uri);
+				final SharedPreferences customSharedPreference = PreferenceManager
+						.getDefaultSharedPreferences(getApplicationContext());
+				final SharedPreferences.Editor editor = customSharedPreference
+						.edit();
+				editor.putString(dicLocalPref, file.getAbsolutePath());
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD)
+					editor.apply();
+				else
+					new Thread(new Runnable() {
+						public void run() {
+							editor.commit();
+						}
+					}).start();
+			}
+		}
 	}
 
 	private boolean isDictionaryServiceRunning() {
@@ -270,41 +292,9 @@ public class Preferences extends SherlockPreferenceActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
+	@SuppressWarnings("unused")
 	private static final String TAG = "ThomsonPreferences";
-	private String[] mFileList;
 
-	private File mPath = new File(Environment.getExternalStorageDirectory()
-			+ File.separator);
-	private String mChosenFile = File.separator;
-	Stack<String> directoryTree = new Stack<String>();
-
-	private void loadFolderList() {
-		mPath = new File(Environment.getExternalStorageDirectory()
-				+ File.separator + mChosenFile);
-		if (mPath.exists()) {
-			FilenameFilter filter = new FilenameFilter() {
-				public boolean accept(File dir, String filename) {
-					File sel = new File(dir, filename);
-					return sel.isDirectory();
-				}
-			};
-			mFileList = mPath.list(filter);
-			if (mFileList == null)
-				return;
-			TreeSet<String> sorter = new TreeSet<String>();
-			for (int i = 0; i < mFileList.length; ++i)
-				sorter.add(mFileList[i]);
-			mFileList = sorter.toArray(mFileList);
-		} else {
-			if (!directoryTree.empty()) {
-				mChosenFile = directoryTree.pop();
-				loadFolderList();
-			} else
-				mFileList = null;
-		}
-	}
-
-	private static final int DIALOG_LOAD_FOLDER = 1000;
 	private static final int DIALOG_ABOUT = 1001;
 	private static final int DIALOG_ASK_DOWNLOAD = 1002;
 	private static final int DIALOG_CHECK_DOWNLOAD_SERVER = 1003;
@@ -315,81 +305,6 @@ public class Preferences extends SherlockPreferenceActivity {
 	protected Dialog onCreateDialog(int id) {
 		AlertDialog.Builder builder = new Builder(this);
 		switch (id) {
-		case DIALOG_LOAD_FOLDER: {
-			loadFolderList();
-			final String path = mPath.toString();
-			try {
-				mPath = getDictionaryFile(path);
-				if (mPath != null)
-					Toast.makeText(
-							getBaseContext(),
-							getString(R.string.pref_msg_detected,
-									mPath.toString()), Toast.LENGTH_SHORT)
-							.show();
-
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-				Toast.makeText(getBaseContext(),
-						R.string.msg_no_read_permissions, Toast.LENGTH_SHORT)
-						.show();
-			}
-			builder.setTitle(getString(R.string.folder_chooser_title));
-			if (mFileList == null || mFileList.length == 0) {
-				Log.e(TAG, "Showing file picker before loading the file list");
-				mFileList = new String[1];
-				mFileList[0] = getString(R.string.folder_chooser_no_dir);
-				builder.setItems(mFileList,
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int which) {
-							}
-						});
-			} else
-				builder.setItems(mFileList,
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int which) {
-								directoryTree.push(mChosenFile);
-								mChosenFile += File.separator
-										+ mFileList[which];
-								removeDialog(DIALOG_LOAD_FOLDER);
-								showDialog(DIALOG_LOAD_FOLDER);
-							}
-						});
-			if (!mChosenFile.equals(File.separator))
-				builder.setNegativeButton(R.string.bt_choose_back,
-						new OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int which) {
-								if (!directoryTree.empty())
-									mChosenFile = directoryTree.pop();
-								else
-									mChosenFile = File.separator;
-								removeDialog(DIALOG_LOAD_FOLDER);
-								showDialog(DIALOG_LOAD_FOLDER);
-							}
-						});
-			builder.setPositiveButton(R.string.bt_choose,
-					new OnClickListener() {
-						public void onClick(DialogInterface dialog, int which) {
-
-							final SharedPreferences customSharedPreference = PreferenceManager
-									.getDefaultSharedPreferences(getApplicationContext());
-							final SharedPreferences.Editor editor = customSharedPreference
-									.edit();
-							editor.putString(folderSelectPref, path);
-							editor.commit();
-							if (mPath == null)
-								Toast.makeText(
-										getBaseContext(),
-										getString(R.string.pref_msg_notfound,
-												path), Toast.LENGTH_SHORT)
-										.show();
-						}
-					});
-
-			break;
-		}
 		case DIALOG_ABOUT: {
 			LayoutInflater inflater = (LayoutInflater) this
 					.getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -495,12 +410,8 @@ public class Preferences extends SherlockPreferenceActivity {
 	}
 
 	private void checkCurrentDictionary() throws FileNotFoundException {
-		final String folderSelect = PreferenceManager
-				.getDefaultSharedPreferences(getBaseContext()).getString(
-						folderSelectPref,
-						Environment.getExternalStorageDirectory()
-								.getAbsolutePath());
-		final File myDicFile = getDictionaryFile(folderSelect);
+		final String myDicFile = PreferenceManager.getDefaultSharedPreferences(
+				getBaseContext()).getString(dicLocalPref, null);
 		if (myDicFile == null) {
 			removeDialog(DIALOG_ASK_DOWNLOAD);
 			startService(new Intent(getApplicationContext(),
@@ -549,8 +460,8 @@ public class Preferences extends SherlockPreferenceActivity {
 							byte[] dicHash = new byte[16];
 							for (int i = 2; i < 18; ++i)
 								dicHash[i - 2] = cfvTable[i];
-							if (HashUtils.checkDicMD5(myDicFile.getPath(),
-									dicHash)) {
+							if (HashUtils.checkDicMD5(
+									new File(myDicFile).getPath(), dicHash)) {
 								// All is well
 								return OK;
 							}
@@ -610,17 +521,4 @@ public class Preferences extends SherlockPreferenceActivity {
 		}
 	}
 
-	private File getDictionaryFile(String folder) throws FileNotFoundException {
-		for (String name : DICTIONARY_NAMES) {
-			try {
-				final File dic = new File(folder + File.separator + name);
-				if (dic.exists())
-					return dic;
-			} catch (SecurityException e) {
-				e.printStackTrace();
-				throw new FileNotFoundException("Permissions Error");
-			}
-		}
-		return null;
-	}
 };

@@ -258,7 +258,7 @@ public class NetworkFragment extends SherlockFragment {
 				cancel(true);
 			}
 			if (keygen instanceof ThomsonKeygen) {
-				((ThomsonKeygen) keygen).setFolder(folderSelect);
+				((ThomsonKeygen) keygen).setDictionary(folderSelect);
 				((ThomsonKeygen) keygen).setInternetAlgorithm(thomson3g);
 				((ThomsonKeygen) keygen).setWebdic(getActivity().getResources()
 						.openRawResource(R.raw.webdic));
@@ -350,7 +350,7 @@ public class NetworkFragment extends SherlockFragment {
 				.getDefaultSharedPreferences(getActivity());
 		thomson3g = prefs.getBoolean(Preferences.thomson3gPref, false);
 		nativeCalc = prefs.getBoolean(Preferences.nativeCalcPref, true);
-		folderSelect = prefs.getString(Preferences.folderSelectPref,
+		folderSelect = prefs.getString(Preferences.dicLocalPref,
 				Environment.getExternalStorageDirectory().getAbsolutePath());
 	}
 

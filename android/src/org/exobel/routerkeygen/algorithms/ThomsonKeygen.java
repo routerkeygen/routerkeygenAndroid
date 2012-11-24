@@ -44,7 +44,7 @@ import android.os.Parcelable;
 public class ThomsonKeygen extends Keygen {
 	final private byte[] cp = new byte[12];
 	private byte[] entry;
-	final private byte[] table= new byte[1282];
+	final private byte[] table = new byte[1282];
 	private int a, b, c;
 	private int year;
 	private int week;
@@ -54,16 +54,16 @@ public class ThomsonKeygen extends Keygen {
 
 	private boolean errorDict;
 	private int len = 0;
-	private String folderSelect;
+	private String dictionaryPath;
 
 	private MessageDigest md;
 	final private String ssidIdentifier;
 	private InputStream webdic;
-	
-	public ThomsonKeygen(String ssid, String mac, int level, String enc ) {
+
+	public ThomsonKeygen(String ssid, String mac, int level, String enc) {
 		super(ssid, mac, level, enc);
 		this.errorDict = false;
-		this.ssidIdentifier = ssid.substring(ssid.length()-6);
+		this.ssidIdentifier = ssid.substring(ssid.length() - 6);
 	}
 
 	@Override
@@ -74,142 +74,146 @@ public class ThomsonKeygen extends Keygen {
 			setErrorCode(R.string.msg_nosha1);
 			return null;
 		}
-		if ( ssidIdentifier.length() != 6 ) 
-		{
+		if (ssidIdentifier.length() != 6) {
 			setErrorCode(R.string.msg_shortessid6);
 			return null;
 		}
-		
-		for (int i = 0; i < 6; i += 2)
-			routerESSID[i / 2] = (byte) ((Character.digit(ssidIdentifier.charAt(i), 16) << 4)
-					+ Character.digit(ssidIdentifier.charAt(i + 1), 16));
 
-		
-		if ( !internetAlgorithm )
-		{
-			if (!localCalc() )
+		for (int i = 0; i < 6; i += 2)
+			routerESSID[i / 2] = (byte) ((Character.digit(
+					ssidIdentifier.charAt(i), 16) << 4) + Character.digit(
+					ssidIdentifier.charAt(i + 1), 16));
+
+		if (!internetAlgorithm) {
+			if (!localCalc())
 				return null;
-		}
-		else
-		{
+		} else {
 			if (!internetCalc())
 				return null;
 		}
 
-		if( getResults().size() == 0) {
+		if (getResults().size() == 0) {
 			setErrorCode(R.string.msg_errnomatches);
 			return null;
 		}
 		return getResults();
 	}
-	private boolean internetCalc(){
-		try{
+
+	private boolean internetCalc() {
+		try {
 			DataInputStream onlineFile = null;
-			int lenght =0 ;
+			int lenght = 0;
 			URL url;
 			ZipInputStream fis = new ZipInputStream(webdic);
 			fis.getNextEntry();
-			int check = 0 , ret = 0 ;
-			while ( check != 1024 )/*ZipInputStream doens't seems to block.*/
+			int check = 0, ret = 0;
+			while (check != 1024)/* ZipInputStream doens't seems to block. */
 			{
-				ret = fis.read(table , check , 1024 - check);
-				if ( ret == -1 )
-				{
+				ret = fis.read(table, check, 1024 - check);
+				if (ret == -1) {
 					setErrorCode(R.string.msg_err_webdic_table);
 					errorDict = true;
 					return false;
-				}
-				else
+				} else
 					check += ret;
 			}
 			int totalOffset = 0;
 			int offset = 0;
-			int lastLength = 0 ;
-			int i = ( 0xFF &routerESSID[0] )*4;
-			offset =( (0xFF & table[i]) << 24 ) | ( (0xFF & table[i + 1])  << 16 ) |
-					( (0xFF & table[i + 2])  << 8 ) | (0xFF & table[i + 3]);
-			if ( i != 1020 ) // routerESSID[0] != 0xFF   ( 255*4 == 1020 )
-				lastLength = ( (0xFF & table[i + 4]) << 24 ) | ( (0xFF & table[i + 5])  << 16 ) |
-					( (0xFF & table[i + 6])  << 8 ) | (0xFF & table[i + 7]);
+			int lastLength = 0;
+			int i = (0xFF & routerESSID[0]) * 4;
+			offset = ((0xFF & table[i]) << 24) | ((0xFF & table[i + 1]) << 16)
+					| ((0xFF & table[i + 2]) << 8) | (0xFF & table[i + 3]);
+			if (i != 1020) // routerESSID[0] != 0xFF ( 255*4 == 1020 )
+				lastLength = ((0xFF & table[i + 4]) << 24)
+						| ((0xFF & table[i + 5]) << 16)
+						| ((0xFF & table[i + 6]) << 8) | (0xFF & table[i + 7]);
 			totalOffset += offset;
-	        long checkLong = 0 , retLong ;
-            while ( checkLong != (i/4)*768 )/*ZipInputStream doens't seems to block.*/
-            {
-                retLong = fis.skip((i/4)*768 - checkLong);
-                if ( retLong == -1 )
-                {
-                    setErrorCode(R.string.msg_err_webdic_table);
-                    errorDict = true;
-                    return false;
-                }
-                else
-                    checkLong += retLong;
-            }
-			check = 0 ;
-			while ( check != 768 )
+			long checkLong = 0, retLong;
+			while (checkLong != (i / 4) * 768)/*
+											 * ZipInputStream doens't seems to
+											 * block.
+											 */
 			{
-				ret = fis.read(table , check , 768 - check);
-				if ( ret == -1 )
-				{
+				retLong = fis.skip((i / 4) * 768 - checkLong);
+				if (retLong == -1) {
 					setErrorCode(R.string.msg_err_webdic_table);
 					errorDict = true;
 					return false;
-				}
-				else
+				} else
+					checkLong += retLong;
+			}
+			check = 0;
+			while (check != 768) {
+				ret = fis.read(table, check, 768 - check);
+				if (ret == -1) {
+					setErrorCode(R.string.msg_err_webdic_table);
+					errorDict = true;
+					return false;
+				} else
 					check += ret;
 			}
-			i = ( 0xFF &routerESSID[1] )*3;
-			offset =( (0xFF & table[i])  << 16 ) |
-					( (0xFF & table[i + 1 ])  << 8 ) | (0xFF & table[i + 2]);
-			/*There's no check here because humans are lazy people and because it doesn't matter*/
-			lenght =  ( (0xFF & table[i + 3])  << 16 ) |
-					( (0xFF & table[i + 4])  << 8 ) | (0xFF & table[i + 5]);
+			i = (0xFF & routerESSID[1]) * 3;
+			offset = ((0xFF & table[i]) << 16) | ((0xFF & table[i + 1]) << 8)
+					| (0xFF & table[i + 2]);
+			/*
+			 * There's no check here because humans are lazy people and because
+			 * it doesn't matter
+			 */
+			lenght = ((0xFF & table[i + 3]) << 16)
+					| ((0xFF & table[i + 4]) << 8) | (0xFF & table[i + 5]);
 			totalOffset += offset;
 			lenght -= offset;
-			if ( ( lastLength != 0 ) && ( (0xFF & routerESSID[1] ) == 0xFF ) )
-			{
-				/*Only for SSID starting with XXFF. We use the next item on the main table
-			 	to know the length of the sector we are looking for. */
+			if ((lastLength != 0) && ((0xFF & routerESSID[1]) == 0xFF)) {
+				/*
+				 * Only for SSID starting with XXFF. We use the next item on the
+				 * main table to know the length of the sector we are looking
+				 * for.
+				 */
 				lastLength -= totalOffset;
 				lenght = lastLength;
 			}
-			if ( ( (0xFF & routerESSID[0] ) == 0xFF ) && ( (0xFF & routerESSID[1] ) == 0xFF  ) )
-			{
-			 /*Only for SSID starting with FFFF as we don't have a marker of the end.*/
-					lenght = 2000;
+			if (((0xFF & routerESSID[0]) == 0xFF)
+					&& ((0xFF & routerESSID[1]) == 0xFF)) {
+				/*
+				 * Only for SSID starting with FFFF as we don't have a marker of
+				 * the end.
+				 */
+				lenght = 2000;
 			}
 			url = new URL(Preferences.PUB_DOWNLOAD);
-			URLConnection con= url.openConnection();
-			con.setRequestProperty("Range", "bytes="  + totalOffset + "-");
+			URLConnection con = url.openConnection();
+			con.setRequestProperty("Range", "bytes=" + totalOffset + "-");
 			onlineFile = new DataInputStream(con.getInputStream());
 			len = 0;
 			this.entry = new byte[lenght];
-			if ( ( len = onlineFile.read(this.entry , 0 , lenght ) ) != -1 ){
-				lenght = len;;
+			if ((len = onlineFile.read(this.entry, 0, lenght)) != -1) {
+				lenght = len;
+				;
 			}
-			
+
 			onlineFile.close();
 			fis.close();
 			return thirdDic();
-		} catch ( IOException e) {
+		} catch (IOException e) {
 			setErrorCode(R.string.msg_err_webdic_table);
 			errorDict = true;
 			return false;
 		}
 	}
 
-	private boolean localCalc(){
+	private boolean localCalc() {
 
-		if ( !Environment.getExternalStorageState().equals("mounted")  && 
-		     !Environment.getExternalStorageState().equals("mounted_ro")	)
-		{
+		if (!Environment.getExternalStorageState().equals(
+				Environment.MEDIA_MOUNTED)
+				&& !Environment.getExternalStorageState().equals(
+						Environment.MEDIA_MOUNTED_READ_ONLY)) {
 			setErrorCode(R.string.msg_nosdcard);
 			errorDict = true;
 			return false;
 		}
 		RandomAccessFile fis;
 		try {
-			File dictionay = getDictionaryFile();
+			File dictionay = new File(dictionaryPath);
 			fis = new RandomAccessFile(dictionay, "r");
 		} catch (FileNotFoundException e2) {
 			setErrorCode(R.string.msg_dictnotfound);
@@ -218,8 +222,7 @@ public class ThomsonKeygen extends Keygen {
 		}
 		int version = 0;
 		try {
-			if ( fis.read(table) == -1 )
-			{
+			if (fis.read(table) == -1) {
 				setErrorCode(R.string.msg_errordict);
 				errorDict = true;
 				fis.close();
@@ -228,64 +231,66 @@ public class ThomsonKeygen extends Keygen {
 			version = table[0] << 8 | table[1];
 			int totalOffset = 0;
 			int offset = 0;
-			int lastLength = 0 , length = 0;
-			if ( table[( 0xFF &routerESSID[0] )*5 + 2 ] == routerESSID[0] )
-			{
-				int i = ( 0xFF &routerESSID[0] )*5 + 2;
-				offset =( (0xFF & table[i + 1]) << 24 ) | ( (0xFF & table[i + 2])  << 16 ) |
-						( (0xFF & table[i + 3])  << 8 ) | (0xFF & table[i + 4]);
-				if ( (0xFF & table[i]) != 0xFF )
-					lastLength = ( (0xFF & table[i + 6]) << 24 ) | ( (0xFF & table[i + 7])  << 16 ) |
-						( (0xFF & table[i + 8])  << 8 ) | (0xFF & table[i + 9]);
+			int lastLength = 0, length = 0;
+			if (table[(0xFF & routerESSID[0]) * 5 + 2] == routerESSID[0]) {
+				int i = (0xFF & routerESSID[0]) * 5 + 2;
+				offset = ((0xFF & table[i + 1]) << 24)
+						| ((0xFF & table[i + 2]) << 16)
+						| ((0xFF & table[i + 3]) << 8) | (0xFF & table[i + 4]);
+				if ((0xFF & table[i]) != 0xFF)
+					lastLength = ((0xFF & table[i + 6]) << 24)
+							| ((0xFF & table[i + 7]) << 16)
+							| ((0xFF & table[i + 8]) << 8)
+							| (0xFF & table[i + 9]);
 			}
 			totalOffset += offset;
 			fis.seek(totalOffset);
-			if ( fis.read(table,0,1024) == -1 )
-			{
+			if (fis.read(table, 0, 1024) == -1) {
 				setErrorCode(R.string.msg_errordict);
 				errorDict = true;
 				fis.close();
 				return false;
-			}	
-			if ( table[( 0xFF &routerESSID[1] )*4] == routerESSID[1] )
-			{
-				int i = ( 0xFF &routerESSID[1] )*4;
-				offset =( (0xFF & table[i + 1])  << 16 ) |
-						( (0xFF & table[i + 2])  << 8 ) | (0xFF & table[i + 3]);
-				length =  ( (0xFF & table[i + 5])  << 16 ) |
-						( (0xFF & table[i + 6])  << 8 ) | (0xFF & table[i + 7]);
-				
+			}
+			if (table[(0xFF & routerESSID[1]) * 4] == routerESSID[1]) {
+				int i = (0xFF & routerESSID[1]) * 4;
+				offset = ((0xFF & table[i + 1]) << 16)
+						| ((0xFF & table[i + 2]) << 8) | (0xFF & table[i + 3]);
+				length = ((0xFF & table[i + 5]) << 16)
+						| ((0xFF & table[i + 6]) << 8) | (0xFF & table[i + 7]);
+
 			}
 			totalOffset += offset;
 			length -= offset;
-			if ( ( lastLength != 0 ) && ( (0xFF & routerESSID[1] ) == 0xFF ) )
-			{
-				/*Only for SSID starting with XXFF. We use the next item on the main table
-			 	to know the length of the sector we are looking for. */
+			if ((lastLength != 0) && ((0xFF & routerESSID[1]) == 0xFF)) {
+				/*
+				 * Only for SSID starting with XXFF. We use the next item on the
+				 * main table to know the length of the sector we are looking
+				 * for.
+				 */
 				lastLength -= totalOffset;
 				length = lastLength;
 			}
-			fis.seek(totalOffset );
-			if ( ( (0xFF & routerESSID[0] ) != 0xFF ) || ( (0xFF & routerESSID[1] ) != 0xFF  ) )
-			{
+			fis.seek(totalOffset);
+			if (((0xFF & routerESSID[0]) != 0xFF)
+					|| ((0xFF & routerESSID[1]) != 0xFF)) {
 				this.entry = new byte[length];
-			}
-			else
-			{ /*Only for SSID starting with FFFF as we don't have a marker of the end.*/
-					length = 2000;
-					this.entry = new byte[length];
+			} else { /*
+					 * Only for SSID starting with FFFF as we don't have a
+					 * marker of the end.
+					 */
+				length = 2000;
+				this.entry = new byte[length];
 			}
 
 			int bytesRead = 0;
 			len = 0;
-			while ( len < length ){
-				bytesRead  = fis.read(entry,len, length-len);
-				if ( bytesRead == -1 )
+			while (len < length) {
+				bytesRead = fis.read(entry, len, length - len);
+				if (bytesRead == -1)
 					break;
 				len += bytesRead;
 			}
-			if ( len == -1 )
-			{
+			if (len == -1) {
 				setErrorCode(R.string.msg_errordict);
 				errorDict = true;
 				fis.close();
@@ -297,86 +302,64 @@ public class ThomsonKeygen extends Keygen {
 			setErrorCode(R.string.msg_errordict);
 			return false;
 		}
-		if ( version > 4 )
-		{
+		if (version > 4) {
 			setErrorCode(R.string.msg_errversion);
 			errorDict = true;
 			return false;
 		}
-		
-		if ( version == 1 )
+
+		if (version == 1)
 			firstDic();
-		else if ( version == 2 )
+		else if (version == 2)
 			secondDic();
-		else if ( version == 3 )
+		else if (version == 3)
 			return thirdDic();
-		else if ( version == 4 )
+		else if (version == 4)
 			forthDic();
 		return true;
 	}
-	
-
-	private File getDictionaryFile() throws FileNotFoundException {
-		String firstName = folderSelect + File.separator + "RouterKeygen.dic";
-		String secondName = folderSelect + File.separator + "RKDictionary.dic";
-		try{
-			File dic = new File(firstName);
-			if ( dic.exists() )
-				return dic;
-			dic = new File(secondName);
-			if ( dic.exists() )
-				return dic;
-			else
-				throw new FileNotFoundException("Permissions Error");
-		} catch(SecurityException e  ){
-			e.printStackTrace();
-			throw new FileNotFoundException("Permissions Error");
-		}
-	}
-
 
 	static {
 		System.loadLibrary("thomson");
-    }
-	
-	private native String [] thirdDicNative( byte [] essid  ,
-												byte [] entry , int size);
-
-	//This has been implemented natively for instant resolution!
-	private boolean thirdDic(){
-		String [] results;
-			try{
-				results = 	this.thirdDicNative(routerESSID , entry , entry.length);
-			}catch (Exception e) {
-				setErrorCode(R.string.msg_err_native);
-				return false;
-			}catch (LinkageError e) {
-				setErrorCode(R.string.err_misbuilt_apk);
-				return false;
-			}
-			if ( isStopRequested() )
-				return false;
-			for (int i = 0 ; i < results.length ; ++i  )
-				addPassword(results[i]);
-			return true;
 	}
-	
 
-	private void forthDic(){
+	private native String[] thirdDicNative(byte[] essid, byte[] entry, int size);
+
+	// This has been implemented natively for instant resolution!
+	private boolean thirdDic() {
+		String[] results;
+		try {
+			results = this.thirdDicNative(routerESSID, entry, entry.length);
+		} catch (Exception e) {
+			setErrorCode(R.string.msg_err_native);
+			return false;
+		} catch (LinkageError e) {
+			setErrorCode(R.string.err_misbuilt_apk);
+			return false;
+		}
+		if (isStopRequested())
+			return false;
+		for (int i = 0; i < results.length; ++i)
+			addPassword(results[i]);
+		return true;
+	}
+
+	private void forthDic() {
 		cp[0] = (byte) (char) 'C';
 		cp[1] = (byte) (char) 'P';
-		for (int offset = 0; offset < len ; offset += 3 )
-		{
-			for ( int i = 0; i <= 1 ; ++i  ){
-				if ( isStopRequested() )
+		for (int offset = 0; offset < len; offset += 3) {
+			for (int i = 0; i <= 1; ++i) {
+				if (isStopRequested())
 					return;
-				sequenceNumber = i + (( (0xFF & entry[offset + 0]) << 16 ) | 
-				( (0xFF & entry[offset + 1])  << 8 ) | (0xFF & entry[offset + 2]) )*2 ;
+				sequenceNumber = i
+						+ (((0xFF & entry[offset + 0]) << 16)
+								| ((0xFF & entry[offset + 1]) << 8) | (0xFF & entry[offset + 2]))
+						* 2;
 				c = sequenceNumber % 36;
-				b = sequenceNumber/36 % 36;
-				a = sequenceNumber/(36*36) % 36;
-				year = sequenceNumber / ( 36*36*36*52 ) + 4 ;
-				week = ( sequenceNumber / ( 36*36*36 ) ) % 52 + 1 ;				
+				b = sequenceNumber / 36 % 36;
+				a = sequenceNumber / (36 * 36) % 36;
+				year = sequenceNumber / (36 * 36 * 36 * 52) + 4;
+				week = (sequenceNumber / (36 * 36 * 36)) % 52 + 1;
 				cp[2] = (byte) Character.forDigit((year / 10), 10);
 				cp[3] = (byte) Character.forDigit((year % 10), 10);
 				cp[4] = (byte) Character.forDigit((week / 10), 10);
@@ -390,36 +373,37 @@ public class ThomsonKeygen extends Keygen {
 				md.reset();
 				md.update(cp);
 				final byte[] hash = md.digest();
-				if ( hash[19] != routerESSID[2])
+				if (hash[19] != routerESSID[2])
 					continue;
-				if ( hash[18] != routerESSID[1])
+				if (hash[18] != routerESSID[1])
 					continue;
-				if ( hash[17] != routerESSID[0])
+				if (hash[17] != routerESSID[0])
 					continue;
-				
+
 				try {
-					addPassword(StringUtils.getHexString(hash).substring(0, 10).toUpperCase(Locale.getDefault()));
+					addPassword(StringUtils.getHexString(hash).substring(0, 10)
+							.toUpperCase(Locale.getDefault()));
 				} catch (UnsupportedEncodingException e) {
 					e.printStackTrace();
 				}
 			}
 		}
 	}
-	
-	private void secondDic(){
+
+	private void secondDic() {
 		cp[0] = (byte) (char) 'C';
 		cp[1] = (byte) (char) 'P';
-		for (int offset = 0; offset < len ; offset += 3 )
-		{
-			if ( isStopRequested() )
+		for (int offset = 0; offset < len; offset += 3) {
+			if (isStopRequested())
 				return;
-			sequenceNumber = ( (0xFF & entry[offset + 0]) << 16 ) | 
-			( (0xFF & entry[offset + 1])  << 8 ) | (0xFF & entry[offset + 2]) ;
+			sequenceNumber = ((0xFF & entry[offset + 0]) << 16)
+					| ((0xFF & entry[offset + 1]) << 8)
+					| (0xFF & entry[offset + 2]);
 			c = sequenceNumber % 36;
-			b = sequenceNumber/36 % 36;
-			a = sequenceNumber/(36*36) % 36;
-			year = sequenceNumber / ( 36*36*36*52 ) + 4 ;
-			week = ( sequenceNumber / ( 36*36*36 ) ) % 52 + 1 ;				
+			b = sequenceNumber / 36 % 36;
+			a = sequenceNumber / (36 * 36) % 36;
+			year = sequenceNumber / (36 * 36 * 36 * 52) + 4;
+			week = (sequenceNumber / (36 * 36 * 36)) % 52 + 1;
 			cp[2] = (byte) Character.forDigit((year / 10), 10);
 			cp[3] = (byte) Character.forDigit((year % 10), 10);
 			cp[4] = (byte) Character.forDigit((week / 10), 10);
@@ -433,37 +417,39 @@ public class ThomsonKeygen extends Keygen {
 			md.reset();
 			md.update(cp);
 			final byte[] hash = md.digest();
-			if ( hash[19] != routerESSID[2])
+			if (hash[19] != routerESSID[2])
 				continue;
-			if ( hash[18] != routerESSID[1])
+			if (hash[18] != routerESSID[1])
 				continue;
-			if ( hash[17] != routerESSID[0])
+			if (hash[17] != routerESSID[0])
 				continue;
-			
+
 			try {
-				addPassword(StringUtils.getHexString(hash).substring(0, 10).toUpperCase(Locale.getDefault()));
+				addPassword(StringUtils.getHexString(hash).substring(0, 10)
+						.toUpperCase(Locale.getDefault()));
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
 		}
 	}
-	private void firstDic(){
+
+	private void firstDic() {
 		cp[0] = (byte) (char) 'C';
 		cp[1] = (byte) (char) 'P';
-		for (int offset = 0; offset < len ; offset += 4 )
-		{
-			if ( isStopRequested() )
+		for (int offset = 0; offset < len; offset += 4) {
+			if (isStopRequested())
 				return;
 
-			if ( entry[offset] != routerESSID[2])
+			if (entry[offset] != routerESSID[2])
 				continue;
-			sequenceNumber = ( (0xFF & entry[offset + 1]) << 16 ) | 
-			( (0xFF & entry[offset + 2])  << 8 ) | (0xFF & entry[offset + 3]) ;
+			sequenceNumber = ((0xFF & entry[offset + 1]) << 16)
+					| ((0xFF & entry[offset + 2]) << 8)
+					| (0xFF & entry[offset + 3]);
 			c = sequenceNumber % 36;
-			b = sequenceNumber/36 % 36;
-			a = sequenceNumber/(36*36) % 36;
-			year = sequenceNumber / ( 36*36*36*52 ) + 4 ;
-			week = ( sequenceNumber / ( 36*36*36 ) ) % 52 + 1 ;				
+			b = sequenceNumber / 36 % 36;
+			a = sequenceNumber / (36 * 36) % 36;
+			year = sequenceNumber / (36 * 36 * 36 * 52) + 4;
+			week = (sequenceNumber / (36 * 36 * 36)) % 52 + 1;
 			cp[2] = (byte) Character.forDigit((year / 10), 10);
 			cp[3] = (byte) Character.forDigit((year % 10), 10);
 			cp[4] = (byte) Character.forDigit((week / 10), 10);
@@ -477,9 +463,10 @@ public class ThomsonKeygen extends Keygen {
 			md.reset();
 			md.update(cp);
 			final byte[] hash = md.digest();
-			
+
 			try {
-				addPassword(StringUtils.getHexString(hash).substring(0, 10).toUpperCase(Locale.getDefault()));
+				addPassword(StringUtils.getHexString(hash).substring(0, 10)
+						.toUpperCase(Locale.getDefault()));
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
@@ -490,38 +477,27 @@ public class ThomsonKeygen extends Keygen {
 		this.webdic = webdic;
 	}
 
-	
-    public boolean isErrorDict() {
-        return errorDict;
-    }
+	public boolean isErrorDict() {
+		return errorDict;
+	}
 
-    public void setFolder(String folder){
-    	folderSelect = folder;
-    }
-    
+	public void setDictionary(String dic) {
+		dictionaryPath = dic;
+	}
 
 	public void setInternetAlgorithm(boolean thomson3g) {
 		this.internetAlgorithm = thomson3g;
 	}
-	
-    final private static byte[] charectbytes0 = {
-        '3','3','3','3','3','3',
-        '3','3','3','3','4','4',
-        '4','4','4','4','4','4',
-        '4','4','4','4','4','4',
-        '4','5','5','5','5','5',
-        '5','5','5','5','5','5',
-        };
-    
-    final private static byte[] charectbytes1 = {
-        '0','1','2','3','4','5',
-        '6','7','8','9','1','2',
-        '3','4','5','6','7','8',
-        '9','A','B','C','D','E',
-        'F','0','1','2','3','4',
-        '5','6','7','8','9','A',
-        };
-    
+
+	final private static byte[] charectbytes0 = { '3', '3', '3', '3', '3', '3',
+			'3', '3', '3', '3', '4', '4', '4', '4', '4', '4', '4', '4', '4',
+			'4', '4', '4', '4', '4', '4', '5', '5', '5', '5', '5', '5', '5',
+			'5', '5', '5', '5', };
+
+	final private static byte[] charectbytes1 = { '0', '1', '2', '3', '4', '5',
+			'6', '7', '8', '9', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+			'A', 'B', 'C', 'D', 'E', 'F', '0', '1', '2', '3', '4', '5', '6',
+			'7', '8', '9', 'A', };
 
 	private ThomsonKeygen(Parcel in) {
 		super(in);
@@ -532,18 +508,17 @@ public class ThomsonKeygen extends Keygen {
 	public void writeToParcel(Parcel dest, int flags) {
 		super.writeToParcel(dest, flags);
 		dest.writeString(ssidIdentifier);
-		dest.writeInt(errorDict?1:0);
+		dest.writeInt(errorDict ? 1 : 0);
 	}
-	
-    public static final Parcelable.Creator<ThomsonKeygen> CREATOR = new Parcelable.Creator<ThomsonKeygen>() {
-        public ThomsonKeygen createFromParcel(Parcel in) {
-            return new ThomsonKeygen(in);
-        }
 
-        public ThomsonKeygen[] newArray(int size) {
-            return new ThomsonKeygen[size];
-        }
-    };
+	public static final Parcelable.Creator<ThomsonKeygen> CREATOR = new Parcelable.Creator<ThomsonKeygen>() {
+		public ThomsonKeygen createFromParcel(Parcel in) {
+			return new ThomsonKeygen(in);
+		}
 
+		public ThomsonKeygen[] newArray(int size) {
+			return new ThomsonKeygen[size];
+		}
+	};
 
 }

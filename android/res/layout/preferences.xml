@@ -93,7 +93,7 @@
         <Preference
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:key="folderSelect"
+            android:key="dictionaryPath"
             android:summary="@string/pref_folder_select_des"
             android:title="@string/pref_folder_select" />
     </PreferenceCategory>
