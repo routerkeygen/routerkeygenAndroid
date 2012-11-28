@@ -21,6 +21,7 @@ package org.exobel.routerkeygen.ui;
 
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.algorithms.Keygen;
+import org.exobel.routerkeygen.utils.LogUtils;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -32,7 +33,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.google.analytics.tracking.android.EasyTracker;
 
 public class NetworkActivity extends SherlockFragmentActivity {
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -57,6 +58,7 @@ public class NetworkActivity extends SherlockFragmentActivity {
 	public void onStart() {
 		super.onStart();
 		EasyTracker.getInstance().activityStart(this); // Add this method.
+		EasyTracker.getTracker().setExceptionParser(LogUtils.parser);
 	}
 
 	@Override
