@@ -1,25 +1,18 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
    Copyright 2012 Rui Araújo, Luís Fonseca
   
    This file is part of Router Keygen.
   
-   Router Keygen is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
+   Router Keygen is gratis software: Je mag het zelf aanpassen en uitgeven onder de GNU General Public License voorwaarden zoals het is uitgegeven door de Free Software Foundation, vanaf versie 3 of(als u wilt) een latere versie.
    
-   Router Keygen is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+   Router Keygen is uitgegeven in de hoop dat het bruikbaar is,	maar ZONDER ENIGE GARANTIE; zelfs zonder de verwachte garantie van VERKOOPBAARHEID of BRUIKBAARHEID VOOR EEN BEPAALD DOEL. Zie de GNU General Public License voor meer details
    
-   You should have received a copy of the GNU General Public License
-   along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
+   Als het goed is heeft u een kopie van de GNU General Publi License gekregen	samen met Router Keygen. Zo niet, zie <http://www.gnu.org/licenses/>.
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- This translation was kindly done by Marco Brohet, Sven Van Hove, X.W. Koehoorn en Matthijs de Rijk -->
+    <!-- Deze vertaling is gemaakt door Marco Brohet, Sven Van Hove, X.W. Koehoorn, Matthijs de Rijk en Florian Hoste -->
 
 
     <!-- MISC STRINGS -->
@@ -55,20 +48,20 @@
 
     <!-- DIALOG STRINGS -->
     <string name="lb_manual">ESSID:</string>
-    <string name="dialog_nativecalc_msg">Dit kan tot 2 minuten duren. Even ogenblik geduld\u2026</string>
+    <string name="dialog_nativecalc_msg">Dit kan tot 2 minuten duren. Even ogenblik geduld..\u2026</string>
     <string name="msg_dicislarge">Het woordenboek is 66 MB groot. Een Wi-Fi-verbinding wordt hiervoor aangeraden.\nWeet u zeker dat u door wilt gaan?</string>
     <string name="msg_dl_dlingdic">Woordenboek downloaden\u2026</string>
     <string name="msg_dic_updated">Uw woordenboek hoeft niet te worden bijgewerkt</string>
     <string name="msg_dic_updated_finished">Uw woordenboek is succesvol bijgewerkt</string>
-    <string name="msg_wait">Ogenblik geduld&#8230;</string>
+    <string name="msg_wait">Een ogenblik geduld&#8230;</string>
     <string name="lb_manual_bssid">MAC-adres (optioneel):</string>
     <string name="dialog_about_credits">Dankbetuigingen</string>
-    <string name="dialog_about_credits_desc">Router Keygen kon niet bestaan zonder de onschatbare bijdrages van :\n\n<b>Luís Fonseca</b> - Exobel-teamlid\n<b>Rui Araújo</b> - Exobel-teamlid\n<b>Ângela Igreja</b> - Portuguese vertaling\n<b>Simone Guidi</b> - Italiaanse vertaling\n<b>Matthijs de Rijk</b>, <b>X.W. Koehoorn</b>, <b>Sven Van Hove</b> en <b>Marco Brohet</b> - Nederlandse vertaling\n<b>Jon Uriarte</b> - Spaanse vertaling en WLAN_XX-implementatie\n<b><a href="http://www.gnucitizen.org/">GNUCITIZEN</a></b> voor het Thomson-algoritme\n<b><a href="http://wifiresearchers.wordpress.com/">White Hats Crew</a></b> voor de Alice- en FASTWEB-algoritmes\n<b>Fred Williams</b> voor het Verizon FiOS-algoritme\n<b>Muris Kurgaš </b> voor het Discus-algoritme\n<b><a href="http://websec.ca/">Pedro Joaquim</a></b> voor het Huawei-algoritme\n<b>chaeo</b> voor het SKY V1-algorithm.</string>
+    <string name="dialog_about_credits_desc">Router Keygen kon niet bestaan zonder de onschatbare bijdrages van :\n\n<b>Luís Fonseca</b> - Exobel-teamlid\n<b>Rui Araújo</b> - Exobel-teamlid\n<b>Ângela Igreja</b> - Portuguese vertaling\n<b>Simone Guidi</b> - Italiaanse vertaling\n<b>Florian Hoste</b>, <b>Matthijs de Rijk</b>, <b>X.W. Koehoorn</b>, <b>Sven Van Hove</b> en <b>Marco Brohet</b> - Nederlandse vertaling\n<b>Jon Uriarte</b> - Spaanse vertaling en WLAN_XX-implementatie\n<b><a href="http://www.gnucitizen.org/">GNUCITIZEN</a></b> voor het Thomson-algoritme\n<b><a href="http://wifiresearchers.wordpress.com/">White Hats Crew</a></b> voor de Alice- en FASTWEB-algoritmes\n<b>Fred Williams</b> voor het Verizon FiOS-algoritme\n<b>Muris Kurgaš </b> voor het Discus-algoritme\n<b><a href="http://websec.ca/">Pedro Joaquim</a></b> voor het Huawei-algoritme\n<b>chaeo</b> voor het SKY V1-algorithm.</string>
     <string name="dialog_about_license">Licentie</string>
     <string name="dialog_about_license_desc">Deze app is uitgebracht onder de GPLv3.\n\nU kunt de voorwaarden <a href="http://www.gnu.org/licenses/gpl-3.0.html">hier</a> nalezen.</string>
     <string name="msg_app_updated">Router Keygen hoeft niet te worden bijgewerkt</string>
-    <string name="update_title">Update beschikbaar</string>
-    <string name="update_message">Versie <xliff:g id="version">%1$s</xliff:g> is beschikbaar. Ga naar de website om deze te downloaden</string>
+    <string name="update_title">Er is een update beschikbaar</string>
+    <string name="update_message">Versie <xliff:g id="version">%1$s</xliff:g> is beschikbaar. Ga naar de website om deze versie te downloaden</string>
     <string name="cancel_download">Woordenboek downloaden annuleren?</string>
     <string name="cancel_auto_test">Knoppen testen annuleren?</string>
 
@@ -76,16 +69,16 @@
     <string name="pref_hinton_wifion">Wi-Fi automatisch inschakelen</string>
     <string name="pref_hintoff_wifion">Wi-Fi handmatig inschakelen</string>
     <string name="pref_wifion">Wi-Fi autom. aan</string>
-    <string name="pref_dict_select">Select Dictionary</string>  <!-- UNTRANSLATED -->
-    <string name="pref_dict_select_des">Select the dictionary file</string>  <!-- UNTRANSLATED -->
+    <string name="pref_dict_select">Selecteer woordenboek</string>
+    <string name="pref_dict_select_des">Selecteer het woordenboek bestand</string>
     <string name="pref_1section">Algemeen</string>
     <string name="pref_2section">Over</string>
     <string name="pref_donate">Doneren</string>
-    <string name="pref_donate_why">Mij trakteren op koffie als u deze app leuk vindt</string>
+    <string name="pref_donate_why">Trakteer mij op koffie als u deze app leuk vindt</string>
     <string name="pref_about">Over Router Keygen</string>
     <string name="pref_about_desc">Router Keygen berekent wachtwoorden voor verschillende soorten routers\n\n<a href="http://code.google.com/p/android-thomson-key-solver/">Projectwebsite</a>\n\nVersie: </string>
     <string name="pref_native">Oorspronkelijke berekening</string>
-    <string name="pref_hinton_native">Berekenen op de oude manier als het woordenboek niet is gevonden</string>
+    <string name="pref_hinton_native">Berekenen sleutels op de oude manier als het woordenboek niet is gevonden</string>
     <string name="pref_hintoff_native">Alleen waarschuwen als het woordenboek niet kan worden gevonden</string>
     <string name="pref_download_des">Woordenboek is vereist voor Thomson-routers</string>
     <string name="pref_download">Woordenboek downloaden</string>
@@ -102,15 +95,15 @@
     <string name="pref_hint_autoscan_interval">Periode tussen het automatisch zoeken</string>
 
     <!-- ERROR MESSAGE STRINGS -->
-    <string name="msg_unspported">Dit ESSID wordt niet ondersteund</string>
+    <string name="msg_unspported">Deze ESSID wordt niet ondersteund</string>
     <string name="msg_nowifidetected">Geen Wi-Fi-toegangspunten gevonden</string>
-    <string name="msg_nowifi">Wi-Fi niet ingeschakeld</string>
+    <string name="msg_nowifi">Wi-Fi is niet ingeschakeld</string>
     <string name="msg_scanfailed">Zoeken mislukt</string>
     <string name="msg_wifibroken">Kan Wi-Fi niet inschakelen</string>
     <string name="msg_shortessid6">ESSID is ongeldig (moet bestaan uit 6 tekens)</string>
     <string name="msg_errordict">Kan woordenboek niet lezen</string>
     <string name="msg_errnomatches">Geen overeenkomsten gevonden</string>
-    <string name="msg_shortessid5">ESSID is ongeldig (moet bestaan uit 5 tekens)</string>
+    <string name="msg_shortessid5">ESSID ongeldig (moet bestaan uit 5 tekens)</string>
     <string name="msg_nomac">Het wachtwoord kan niet worden berekend zonder MAC-adres</string>
     <string name="msg_dlinkerror">Kan D-Link-wachtwoord niet berekenen</string>
     <string name="msg_dictnotfound">Kan woordenboek niet vinden</string>
@@ -123,13 +116,13 @@
     <string name="msg_erralicenotsupported">Deze Alice-serie wordt nog niet ondersteund</string>
     <string name="msg_errversion">Onbekende versie van woordenboek</string>
     <string name="msg_startingnativecalc">Fout in woordenboek, oorspronkelijke berekening wordt toegepast</string>
-    <string name="msg_err_essid_no_match">De berekende SSID kwam niet overeen met de opgegeven SSID</string>
+    <string name="msg_err_essid_no_match">De berekende SSID komt niet overeen met de opgegeven SSID</string>
     <string name="msg_err_native">­Fout in de oorspronkelijke berekening, neem a.u.b. contact op met de ontwikkelaars</string>
     <string name="msg_nomemoryonsdcard">De externe opslag bevat niet genoeg vrije ruimte</string>
     <string name="msg_no_write_permissions">Kan niet schrijven naar gekozen map</string>
     <string name="msg_error">Fout</string>
     <string name="pref_msg_err_backup_dic">Kan vorig woordenboek niet verplaatsen naar back-up</string>
-    <string name="pref_msg_err_rename_dic">Kan naam van gedownload woordenboek niet wijzigen</string>
+    <string name="pref_msg_err_rename_dic">Kan de naam van het gedownloade woordenboek niet wijzigen</string>
     <string name="msg_err_sendto">Kan wachtwoorden niet delen</string>
     <string name="msg_shortessid13">ESSID is ongeldig (moet bestaan uit 13 tekens)</string>
     <string name="msg_err_unkown">Er is een onbekende fout opgetreden.</string>
@@ -142,15 +135,15 @@
     <string name="msg_err_webdic_table">Kan online wachtwoorden niet verwerken</string>
     <string name="msg_unspported_network">Er is geen geldig netwerk herkend. Controleer a.u.b. de SSID en het MAC-adres</string>
     <string name="msg_invalid_mac">Er is geen geldig MAC-adres ingevoerd en wordt dus genegeerd</string>
-    <string name="msg_error_key_testing">Kan wachtwoord niet uitproberen</string>
+    <string name="msg_error_key_testing">Kan het wachtwoord niet uitproberen</string>
     <string name="msg_no_correct_keys">Wachtwoorden incorrect</string>
     <string name="msg_auto_connect_running">Er wordt al automatisch verbonden</string>
 
     <!-- FILE CHOOSER -->
-    <string name="empty_directory">Empty Directory</string><!-- UNTRANSLATED -->
-    <string name="storage_removed">Storage was removed or unmounted.</string><!-- UNTRANSLATED -->
-    <string name="choose_file">Select a file</string><!-- UNTRANSLATED -->
-    <string name="error_selecting_file">Error selecting File</string><!-- UNTRANSLATED -->
+    <string name="empty_directory">Lege map</string>
+    <string name="storage_removed">Opslag is verwijderd of ontkoppelt.</string>
+    <string name="choose_file">Selecteer bestand</string>
+    <string name="error_selecting_file">Fout bij selecteren van het bestand</string>
 
     <!-- AUTOCOMPLETE SUPPORT -->
     <string-array name="supported_routers">
@@ -180,7 +173,7 @@
         <item>TECOM-AH4021-</item>
         <item>InfostradaWiFi-</item>
         <item>TN_private_</item>
-        <item>CYTA</item>
+        <item>Cyta</item>
         <item>PBS</item>
         <item>CONN</item>
         <item>OTE</item>
@@ -192,4 +185,5 @@
         <item>Optimus</item>
         <item>OptimusFibra</item>
     </string-array>
+
 </resources>
