@@ -1,0 +1,9 @@
+<resources>
+
+    <!-- UI elements -->
+    <dimen name="mac_input_size">45dip</dimen>
+
+    <!-- body content -->
+    <dimen name="body_mac_input">30sp</dimen>
+
+</resources>
