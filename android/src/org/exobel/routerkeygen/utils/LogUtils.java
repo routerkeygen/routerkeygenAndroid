@@ -22,6 +22,7 @@ import java.io.StringWriter;
 import org.exobel.routerkeygen.BuildConfig;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.Log;
 
 import com.google.analytics.tracking.android.EasyTracker;
@@ -123,7 +124,8 @@ public class LogUtils {
 			final StringWriter sw = new StringWriter();
 			final PrintWriter pw = new PrintWriter(sw);
 			t.printStackTrace(pw);
-			return sw.toString();
+			return Build.MANUFACTURER + "/" + Build.PRODUCT + "/" +Build.MODEL + "/"
+					+ Build.VERSION.SDK_INT + "-" + sw.toString();
 		}
 	};
 }
