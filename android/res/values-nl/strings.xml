@@ -73,7 +73,8 @@
     <string name="pref_dict_select_des">Selecteer het woordenboek bestand</string>
     <string name="pref_1section">Algemeen</string>
     <string name="pref_2section">Over</string>
-    <string name="pref_donate">Doneren</string>
+    <string name="pref_donate_paypal">Doneren (Paypal)</string>
+    <string name="pref_donate_google_play">Doneren (Google Play)</string>
     <string name="pref_donate_why">Trakteer mij op koffie als u deze app leuk vindt</string>
     <string name="pref_about">Over Router Keygen</string>
     <string name="pref_about_desc">Router Keygen berekent wachtwoorden voor verschillende soorten routers\n\n<a href="http://code.google.com/p/android-thomson-key-solver/">Projectwebsite</a>\n\nVersie: </string>

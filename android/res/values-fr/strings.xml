@@ -81,7 +81,8 @@
     <string name="pref_dict_select_des">Select the dictionary file</string>  <!-- UNTRANSLATED -->
     <string name="pref_1section">Options générales</string>
     <string name="pref_2section">A propos</string>
-    <string name="pref_donate">Don</string>
+    <string name="pref_donate_paypal">Don (Paypal)</string>
+    <string name="pref_donate_google_play">Don (Google Play)</string>
     <string name="pref_donate_why">Acheter moi un café si vous aimez l\'application</string>
     <string name="pref_about">A propos de Router Keygen</string>
     <string name="pref_about_desc">Router Keygen calcule les clés par défaut de nombreux routerus.\n\n<a href="http://code.google.com/p/android-thomson-key-solver/">Site web</a>\n\nVersion: </string>

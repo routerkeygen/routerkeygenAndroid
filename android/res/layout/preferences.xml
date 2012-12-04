@@ -112,9 +112,16 @@
         <Preference
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:key="donate"
+            android:key="donate_playstore"
             android:summary="@string/pref_donate_why"
-            android:title="@string/pref_donate" />
+            android:title="@string/pref_donate_google_play" />
+        
+        <Preference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:key="donate_paypal"
+            android:summary="@string/pref_donate_why"
+            android:title="@string/pref_donate_paypal" />
 
         <Preference
             android:layout_width="wrap_content"

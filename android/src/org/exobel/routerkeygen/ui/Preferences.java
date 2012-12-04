@@ -32,6 +32,7 @@ import java.net.UnknownHostException;
 import org.exobel.routerkeygen.DictionaryDownloadService;
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.utils.HashUtils;
+import org.exobel.routerkeygen.utils.LogUtils;
 
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
@@ -84,6 +85,9 @@ public class Preferences extends SherlockPreferenceActivity {
 	public static final String nativeCalcPref = "nativethomson";
 	public static final String autoScanPref = "autoScan";
 	public static final String autoScanIntervalPref = "autoScanInterval";
+	
+
+	private final static String GOOGLE_PLAY_DOWNLOADER = "org.exobel.routerkeygendownloader";
 
 	public static final String PUB_DOWNLOAD = "http://android-thomson-key-solver.googlecode.com/files/RouterKeygen_v3.dic";
 	private static final String PUB_DIC_CFV = "http://android-thomson-key-solver.googlecode.com/svn/trunk/RKDictionary.cfv";
@@ -137,7 +141,7 @@ public class Preferences extends SherlockPreferenceActivity {
 					}
 				});
 
-		findPreference("donate").setOnPreferenceClickListener(
+		findPreference("donate_paypal").setOnPreferenceClickListener(
 				new OnPreferenceClickListener() {
 					public boolean onPreferenceClick(Preference preference) {
 						String donateLink = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=V3FFBTRTTV5DN";
@@ -147,6 +151,21 @@ public class Preferences extends SherlockPreferenceActivity {
 						return true;
 					}
 				});
+		
+		findPreference("donate_playstore").setOnPreferenceClickListener(
+				new OnPreferenceClickListener() {
+					public boolean onPreferenceClick(Preference preference) {
+						try {
+						    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id="+GOOGLE_PLAY_DOWNLOADER)));
+						} catch (android.content.ActivityNotFoundException anfe) {
+						    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id="+GOOGLE_PLAY_DOWNLOADER)));
+						}
+
+						return true;
+					}
+				});
+		
+		
 		findPreference("update").setOnPreferenceClickListener(
 				new OnPreferenceClickListener() {
 					public boolean onPreferenceClick(Preference preference) {
@@ -297,6 +316,7 @@ public class Preferences extends SherlockPreferenceActivity {
 	public void onStart() {
 		super.onStart();
 		EasyTracker.getInstance().activityStart(this); // Add this method.
+		EasyTracker.getTracker().setExceptionParser(LogUtils.parser);
 	}
 
 	@Override
@@ -304,9 +324,6 @@ public class Preferences extends SherlockPreferenceActivity {
 		super.onStop();
 		EasyTracker.getInstance().activityStop(this); // Add this method.
 	}
-
-	@SuppressWarnings("unused")
-	private static final String TAG = "ThomsonPreferences";
 
 	private static final int DIALOG_ABOUT = 1001;
 	private static final int DIALOG_ASK_DOWNLOAD = 1002;

@@ -80,7 +80,8 @@
     <string name="pref_dict_select_des">Seleccionar o ficheiro do dicionário</string>
     <string name="pref_1section">Opções Gerais</string>
     <string name="pref_2section">Sobre</string>
-    <string name="pref_donate">Donativo</string>
+    <string name="pref_donate_paypal">Donativo (Paypal)</string>
+    <string name="pref_donate_google_play">Donativo (Google Play)</string>
     <string name="pref_donate_why">Ofereça-me um café se gostou desta aplicação</string>
     <string name="pref_about">Sobre Router Keygen</string>
     <string name="pref_about_desc">Router Keygen calcula senhas de origem para vários routers.\n\n<a href="http://code.google.com/p/android-thomson-key-solver/">Website do Projecto</a>\n\nVersão: </string>

@@ -76,7 +76,8 @@
     <string name="pref_dict_select_des">Selecciona el archivo del diccionario.</string>
     <string name="pref_1section">Opciones Generales</string>
     <string name="pref_2section">Acerca de</string>
-    <string name="pref_donate">Donar</string>
+    <string name="pref_donate_paypal">Donar (Paypal)</string>
+    <string name="pref_donate_google_play">Donar (Google Play)</string>
     <string name="pref_donate_why">Cómprame un café si te gustó ésta aplicación.</string>
     <string name="pref_about">Acerca de Router Keygen</string>
     <string name="pref_about_desc">Router Keygen calcula los passwords por defecto para varios routers.\n\n<a href="http://code.google.com/p/android-thomson-key-solver/">Sitio del Proyecto</a>\n\nVersión: </string>
