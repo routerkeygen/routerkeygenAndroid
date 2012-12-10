@@ -54,6 +54,8 @@
     <string name="bt_save_sd">Save to the SD</string>
     <string name="bt_auto_connect">Test key(s)</string>
     <string name="bt_website">Go to Website</string>
+    <string name="bt_paypal">PayPal</string>
+    <string name="bt_google_play">Google Play</string>
 
     <!-- DIALOG STRINGS -->
     <string name="lb_manual">Input your ESSID here:</string>

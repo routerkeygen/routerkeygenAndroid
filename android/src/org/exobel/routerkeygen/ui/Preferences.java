@@ -87,7 +87,7 @@ public class Preferences extends SherlockPreferenceActivity {
 	public static final String autoScanIntervalPref = "autoScanInterval";
 	
 
-	private final static String GOOGLE_PLAY_DOWNLOADER = "org.exobel.routerkeygendownloader";
+	public final static String GOOGLE_PLAY_DOWNLOADER = "org.exobel.routerkeygendownloader";
 
 	public static final String PUB_DOWNLOAD = "http://android-thomson-key-solver.googlecode.com/files/RouterKeygen_v3.dic";
 	private static final String PUB_DIC_CFV = "http://android-thomson-key-solver.googlecode.com/svn/trunk/RKDictionary.cfv";
@@ -144,7 +144,7 @@ public class Preferences extends SherlockPreferenceActivity {
 		findPreference("donate_paypal").setOnPreferenceClickListener(
 				new OnPreferenceClickListener() {
 					public boolean onPreferenceClick(Preference preference) {
-						String donateLink = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=V3FFBTRTTV5DN";
+						final String donateLink = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=V3FFBTRTTV5DN";
 						Uri uri = Uri.parse(donateLink);
 						startActivity(new Intent(Intent.ACTION_VIEW, uri));
 

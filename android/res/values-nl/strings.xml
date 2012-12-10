@@ -45,6 +45,8 @@
     <string name="bt_save_sd">Opslaan op de SD-kaart</string>
     <string name="bt_auto_connect">Automatisch verbinden</string>
     <string name="bt_website">Naar de website</string>
+    <string name="bt_paypal">PayPal</string>
+    <string name="bt_google_play">Google Play</string>
 
     <!-- DIALOG STRINGS -->
     <string name="lb_manual">ESSID:</string>

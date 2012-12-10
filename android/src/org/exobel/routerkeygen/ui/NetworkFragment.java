@@ -31,6 +31,7 @@ import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.algorithms.Keygen;
 import org.exobel.routerkeygen.algorithms.NativeThomson;
 import org.exobel.routerkeygen.algorithms.ThomsonKeygen;
+import org.exobel.routerkeygen.utils.LogUtils;
 
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
@@ -60,6 +61,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.google.analytics.tracking.android.EasyTracker;
 
 @SuppressWarnings("deprecation")
 public class NetworkFragment extends SherlockFragment {
@@ -304,6 +306,7 @@ public class NetworkFragment extends SherlockFragment {
 
 		@Override
 		protected List<String> doInBackground(Keygen... params) {
+			EasyTracker.getTracker().setExceptionParser(LogUtils.parser);
 			List<String> result = calcKeys();
 			if (nativeCalc && (keygen instanceof ThomsonKeygen)) {
 				if (((ThomsonKeygen) keygen).isErrorDict()) {

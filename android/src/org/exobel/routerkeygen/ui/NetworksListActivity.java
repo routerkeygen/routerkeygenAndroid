@@ -36,6 +36,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -58,7 +59,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 	private WifiManager wifi;
 	private BroadcastReceiver scanFinished;
 	private BroadcastReceiver stateChanged;
-	private static final String welcomeScreenShownPref = "welcomeScreenShown";
+	private static final String donateScreenShownPref = "donateScreenShown";
 	boolean welcomeScreenShown;
 
 	private Handler mHandler = new Handler();
@@ -87,7 +88,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 
 		final SharedPreferences mPrefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
-		welcomeScreenShown = mPrefs.getBoolean(welcomeScreenShownPref, false);
+		welcomeScreenShown = mPrefs.getBoolean(donateScreenShownPref, false);
 
 		if (!welcomeScreenShown) {
 
@@ -97,15 +98,44 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 					.setIcon(android.R.drawable.ic_dialog_alert)
 					.setTitle(whatsNewTitle)
 					.setMessage(whatsNewText)
-					.setPositiveButton(android.R.string.ok,
+					.setNegativeButton(android.R.string.ok,
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
 										int which) {
 									dialog.dismiss();
 								}
+							})
+					.setNeutralButton(R.string.bt_paypal,
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int which) {
+									final String donateLink = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=V3FFBTRTTV5DN";
+									Uri uri = Uri.parse(donateLink);
+									startActivity(new Intent(
+											Intent.ACTION_VIEW, uri));
+									dialog.dismiss();
+								}
+							})
+					.setPositiveButton(R.string.bt_google_play,
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int which) {
+									try {
+										startActivity(new Intent(
+												Intent.ACTION_VIEW,
+												Uri.parse("market://details?id="
+														+ Preferences.GOOGLE_PLAY_DOWNLOADER)));
+									} catch (android.content.ActivityNotFoundException anfe) {
+										startActivity(new Intent(
+												Intent.ACTION_VIEW,
+												Uri.parse("http://play.google.com/store/apps/details?id="
+														+ Preferences.GOOGLE_PLAY_DOWNLOADER)));
+									}
+									dialog.dismiss();
+								}
 							}).show();
 			final SharedPreferences.Editor editor = mPrefs.edit();
-			editor.putBoolean(welcomeScreenShownPref, true);
+			editor.putBoolean(donateScreenShownPref, true);
 			editor.commit();
 		}
 	}
@@ -167,11 +197,10 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 			else
 				wifi_state = true;
 		}
-		if (autoScan){
+		if (autoScan) {
 			mHandler.removeCallbacks(mAutoScanTask);
-			mHandler.postDelayed(mAutoScanTask, autoScanInterval*1000L);
-		}
-		else
+			mHandler.postDelayed(mAutoScanTask, autoScanInterval * 1000L);
+		} else
 			mHandler.removeCallbacks(mAutoScanTask);
 		scan();
 	}
@@ -244,7 +273,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 	private Runnable mAutoScanTask = new Runnable() {
 		public void run() {
 			scan();
-			mHandler.postDelayed(mAutoScanTask, autoScanInterval*1000L);
+			mHandler.postDelayed(mAutoScanTask, autoScanInterval * 1000L);
 		}
 	};
 
