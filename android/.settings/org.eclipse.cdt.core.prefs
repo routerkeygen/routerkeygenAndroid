@@ -1,6 +1,6 @@
 eclipse.preferences.version=1
 environment/project/0.1920855796/NDKROOT/delimiter=\:
-environment/project/0.1920855796/NDKROOT/operation=append
-environment/project/0.1920855796/NDKROOT/value=/home/ruka/local/android-ndk-r8b
+environment/project/0.1920855796/NDKROOT/operation=replace
+environment/project/0.1920855796/NDKROOT/value=/home/raraujo/local/android-ndk-r8c
 environment/project/0.1920855796/append=true
 environment/project/0.1920855796/appendContributed=true
