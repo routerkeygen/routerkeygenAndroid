@@ -171,7 +171,9 @@ public class AutoConnectService extends Service implements onConnectionListener 
 
 	public void onDestroy() {
 		try {
+			reenableAllHotspots();
 			unregisterReceiver(mReceiver);
+			mNotificationManager.cancel(UNIQUE_ID);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
