@@ -14,19 +14,19 @@
         android:src="@drawable/icon" />
 
     <TextView
-        android:id="?android:id/text1"
+        android:id="@+id/text1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left|center_vertical"
         android:layout_toRightOf="@id/image" />
 
     <ProgressBar
-        android:id="?android:id/progress"
+        android:id="@+id/progress"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dip"
-        android:layout_below="?android:id/text1"
+        android:layout_below="@id/text1"
         android:layout_gravity="left|center_vertical"
         android:layout_toRightOf="@id/image"
         android:max="0"

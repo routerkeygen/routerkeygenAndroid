@@ -32,10 +32,10 @@ public class DictionaryDownloadService extends IntentService {
 	private final static String DEFAULT_DIC_NAME = "RouterKeygen.dic";
 
 	private static final long MIN_TIME_BETWWEN_UPDATES = 500;
-	
-	private static final byte[] DICTIONARY_HASH = { (byte) 0x8c, (byte) 0xcf, 0x2c,
-			(byte) 0xb2, (byte) 0xe8, (byte) 0xda, (byte) 0x13, (byte) 0xc2,
- (byte) 0xd8, (byte) 0xc7, (byte) 0xbb, (byte) 0x08,
+
+	private static final byte[] DICTIONARY_HASH = { (byte) 0x8c, (byte) 0xcf,
+			0x2c, (byte) 0xb2, (byte) 0xe8, (byte) 0xda, (byte) 0x13,
+			(byte) 0xc2, (byte) 0xd8, (byte) 0xc7, (byte) 0xbb, (byte) 0x08,
 			0x2c, (byte) 0xc2, (byte) 0x1f, (byte) 0xe6 };
 
 	public DictionaryDownloadService() {
@@ -250,8 +250,12 @@ public class DictionaryDownloadService extends IntentService {
 
 	@TargetApi(16)
 	private Notification updateProgressBar(int progress, boolean indeterminate) {
-		update.contentView.setProgressBar(android.R.id.progress, fileLen,
-				progress, indeterminate);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+			update.contentView.setProgressBar(android.R.id.progress, fileLen,
+					progress, indeterminate);
+		else
+			update.contentView.setProgressBar(R.id.progress, fileLen, progress,
+					indeterminate);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
 			update.bigContentView.setProgressBar(android.R.id.progress,
 					fileLen, progress, indeterminate);
@@ -284,9 +288,9 @@ public class DictionaryDownloadService extends IntentService {
 		} else {
 			RemoteViews contentView = new RemoteViews(getPackageName(),
 					R.layout.notification);
-			contentView.setTextViewText(android.R.id.text1, content);
-			contentView.setProgressBar(android.R.id.progress, fileLen,
-					progress, indeterminate);
+			contentView.setTextViewText(R.id.text1, content);
+			contentView.setProgressBar(R.id.progress, fileLen, progress,
+					indeterminate);
 			update = builder.build();
 			update.contentView = contentView;
 		}
