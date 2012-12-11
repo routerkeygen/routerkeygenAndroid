@@ -255,8 +255,8 @@ public class AutoConnectService extends Service implements onConnectionListener 
 		} else {
 			final RemoteViews contentView = new RemoteViews(getPackageName(),
 					R.layout.notification);
-			contentView.setTextViewText(android.R.id.text1, content);
-			contentView.setProgressBar(android.R.id.progress, keys.size(),
+			contentView.setTextViewText(R.id.text1, content);
+			contentView.setProgressBar(R.id.progress, keys.size(),
 					progress, false);
 			final Notification not = builder.build();
 			not.contentView = contentView;
