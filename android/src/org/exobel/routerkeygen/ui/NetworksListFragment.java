@@ -25,6 +25,7 @@ import org.exobel.routerkeygen.algorithms.Keygen;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.ClipboardManager;
@@ -149,41 +150,49 @@ public class NetworksListFragment extends SherlockFragment implements
 		mActivatedPosition = position;
 	}
 
+	private static final String MENU_VALUE = "menu_value";
+
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenu.ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
+		final AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
 		MenuInflater inflater = getActivity().getMenuInflater();
 		inflater.inflate(R.menu.networks_context_menu, menu);
+		//We are copying the values right away as the networks list is unstable.
+		((MenuItem) menu.findItem(R.id.copy_ssid)).setIntent(new Intent()
+				.putExtra(MENU_VALUE,
+						networksFound[info.position].getSsidName()));
+		((MenuItem) menu.findItem(R.id.copy_mac)).setIntent(new Intent()
+				.putExtra(MENU_VALUE,
+						networksFound[info.position].getDisplayMacAddress()));
+		((MenuItem) menu.findItem(R.id.use_mac)).setIntent(new Intent()
+				.putExtra(MENU_VALUE,
+						networksFound[info.position].getMacAddress()));
 	}
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
-		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
-				.getMenuInfo();
+		String value = item.getIntent().getStringExtra(MENU_VALUE);
 		switch (item.getItemId()) {
 		case R.id.copy_ssid: {
 			ClipboardManager clipboard = (ClipboardManager) getActivity()
 					.getSystemService(Context.CLIPBOARD_SERVICE);
-			final String ssid = networksFound[(int) info.id].getSsidName();
-			clipboard.setText(ssid);
-			Toast.makeText(getActivity(), getString(R.string.msg_copied, ssid),
+			clipboard.setText(value);
+			Toast.makeText(getActivity(), getString(R.string.msg_copied, value),
 					Toast.LENGTH_SHORT).show();
 			return true;
 		}
 		case R.id.copy_mac: {
 			ClipboardManager clipboard = (ClipboardManager) getActivity()
 					.getSystemService(Context.CLIPBOARD_SERVICE);
-			final String mac = networksFound[(int) info.id]
-					.getDisplayMacAddress();
-			clipboard.setText(mac);
-			Toast.makeText(getActivity(), getString(R.string.msg_copied, mac),
+			clipboard.setText(value);
+			Toast.makeText(getActivity(), getString(R.string.msg_copied, value),
 					Toast.LENGTH_SHORT).show();
 			return true;
 		}
 		case R.id.use_mac:
-			mCallbacks.onItemSelected(networksFound[(int) info.id]
-					.getMacAddress());
+			mCallbacks.onItemSelected(value);
 			return true;
 		}
 		return super.onContextItemSelected(item);
@@ -199,9 +208,11 @@ public class NetworksListFragment extends SherlockFragment implements
 			listview.setAdapter(new WifiListAdapter(networksFound,
 					getActivity()));
 		} else {
-			noNetworksMessage.findViewById(R.id.loading_spinner).setVisibility(View.GONE);
+			noNetworksMessage.findViewById(R.id.loading_spinner).setVisibility(
+					View.GONE);
 			listview.setVisibility(View.GONE);
-			noNetworksMessage.findViewById(R.id.message).setVisibility(View.VISIBLE);
+			noNetworksMessage.findViewById(R.id.message).setVisibility(
+					View.VISIBLE);
 			noNetworksMessage.setVisibility(View.VISIBLE);
 		}
 	}
