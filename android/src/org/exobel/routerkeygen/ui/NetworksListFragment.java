@@ -19,9 +19,6 @@
 
 package org.exobel.routerkeygen.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.WiFiScanReceiver.OnScanListener;
 import org.exobel.routerkeygen.algorithms.Keygen;
@@ -51,7 +48,7 @@ public class NetworksListFragment extends SherlockListFragment implements
 	private OnItemSelectionListener mCallbacks = sDummyCallbacks;
 	private int mActivatedPosition = ListView.INVALID_POSITION;
 
-	private List<Keygen> networksFound;
+	private Keygen[] networksFound;
 
 	public interface OnItemSelectionListener {
 
@@ -82,11 +79,12 @@ public class NetworksListFragment extends SherlockListFragment implements
 		super.onViewCreated(view, savedInstanceState);
 		if (savedInstanceState != null) {
 			if (savedInstanceState.containsKey(NETWORKS_FOUND)) {
-
-				this.networksFound = savedInstanceState
-						.getParcelableArrayList(NETWORKS_FOUND);
-				setListAdapter(new WifiListAdapter(this.networksFound,
-						getActivity()));
+				Parcelable[] storedNetworksFound = savedInstanceState
+						.getParcelableArray(NETWORKS_FOUND);
+				networksFound = new Keygen[storedNetworksFound.length];
+				for (int i = 0; i < storedNetworksFound.length; ++i)
+					networksFound[i] = (Keygen) storedNetworksFound[i];
+				setListAdapter(new WifiListAdapter(networksFound, getActivity()));
 			}
 			if (savedInstanceState.containsKey(STATE_ACTIVATED_POSITION)) {
 				setActivatedPosition(savedInstanceState
@@ -117,14 +115,13 @@ public class NetworksListFragment extends SherlockListFragment implements
 	public void onListItemClick(ListView listView, View view, int position,
 			long id) {
 		super.onListItemClick(listView, view, position, id);
-		mCallbacks.onItemSelected(networksFound.get(position));
+		mCallbacks.onItemSelected(networksFound[position]);
 	}
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putParcelableArrayList(NETWORKS_FOUND,
-				(ArrayList<? extends Parcelable>) networksFound);
+		outState.putParcelableArray(NETWORKS_FOUND, networksFound);
 		if (mActivatedPosition != ListView.INVALID_POSITION) {
 			outState.putInt(STATE_ACTIVATED_POSITION, mActivatedPosition);
 		}
@@ -162,7 +159,7 @@ public class NetworksListFragment extends SherlockListFragment implements
 		case R.id.copy_ssid: {
 			ClipboardManager clipboard = (ClipboardManager) getActivity()
 					.getSystemService(Context.CLIPBOARD_SERVICE);
-			final String ssid = networksFound.get((int) info.id).getSsidName();
+			final String ssid = networksFound[(int) info.id].getSsidName();
 			clipboard.setText(ssid);
 			Toast.makeText(getActivity(), getString(R.string.msg_copied, ssid),
 					Toast.LENGTH_SHORT).show();
@@ -171,7 +168,7 @@ public class NetworksListFragment extends SherlockListFragment implements
 		case R.id.copy_mac: {
 			ClipboardManager clipboard = (ClipboardManager) getActivity()
 					.getSystemService(Context.CLIPBOARD_SERVICE);
-			final String mac = networksFound.get((int) info.id)
+			final String mac = networksFound[(int) info.id]
 					.getDisplayMacAddress();
 			clipboard.setText(mac);
 			Toast.makeText(getActivity(), getString(R.string.msg_copied, mac),
@@ -179,18 +176,17 @@ public class NetworksListFragment extends SherlockListFragment implements
 			return true;
 		}
 		case R.id.use_mac:
-			mCallbacks.onItemSelected(networksFound.get((int) info.id)
+			mCallbacks.onItemSelected(networksFound[(int) info.id]
 					.getMacAddress());
 			return true;
 		}
 		return super.onContextItemSelected(item);
 	}
 
-	public void onScanFinished(List<Keygen> networks) {
-		this.networksFound = networks;
+	public void onScanFinished(Keygen[] networks) {
+		networksFound = networks;
 		if (getActivity() != null)
-			setListAdapter(new WifiListAdapter(this.networksFound,
-					getActivity()));
+			setListAdapter(new WifiListAdapter(networksFound, getActivity()));
 	}
 
 }

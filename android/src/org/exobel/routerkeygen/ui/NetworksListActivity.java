@@ -19,8 +19,6 @@
 
 package org.exobel.routerkeygen.ui;
 
-import java.util.List;
-
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.WiFiScanReceiver;
 import org.exobel.routerkeygen.WiFiScanReceiver.OnScanListener;
@@ -139,6 +137,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 		}
 	}
 
+	
 	public void onItemSelected(Keygen keygen) {
 		if (mTwoPane) {
 			final Bundle arguments = new Bundle();
@@ -167,6 +166,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 		return true;
 	}
 
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.manual_input:
@@ -184,6 +184,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 		}
 	}
 
+	@Override
 	public void onStart() {
 		super.onStart();
 		EasyTracker.getInstance().activityStart(this); // Add this method.
@@ -203,6 +204,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 		scan();
 	}
 
+	@Override
 	public void onStop() {
 		try {
 			super.onStop();
@@ -241,6 +243,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 		}
 	}
 
+	@Override
 	public void onResume() {
 		super.onResume();
 		getPrefs();
@@ -291,7 +294,8 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 				getResources().getInteger(R.integer.autoScanIntervalDefault));
 	}
 
-	public void onScanFinished(List<Keygen> networks) {
+	
+	public void onScanFinished(Keygen[] networks) {
 		setRefreshActionItemState(false);
 		if (!welcomeScreenShown) {
 			Toast.makeText(this, R.string.msg_welcome_tip, Toast.LENGTH_LONG)
@@ -300,6 +304,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 		}
 	}
 
+	
 	public void onItemSelected(String mac) {
 
 		ManualDialogFragment.newInstance(networkMatcher, mac).show(
