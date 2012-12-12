@@ -23,6 +23,5 @@
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
         android:layout_gravity="center"
-        android:indeterminate="true" 
-        style="@android:style/Widget.ProgressBar.Small"/>
+        style="?android:attr/indeterminateProgressStyle" />
 </FrameLayout>

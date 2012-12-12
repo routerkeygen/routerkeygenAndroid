@@ -56,13 +56,13 @@ public class WiFiScanReceiver extends BroadcastReceiver {
 			return;
 		if (wifi == null)
 			return;
-		List<ScanResult> results = wifi.getScanResults();
+		final List<ScanResult> results = wifi.getScanResults();
 		/*
 		 * He have had reports of this returning null instead of empty
 		 */
 		if (results == null)
 			return;
-		Set<Keygen> set = new TreeSet<Keygen>();
+		final Set<Keygen> set = new TreeSet<Keygen>();
 		for (int i = 0; i < results.size() - 1; ++i)
 			for (int j = i + 1; j < results.size(); ++j)
 				if (results.get(i).SSID.equals(results.get(j).SSID))
@@ -75,12 +75,11 @@ public class WiFiScanReceiver extends BroadcastReceiver {
 			Toast.makeText(c, R.string.err_misbuilt_apk, Toast.LENGTH_SHORT)
 					.show();
 		}
-		Keygen[] networks = new Keygen[set.size()];
-		Iterator<Keygen> it = set.iterator();
+		final Keygen[] networks = new Keygen[set.size()];
+		final Iterator<Keygen> it = set.iterator();
 		int i = 0;
 		while (it.hasNext())
 			networks[i++] = it.next();
-
 		for (OnScanListener scanListener : scanListeners)
 			scanListener.onScanFinished(networks);
 		try {

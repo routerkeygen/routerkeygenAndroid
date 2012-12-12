@@ -61,7 +61,7 @@
             android:maxLines="1"
             android:scrollHorizontally="true"
             android:singleLine="true"
-            android:textAppearance="?android:attr/textAppearanceListItem"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="#ffffff"
             android:textSize="20sp" />
 
@@ -74,7 +74,7 @@
             android:maxLines="1"
             android:scrollHorizontally="true"
             android:singleLine="true"
-            android:textAppearance="?android:attr/textAppearanceListItemSmall"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="#545454" />
     </LinearLayout>
 

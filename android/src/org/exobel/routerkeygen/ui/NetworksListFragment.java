@@ -29,24 +29,31 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.ClipboardManager;
 import android.view.ContextMenu;
+import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockListFragment;
+import com.actionbarsherlock.app.SherlockFragment;
 
 @SuppressWarnings("deprecation")
-public class NetworksListFragment extends SherlockListFragment implements
-		OnScanListener {
+public class NetworksListFragment extends SherlockFragment implements
+		OnScanListener, OnItemClickListener {
 
 	private static final String STATE_ACTIVATED_POSITION = "activated_position";
 	private static final String NETWORKS_FOUND = "network_found";
 
 	private OnItemSelectionListener mCallbacks = sDummyCallbacks;
 	private int mActivatedPosition = ListView.INVALID_POSITION;
+	private ListView listview;
+	private View noNetworksMessage;
 
 	private Keygen[] networksFound;
 
@@ -75,8 +82,13 @@ public class NetworksListFragment extends SherlockListFragment implements
 	}
 
 	@Override
-	public void onViewCreated(View view, Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		super.onCreateView(inflater, container, savedInstanceState);
+		FrameLayout root = (FrameLayout) inflater.inflate(
+				R.layout.fragment_networks_list, container, false);
+		listview = (ListView) root.findViewById(R.id.networks_list);
+		noNetworksMessage = root.findViewById(R.id.message_group);
 		if (savedInstanceState != null) {
 			if (savedInstanceState.containsKey(NETWORKS_FOUND)) {
 				Parcelable[] storedNetworksFound = savedInstanceState
@@ -84,14 +96,16 @@ public class NetworksListFragment extends SherlockListFragment implements
 				networksFound = new Keygen[storedNetworksFound.length];
 				for (int i = 0; i < storedNetworksFound.length; ++i)
 					networksFound[i] = (Keygen) storedNetworksFound[i];
-				setListAdapter(new WifiListAdapter(networksFound, getActivity()));
+				onScanFinished(networksFound);
 			}
 			if (savedInstanceState.containsKey(STATE_ACTIVATED_POSITION)) {
 				setActivatedPosition(savedInstanceState
 						.getInt(STATE_ACTIVATED_POSITION));
 			}
 		}
-		registerForContextMenu(getListView());
+		registerForContextMenu(listview);
+		listview.setOnItemClickListener(this);
+		return root;
 	}
 
 	@Override
@@ -112,13 +126,6 @@ public class NetworksListFragment extends SherlockListFragment implements
 	}
 
 	@Override
-	public void onListItemClick(ListView listView, View view, int position,
-			long id) {
-		super.onListItemClick(listView, view, position, id);
-		mCallbacks.onItemSelected(networksFound[position]);
-	}
-
-	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putParcelableArray(NETWORKS_FOUND, networksFound);
@@ -128,16 +135,15 @@ public class NetworksListFragment extends SherlockListFragment implements
 	}
 
 	public void setActivateOnItemClick(boolean activateOnItemClick) {
-		getListView().setChoiceMode(
-				activateOnItemClick ? ListView.CHOICE_MODE_SINGLE
-						: ListView.CHOICE_MODE_NONE);
+		listview.setChoiceMode(activateOnItemClick ? ListView.CHOICE_MODE_SINGLE
+				: ListView.CHOICE_MODE_NONE);
 	}
 
 	public void setActivatedPosition(int position) {
 		if (position == ListView.INVALID_POSITION) {
-			getListView().setItemChecked(mActivatedPosition, false);
+			listview.setItemChecked(mActivatedPosition, false);
 		} else {
-			getListView().setItemChecked(position, true);
+			listview.setItemChecked(position, true);
 		}
 
 		mActivatedPosition = position;
@@ -185,8 +191,24 @@ public class NetworksListFragment extends SherlockListFragment implements
 
 	public void onScanFinished(Keygen[] networks) {
 		networksFound = networks;
-		if (getActivity() != null)
-			setListAdapter(new WifiListAdapter(networksFound, getActivity()));
+		if (getActivity() == null)
+			return;
+		if (networks.length > 0) {
+			noNetworksMessage.setVisibility(View.GONE);
+			listview.setVisibility(View.VISIBLE);
+			listview.setAdapter(new WifiListAdapter(networksFound,
+					getActivity()));
+		} else {
+			noNetworksMessage.findViewById(R.id.loading_spinner).setVisibility(View.GONE);
+			listview.setVisibility(View.GONE);
+			noNetworksMessage.findViewById(R.id.message).setVisibility(View.VISIBLE);
+			noNetworksMessage.setVisibility(View.VISIBLE);
+		}
+	}
+
+	public void onItemClick(AdapterView<?> list, View view, int position,
+			long id) {
+		mCallbacks.onItemSelected(networksFound[position]);
 	}
 
 }

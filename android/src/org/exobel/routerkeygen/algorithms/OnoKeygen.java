@@ -21,6 +21,7 @@ package org.exobel.routerkeygen.algorithms;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.Locale;
 
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.utils.StringUtils;
@@ -76,7 +77,7 @@ public class OnoKeygen extends Keygen {
 		{
 			randNumber = (randNumber * 0x343fd + 0x269ec3) & 0xffffffff;
 			tmp = (short) ((randNumber >> 16) & 0xff);
-			key += StringUtils.getHexString(tmp).toUpperCase();
+			key += StringUtils.getHexString(tmp).toUpperCase(Locale.getDefault());
 		}
 		addPassword(key);
 		key = "";
@@ -91,7 +92,7 @@ public class OnoKeygen extends Keygen {
 		byte [] hash = md.digest();
 		for ( int i = 0 ; i < 13 ; ++i )
 			key += StringUtils.getHexString((short)hash[i]);
-		addPassword(key.toUpperCase());
+		addPassword(key.toUpperCase(Locale.getDefault()));
 		return getResults();
 	}
 	

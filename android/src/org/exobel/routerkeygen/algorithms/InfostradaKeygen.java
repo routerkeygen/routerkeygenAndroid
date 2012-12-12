@@ -19,6 +19,7 @@
 package org.exobel.routerkeygen.algorithms;
 
 import java.util.List;
+import java.util.Locale;
 
 import org.exobel.routerkeygen.R;
 
@@ -43,7 +44,7 @@ public class InfostradaKeygen extends Keygen {
 			setErrorCode(R.string.msg_errpirelli);
 			return null;
 		}
-		addPassword("2"+getMacAddress().toUpperCase());
+		addPassword("2"+getMacAddress().toUpperCase(Locale.getDefault()));
 		return getResults();
 	}
 

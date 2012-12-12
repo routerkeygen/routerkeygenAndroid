@@ -80,6 +80,7 @@ public class NetworkFragment extends SherlockFragment {
 		super.onCreate(savedInstanceState);
 		if (getArguments().containsKey(NETWORK_ID)) {
 			keygen = (Keygen) getArguments().getParcelable(NETWORK_ID);
+			thread = new KeygenThread(keygen);
 		}
 		if (savedInstanceState != null) {
 			String[] passwords = savedInstanceState
