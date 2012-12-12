@@ -27,7 +27,6 @@ import org.exobel.routerkeygen.WiFiScanReceiver.OnScanListener;
 import org.exobel.routerkeygen.WifiStateReceiver;
 import org.exobel.routerkeygen.WirelessMatcher;
 import org.exobel.routerkeygen.algorithms.Keygen;
-import org.exobel.routerkeygen.utils.LogUtils;
 
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
@@ -188,7 +187,6 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 	public void onStart() {
 		super.onStart();
 		EasyTracker.getInstance().activityStart(this); // Add this method.
-		EasyTracker.getTracker().setExceptionParser(LogUtils.parser);
 		getPrefs();
 		if (wifiOn) {
 			if (!wifi.setWifiEnabled(true))

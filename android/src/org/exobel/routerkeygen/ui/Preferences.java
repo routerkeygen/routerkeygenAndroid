@@ -32,7 +32,6 @@ import java.net.UnknownHostException;
 import org.exobel.routerkeygen.DictionaryDownloadService;
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.utils.HashUtils;
-import org.exobel.routerkeygen.utils.LogUtils;
 
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
@@ -316,7 +315,6 @@ public class Preferences extends SherlockPreferenceActivity {
 	public void onStart() {
 		super.onStart();
 		EasyTracker.getInstance().activityStart(this); // Add this method.
-		EasyTracker.getTracker().setExceptionParser(LogUtils.parser);
 	}
 
 	@Override
