@@ -19,6 +19,7 @@
 package org.exobel.routerkeygen.algorithms;
 
 import java.util.List;
+import java.util.Locale;
 
 import org.exobel.routerkeygen.R;
 
@@ -35,12 +36,12 @@ public class Wlan6Keygen extends Keygen {
 
 	@Override
 	public List<String> getKeys() {
-		if ( getMacAddress().equals("") ) 
-		{	
-			setErrorCode(R.string.msg_nomac);
+		String macStr = getMacAddress();
+		if ( macStr.length() != 12 ) 
+		{
+			setErrorCode(R.string.msg_errpirelli);
 			return null;
 		}
-		String macStr = getMacAddress();
 		char [] ssidSubPart = {'1', '2','3', '4', '5','6' };/*These values are not revelant.*/
 		char [] bssidLastByte = { '6', '6' };
 		ssidSubPart[0] = ssidIdentifier.charAt(0);
@@ -49,8 +50,8 @@ public class Wlan6Keygen extends Keygen {
 		ssidSubPart[3] = ssidIdentifier.charAt(3);
 		ssidSubPart[4] = ssidIdentifier.charAt(4);
 		ssidSubPart[5] = ssidIdentifier.charAt(5);
-		bssidLastByte[0] = macStr.charAt(15);
-		bssidLastByte[1] = macStr.charAt(16);
+		bssidLastByte[0] = macStr.charAt(10);
+		bssidLastByte[1] = macStr.charAt(11);
 		for ( int  k = 0; k < 6 ; ++k ) 
 		    if( ssidSubPart[k] >= 'A')
 		        ssidSubPart[k] = (char)(ssidSubPart[k] - 55);
@@ -86,9 +87,9 @@ public class Wlan6Keygen extends Keygen {
 						Integer.toHexString(eleventh & 0xf) + Integer.toHexString(twelfth & 0xf) +
 						Integer.toHexString(thirteenth & 0xf);
 			
-			addPassword(key.toUpperCase());
+			addPassword(key.toUpperCase(Locale.getDefault()));
 		}
-		if ( ( ( ssidSubPart[0] != macStr.charAt(10) ) || ( ssidSubPart[1] != macStr.charAt(12) ) ||( ssidSubPart[2] != macStr.charAt(13) ) )
+		if ( ( ( ssidSubPart[0] != macStr.charAt(7) ) || ( ssidSubPart[1] != macStr.charAt(8) ) ||( ssidSubPart[2] != macStr.charAt(9) ) )
 				&& !getSsidName().startsWith("WiFi"))
 		{
 			setErrorCode(R.string.msg_err_essid_no_match);
