@@ -80,7 +80,15 @@ public class NetworkFragment extends SherlockFragment {
 		super.onCreate(savedInstanceState);
 		if (getArguments().containsKey(NETWORK_ID)) {
 			keygen = (Keygen) getArguments().getParcelable(NETWORK_ID);
-			thread = new KeygenThread(keygen);
+		}
+		if (savedInstanceState != null) {
+			String[] passwords = savedInstanceState
+					.getStringArray(PASSWORD_LIST);
+			if (passwords != null) {
+				passwordList = new ArrayList<String>();
+				for (String p : passwords)
+					passwordList.add(p);
+			}
 		}
 		setHasOptionsMenu(true);
 	}
@@ -92,6 +100,7 @@ public class NetworkFragment extends SherlockFragment {
 				container, false);
 		messages = (TextView) root.findViewById(R.id.loading_text);
 		final View autoConnect = root.findViewById(R.id.auto_connect);
+		// Auto connect service unavailable for manual calculations
 		if (keygen.getScanResult() == null)
 			autoConnect.setVisibility(View.GONE);
 		else
@@ -114,6 +123,8 @@ public class NetworkFragment extends SherlockFragment {
 					getActivity().startService(i);
 				}
 			});
+		if (passwordList != null)
+			displayResults();
 		return root;
 	}
 
@@ -132,10 +143,20 @@ public class NetworkFragment extends SherlockFragment {
 		return false;
 	}
 
+	private static final String PASSWORD_LIST = "password_list";
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		if (passwordList != null)
+			outState.putStringArray(PASSWORD_LIST,
+					passwordList.toArray(new String[0]));
+	}
+
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		getPrefs();
-		thread.execute();
+		if (passwordList == null)
+			thread.execute();
 	}
 
 	@Override
@@ -216,20 +237,11 @@ public class NetworkFragment extends SherlockFragment {
 		return super.onOptionsItemSelected(item);
 	}
 
-	private class KeygenThread extends AsyncTask<Keygen, Integer, List<String>> {
-		private Keygen keygen;
-
-		private KeygenThread(Keygen keygen) {
-			this.keygen = keygen;
-		}
-
-		@Override
-		protected void onPostExecute(List<String> result) {
-			if (getActivity() == null)
-				return;
-			if (result == null)
-				return;
-			passwordList = result;
+	private void displayResults() {
+		if (passwordList.isEmpty()) {
+			root.findViewById(R.id.loading_spinner).setVisibility(View.GONE);
+			messages.setText(R.string.msg_no_correct_keys);
+		} else {
 			final ListView list = (ListView) root.findViewById(R.id.list_keys);
 			list.setOnItemClickListener(new OnItemClickListener() {
 				public void onItemClick(AdapterView<?> parent, View view,
@@ -246,8 +258,26 @@ public class NetworkFragment extends SherlockFragment {
 				}
 			});
 			list.setAdapter(new ArrayAdapter<String>(getActivity(),
-					android.R.layout.simple_list_item_1, result));
+					android.R.layout.simple_list_item_1, passwordList));
 			root.showNext();
+		}
+	}
+
+	private class KeygenThread extends AsyncTask<Keygen, Integer, List<String>> {
+		private Keygen keygen;
+
+		private KeygenThread(Keygen keygen) {
+			this.keygen = keygen;
+		}
+
+		@Override
+		protected void onPostExecute(List<String> result) {
+			if (getActivity() == null)
+				return;
+			if (result == null)
+				return;
+			passwordList = result;
+			displayResults();
 		}
 
 		@Override
@@ -257,12 +287,6 @@ public class NetworkFragment extends SherlockFragment {
 						.setVisibility(View.GONE);
 				messages.setText(R.string.msg_unspported);
 				cancel(true);
-			}
-			if (keygen instanceof ThomsonKeygen) {
-				((ThomsonKeygen) keygen).setDictionary(folderSelect);
-				((ThomsonKeygen) keygen).setInternetAlgorithm(thomson3g);
-				((ThomsonKeygen) keygen).setWebdic(getActivity().getResources()
-						.openRawResource(R.raw.webdic));
 			}
 		}
 
@@ -304,6 +328,13 @@ public class NetworkFragment extends SherlockFragment {
 
 		@Override
 		protected List<String> doInBackground(Keygen... params) {
+			if (keygen instanceof ThomsonKeygen) {
+				getPrefs();
+				((ThomsonKeygen) keygen).setDictionary(folderSelect);
+				((ThomsonKeygen) keygen).setInternetAlgorithm(thomson3g);
+				((ThomsonKeygen) keygen).setWebdic(getActivity().getResources()
+						.openRawResource(R.raw.webdic));
+			}
 			List<String> result = calcKeys();
 			if (nativeCalc && (keygen instanceof ThomsonKeygen)) {
 				if (((ThomsonKeygen) keygen).isErrorDict()) {
