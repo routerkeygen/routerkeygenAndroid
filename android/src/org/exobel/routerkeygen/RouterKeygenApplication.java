@@ -5,7 +5,7 @@ import org.acra.annotation.ReportsCrashes;
 
 import android.app.Application;
 
-@ReportsCrashes(formKey = "dHhJWWdhVDZOTnAwaWZMTngxY1pYY0E6MQ") 
+@ReportsCrashes(formKey = "dDJGUGp2VUE1cFhDaDZzVUZjb2dSdUE6MQ") 
 public class RouterKeygenApplication extends Application {
   @Override
   public void onCreate() {
