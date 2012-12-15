@@ -22,6 +22,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.Locale;
 
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.utils.StringUtils;
@@ -58,8 +59,8 @@ public class ComtrendKeygen extends Keygen {
 			final String macMod = mac.substring(0, 8) + ssidIdentifier;
 			md.reset();
 			md.update(magic.getBytes("ASCII"));
-			md.update(macMod.toUpperCase().getBytes("ASCII"));
-			md.update(mac.toUpperCase().getBytes("ASCII"));
+			md.update(macMod.toUpperCase(Locale.getDefault()).getBytes("ASCII"));
+			md.update(mac.toUpperCase(Locale.getDefault()).getBytes("ASCII"));
 			byte[] hash = md.digest();
 			addPassword(StringUtils.getHexString(hash).substring(0, 20));
 			return getResults();

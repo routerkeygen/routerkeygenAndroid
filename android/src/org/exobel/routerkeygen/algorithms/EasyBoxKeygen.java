@@ -1,6 +1,7 @@
 package org.exobel.routerkeygen.algorithms;
 
 import java.util.List;
+import java.util.Locale;
 
 import org.exobel.routerkeygen.R;
 
@@ -53,7 +54,7 @@ public class EasyBoxKeygen extends Keygen {
 		final String Z3 = Integer.toHexString(Character.digit(K1, 16) ^ Character.digit(K2, 16));
 		
 		final String wpaKey = X1+Y1+Z1+X2+Y2+Z2+X3+Y3+Z3;
-		addPassword(wpaKey.toUpperCase());
+		addPassword(wpaKey.toUpperCase(Locale.getDefault()));
 		return getResults();
 	}
 

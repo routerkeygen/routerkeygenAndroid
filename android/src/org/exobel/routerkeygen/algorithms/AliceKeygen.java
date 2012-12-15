@@ -22,6 +22,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.Locale;
 
 import org.exobel.routerkeygen.AliceMagicInfo;
 import org.exobel.routerkeygen.R;
@@ -112,7 +113,7 @@ public class AliceKeygen extends Keygen {
 			while ( extraNumber <= 9 )
 			{
 				String calc = Integer.toHexString(Integer.valueOf(
-						extraNumber + ssidIdentifier) ).toUpperCase();
+						extraNumber + ssidIdentifier) ).toUpperCase(Locale.getDefault());
 				if ( macEth.charAt(5) == calc.charAt(0))
 				{
 					macEth += calc.substring(1);

@@ -43,8 +43,9 @@ public class ManualDialogFragment extends SherlockDialogFragment {
 		frag.setArguments(args);
 		return frag;
 	}
-	
-	public static ManualDialogFragment newInstance(WirelessMatcher matcher, String mac) {
+
+	public static ManualDialogFragment newInstance(WirelessMatcher matcher,
+			String mac) {
 		Bundle args = new Bundle();
 		args.putParcelable(WIRELESS_MATCHER_ARG, matcher);
 		args.putString(MAC_ADDRESS_ARG, mac);
@@ -56,7 +57,7 @@ public class ManualDialogFragment extends SherlockDialogFragment {
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		final String macAddress;
-		if ( getArguments().containsKey(MAC_ADDRESS_ARG) )
+		if (getArguments().containsKey(MAC_ADDRESS_ARG))
 			macAddress = getArguments().getString(MAC_ADDRESS_ARG);
 		else
 			macAddress = null;
@@ -80,7 +81,7 @@ public class ManualDialogFragment extends SherlockDialogFragment {
 				.findViewById(R.id.manual_autotext);
 		edit.setAdapter(adapter);
 		edit.setThreshold(1);
-		InputFilter filterMAC = new InputFilter() {
+		final InputFilter filterMAC = new InputFilter() {
 			public CharSequence filter(CharSequence source, int start, int end,
 					Spanned dest, int dstart, int dend) {
 				for (int i = start; i < end; i++) {
@@ -104,24 +105,28 @@ public class ManualDialogFragment extends SherlockDialogFragment {
 		macs[3] = (EditText) layout.findViewById(R.id.input_mac_pair4);
 		macs[4] = (EditText) layout.findViewById(R.id.input_mac_pair5);
 		macs[5] = (EditText) layout.findViewById(R.id.input_mac_pair6);
-		if ( macAddress != null ) {
+		if (macAddress != null) {
 			macs[0].setText(macAddress.substring(0, 2));
 			macs[1].setText(macAddress.substring(2, 4));
 			macs[2].setText(macAddress.substring(4, 6));
 			macs[3].setText(macAddress.substring(6, 8));
 			macs[4].setText(macAddress.substring(8, 10));
 			macs[5].setText(macAddress.substring(10, 12));
-		}	
-		InputFilter filterMac = new InputFilter() {
+		}
+		final InputFilter filterMac = new InputFilter() {
 			public CharSequence filter(CharSequence source, int start, int end,
 					Spanned dest, int dstart, int dend) {
+				if (dstart >= 2)
+					return "";
 				if (source.length() > 2)
 					return "";// max 2 chars
 				for (int i = start; i < end; i++) {
-					if (Character.digit(source.charAt(i),16) == -1 ) {
+					if (Character.digit(source.charAt(i), 16) == -1) {
 						return "";
 					}
 				}
+				if (source.length() + dstart > 2)
+					return source.subSequence(0, 2 - dstart);
 				return null;
 			}
 		};
@@ -210,7 +215,7 @@ public class ManualDialogFragment extends SherlockDialogFragment {
 		public void onItemSelected(Keygen id) {
 		}
 
-		public void onItemSelected(String mac) {		
+		public void onItemSelected(String mac) {
 		}
 	};
 

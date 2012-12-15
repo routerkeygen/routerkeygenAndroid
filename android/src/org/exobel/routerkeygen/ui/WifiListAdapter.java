@@ -18,9 +18,6 @@
  */
 package org.exobel.routerkeygen.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.algorithms.Keygen;
 
@@ -34,26 +31,26 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class WifiListAdapter extends BaseAdapter {
-	private List<Keygen> listNetworks;
+	private Keygen[] listNetworks;
 
 	final private Resources resources;
 	final private LayoutInflater inflater;
 
-	public WifiListAdapter(List<Keygen> list, Context context) {
+	public WifiListAdapter(Keygen [] list, Context context) {
 		if (list != null)
 			this.listNetworks = list;
 		else
-			this.listNetworks = new ArrayList<Keygen>();
+			this.listNetworks = new Keygen[0];
 		resources = context.getResources();
 		inflater = LayoutInflater.from(context);
 	}
 
 	public int getCount() {
-		return listNetworks.size();
+		return listNetworks.length;
 	}
 
 	public Object getItem(int position) {
-		return listNetworks.get(position);
+		return listNetworks[position];
 	}
 
 	public long getItemId(int position) {
@@ -61,7 +58,7 @@ public class WifiListAdapter extends BaseAdapter {
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {
-		final Keygen wifi = listNetworks.get(position);
+		final Keygen wifi = listNetworks[position];
 		if (convertView == null) {
 			convertView = inflater.inflate(R.layout.item_list_wifi, parent,
 					false);

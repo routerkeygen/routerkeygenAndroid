@@ -32,7 +32,6 @@ import java.net.UnknownHostException;
 import org.exobel.routerkeygen.DictionaryDownloadService;
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.utils.HashUtils;
-import org.exobel.routerkeygen.utils.LogUtils;
 
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
@@ -87,14 +86,14 @@ public class Preferences extends SherlockPreferenceActivity {
 	public static final String autoScanIntervalPref = "autoScanInterval";
 	
 
-	private final static String GOOGLE_PLAY_DOWNLOADER = "org.exobel.routerkeygendownloader";
+	public final static String GOOGLE_PLAY_DOWNLOADER = "org.exobel.routerkeygendownloader";
 
 	public static final String PUB_DOWNLOAD = "http://android-thomson-key-solver.googlecode.com/files/RouterKeygen_v3.dic";
 	private static final String PUB_DIC_CFV = "http://android-thomson-key-solver.googlecode.com/svn/trunk/RKDictionary.cfv";
 	private static final String PUB_VERSION = "http://android-thomson-key-solver.googlecode.com/svn/trunk/RouterKeygenVersion.txt";
 
-	private static final String VERSION = "3.0.0";
-	private static final String LAUNCH_DATE = "04/01/2012";
+	private static final String VERSION = "3.0.3";
+	private static final String LAUNCH_DATE = "13/12/2012";
 
 	private String version = "";
 
@@ -144,7 +143,7 @@ public class Preferences extends SherlockPreferenceActivity {
 		findPreference("donate_paypal").setOnPreferenceClickListener(
 				new OnPreferenceClickListener() {
 					public boolean onPreferenceClick(Preference preference) {
-						String donateLink = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=V3FFBTRTTV5DN";
+						final String donateLink = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=V3FFBTRTTV5DN";
 						Uri uri = Uri.parse(donateLink);
 						startActivity(new Intent(Intent.ACTION_VIEW, uri));
 
@@ -316,7 +315,6 @@ public class Preferences extends SherlockPreferenceActivity {
 	public void onStart() {
 		super.onStart();
 		EasyTracker.getInstance().activityStart(this); // Add this method.
-		EasyTracker.getTracker().setExceptionParser(LogUtils.parser);
 	}
 
 	@Override

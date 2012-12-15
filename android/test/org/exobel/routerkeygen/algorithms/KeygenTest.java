@@ -111,6 +111,24 @@ public class KeygenTest {
 		assertEquals("There should only one result", 1, results.size());
 		assertEquals("The password should be 75169F60EC", "75169F60EC", results.get(0));
 		assertFalse("Keygen should not be Megared", matcher.getKeygen("Megared60EC", "FC:75:16:9F:60:EB", 0, "") instanceof MegaredKeygen);
-
+	}
+	
+	@Test
+	public void testLWAN6X() {
+		Keygen keygen = matcher.getKeygen("WLAN123456", "11:22:33:44:55:66", 0, "");
+		assertTrue("Keygen should be Wlan6",keygen instanceof Wlan6Keygen);
+		List<String> results = keygen.getKeys();
+		assertTrue("Error should  happen",keygen.getErrorCode() != 0);
+		assertEquals("There should only one result", 10, results.size());
+		assertEquals("The password should be 5630556304607", "5630556304607", results.get(0));
+		assertEquals("The password should be 5730446305616", "5730446305616", results.get(1));
+		assertEquals("The password should be 5430776306625", "5430776306625", results.get(2));
+		assertEquals("The password should be 5530666307634", "5530666307634", results.get(3));
+		assertEquals("The password should be 5230116300643", "5230116300643", results.get(4));
+		assertEquals("The password should be 5330006301652", "5330006301652", results.get(5));
+		assertEquals("The password should be 5030336302661", "5030336302661", results.get(6));
+		assertEquals("The password should be 5130226303670", "5130226303670", results.get(7));
+		assertEquals("The password should be 5E30DD630C68F", "5E30DD630C68F", results.get(8));
+		assertEquals("The password should be 5F30CC630D69E", "5F30CC630D69E", results.get(9));
 	}
 }

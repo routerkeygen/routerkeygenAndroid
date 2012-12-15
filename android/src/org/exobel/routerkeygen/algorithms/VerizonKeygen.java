@@ -19,6 +19,7 @@
 package org.exobel.routerkeygen.algorithms;
 
 import java.util.List;
+import java.util.Locale;
 
 import org.exobel.routerkeygen.R;
 
@@ -54,7 +55,7 @@ public class VerizonKeygen extends Keygen {
 			return null;
 		}
 		
-		String ssidKey = Integer.toHexString(result).toUpperCase();
+		String ssidKey = Integer.toHexString(result).toUpperCase(Locale.getDefault());
 		while ( ssidKey.length() < 6 )
 			ssidKey = "0" + ssidKey;
 	    if ( !getMacAddress().equals(""))

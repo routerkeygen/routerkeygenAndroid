@@ -52,6 +52,8 @@
     <string name="bt_save_sd">Salva nella scheda SD</string>
     <string name="bt_auto_connect">Connetti automaticamente</string>
     <string name="bt_website">Vai al sito web</string>
+    <string name="bt_paypal">PayPal</string>
+    <string name="bt_google_play">Google Play</string>
 
     <!-- DIALOG STRINGS -->
     <string name="lb_manual">Inserisci qui il tuo ESSID:</string>

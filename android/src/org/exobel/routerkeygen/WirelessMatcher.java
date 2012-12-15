@@ -41,7 +41,6 @@ import org.exobel.routerkeygen.algorithms.ZyxelKeygen;
 
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
-import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -266,25 +265,21 @@ public class WirelessMatcher implements Parcelable {
 	}
 
 	public void writeToParcel(Parcel dest, int flags) {
-		Set<String> keySet = supportedAlices.keySet();
-		Bundle b = new Bundle();
-		for (String key : keySet)
-			b.putParcelableArrayList(key, supportedAlices.get(key));
-		String[] array = keySet.toArray(new String[keySet.size()]);
+		final Set<String> keySet = supportedAlices.keySet();
+		final String[] array = keySet.toArray(new String[keySet.size()]);
 		dest.writeStringArray(array);
-		dest.writeBundle(b);
+		for (String key : keySet)
+			dest.writeTypedList(supportedAlices.get(key));
 	}
 
 	private WirelessMatcher(Parcel in) {
 		supportedAlices = new HashMap<String, ArrayList<AliceMagicInfo>>();
 		String[] keys = in.createStringArray();
-		@SuppressWarnings("unchecked")
-		Class<ArrayList<AliceMagicInfo>> type = (Class<ArrayList<AliceMagicInfo>>) new ArrayList<AliceMagicInfo>()
-				.getClass();
-		Bundle bundle = in.readBundle(type.getClassLoader());
-		for (String key : keys)
-			supportedAlices.put(key,
-					type.cast(bundle.getParcelableArrayList(key)));
+		for (String key : keys) {
+			final ArrayList<AliceMagicInfo> supportedAlicesList = new ArrayList<AliceMagicInfo>();
+			in.readTypedList(supportedAlicesList, AliceMagicInfo.CREATOR);
+			supportedAlices.put(key, supportedAlicesList);
+		}
 
 	}
 

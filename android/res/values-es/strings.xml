@@ -49,6 +49,8 @@
     <string name="bt_save_sd">Guardar a la tarjeta SD</string>
     <string name="bt_auto_connect">Auto conectar</string>
     <string name="bt_website">Ir al sitio Web</string>
+    <string name="bt_paypal">PayPal</string>
+    <string name="bt_google_play">Google Play</string>
     <!-- DIALOG STRINGS -->
     <string name="lb_manual">Introduce el ESSID:</string>
     <string name="dialog_nativecalc_msg">Esto puede llevar hasta unos 2 minutos, espera por favor…</string>

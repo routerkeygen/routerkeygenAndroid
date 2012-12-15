@@ -18,7 +18,6 @@
  */
 package org.exobel.routerkeygen;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -33,17 +32,18 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.widget.Toast;
 
-public class WiFiScanReceiver extends BroadcastReceiver { 
-	final private OnScanListener [] scanListeners;
+public class WiFiScanReceiver extends BroadcastReceiver {
+	final private OnScanListener[] scanListeners;
 	final private WirelessMatcher matcher;
 	final private WifiManager wifi;
 
 	public interface OnScanListener {
 
-		public void onScanFinished(List<Keygen> networks);
+		public void onScanFinished(Keygen[] networks);
 	}
 
-	public WiFiScanReceiver(WirelessMatcher matcher, WifiManager wifi, OnScanListener ... scanListener) {
+	public WiFiScanReceiver(WirelessMatcher matcher, WifiManager wifi,
+			OnScanListener... scanListener) {
 		super();
 		this.scanListeners = scanListener;
 		this.matcher = matcher;
@@ -56,14 +56,13 @@ public class WiFiScanReceiver extends BroadcastReceiver {
 			return;
 		if (wifi == null)
 			return;
-		List<ScanResult> results = wifi.getScanResults();
+		final List<ScanResult> results = wifi.getScanResults();
 		/*
 		 * He have had reports of this returning null instead of empty
 		 */
 		if (results == null)
 			return;
-		ArrayList<Keygen> networks = new ArrayList<Keygen>();
-		Set<Keygen> set = new TreeSet<Keygen>();
+		final Set<Keygen> set = new TreeSet<Keygen>();
 		for (int i = 0; i < results.size() - 1; ++i)
 			for (int j = i + 1; j < results.size(); ++j)
 				if (results.get(i).SSID.equals(results.get(j).SSID))
@@ -76,14 +75,13 @@ public class WiFiScanReceiver extends BroadcastReceiver {
 			Toast.makeText(c, R.string.err_misbuilt_apk, Toast.LENGTH_SHORT)
 					.show();
 		}
-		Iterator<Keygen> it = set.iterator();
+		final Keygen[] networks = new Keygen[set.size()];
+		final Iterator<Keygen> it = set.iterator();
+		int i = 0;
 		while (it.hasNext())
-			networks.add(it.next());
-		for ( OnScanListener scanListener : scanListeners )
+			networks[i++] = it.next();
+		for (OnScanListener scanListener : scanListeners)
 			scanListener.onScanFinished(networks);
-		if (networks.isEmpty())
-			Toast.makeText(c, R.string.msg_nowifidetected, Toast.LENGTH_SHORT)
-					.show();
 		try {
 			c.unregisterReceiver(this);
 		} catch (Exception e) {
