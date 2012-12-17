@@ -84,7 +84,6 @@ public class Preferences extends SherlockPreferenceActivity {
 	public static final String nativeCalcPref = "nativethomson";
 	public static final String autoScanPref = "autoScan";
 	public static final String autoScanIntervalPref = "autoScanInterval";
-	
 
 	public final static String GOOGLE_PLAY_DOWNLOADER = "org.exobel.routerkeygendownloader";
 
@@ -92,10 +91,10 @@ public class Preferences extends SherlockPreferenceActivity {
 	private static final String PUB_DIC_CFV = "http://android-thomson-key-solver.googlecode.com/svn/trunk/RKDictionary.cfv";
 	private static final String PUB_VERSION = "http://android-thomson-key-solver.googlecode.com/svn/trunk/RouterKeygenVersion.txt";
 
-	private static final String VERSION = "3.0.3";
-	private static final String LAUNCH_DATE = "13/12/2012";
+	private static final String VERSION = "3.0.4";
+	private static final String LAUNCH_DATE = "20/12/2012";
 
-	private String version = "";
+	private String version;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -150,21 +149,25 @@ public class Preferences extends SherlockPreferenceActivity {
 						return true;
 					}
 				});
-		
+
 		findPreference("donate_playstore").setOnPreferenceClickListener(
 				new OnPreferenceClickListener() {
 					public boolean onPreferenceClick(Preference preference) {
 						try {
-						    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id="+GOOGLE_PLAY_DOWNLOADER)));
+							startActivity(new Intent(Intent.ACTION_VIEW, Uri
+									.parse("market://details?id="
+											+ GOOGLE_PLAY_DOWNLOADER)));
 						} catch (android.content.ActivityNotFoundException anfe) {
-						    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id="+GOOGLE_PLAY_DOWNLOADER)));
+							startActivity(new Intent(
+									Intent.ACTION_VIEW,
+									Uri.parse("http://play.google.com/store/apps/details?id="
+											+ GOOGLE_PLAY_DOWNLOADER)));
 						}
 
 						return true;
 					}
 				});
-		
-		
+
 		findPreference("update").setOnPreferenceClickListener(
 				new OnPreferenceClickListener() {
 					public boolean onPreferenceClick(Preference preference) {
