@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exobel.routerkeygen.AutoConnectService;
+import org.exobel.routerkeygen.BuildConfig;
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.algorithms.Keygen;
 import org.exobel.routerkeygen.algorithms.NativeThomson;
@@ -360,7 +361,8 @@ public class NetworkFragment extends SherlockFragment {
 			long begin = System.currentTimeMillis();
 			final List<String> result = keygen.getKeys();
 			long end = System.currentTimeMillis() - begin;
-			Log.d(TAG, "Time to solve:" + end);
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Time to solve:" + end);
 
 			final int errorCode = keygen.getErrorCode();
 			if (errorCode != 0) {
