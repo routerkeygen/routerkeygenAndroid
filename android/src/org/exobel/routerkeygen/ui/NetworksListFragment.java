@@ -223,7 +223,8 @@ public class NetworksListFragment extends SherlockFragment implements
 
 	public void onItemClick(AdapterView<?> list, View view, int position,
 			long id) {
-		mCallbacks.onItemSelected(networksFound[position]);
+		if (networksFound != null && networksFound.length > position)
+			mCallbacks.onItemSelected(networksFound[position]);
 	}
 
 }
