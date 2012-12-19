@@ -3,6 +3,8 @@
 	<name>RouterKeygen</name>
 	<comment></comment>
 	<projects>
+		<project>Actionbar</project>
+		<project>aFileChooser</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
