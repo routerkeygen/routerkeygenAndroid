@@ -186,6 +186,7 @@ public class NetworkFragment extends SherlockFragment {
 						+ getString(R.string.share_msg_begin));
 				final StringBuilder message = new StringBuilder(
 						keygen.getSsidName());
+				message.append("\n");
 				message.append(getString(R.string.share_msg_begin));
 				message.append(":\n");
 				for (String password : passwordList) {
