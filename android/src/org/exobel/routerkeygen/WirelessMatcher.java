@@ -14,6 +14,7 @@ import javax.xml.parsers.SAXParserFactory;
 import org.exobel.routerkeygen.algorithms.AliceKeygen;
 import org.exobel.routerkeygen.algorithms.AndaredKeygen;
 import org.exobel.routerkeygen.algorithms.AxtelKeygen;
+import org.exobel.routerkeygen.algorithms.CabovisaoSagemKeygen;
 import org.exobel.routerkeygen.algorithms.ComtrendKeygen;
 import org.exobel.routerkeygen.algorithms.ConnKeygen;
 import org.exobel.routerkeygen.algorithms.DiscusKeygen;
@@ -206,6 +207,11 @@ public class WirelessMatcher implements Parcelable {
 
 		if (ssid.matches("PBS-[0-9a-fA-F]{6}"))
 			return new PBSKeygen(ssid, mac, level, enc);
+
+		if (ssid.matches("Cabovisao-[0-9a-fA-F]{4}")) {
+			if (mac.length() == 0 || mac.startsWith("C0:AC:54"))
+				return new CabovisaoSagemKeygen(ssid, mac, level, enc);
+		}
 
 		if (ssid.equals("CONN-X"))
 			return new ConnKeygen(ssid, mac, level, enc);
