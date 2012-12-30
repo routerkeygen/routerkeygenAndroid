@@ -33,6 +33,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -56,7 +57,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 	private WifiManager wifi;
 	private BroadcastReceiver scanFinished;
 	private BroadcastReceiver stateChanged;
-	private static final String donateScreenShownPref = "donateScreenShown";
+	private static final String donateScreenShownPref = "3.0.4";
 	boolean welcomeScreenShown;
 
 	private Handler mHandler = new Handler();
@@ -88,56 +89,65 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 		welcomeScreenShown = mPrefs.getBoolean(donateScreenShownPref, false);
 
 		if (!welcomeScreenShown) {
-
-			final String whatsNewTitle = getString(R.string.msg_welcome_title);
-			final String whatsNewText = getString(R.string.msg_welcome_text);
-			new AlertDialog.Builder(this)
-					.setIcon(android.R.drawable.ic_dialog_alert)
-					.setTitle(whatsNewTitle)
-					.setMessage(whatsNewText)
-					.setNegativeButton(android.R.string.ok,
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int which) {
-									dialog.dismiss();
-								}
-							})
-					.setNeutralButton(R.string.bt_paypal,
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int which) {
-									final String donateLink = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=V3FFBTRTTV5DN";
-									Uri uri = Uri.parse(donateLink);
-									startActivity(new Intent(
-											Intent.ACTION_VIEW, uri));
-									dialog.dismiss();
-								}
-							})
-					.setPositiveButton(R.string.bt_google_play,
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int which) {
-									try {
-										startActivity(new Intent(
-												Intent.ACTION_VIEW,
-												Uri.parse("market://details?id="
-														+ Preferences.GOOGLE_PLAY_DOWNLOADER)));
-									} catch (android.content.ActivityNotFoundException anfe) {
-										startActivity(new Intent(
-												Intent.ACTION_VIEW,
-												Uri.parse("http://play.google.com/store/apps/details?id="
-														+ Preferences.GOOGLE_PLAY_DOWNLOADER)));
+			PackageManager pm = getPackageManager();
+			boolean app_installed = false;
+			try {
+				pm.getPackageInfo("org.exobel.routerkeygendownloader",
+						PackageManager.GET_ACTIVITIES);
+				app_installed = true;
+			} catch (PackageManager.NameNotFoundException e) {
+				app_installed = false;
+			}
+			if (!app_installed) {
+				final String whatsNewTitle = getString(R.string.msg_welcome_title);
+				final String whatsNewText = getString(R.string.msg_welcome_text);
+				new AlertDialog.Builder(this)
+						.setIcon(android.R.drawable.ic_dialog_alert)
+						.setTitle(whatsNewTitle)
+						.setMessage(whatsNewText)
+						.setNegativeButton(android.R.string.ok,
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog,
+											int which) {
+										dialog.dismiss();
 									}
-									dialog.dismiss();
-								}
-							}).show();
+								})
+						.setNeutralButton(R.string.bt_paypal,
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog,
+											int which) {
+										final String donateLink = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=V3FFBTRTTV5DN";
+										Uri uri = Uri.parse(donateLink);
+										startActivity(new Intent(
+												Intent.ACTION_VIEW, uri));
+										dialog.dismiss();
+									}
+								})
+						.setPositiveButton(R.string.bt_google_play,
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog,
+											int which) {
+										try {
+											startActivity(new Intent(
+													Intent.ACTION_VIEW,
+													Uri.parse("market://details?id="
+															+ Preferences.GOOGLE_PLAY_DOWNLOADER)));
+										} catch (android.content.ActivityNotFoundException anfe) {
+											startActivity(new Intent(
+													Intent.ACTION_VIEW,
+													Uri.parse("http://play.google.com/store/apps/details?id="
+															+ Preferences.GOOGLE_PLAY_DOWNLOADER)));
+										}
+										dialog.dismiss();
+									}
+								}).show();
+			}
 			final SharedPreferences.Editor editor = mPrefs.edit();
 			editor.putBoolean(donateScreenShownPref, true);
 			editor.commit();
 		}
 	}
 
-	
 	public void onItemSelected(Keygen keygen) {
 		if (mTwoPane) {
 			final Bundle arguments = new Bundle();
@@ -294,7 +304,6 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 				getResources().getInteger(R.integer.autoScanIntervalDefault));
 	}
 
-	
 	public void onScanFinished(Keygen[] networks) {
 		setRefreshActionItemState(false);
 		if (!welcomeScreenShown) {
@@ -304,7 +313,6 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 		}
 	}
 
-	
 	public void onItemSelected(String mac) {
 
 		ManualDialogFragment.newInstance(networkMatcher, mac).show(
