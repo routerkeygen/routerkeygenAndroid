@@ -27,6 +27,7 @@ import android.os.Parcelable;
  * This is not actual an algorithm as
  * it is just the base string followed by a character in the range a-e and then
  * the last 4 characters of the SSID.
+ * Source: http://jb.ptsec.info/cabovisao/
  */
 public class CabovisaoSagemKeygen extends Keygen {
 	private final static String KEY_BASE = "2ce412e";

@@ -101,7 +101,7 @@
     <string name="pref_hinton_autoscan">Le balayage se répétera automatiquement.</string>
     <string name="pref_hintoff_autoscan">Balayage toujours manuel.</string>
     <string name="pref_autoscan_interval">Intervalle du balayage automatique</string>
-    <string name="pref_hint_autoscan_interval">Période du balayage automatique...</string>
+    <string name="pref_hint_autoscan_interval">Période du balayage automatique&#8230;</string>
 
 
     <!-- ERROR MESSAGE STRINGS -->
@@ -195,6 +195,7 @@
         <item>MEO-</item>
         <item>Optimus</item>
         <item>OptimusFibra</item>
+        <item>Cabovisao-</item>
     </string-array>
 
 </resources>
