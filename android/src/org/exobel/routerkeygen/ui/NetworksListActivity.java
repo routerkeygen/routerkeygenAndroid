@@ -57,8 +57,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 	private WifiManager wifi;
 	private BroadcastReceiver scanFinished;
 	private BroadcastReceiver stateChanged;
-	private static final String donateScreenShownPref = "3.0.4";
-	boolean welcomeScreenShown;
+	private boolean welcomeScreenShown;
 
 	private Handler mHandler = new Handler();
 
@@ -86,7 +85,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 
 		final SharedPreferences mPrefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
-		welcomeScreenShown = mPrefs.getBoolean(donateScreenShownPref, false);
+		welcomeScreenShown = mPrefs.getBoolean(Preferences.VERSION, false);
 
 		if (!welcomeScreenShown) {
 			PackageManager pm = getPackageManager();
@@ -143,7 +142,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 								}).show();
 			}
 			final SharedPreferences.Editor editor = mPrefs.edit();
-			editor.putBoolean(donateScreenShownPref, true);
+			editor.putBoolean(Preferences.VERSION, true);
 			editor.commit();
 		}
 	}
