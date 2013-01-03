@@ -40,13 +40,14 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
 @SuppressWarnings("deprecation")
 public class NetworksListFragment extends SherlockFragment implements
-		OnScanListener, OnItemClickListener {
+		OnScanListener, OnItemClickListener, MessagePublisher {
 
 	private static final String STATE_ACTIVATED_POSITION = "activated_position";
 	private static final String NETWORKS_FOUND = "network_found";
@@ -202,6 +203,17 @@ public class NetworksListFragment extends SherlockFragment implements
 		return super.onContextItemSelected(item);
 	}
 
+	public void setMessage(int message) {
+		noNetworksMessage.findViewById(R.id.loading_spinner).setVisibility(
+				View.GONE);
+		listview.setVisibility(View.GONE);
+		TextView messageView = (TextView) noNetworksMessage
+				.findViewById(R.id.message);
+		messageView.setVisibility(View.VISIBLE);
+		messageView.setText(message);
+		noNetworksMessage.setVisibility(View.VISIBLE);
+	}
+
 	public void onScanFinished(Keygen[] networks) {
 		networksFound = networks;
 		if (getActivity() == null)
@@ -215,8 +227,11 @@ public class NetworksListFragment extends SherlockFragment implements
 			noNetworksMessage.findViewById(R.id.loading_spinner).setVisibility(
 					View.GONE);
 			listview.setVisibility(View.GONE);
-			noNetworksMessage.findViewById(R.id.message).setVisibility(
-					View.VISIBLE);
+			listview.setVisibility(View.GONE);
+			TextView messageView = (TextView) noNetworksMessage
+					.findViewById(R.id.message);
+			messageView.setVisibility(View.VISIBLE);
+			messageView.setText(R.string.msg_nowifidetected);
 			noNetworksMessage.setVisibility(View.VISIBLE);
 		}
 	}

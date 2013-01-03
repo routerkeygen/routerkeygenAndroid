@@ -52,7 +52,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 		NetworksListFragment.OnItemSelectionListener, OnScanListener {
 
 	private boolean mTwoPane;
-
+	private NetworksListFragment networkListFragment;
 	private WirelessMatcher networkMatcher;
 	private WifiManager wifi;
 	private BroadcastReceiver scanFinished;
@@ -67,21 +67,21 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 		EasyTracker.getInstance().setContext(getApplicationContext());
 		setContentView(R.layout.activity_networks_list);
 
-		final NetworksListFragment fragment = ((NetworksListFragment) getSupportFragmentManager()
+		networkListFragment = ((NetworksListFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.item_list));
 		if (findViewById(R.id.item_detail_container) != null) {
 			mTwoPane = true;
-			fragment.setActivateOnItemClick(true);
+			networkListFragment.setActivateOnItemClick(true);
 		}
 		networkMatcher = new WirelessMatcher(getResources().openRawResource(
 				R.raw.alice));
 		wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 
-		wifi_state = wifi.getWifiState() == WifiManager.WIFI_STATE_ENABLED
+		wifiState = wifi.getWifiState() == WifiManager.WIFI_STATE_ENABLED
 				|| wifi.getWifiState() == WifiManager.WIFI_STATE_ENABLING;
-		scanFinished = new WiFiScanReceiver(networkMatcher, wifi, fragment,
+		scanFinished = new WiFiScanReceiver(networkMatcher, wifi, networkListFragment,
 				this);
-		stateChanged = new WifiStateReceiver(wifi);
+		stateChanged = new WifiStateReceiver(wifi, networkListFragment);
 
 		final SharedPreferences mPrefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
@@ -200,10 +200,9 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 		getPrefs();
 		if (wifiOn) {
 			if (!wifi.setWifiEnabled(true))
-				Toast.makeText(this, R.string.msg_wifibroken,
-						Toast.LENGTH_SHORT).show();
+				networkListFragment.setMessage(R.string.msg_wifibroken);
 			else
-				wifi_state = true;
+				wifiState = true;
 		}
 		if (autoScan) {
 			mHandler.removeCallbacks(mAutoScanTask);
@@ -259,9 +258,8 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 	}
 
 	public void scan() {
-		if (!wifi_state && !wifiOn) {
-			Toast.makeText(this, R.string.msg_nowifi, Toast.LENGTH_SHORT)
-					.show();
+		if (!wifiState && !wifiOn) {
+			networkListFragment.setMessage(R.string.msg_nowifi);
 			return;
 		}
 		registerReceiver(scanFinished, new IntentFilter(
@@ -275,8 +273,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 			if (wifi.startScan()) {
 				setRefreshActionItemState(true);
 			} else
-				Toast.makeText(this, R.string.msg_scanfailed,
-						Toast.LENGTH_SHORT).show();
+				networkListFragment.setMessage(R.string.msg_scanfailed);
 		}
 	}
 
@@ -287,7 +284,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 		}
 	};
 
-	private boolean wifi_state;
+	private boolean wifiState;
 	private boolean wifiOn;
 	private boolean autoScan;
 	private long autoScanInterval;
