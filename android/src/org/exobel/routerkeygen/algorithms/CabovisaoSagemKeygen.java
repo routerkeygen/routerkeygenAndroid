@@ -19,6 +19,7 @@
 package org.exobel.routerkeygen.algorithms;
 
 import java.util.List;
+import java.util.Locale;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -34,7 +35,7 @@ public class CabovisaoSagemKeygen extends Keygen {
 	final private String ssidIdentifier;
 	public CabovisaoSagemKeygen(String ssid, String mac, int level, String enc ) {
 		super(ssid, mac, level, enc);
-		this.ssidIdentifier = ssid.substring(ssid.length()-4);
+		this.ssidIdentifier = ssid.substring(ssid.length()-4).toLowerCase(Locale.getDefault());
 	}
 	
 	@Override
