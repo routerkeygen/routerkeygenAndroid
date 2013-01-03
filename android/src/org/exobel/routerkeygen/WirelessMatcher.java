@@ -22,11 +22,13 @@ import org.exobel.routerkeygen.algorithms.HuaweiKeygen;
 import org.exobel.routerkeygen.algorithms.InfostradaKeygen;
 import org.exobel.routerkeygen.algorithms.InterCableKeygen;
 import org.exobel.routerkeygen.algorithms.Keygen;
+import org.exobel.routerkeygen.algorithms.MaxcomKeygen;
 import org.exobel.routerkeygen.algorithms.MegaredKeygen;
 import org.exobel.routerkeygen.algorithms.OnoKeygen;
 import org.exobel.routerkeygen.algorithms.OteKeygen;
 import org.exobel.routerkeygen.algorithms.PBSKeygen;
 import org.exobel.routerkeygen.algorithms.PirelliKeygen;
+import org.exobel.routerkeygen.algorithms.PtvKeygen;
 import org.exobel.routerkeygen.algorithms.SkyV1Keygen;
 import org.exobel.routerkeygen.algorithms.TecomKeygen;
 import org.exobel.routerkeygen.algorithms.TelseyKeygen;
@@ -196,8 +198,14 @@ public class WirelessMatcher implements Parcelable {
 		if (ssid.matches("OTE[0-9a-fA-F]{6}"))
 			return new OteKeygen(ssid, mac, level, enc);
 
+		if (ssid.matches("MAXCOM[0-9a-zA-Z]{4}"))
+			return new MaxcomKeygen(ssid, mac, level, enc);
+
 		if (ssid.matches("PBS-[0-9a-fA-F]{6}"))
 			return new PBSKeygen(ssid, mac, level, enc);
+		
+		if (ssid.matches("(PTV-|ptv|ptv-)[0-9a-zA-Z]{6}"))
+			return new PtvKeygen(ssid, mac, level, enc);
 
 		if (ssid.matches("Cabovisao-[0-9a-fA-F]{4}")) {
 			if (mac.length() == 0 || mac.startsWith("C0:AC:54"))
