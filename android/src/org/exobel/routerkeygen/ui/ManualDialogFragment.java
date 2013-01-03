@@ -1,5 +1,7 @@
 package org.exobel.routerkeygen.ui;
 
+import java.util.Locale;
+
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.WirelessMatcher;
 import org.exobel.routerkeygen.algorithms.Keygen;
@@ -196,7 +198,7 @@ public class ManualDialogFragment extends SherlockDialogFragment {
 
 				if (ssid.equals(""))
 					return;
-				Keygen keygen = matcher.getKeygen(ssid, mac.toString(), 0, "");
+				Keygen keygen = matcher.getKeygen(ssid, mac.toString().toUpperCase(Locale.getDefault()), 0, "");
 				if (keygen instanceof UnsupportedKeygen) {
 					Toast.makeText(getActivity(),
 							R.string.msg_unspported_network, Toast.LENGTH_SHORT)

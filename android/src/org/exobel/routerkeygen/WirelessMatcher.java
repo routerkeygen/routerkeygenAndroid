@@ -8,9 +8,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
 import org.exobel.routerkeygen.algorithms.AliceKeygen;
 import org.exobel.routerkeygen.algorithms.AndaredKeygen;
 import org.exobel.routerkeygen.algorithms.AxtelKeygen;
@@ -50,15 +47,8 @@ public class WirelessMatcher implements Parcelable {
 	private final Map<String, ArrayList<AliceMagicInfo>> supportedAlices;
 
 	public WirelessMatcher(InputStream aliceXml) {
-		AliceHandle aliceReader = new AliceHandle();
-		SAXParserFactory factory = SAXParserFactory.newInstance();
-		SAXParser saxParser;
-		try {
-			saxParser = factory.newSAXParser();
-			saxParser.parse(aliceXml, aliceReader);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		AliceHandle aliceReader = new AliceHandle(aliceXml);
+		aliceReader.parse();
 		supportedAlices = aliceReader.getSupportedAlices();
 	}
 
@@ -72,6 +62,7 @@ public class WirelessMatcher implements Parcelable {
 	}
 
 	public Keygen getKeygen(String ssid, String mac, int level, String enc) {
+		mac = mac.toUpperCase(Locale.getDefault());
 		if (enc.equals(""))
 			enc = Keygen.OPEN;
 		if (ssid.matches("(AXTEL|AXTEL-XTREMO)-[0-9a-fA-F]{4}")) {
@@ -144,7 +135,7 @@ public class WirelessMatcher implements Parcelable {
 		if (ssid.matches("[aA]lice-[0-9]{8}")) {
 
 			final List<AliceMagicInfo> supported = supportedAlices.get(ssid
-					.substring(0, 9));
+					.substring(6, 9));
 			if (supported != null && supported.size() > 0) {
 				if (mac.length() < 6)
 					mac = supported.get(0).getMac();

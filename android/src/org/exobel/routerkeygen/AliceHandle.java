@@ -18,52 +18,55 @@
  */
 package org.exobel.routerkeygen;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
-
-
-class AliceHandle extends DefaultHandler{
+class AliceHandle {
 	private final Map<String, ArrayList<AliceMagicInfo>> supportedAlices;
+	private final InputStream in;
 
-	public AliceHandle(){
+	public AliceHandle(InputStream in) {
+		this.in = in;
 		supportedAlices = new HashMap<String, ArrayList<AliceMagicInfo>>();
-	} 
-	
-	public void startElement(String uri, String localName,
-	        String qName, Attributes attributes){
-		int [] magic = new int[2];
-		String serial;
-		String mac;
-		if ( attributes.getLength() == 0 )
-			return;
-		ArrayList<AliceMagicInfo> supported = supportedAlices.get(qName);
-		if ( supported == null) {
-			supported = new ArrayList<AliceMagicInfo>(5);
-			supportedAlices.put(qName, supported);
-		}
-		serial = attributes.getValue("sn");
-		mac = attributes.getValue("mac");
-		magic[0] = Integer.parseInt(attributes.getValue("q"));
-		magic[1] = Integer.parseInt(attributes.getValue("k"));
-		supported.add(new AliceMagicInfo(qName, magic, serial, mac));
-
 	}
-	
-	public void endElement( String namespaceURI,
-	              String localName,
-	              String qName ) throws SAXException {}
-	
-	public void characters( char[] ch, int start, int length )
-	              throws SAXException {}
-	
-	
-	public Map<String, ArrayList<AliceMagicInfo>> getSupportedAlices(){
+
+	public void parse() {
+		final BufferedReader bufferedInput = new BufferedReader(
+				new InputStreamReader(in));
+		try {
+			String line;
+			while ((line = bufferedInput.readLine()) != null) {
+				final String[] infos = line.split(",");
+				final String name = infos[0];
+				ArrayList<AliceMagicInfo> supported = supportedAlices
+						.get(name);
+				if (supported == null) {
+					supported = new ArrayList<AliceMagicInfo>(5);
+					supportedAlices.put(name, supported);
+				}
+				final String serial = infos[1];
+				int[] magic = new int[2];
+				magic[0] = Integer.parseInt(infos[2]); // k
+				magic[1] = Integer.parseInt(infos[3]); // q
+				final String mac = infos[4];
+				supported.add(new AliceMagicInfo(name, magic, serial, mac));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				bufferedInput.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public Map<String, ArrayList<AliceMagicInfo>> getSupportedAlices() {
 		return supportedAlices;
 	}
 }
-

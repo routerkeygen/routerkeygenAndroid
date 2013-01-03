@@ -15,7 +15,7 @@ public class KeygenTest {
 	static WirelessMatcher matcher;
 	@BeforeClass
 	public static void initMatcher() throws FileNotFoundException{
-		matcher = new WirelessMatcher(new FileInputStream("../res/raw/alice.xml"));
+		matcher = new WirelessMatcher(new FileInputStream("../res/raw/alice.txt"));
 	}
 	
 	@Test
@@ -58,6 +58,18 @@ public class KeygenTest {
 		assertEquals("The password should be 29b2e9560b3a83a187ec5f2057", "29b2e9560b3a83a187ec5f2057", results.get(0));		
 	}
 	
+	@Test
+	public void testAlice() {
+		Keygen keygen = matcher.getKeygen("Alice-37588990", "00:23:8e:48:e7:d4", 0, "");
+		assertTrue("Keygen should be Alice",keygen instanceof AliceKeygen);
+		List<String> results = keygen.getKeys();
+		assertEquals("Errors should not happen",0, keygen.getErrorCode());
+		assertEquals("There should only 4 result", 4, results.size());
+		assertEquals("The password should be djfveeeqyasxhhcqar8ypkcv", "djfveeeqyasxhhcqar8ypkcv", results.get(0));
+		assertEquals("The password should be fsvcl1ujd3coikm49qowthn8", "fsvcl1ujd3coikm49qowthn8", results.get(1));
+		assertEquals("The password should be y7xysqmqs9jooa7rersi7ayi", "y7xysqmqs9jooa7rersi7ayi", results.get(2));
+		assertEquals("The password should be 9j4hm3ojq4brfdy6wcsuglwu", "9j4hm3ojq4brfdy6wcsuglwu", results.get(3));		
+	}
 	@Test
 	public void testEasyBox() {
 		Keygen keygen = new EasyBoxKeygen("Arcor-910B02", "00:12:BF:91:0B:EC", 0, "");

@@ -18,38 +18,38 @@
  */
 package org.exobel.routerkeygen;
 
+import org.exobel.routerkeygen.ui.MessagePublisher;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
-import android.widget.Toast;
 
 public class WifiStateReceiver extends BroadcastReceiver {
 
-	final private WifiManager wifi;
-	public WifiStateReceiver(WifiManager wifi ){
+	private final WifiManager wifi;
+	private final MessagePublisher messagePublisher;
+
+	public WifiStateReceiver(WifiManager wifi, MessagePublisher messagePublisher) {
 		this.wifi = wifi;
+		this.messagePublisher = messagePublisher;
 	}
+
 	@Override
 	public void onReceive(Context context, Intent arg1) {
-		if ( wifi.getWifiState() == WifiManager.WIFI_STATE_ENABLED  )
-		{
+		if (wifi.getWifiState() == WifiManager.WIFI_STATE_ENABLED) {
 			wifi.startScan();
-			try{
-    		context.unregisterReceiver(this);
-			}catch(Exception e ){}
-    		Toast.makeText( context ,
-					context.getResources().getString(R.string.msg_scanstarted),
-					Toast.LENGTH_SHORT).show();
-    		return;
+			try {
+				context.unregisterReceiver(this);
+			} catch (Exception e) {
+			}
+
+			messagePublisher.setMessage(R.string.msg_scanstarted);
+			return;
 		}
-		if ( wifi.getWifiState() != WifiManager.WIFI_STATE_ENABLING )
-		{
-			Toast.makeText( context , 
-					  context.getResources().getString(R.string.msg_nowifi),
-					  Toast.LENGTH_SHORT).show();
+		if (wifi.getWifiState() != WifiManager.WIFI_STATE_ENABLING) {
+			messagePublisher.setMessage(R.string.msg_nowifi);
 			return;
 		}
 	}
-
 }
