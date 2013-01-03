@@ -74,7 +74,7 @@ public class WirelessMatcher implements Parcelable {
 	public Keygen getKeygen(String ssid, String mac, int level, String enc) {
 		if (enc.equals(""))
 			enc = Keygen.OPEN;
-		if (ssid.matches("AXTEL-[0-9a-fA-F]{4}")) {
+		if (ssid.matches("(AXTEL|AXTEL-XTREMO)-[0-9a-fA-F]{4}")) {
 			final String ssidSubpart = ssid.substring(ssid.length() - 4);
 			final String macShort = mac.replace(":", "");
 			if (macShort.length() < 12

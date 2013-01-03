@@ -26,11 +26,6 @@ import org.exobel.routerkeygen.R;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/*
- * This is not actual an algorithm
- * as the key is calculated from the MAC 
- * address adding a '2' as the first character
- */
 public class AxtelKeygen extends Keygen {
 
 	public AxtelKeygen(String ssid, String mac, int level, String enc) {
