@@ -7,5 +7,6 @@
 
     <bool name="wifiOnDefault">true</bool>
     <bool name="autoScanDefault">false</bool>
+    <bool name="analyticsDefault">true</bool>
 
 </resources>

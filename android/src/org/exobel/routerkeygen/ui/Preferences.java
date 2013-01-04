@@ -45,6 +45,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -83,6 +84,7 @@ public class Preferences extends SherlockPreferenceActivity {
 	public static final String thomson3gPref = "thomson3g";
 	public static final String nativeCalcPref = "nativethomson";
 	public static final String autoScanPref = "autoScan";
+	public static final String analyticsPref = "analytics_enabled";
 	public static final String autoScanIntervalPref = "autoScanInterval";
 
 	public final static String GOOGLE_PLAY_DOWNLOADER = "org.exobel.routerkeygendownloader";
@@ -102,6 +104,18 @@ public class Preferences extends SherlockPreferenceActivity {
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+		PackageManager pm = getPackageManager();
+		boolean app_installed = false;
+		try {
+			pm.getPackageInfo("org.exobel.routerkeygendownloader",
+					PackageManager.GET_ACTIVITIES);
+			app_installed = true;
+		} catch (PackageManager.NameNotFoundException e) {
+			app_installed = false;
+		}
+		if ( !app_installed ){
+			findViewById(R.id.analytics).setVisibility(View.GONE);
+		}
 		findPreference("download").setOnPreferenceClickListener(
 				new OnPreferenceClickListener() {
 					public boolean onPreferenceClick(Preference preference) {

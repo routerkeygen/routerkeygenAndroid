@@ -47,6 +47,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.GoogleAnalytics;
 
 public class NetworksListActivity extends SherlockFragmentActivity implements
 		NetworksListFragment.OnItemSelectionListener, OnScanListener {
@@ -261,6 +262,9 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 	public void onResume() {
 		super.onResume();
 		getPrefs();
+		GoogleAnalytics myInstance = GoogleAnalytics
+				.getInstance(getApplicationContext());
+		myInstance.setAppOptOut(!analyticsOptIn);
 	}
 
 	public void scan() {
@@ -293,6 +297,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 	private boolean wifiState;
 	private boolean wifiOn;
 	private boolean autoScan;
+	private boolean analyticsOptIn;
 	private long autoScanInterval;
 
 	private void getPrefs() {
@@ -304,6 +309,8 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 				.getBoolean(R.bool.autoScanDefault));
 		autoScanInterval = prefs.getInt(Preferences.autoScanIntervalPref,
 				getResources().getInteger(R.integer.autoScanIntervalDefault));
+		analyticsOptIn = prefs.getBoolean(Preferences.analyticsPref,
+				getResources().getBoolean(R.bool.analyticsDefault));
 	}
 
 	public void onScanFinished(Keygen[] networks) {
