@@ -199,10 +199,15 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 		EasyTracker.getInstance().activityStart(this); // Add this method.
 		getPrefs();
 		if (wifiOn) {
+			try{
 			if (!wifi.setWifiEnabled(true))
 				networkListFragment.setMessage(R.string.msg_wifibroken);
 			else
 				wifiState = true;
+			} catch ( SecurityException e ) {
+				//Workaround for http://code.google.com/p/android/issues/detail?id=22036
+				networkListFragment.setMessage(R.string.msg_wifibroken);
+			}
 		}
 		if (autoScan) {
 			mHandler.removeCallbacks(mAutoScanTask);
