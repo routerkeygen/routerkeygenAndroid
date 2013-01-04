@@ -24,8 +24,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Locale;
 
-import org.exobel.routerkeygen.AliceMagicInfo;
 import org.exobel.routerkeygen.R;
+import org.exobel.routerkeygen.config.AliceMagicInfo;
 
 import android.os.Parcel;
 import android.os.Parcelable;

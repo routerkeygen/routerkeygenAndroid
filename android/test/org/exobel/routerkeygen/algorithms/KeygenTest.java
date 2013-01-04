@@ -15,7 +15,7 @@ public class KeygenTest {
 	static WirelessMatcher matcher;
 	@BeforeClass
 	public static void initMatcher() throws FileNotFoundException{
-		matcher = new WirelessMatcher(new FileInputStream("../res/raw/alice.txt"));
+		matcher = new WirelessMatcher(new FileInputStream("../res/raw/alice.txt"),new FileInputStream("../res/raw/tele2.txt"));
 	}
 	
 	@Test
@@ -142,5 +142,15 @@ public class KeygenTest {
 		assertEquals("The password should be 5130226303670", "5130226303670", results.get(7));
 		assertEquals("The password should be 5E30DD630C68F", "5E30DD630C68F", results.get(8));
 		assertEquals("The password should be 5F30CC630D69E", "5F30CC630D69E", results.get(9));
+	}
+	
+	@Test
+	public void testTeletu() {
+		Keygen keygen = matcher.getKeygen("teletu", "00:23:8E:E5:28:C7", 0, "");
+		assertTrue("Keygen should be TeleTu",keygen instanceof TeletuKeygen);
+		List<String> results = keygen.getKeys();
+		assertEquals("Errors should not happen",0, keygen.getErrorCode());
+		assertEquals("There should only one result", 1, results.size());
+		assertEquals("The password should be 15301Y0013305, not " +results.get(0) , "15301Y0013305", results.get(0));		
 	}
 }

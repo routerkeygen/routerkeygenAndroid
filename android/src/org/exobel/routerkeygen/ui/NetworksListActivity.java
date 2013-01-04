@@ -74,13 +74,13 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 			networkListFragment.setActivateOnItemClick(true);
 		}
 		networkMatcher = new WirelessMatcher(getResources().openRawResource(
-				R.raw.alice));
+				R.raw.alice), getResources().openRawResource(R.raw.tele2));
 		wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 
 		wifiState = wifi.getWifiState() == WifiManager.WIFI_STATE_ENABLED
 				|| wifi.getWifiState() == WifiManager.WIFI_STATE_ENABLING;
-		scanFinished = new WiFiScanReceiver(networkMatcher, wifi, networkListFragment,
-				this);
+		scanFinished = new WiFiScanReceiver(networkMatcher, wifi,
+				networkListFragment, this);
 		stateChanged = new WifiStateReceiver(wifi, networkListFragment);
 
 		final SharedPreferences mPrefs = PreferenceManager
@@ -199,13 +199,14 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 		EasyTracker.getInstance().activityStart(this); // Add this method.
 		getPrefs();
 		if (wifiOn) {
-			try{
-			if (!wifi.setWifiEnabled(true))
-				networkListFragment.setMessage(R.string.msg_wifibroken);
-			else
-				wifiState = true;
-			} catch ( SecurityException e ) {
-				//Workaround for http://code.google.com/p/android/issues/detail?id=22036
+			try {
+				if (!wifi.setWifiEnabled(true))
+					networkListFragment.setMessage(R.string.msg_wifibroken);
+				else
+					wifiState = true;
+			} catch (SecurityException e) {
+				// Workaround for
+				// http://code.google.com/p/android/issues/detail?id=22036
 				networkListFragment.setMessage(R.string.msg_wifibroken);
 			}
 		}

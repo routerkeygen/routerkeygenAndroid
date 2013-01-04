@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exobel.routerkeygen;
+package org.exobel.routerkeygen.config;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -25,35 +25,31 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-class AliceHandle {
-	private final Map<String, ArrayList<AliceMagicInfo>> supportedAlices;
-	private final InputStream in;
-
-	public AliceHandle(InputStream in) {
-		this.in = in;
-		supportedAlices = new HashMap<String, ArrayList<AliceMagicInfo>>();
-	}
-
-	public void parse() {
+public class TeleTuConfigParser {
+	
+	public static Map<String, ArrayList<TeleTuMagicInfo>> parse(InputStream in) {
+		Map<String, ArrayList<TeleTuMagicInfo>> supportedTeleTu = new HashMap<String, ArrayList<TeleTuMagicInfo>>();
 		final BufferedReader bufferedInput = new BufferedReader(
 				new InputStreamReader(in));
 		try {
 			String line;
 			while ((line = bufferedInput.readLine()) != null) {
-				final String[] infos = line.split(",");
+				final String[] infos = line.split(" ");
 				final String name = infos[0];
-				ArrayList<AliceMagicInfo> supported = supportedAlices
+				ArrayList<TeleTuMagicInfo> supported = supportedTeleTu
 						.get(name);
 				if (supported == null) {
-					supported = new ArrayList<AliceMagicInfo>(5);
-					supportedAlices.put(name, supported);
+					supported = new ArrayList<TeleTuMagicInfo>(5);
+					supportedTeleTu.put(name, supported);
 				}
-				final String serial = infos[1];
-				int[] magic = new int[2];
-				magic[0] = Integer.parseInt(infos[2]); // k
-				magic[1] = Integer.parseInt(infos[3]); // q
-				final String mac = infos[4];
-				supported.add(new AliceMagicInfo(name, magic, serial, mac));
+				int[] range = new int[2];
+				range[0] = Integer.parseInt(infos[1], 16); // from
+				range[1] = Integer.parseInt(infos[2], 16); // to
+				final String serial = infos[3];
+				final int base = Integer.parseInt(infos[4], 16);
+				final int divider = Integer.parseInt(infos[5]);
+				supported
+						.add(new TeleTuMagicInfo(range, serial, base, divider));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -64,9 +60,7 @@ class AliceHandle {
 				e.printStackTrace();
 			}
 		}
+		return supportedTeleTu;
 	}
 
-	public Map<String, ArrayList<AliceMagicInfo>> getSupportedAlices() {
-		return supportedAlices;
-	}
 }
