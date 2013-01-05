@@ -156,6 +156,7 @@
     <string name="msg_error_key_testing">Error trying to test the key.</string>
     <string name="msg_no_correct_keys">No correct keys.</string>
     <string name="msg_auto_connect_running">The auto connect process is already running.</string>
+    <string name="msg_auto_connect_warning">This feature doesn\'t work well with weak networks.</string>
 
     <!-- FILE CHOOSER -->
     <string name="empty_directory">Empty Directory</string>

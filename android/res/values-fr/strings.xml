@@ -151,6 +151,7 @@
     <string name="msg_error_key_testing">Erreur lors du test de la clef.</string>
     <string name="msg_no_correct_keys">Aucune clef valide.</string>
     <string name="msg_auto_connect_running">Le processus d\'auto-connexion est déjà en cours.</string>
+    <string name="msg_auto_connect_warning">This feature doesn\'t work well with weak networks.</string> <!-- UNTRANSLATED -->
 
     <!-- FILE CHOOSER -->
     <string name="empty_directory">Dossier vide</string>

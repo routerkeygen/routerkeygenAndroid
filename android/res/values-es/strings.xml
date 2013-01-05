@@ -149,6 +149,7 @@
     <string name="msg_error_key_testing">Error tratando de probar la clave.</string>
     <string name="msg_no_correct_keys">Sin claves correctas.</string>
     <string name="msg_auto_connect_running">El proceso de auto conectar ya se está ejecutando.</string>
+    <string name="msg_auto_connect_warning">This feature doesn\'t work well with weak networks.</string> <!-- UNTRANSLATED -->
     
     <!-- FILE CHOOSER -->
     <string name="empty_directory">El directorio está vacío.</string>

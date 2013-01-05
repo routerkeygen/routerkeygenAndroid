@@ -105,7 +105,8 @@ public class NetworkFragment extends SherlockFragment {
 		// Auto connect service unavailable for manual calculations
 		if (keygen.getScanResult() == null)
 			autoConnect.setVisibility(View.GONE);
-		else
+		else {
+			final int level = keygen.getLevel();
 			autoConnect.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
 					if (passwordList == null)
@@ -116,6 +117,8 @@ public class NetworkFragment extends SherlockFragment {
 								Toast.LENGTH_SHORT).show();
 						return;
 					}
+					if ( level <= 1 )
+						Toast.makeText(getActivity(), R.string.msg_auto_connect_warning, Toast.LENGTH_SHORT).show();
 					Intent i = new Intent(getActivity(),
 							AutoConnectService.class);
 					i.putStringArrayListExtra(AutoConnectService.KEY_LIST,
@@ -125,6 +128,7 @@ public class NetworkFragment extends SherlockFragment {
 					getActivity().startService(i);
 				}
 			});
+		}
 		if (passwordList != null)
 			displayResults();
 		return root;

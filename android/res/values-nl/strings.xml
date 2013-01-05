@@ -148,6 +148,7 @@
     <string name="msg_error_key_testing">Kan het wachtwoord niet uitproberen</string>
     <string name="msg_no_correct_keys">Wachtwoorden incorrect</string>
     <string name="msg_auto_connect_running">Er wordt al automatisch verbonden</string>
+    <string name="msg_auto_connect_warning">This feature doesn\'t work well with weak networks.</string> <!-- UNTRANSLATED -->
 
     <!-- FILE CHOOSER -->
     <string name="empty_directory">Lege map</string>
