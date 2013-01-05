@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.exobel.routerkeygen"
     android:installLocation="auto"
-    android:versionCode="24"
-    android:versionName="3.0.5" >
+    android:versionCode="25"
+    android:versionName="3.2.0" >
 
     <uses-sdk
         android:minSdkVersion="7"
