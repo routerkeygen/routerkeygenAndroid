@@ -56,6 +56,7 @@ import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.text.method.LinkMovementMethod;
@@ -113,8 +114,9 @@ public class Preferences extends SherlockPreferenceActivity {
 		} catch (PackageManager.NameNotFoundException e) {
 			app_installed = false;
 		}
-		if ( !app_installed ){
-			findViewById(R.id.analytics).setVisibility(View.GONE);
+		if (!app_installed) {
+			PreferenceCategory mCategory = (PreferenceCategory) findPreference("2section");
+			mCategory.removePreference(findPreference("analytics_enabled"));
 		}
 		findPreference("download").setOnPreferenceClickListener(
 				new OnPreferenceClickListener() {
