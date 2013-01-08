@@ -117,8 +117,10 @@ public class NetworkFragment extends SherlockFragment {
 								Toast.LENGTH_SHORT).show();
 						return;
 					}
-					if ( level <= 1 )
-						Toast.makeText(getActivity(), R.string.msg_auto_connect_warning, Toast.LENGTH_SHORT).show();
+					if (level <= 1)
+						Toast.makeText(getActivity(),
+								R.string.msg_auto_connect_warning,
+								Toast.LENGTH_SHORT).show();
 					Intent i = new Intent(getActivity(),
 							AutoConnectService.class);
 					i.putStringArrayListExtra(AutoConnectService.KEY_LIST,
@@ -222,10 +224,12 @@ public class NetworkFragment extends SherlockFragment {
 				message.append('\n');
 			}
 			try {
-
+				final String path = new File(dicFile).getParent();
 				final BufferedWriter out = new BufferedWriter(new FileWriter(
-						folderSelect + File.separator + keygen.getSsidName()
-								+ ".txt"));
+						(path != null ? path
+								: Environment.getExternalStorageDirectory())
+										+ File.separator + keygen.getSsidName()
+										+ ".txt"));
 				out.write(message.toString());
 				out.close();
 			} catch (IOException e) {
@@ -337,7 +341,7 @@ public class NetworkFragment extends SherlockFragment {
 		protected List<String> doInBackground(Keygen... params) {
 			if (keygen instanceof ThomsonKeygen) {
 				getPrefs();
-				((ThomsonKeygen) keygen).setDictionary(folderSelect);
+				((ThomsonKeygen) keygen).setDictionary(dicFile);
 				((ThomsonKeygen) keygen).setInternetAlgorithm(thomson3g);
 				((ThomsonKeygen) keygen).setWebdic(getActivity().getResources()
 						.openRawResource(R.raw.webdic));
@@ -383,15 +387,16 @@ public class NetworkFragment extends SherlockFragment {
 
 	private boolean thomson3g;
 	private boolean nativeCalc;
-	private String folderSelect;
+	private String dicFile;
 
 	private void getPrefs() {
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(getActivity());
 		thomson3g = prefs.getBoolean(Preferences.thomson3gPref, false);
 		nativeCalc = prefs.getBoolean(Preferences.nativeCalcPref, true);
-		folderSelect = prefs.getString(Preferences.dicLocalPref, Environment
-				.getExternalStorageDirectory().getAbsolutePath());
+		dicFile = prefs.getString(Preferences.dicLocalPref, Environment
+				.getExternalStorageDirectory().getAbsolutePath()
+				+ "RouterKeygen.dic");
 	}
 
 }
