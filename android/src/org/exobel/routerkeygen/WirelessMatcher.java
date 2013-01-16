@@ -161,7 +161,8 @@ public class WirelessMatcher implements Parcelable {
 					for (TeleTuMagicInfo magic : supported) {
 						if (macIntValue >= magic.getRange()[0]
 								&& macIntValue <= magic.getRange()[1]) {
-							return new TeletuKeygen(ssid, mac, level, enc, magic);
+							return new TeletuKeygen(ssid, mac, level, enc,
+									magic);
 						}
 					}
 				}
@@ -206,8 +207,7 @@ public class WirelessMatcher implements Parcelable {
 		if (ssid.matches("InfostradaWiFi-[0-9a-zA-Z]{6}"))
 			return new InfostradaKeygen(ssid, mac, level, enc);
 
-		if (ssid.startsWith("WLAN_")
-				&& ssid.length() == 7
+		if (ssid.matches("WLAN_[0-9a-fA-F]{2}")
 				&& (mac.startsWith("00:01:38") || mac.startsWith("00:16:38")
 						|| mac.startsWith("00:01:13")
 						|| mac.startsWith("00:01:1B") || mac
@@ -293,12 +293,14 @@ public class WirelessMatcher implements Parcelable {
 
 	public void writeToParcel(Parcel dest, int flags) {
 		final Set<String> keySetAlice = supportedAlices.keySet();
-		final String[] arrayAlice = keySetAlice.toArray(new String[keySetAlice.size()]);
+		final String[] arrayAlice = keySetAlice.toArray(new String[keySetAlice
+				.size()]);
 		dest.writeStringArray(arrayAlice);
 		for (String key : keySetAlice)
 			dest.writeTypedList(supportedAlices.get(key));
 		final Set<String> keySetTeletu = supportedAlices.keySet();
-		final String[] arrayTeletu = keySetTeletu.toArray(new String[keySetTeletu.size()]);
+		final String[] arrayTeletu = keySetTeletu
+				.toArray(new String[keySetTeletu.size()]);
 		dest.writeStringArray(arrayTeletu);
 		for (String key : keySetTeletu)
 			dest.writeTypedList(supportedAlices.get(key));
