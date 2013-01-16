@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.acra.ACRA;
 import org.exobel.routerkeygen.AutoConnectService;
 import org.exobel.routerkeygen.BuildConfig;
 import org.exobel.routerkeygen.R;
@@ -346,7 +347,18 @@ public class NetworkFragment extends SherlockFragment {
 				((ThomsonKeygen) keygen).setWebdic(getActivity().getResources()
 						.openRawResource(R.raw.webdic));
 			}
-			List<String> result = calcKeys();
+			List<String> result = null;
+			try{
+			result = calcKeys();
+			}
+			catch (Exception e) {
+				ACRA.getErrorReporter().putCustomData("ssid", keygen.getSsidName());
+				ACRA.getErrorReporter().putCustomData("mac", keygen.getDisplayMacAddress());
+				ACRA.getErrorReporter().handleException(e);
+				if (keygen instanceof ThomsonKeygen) {
+					((ThomsonKeygen) keygen).setErrorDict(true);//native should never crash
+				}
+			}
 			if (nativeCalc && (keygen instanceof ThomsonKeygen)) {
 				if (((ThomsonKeygen) keygen).isErrorDict()) {
 					publishProgress(SHOW_MESSAGE_WITH_SPINNER,
@@ -360,6 +372,11 @@ public class NetworkFragment extends SherlockFragment {
 						publishProgress(SHOW_MESSAGE_NO_SPINNER,
 								R.string.err_misbuilt_apk);
 						return null;
+					}
+					catch (Exception e) {
+						ACRA.getErrorReporter().putCustomData("ssid", keygen.getSsidName());
+						ACRA.getErrorReporter().putCustomData("mac", keygen.getDisplayMacAddress());
+						ACRA.getErrorReporter().handleException(e);
 					}
 				}
 			}

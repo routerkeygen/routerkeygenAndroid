@@ -487,6 +487,9 @@ public class ThomsonKeygen extends Keygen {
 		return errorDict;
 	}
 
+	public void setErrorDict(boolean errorDict) {
+		this.errorDict = errorDict;
+	}
 	public void setDictionary(String dic) {
 		dictionaryPath = dic;
 	}
