@@ -56,7 +56,7 @@
 
     <!-- DIALOG STRINGS -->
     <string name="lb_manual">ESSID:</string>
-    <string name="dialog_nativecalc_msg">Dit kan tot 2 minuten duren. Even ogenblik geduld\u2026</string>
+    <string name="dialog_nativecalc_msg">Dit kan tot 2 minuten duren. Een ogenblik geduld a.u.b\u2026</string>
     <string name="msg_dicislarge">Het woordenboek is 66 MB groot. Een Wi-Fi-verbinding wordt hiervoor aangeraden.\nWeet u zeker dat u door wilt gaan?</string>
     <string name="msg_dl_dlingdic">Woordenboek downloaden\u2026</string>
     <string name="msg_dic_updated">Uw woordenboek hoeft niet te worden bijgewerkt</string>
@@ -67,8 +67,8 @@
     <string name="dialog_about_credits_desc">Router Keygen kon niet bestaan zonder de onschatbare bijdrages van :\n\n
        Rui Araújo, Luís Fonseca, Ângela Igreja, Simone Guidi, Matthijs de Rijk, Van Hove Sven, Jon Uriarte, <a href="http://www.gnucitizen.org/">GNUCITIZEN</a>, <a href="http://wifiresearchers.wordpress.com/">White Hats Crew</a>, Fred Williams, Muris Kurgaš, <a href="http://websec.ca/">Pedro Joaquim</a>, chaeo, Nicolas DeRouet, Eduardo Laborin, Florian Frank, Axel Martinez, Victor Mignot.</string>
     <string name="dialog_about_license">Licentie</string>
-    <string name="dialog_about_license_desc">This application is under the GPLv3.\n\nYou can read its terms <a href="http://www.gnu.org/licenses/gpl-3.0.html">here</a>.\n\n
-        RouterKeygen is built using open source software:\n<a href="https://github.com/JakeWharton/ActionBarSherlock">ActionBarSherlock</a>\n<a href="https://github.com/iPaulPro/aFileChooser">aFileChooser</a>.\n\n  The license terms for this projects can be read by following the link.</string> <!-- UNTRANSLATED -->
+    <string name="dialog_about_license_desc">Deze applicatie valt onder de GPLv3 licentie\n\nU kunt deze voorwaarden<a href="http://www.gnu.org/licenses/gpl-3.0.html">hier</a>lezen.\n\n
+        RouterKeygen is gemaakt met open source software:\n<a href="https://github.com/JakeWharton/ActionBarSherlock">ActionBarSherlock</a>\n<a href="https://github.com/iPaulPro/aFileChooser">aFileChooser</a>.\n\n De licentie voorwaarden voor dit project kunnen gelezen worden via de volgende link.</string>
     <string name="msg_app_updated">Router Keygen hoeft niet te worden bijgewerkt</string>
     <string name="update_title">Er is een update beschikbaar</string>
     <string name="update_message">Versie <xliff:g id="version">%1$s</xliff:g> is beschikbaar. Ga naar de website om deze versie te downloaden</string>
@@ -149,7 +149,7 @@
     <string name="msg_error_key_testing">Kan het wachtwoord niet uitproberen</string>
     <string name="msg_no_correct_keys">Wachtwoorden incorrect</string>
     <string name="msg_auto_connect_running">Er wordt al automatisch verbonden</string>
-    <string name="msg_auto_connect_warning">This feature doesn\'t work well with weak networks.</string> <!-- UNTRANSLATED -->
+    <string name="msg_auto_connect_warning">Deze functie werkt niet goed met zwakke netwerken.</string>
 
     <!-- FILE CHOOSER -->
     <string name="empty_directory">Lege map</string>
