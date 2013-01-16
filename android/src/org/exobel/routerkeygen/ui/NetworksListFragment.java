@@ -159,6 +159,9 @@ public class NetworksListFragment extends SherlockFragment implements
 			ContextMenu.ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 		final AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
+		//We may have had bad luck
+		if ( info.position >= networksFound.length )
+			return;
 		MenuInflater inflater = getActivity().getMenuInflater();
 		inflater.inflate(R.menu.networks_context_menu, menu);
 		// We are copying the values right away as the networks list is
