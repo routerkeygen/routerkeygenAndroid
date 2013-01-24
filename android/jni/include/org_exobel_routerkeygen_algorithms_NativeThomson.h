@@ -18,8 +18,9 @@ extern "C" {
  * Method:    thomson
  * Signature: ([BI)[Ljava/lang/String;
  */
-JNIEXPORT jobjectArray JNICALL Java_org_exobel_routerkeygen_algorithms_NativeThomson_thomson
-  (JNIEnv *, jobject, jbyteArray);
+JNIEXPORT jobjectArray JNICALL
+		Java_org_exobel_routerkeygen_algorithms_NativeThomson_thomson(JNIEnv *,
+				jobject, jbyteArray, jint, jint);
 
 #ifdef __cplusplus
 }

@@ -87,6 +87,13 @@ JNIEXPORT jobjectArray JNICALL Java_org_exobel_routerkeygen_algorithms_ThomsonKe
 		sequenceNumber += ( entry[i + 0 ]<<8 ) |  entry[i + 1 ];
 		for ( j = 0 ; j < 18 ; ++j )
 		{
+			stop = (*env)->GetBooleanField(env, obj, fid_s);
+			if ( stop )
+			{
+				(*env)->ReleaseByteArrayElements(env, ess, entry_native, 0);
+				//LOGI("Stopping");
+				return NULL;
+			}
 			inc = j* ( 36*36*36*6*3);
 			year = ( (sequenceNumber+inc) / ( 36*36*36 )% 6) + 4 ;
 			week = (sequenceNumber+inc) / ( 36*36*36*6 )  + 1 ;

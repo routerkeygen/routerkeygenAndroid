@@ -18,63 +18,85 @@
  */
 package org.exobel.routerkeygen.algorithms;
 
-import java.util.List;	
+import java.util.ArrayList;
+import java.util.List;
 
 import org.exobel.routerkeygen.R;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class NativeThomson extends Keygen{
-
-
+public class NativeThomson extends Keygen {
 	final private String ssidIdentifier;
-	public NativeThomson(String ssid, String mac, int level, String enc ) {
-		super(ssid, mac, level, enc);
-		ssidIdentifier = ssid.substring(ssid.length()-6);
+	final private List<ThomsonTask> tasks;
+
+	private final static int MAGIC_NUMBER = 46657;
+
+	public NativeThomson(Keygen keygen) {
+		super(keygen.getSsidName(), keygen.getMacAddress(), keygen.getLevel(),
+				keygen.getEncryption());
+		ssidIdentifier = keygen.getSsidName().substring(
+				keygen.getSsidName().length() - 6);
+		tasks = new ArrayList<ThomsonTask>();
 	}
 
-	public NativeThomson( Keygen keygen) {
-		super(keygen.getSsidName(), keygen.getMacAddress(), keygen.getLevel(), keygen.getEncryption());
-		ssidIdentifier = keygen.getSsidName().substring(keygen.getSsidName().length()-6);
+	@Override
+	public synchronized void setStopRequested(boolean stopRequested) {
+		super.setStopRequested(stopRequested);
+		for (ThomsonTask t : tasks)
+			t.stopRequested = true;
 	}
-
 
 	static {
 		System.loadLibrary("thomson");
-    }
-	
-    		  
-  /** 
-   * Native processing without a dictionary.
-   */
-	public native String[] thomson( byte [] essid );
+	}
+
+	/**
+	 * Native processing without a dictionary.
+	 */
+	public native String[] thomson(byte[] essid, int start, int end);
 
 	@Override
 	public List<String> getKeys() {
-		if ( ssidIdentifier.length() != 6 ) 
-		{
+		if (ssidIdentifier.length() != 6) {
 			setErrorCode(R.string.msg_shortessid6);
 			return null;
 		}
-		byte [] routerESSID = new byte[3];
+		byte[] routerESSID = new byte[3];
 
 		for (int i = 0; i < 6; i += 2)
-			routerESSID[i / 2] = (byte) ((Character.digit(ssidIdentifier.charAt(i), 16) << 4)
-					+ Character.digit(ssidIdentifier.charAt(i + 1), 16));
-		String [] results;
-		try{
-			results = this.thomson(routerESSID);
-		}catch (Exception e) {
-			setErrorCode(R.string.msg_err_native);
-			return null;
+			routerESSID[i / 2] = (byte) ((Character.digit(
+					ssidIdentifier.charAt(i), 16) << 4) + Character.digit(
+					ssidIdentifier.charAt(i + 1), 16));
+		int cores = Runtime.getRuntime().availableProcessors();
+		if (cores <= 0)
+			cores = 1;// WTF?? HOW? :P
+		int work = MAGIC_NUMBER / cores;
+		int beggining = 0;
+		for (int i = 1; i < cores; ++i) {
+			tasks.add(new ThomsonTask(this, routerESSID, beggining, beggining
+					+ work));
+			tasks.get(tasks.size() - 1).start();
+			beggining += work;
 		}
-		if ( isStopRequested() )
-			return null;
-		for (int i = 0 ; i < results.length ; ++i  )
-			addPassword(results[i]);
-		
-		 if(getResults().size() == 0)
+		tasks.add(new ThomsonTask(this, routerESSID, beggining, MAGIC_NUMBER));
+		tasks.get(tasks.size() - 1).start();
+		for (ThomsonTask t : tasks) {
+			try {
+				t.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+				continue;	
+			}
+			final String[] results = t.results;
+			if ( t.error )
+				setErrorCode(R.string.msg_err_native);
+			if (isStopRequested())
+				return null;
+			for (int i = 0; i < results.length; ++i)
+				addPassword(results[i]);
+		}
+		if (getResults().size() == 0)
 			setErrorCode(R.string.msg_errnomatches);
 		return getResults();
 	}
@@ -82,23 +104,54 @@ public class NativeThomson extends Keygen{
 	private NativeThomson(Parcel in) {
 		super(in);
 		ssidIdentifier = in.readString();
+		tasks = new ArrayList<ThomsonTask>();
 	}
 
 	public void writeToParcel(Parcel dest, int flags) {
 		super.writeToParcel(dest, flags);
 		dest.writeString(ssidIdentifier);
 	}
-	
-    public static final Parcelable.Creator<NativeThomson> CREATOR = new Parcelable.Creator<NativeThomson>() {
-        public NativeThomson createFromParcel(Parcel in) {
-            return new NativeThomson(in);
-        }
 
-        public NativeThomson[] newArray(int size) {
-            return new NativeThomson[size];
-        }
-    };
+	public static final Parcelable.Creator<NativeThomson> CREATOR = new Parcelable.Creator<NativeThomson>() {
+		public NativeThomson createFromParcel(Parcel in) {
+			return new NativeThomson(in);
+		}
 
+		public NativeThomson[] newArray(int size) {
+			return new NativeThomson[size];
+		}
+	};
 
+	public static class ThomsonTask extends Thread {
+		private final NativeThomson keygen;
+		private final byte[] routerESSID;
+		private final int begin;
+		private final int end;
+		private boolean error = false;
+		private String[] results;
+		@SuppressWarnings("unused")
+		//This is read in the native code
+		private boolean stopRequested = false;
 
+		static {
+			System.loadLibrary("thomson");
+		}
+
+		public ThomsonTask(NativeThomson keygen, byte[] routerESSID, int begin,
+				int end) {
+			this.keygen = keygen;
+			this.routerESSID = routerESSID;
+			this.begin = begin;
+			this.end = end;
+		}
+
+		@Override
+		public void run() {
+			try {
+				results = keygen.thomson(routerESSID, begin, end);
+			} catch (Exception e) {
+				error = true;
+			}
+		}
+	}
 }
