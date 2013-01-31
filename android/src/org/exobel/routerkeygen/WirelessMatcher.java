@@ -36,6 +36,7 @@ import org.exobel.routerkeygen.algorithms.TelseyKeygen;
 import org.exobel.routerkeygen.algorithms.ThomsonKeygen;
 import org.exobel.routerkeygen.algorithms.UnsupportedKeygen;
 import org.exobel.routerkeygen.algorithms.VerizonKeygen;
+import org.exobel.routerkeygen.algorithms.WifimediaRKeygen;
 import org.exobel.routerkeygen.algorithms.Wlan2Keygen;
 import org.exobel.routerkeygen.algorithms.Wlan6Keygen;
 import org.exobel.routerkeygen.algorithms.ZyxelKeygen;
@@ -247,6 +248,10 @@ public class WirelessMatcher implements Parcelable {
 							mac.replace(":", "").substring(8)))
 				return new MegaredKeygen(ssid, mac, level, enc);
 		}
+
+		if (ssid.matches("wifimedia_R-[0-9a-zA-Z]{4}")
+				&& mac.replace(":", "").length() == 12)
+			return new WifimediaRKeygen(ssid, mac, level, enc);
 
 		if (ssid.length() == 5
 				&& (mac.startsWith("00:1F:90") || mac.startsWith("A8:39:44")
