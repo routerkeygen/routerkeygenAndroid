@@ -151,6 +151,7 @@
     <string name="msg_no_correct_keys">No correct keys.</string>
     <string name="msg_auto_connect_running">The auto connect process is already running.</string>
     <string name="msg_auto_connect_warning">This feature doesn\'t work well with weak networks.</string>
+    <string name="crash_toast_text">Routerkeygen has crashed.</string>
     <!-- FILE CHOOSER -->
     <string name="empty_directory">Empty Directory</string>
     <string name="storage_removed">Storage was removed or unmounted.</string>
