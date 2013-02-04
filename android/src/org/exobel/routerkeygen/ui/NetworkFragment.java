@@ -176,7 +176,8 @@ public class NetworkFragment extends SherlockFragment {
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.share_keys, menu);
+		if (keygen.isSupported())
+			inflater.inflate(R.menu.share_keys, menu);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 
@@ -229,8 +230,9 @@ public class NetworkFragment extends SherlockFragment {
 				final BufferedWriter out = new BufferedWriter(new FileWriter(
 						(path != null ? path
 								: Environment.getExternalStorageDirectory())
-										+ File.separator + keygen.getSsidName()
-										+ ".txt"));
+								+ File.separator
+								+ keygen.getSsidName()
+								+ ".txt"));
 				out.write(message.toString());
 				out.close();
 			} catch (IOException e) {
@@ -348,15 +350,17 @@ public class NetworkFragment extends SherlockFragment {
 						.openRawResource(R.raw.webdic));
 			}
 			List<String> result = null;
-			try{
-			result = calcKeys();
-			}
-			catch (Exception e) {
-				ACRA.getErrorReporter().putCustomData("ssid", keygen.getSsidName());
-				ACRA.getErrorReporter().putCustomData("mac", keygen.getDisplayMacAddress());
+			try {
+				result = calcKeys();
+			} catch (Exception e) {
+				ACRA.getErrorReporter().putCustomData("ssid",
+						keygen.getSsidName());
+				ACRA.getErrorReporter().putCustomData("mac",
+						keygen.getDisplayMacAddress());
 				ACRA.getErrorReporter().handleException(e);
 				if (keygen instanceof ThomsonKeygen) {
-					((ThomsonKeygen) keygen).setErrorDict(true);//native should never crash
+					((ThomsonKeygen) keygen).setErrorDict(true);// native should
+																// never crash
 				}
 			}
 			if (nativeCalc && (keygen instanceof ThomsonKeygen)) {
@@ -372,10 +376,11 @@ public class NetworkFragment extends SherlockFragment {
 						publishProgress(SHOW_MESSAGE_NO_SPINNER,
 								R.string.err_misbuilt_apk);
 						return null;
-					}
-					catch (Exception e) {
-						ACRA.getErrorReporter().putCustomData("ssid", keygen.getSsidName());
-						ACRA.getErrorReporter().putCustomData("mac", keygen.getDisplayMacAddress());
+					} catch (Exception e) {
+						ACRA.getErrorReporter().putCustomData("ssid",
+								keygen.getSsidName());
+						ACRA.getErrorReporter().putCustomData("mac",
+								keygen.getDisplayMacAddress());
 						ACRA.getErrorReporter().handleException(e);
 					}
 				}
