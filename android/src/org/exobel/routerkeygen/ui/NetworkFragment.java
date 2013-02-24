@@ -26,7 +26,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.acra.ACRA;
 import org.exobel.routerkeygen.AutoConnectService;
+import org.exobel.routerkeygen.BuildConfig;
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.algorithms.Keygen;
 import org.exobel.routerkeygen.algorithms.NativeThomson;
@@ -104,7 +106,8 @@ public class NetworkFragment extends SherlockFragment {
 		// Auto connect service unavailable for manual calculations
 		if (keygen.getScanResult() == null)
 			autoConnect.setVisibility(View.GONE);
-		else
+		else {
+			final int level = keygen.getLevel();
 			autoConnect.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
 					if (passwordList == null)
@@ -115,6 +118,10 @@ public class NetworkFragment extends SherlockFragment {
 								Toast.LENGTH_SHORT).show();
 						return;
 					}
+					if (level <= 1)
+						Toast.makeText(getActivity(),
+								R.string.msg_auto_connect_warning,
+								Toast.LENGTH_SHORT).show();
 					Intent i = new Intent(getActivity(),
 							AutoConnectService.class);
 					i.putStringArrayListExtra(AutoConnectService.KEY_LIST,
@@ -124,6 +131,7 @@ public class NetworkFragment extends SherlockFragment {
 					getActivity().startService(i);
 				}
 			});
+		}
 		if (passwordList != null)
 			displayResults();
 		return root;
@@ -168,7 +176,8 @@ public class NetworkFragment extends SherlockFragment {
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.share_keys, menu);
+		if (keygen.isSupported())
+			inflater.inflate(R.menu.share_keys, menu);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 
@@ -185,6 +194,7 @@ public class NetworkFragment extends SherlockFragment {
 						+ getString(R.string.share_msg_begin));
 				final StringBuilder message = new StringBuilder(
 						keygen.getSsidName());
+				message.append("\n");
 				message.append(getString(R.string.share_msg_begin));
 				message.append(":\n");
 				for (String password : passwordList) {
@@ -216,9 +226,12 @@ public class NetworkFragment extends SherlockFragment {
 				message.append('\n');
 			}
 			try {
-
+				final String path = new File(dicFile).getParent();
 				final BufferedWriter out = new BufferedWriter(new FileWriter(
-						folderSelect + File.separator + keygen.getSsidName()
+						(path != null ? path
+								: Environment.getExternalStorageDirectory())
+								+ File.separator
+								+ keygen.getSsidName()
 								+ ".txt"));
 				out.write(message.toString());
 				out.close();
@@ -331,12 +344,25 @@ public class NetworkFragment extends SherlockFragment {
 		protected List<String> doInBackground(Keygen... params) {
 			if (keygen instanceof ThomsonKeygen) {
 				getPrefs();
-				((ThomsonKeygen) keygen).setDictionary(folderSelect);
+				((ThomsonKeygen) keygen).setDictionary(dicFile);
 				((ThomsonKeygen) keygen).setInternetAlgorithm(thomson3g);
 				((ThomsonKeygen) keygen).setWebdic(getActivity().getResources()
 						.openRawResource(R.raw.webdic));
 			}
-			List<String> result = calcKeys();
+			List<String> result = null;
+			try {
+				result = calcKeys();
+			} catch (Exception e) {
+				ACRA.getErrorReporter().putCustomData("ssid",
+						keygen.getSsidName());
+				ACRA.getErrorReporter().putCustomData("mac",
+						keygen.getDisplayMacAddress());
+				ACRA.getErrorReporter().handleException(e);
+				if (keygen instanceof ThomsonKeygen) {
+					((ThomsonKeygen) keygen).setErrorDict(true);// native should
+																// never crash
+				}
+			}
 			if (nativeCalc && (keygen instanceof ThomsonKeygen)) {
 				if (((ThomsonKeygen) keygen).isErrorDict()) {
 					publishProgress(SHOW_MESSAGE_WITH_SPINNER,
@@ -350,6 +376,12 @@ public class NetworkFragment extends SherlockFragment {
 						publishProgress(SHOW_MESSAGE_NO_SPINNER,
 								R.string.err_misbuilt_apk);
 						return null;
+					} catch (Exception e) {
+						ACRA.getErrorReporter().putCustomData("ssid",
+								keygen.getSsidName());
+						ACRA.getErrorReporter().putCustomData("mac",
+								keygen.getDisplayMacAddress());
+						ACRA.getErrorReporter().handleException(e);
 					}
 				}
 			}
@@ -360,7 +392,8 @@ public class NetworkFragment extends SherlockFragment {
 			long begin = System.currentTimeMillis();
 			final List<String> result = keygen.getKeys();
 			long end = System.currentTimeMillis() - begin;
-			Log.d(TAG, "Time to solve:" + end);
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Time to solve:" + end);
 
 			final int errorCode = keygen.getErrorCode();
 			if (errorCode != 0) {
@@ -376,15 +409,16 @@ public class NetworkFragment extends SherlockFragment {
 
 	private boolean thomson3g;
 	private boolean nativeCalc;
-	private String folderSelect;
+	private String dicFile;
 
 	private void getPrefs() {
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(getActivity());
 		thomson3g = prefs.getBoolean(Preferences.thomson3gPref, false);
 		nativeCalc = prefs.getBoolean(Preferences.nativeCalcPref, true);
-		folderSelect = prefs.getString(Preferences.dicLocalPref, Environment
-				.getExternalStorageDirectory().getAbsolutePath());
+		dicFile = prefs.getString(Preferences.dicLocalPref, Environment
+				.getExternalStorageDirectory().getAbsolutePath()
+				+ "RouterKeygen.dic");
 	}
 
 }

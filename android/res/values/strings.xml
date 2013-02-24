@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
    Copyright 2012 Rui Araújo, Luís Fonseca
   
@@ -15,13 +15,11 @@
    GNU General Public License for more details.
    
    You should have received a copy of the GNU General Public License
-   along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
+   along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Main file and reference for the others. -->
-
-
     <!-- MISC STRINGS -->
     <string name="app_name">Router Keygen</string>
     <string name="msg_welcome_title">Router Keygen</string>
@@ -45,7 +43,6 @@
     <string name="not_auto_connect_waiting">Waiting for the current network to disconnect</string>
     <string name="not_auto_connect_key_testing">Testing <xliff:g id="key">%1$s</xliff:g></string>
     <string name="not_correct_key_testing"><xliff:g id="key">%1$s</xliff:g> is the correct key.</string>
-
     <!-- BUTTONS STRINGS -->
     <string name="bt_manual_cancel">Cancel</string>
     <string name="bt_manual_calc">Calculate</string>
@@ -56,7 +53,6 @@
     <string name="bt_website">Go to Website</string>
     <string name="bt_paypal">PayPal</string>
     <string name="bt_google_play">Google Play</string>
-
     <!-- DIALOG STRINGS -->
     <string name="lb_manual">Input your ESSID here:</string>
     <string name="dialog_nativecalc_msg">This can take up to 2 minutes. Please wait.</string>
@@ -64,18 +60,19 @@
     <string name="msg_dl_dlingdic">Downloading dictionary</string>
     <string name="msg_dic_updated">Your dictionary is already at the latest version.</string>
     <string name="msg_dic_updated_finished">Your dictionary has been updated to the latest version.</string>
-    <string name="msg_wait">Please wait&#8230;</string>
+    <string name="msg_wait">Please wait…</string>
     <string name="lb_manual_bssid">MAC address (optional):</string>
     <string name="dialog_about_credits">Credits</string>
-    <string name="dialog_about_credits_desc">Router Keygen is the result of the invaluable contribution from the  following people/organizations:\n\n<b>Rui Araújo</b> - Exobel Team Member\n<b>Luís Fonseca</b> - Exobel Team Member\n<b>Ângela Igreja</b> for the Portuguese Translation\n<b>Simone Guidi</b> for the Italian Translation\n<b>Matthijs de Rijk</b> and <b>Van Hove Sven</b> for the Dutch Translation\n<b>Jon Uriarte</b> for the Spanish Translation and the WLAN_XX implementation\n<b><a href="http://www.gnucitizen.org/">GNUCITIZEN</a></b> for the Thomson algorithm\n<b><a href="http://wifiresearchers.wordpress.com/">White Hats Crew</a></b> for the Alice and FASTWEB algorithms\n<b>Fred Williams</b> for the Verizon FiOS algorithm\n<b>Muris Kurgaš </b> for the Discus algorithm\n<b><a href="http://websec.ca/">Pedro Joaquim</a></b> for the Huawei algorithm\n<b>chaeo</b> for the SKY V1 algorithm.</string>
+    <string name="dialog_about_credits_desc">Router Keygen is the result of the invaluable contribution from the  following people/organizations:\n\n
+      Rui Araújo, Luís Fonseca, Ângela Igreja, Simone Guidi, Matthijs de Rijk, Van Hove Sven, Jon Uriarte, <a href="http://www.gnucitizen.org/">GNUCITIZEN</a>, <a href="http://wifiresearchers.wordpress.com/">White Hats Crew</a>, Fred Williams, Muris Kurgaš, <a href="http://websec.ca/">Pedro Joaquim</a>, chaeo, Nicolas DeRouet, Eduardo Laborin, Florian Frank, Axel Martínez, Victor Mignot, <a href="http://www.openssl.org/">OpenSSl</a>.</string>
     <string name="dialog_about_license">License</string>
-    <string name="dialog_about_license_desc">This application is under the GPLv3.\n\nYou can read its terms <a href="http://www.gnu.org/licenses/gpl-3.0.html">here</a>.</string>
+    <string name="dialog_about_license_desc">This application is under the GPLv3.\n\nYou can read its terms <a href="http://www.gnu.org/licenses/gpl-3.0.html">here</a>.\n\n
+        RouterKeygen is built using open source software:\n<a href="https://github.com/JakeWharton/ActionBarSherlock">ActionBarSherlock</a>\n<a href="https://github.com/iPaulPro/aFileChooser">aFileChooser</a>.\n\n  The license terms for this projects can be read by following the link.</string>
     <string name="msg_app_updated">The application is already at the latest version.</string>
     <string name="update_title">Update Available</string>
     <string name="update_message">There is version <xliff:g id="version">%1$s</xliff:g> available. Go to the website to download the latest version.</string>
     <string name="cancel_download">Do you want to cancel the dictionary download?</string>
     <string name="cancel_auto_test">Do you want to cancel the keys testing?</string>
-
     <!-- PREFERENCES STRINGS -->
     <string name="pref_hinton_wifion">Activate the Wifi Automatically</string>
     <string name="pref_hintoff_wifion">Do not activate the Wifi Automatically</string>
@@ -94,7 +91,7 @@
     <string name="pref_hintoff_native">Only warns if it fails to find the dictionary</string>
     <string name="pref_download_des">Dictionary needed for Thomson keys</string>
     <string name="pref_download">Download Dictionary</string>
-    <string name="pref_thomson3g">Use 3G for Thomson</string>
+    <string name="pref_thomson3g">Use 3G/4G for Thomson</string>
     <string name="pref_hinton_thomson3g">Fetching keys from Internet</string>
     <string name="pref_hintoff_thomson3g">Using dictionary to generate keys.</string>
     <string name="pref_thomson_section">Thomson Options</string>
@@ -105,7 +102,9 @@
     <string name="pref_hintoff_autoscan">Scan is always manual.</string>
     <string name="pref_autoscan_interval">Auto Scan Interval</string>
     <string name="pref_hint_autoscan_interval">Period of the automatic scan.</string>
-
+    <string name="pref_analytics">Google Analytics</string>
+    <string name="pref_hinton_analytics">Usage and crashes are being tracked anonymously</string>
+    <string name="pref_hintoff_analytics">Usage and crashes are not being tracked</string>
     <!-- ERROR MESSAGE STRINGS -->
     <string name="msg_unspported">That ESSID is not supported!</string>
     <string name="msg_nowifidetected">No WIFI networks detected!</string>
@@ -151,13 +150,13 @@
     <string name="msg_error_key_testing">Error trying to test the key.</string>
     <string name="msg_no_correct_keys">No correct keys.</string>
     <string name="msg_auto_connect_running">The auto connect process is already running.</string>
-
+    <string name="msg_auto_connect_warning">This feature doesn\'t work well with weak networks.</string>
+    <string name="crash_toast_text">Routerkeygen has crashed.</string>
     <!-- FILE CHOOSER -->
     <string name="empty_directory">Empty Directory</string>
     <string name="storage_removed">Storage was removed or unmounted.</string>
     <string name="choose_file">Select a file</string>
     <string name="error_selecting_file">Error selecting File</string>
-
     <!-- AUTOCOMPLETE SUPPORT -->
     <string-array name="supported_routers">
         <item>Thomson</item>
@@ -197,6 +196,14 @@
         <item>MEO-</item>
         <item>Optimus</item>
         <item>OptimusFibra</item>
+        <item>Cabovisao-</item>
+        <item>AXTEL-</item>
+        <item>AXTEL-XTREMO-</item>
+        <item>InterCable</item>
+        <item>ptv</item>
+        <item>MAXCOM</item>
+        <item>TeleTu</item>
+        <item>wifimedia_R-</item>
     </string-array>
 
 </resources>

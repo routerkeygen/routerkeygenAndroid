@@ -26,13 +26,13 @@
     <string name="app_name">Router Keygen</string>
     <string name="msg_welcome_title">Router Keygen</string>
     <string name="msg_welcome_text">Merci d\'avoir installé Router Keygen. Si vous appréciez cette application, merci de faire un don en achetant la version Donate (le lien est dans le menu des préférences). Votre don permettra de motiver les auteurs et d\'améliorer cet outil open-source.</string>
-    <string name="msg_welcome_tip">Select any network with a green bar to generate possible keys.</string> <!-- UNTRANSLATED -->
+    <string name="msg_welcome_tip">Sélectionnez un réseau marqué d\'une barre verte pour générer les clés possibles.</string>
     <string name="menu_scan">Scan</string>
     <string name="menu_manual">Saisie manuelle</string>
     <string name="menu_preferences">Préférences</string>
-    <string name="context_menu_copy_ssid">Copy SSID</string> <!-- UNTRANSLATED -->
-    <string name="context_menu_copy_mac">Copy MAC address</string> <!-- UNTRANSLATED -->
-    <string name="context_menu_use_mac">Use MAC address in Manual Input Dialog</string> <!-- UNTRANSLATED -->
+    <string name="context_menu_copy_ssid">Copier le SSID</string>
+    <string name="context_menu_copy_mac">Copier l\'adresse MAC</string>
+    <string name="context_menu_use_mac">Utiliser l\'adresse mac dans le menu de saisie manuelle</string>
     <string name="share_msg_begin">Clés</string>
     <string name="share_title">Clés partagées</string>
     <string name="msg_copied"><xliff:g id="arg">%1$s</xliff:g> a été copié dans le presse-papiers!</string>
@@ -40,9 +40,9 @@
     <string name="msg_wifienabling">Activation du Wifi</string>
     <string name="msg_results">Cliquez sur l\'une des clés pour la copier.\npuis les paramètres Wifi seront ouvert où vous pouvez la tester.</string>
     <string name="manual_mac_separator">:</string>
-    <string name="not_auto_connect_waiting">Waiting for the current network to disconnect</string> <!-- UNTRANSLATED -->
-    <string name="not_auto_connect_key_testing">Testing <xliff:g id="key">%1$s</xliff:g></string> <!-- UNTRANSLATED -->
-    <string name="not_correct_key_testing"><xliff:g id="key">%1$s</xliff:g> is the correct key.</string> <!-- UNTRANSLATED -->
+    <string name="not_auto_connect_waiting">Déconnexion du réseau courant en cours</string>
+    <string name="not_auto_connect_key_testing">Essaie de : <xliff:g id="key">%1$s</xliff:g></string>
+    <string name="not_correct_key_testing"><xliff:g id="key">%1$s</xliff:g> est la bonne clef.</string>
 
 
     <!-- BUTTONS STRINGS -->
@@ -53,8 +53,6 @@
     <string name="bt_save_sd">Sauvegarder sur SD</string>
     <string name="bt_auto_connect">Connexion Auto</string>
     <string name="bt_website">Visiter notre site web</string>
-    <string name="bt_paypal">PayPal</string>
-    <string name="bt_google_play">Google Play</string>
 
     <!-- DIALOG STRINGS -->
     <string name="lb_manual">Entrez votre ESSID ici:</string>
@@ -64,28 +62,29 @@
     <string name="msg_dic_updated">Votre dictionnaire est déjà à la dernière version.</string>
     <string name="msg_dic_updated_finished">Votre dictionnaire a été mis à jour.</string>
     <string name="msg_wait">Veuillez patienter&#8230;</string>
-    <string name="lb_manual_bssid">MAC address (optional):</string> <!-- UNTRANSLATED -->
+    <string name="lb_manual_bssid">Adresse MAC (optionnelle):</string>
     <string name="dialog_about_credits">Credits</string>
-    <string name="dialog_about_credits_desc">Router Keygen est le résultat de nombreuses contributions provenant de personnes et d\'organisations:\n\n<b>Rui Araújo</b> - Exobel Team Member\n<b>Luís Fonseca</b> - Exobel Team Member\n<b>Ângela Igreja</b> for the Portuguese Translation\n<b>Simone Guidi</b> for the Italian Translation\n<b>Matthijs de Rijk</b> and <b>Van Hove Sven</b> for the Dutch Translation\n<b>Jon Uriarte</b> for the Spanish Translation and the WLAN_XX implementation\n<b><a href="http://www.gnucitizen.org/">GNUCITIZEN</a></b> for the Thomson algorithm\n<b><a href="http://wifiresearchers.wordpress.com/">White Hats Crew</a></b> for the Alice and FASTWEB algorithms\n<b>Fred Williams</b> for the Verizon FiOS algorithm\n<b>Muris Kurgaš </b> for the Discus algorithm\n<b><a href="http://websec.ca/">Pedro Joaquim</a></b> for the Huawei algorithm\n<b>chaeo</b> for the SKY V1 algorithm.</string>
+    <string name="dialog_about_credits_desc">Router Keygen est le résultat de nombreuses contributions provenant de personnes et d\'organisations:\n\n        Rui Araújo, Luís Fonseca, Ângela Igreja, Simone Guidi, Matthijs de Rijk, Van Hove Sven, Jon Uriarte, <a href="http://www.gnucitizen.org/">GNUCITIZEN</a>, <a href="http://wifiresearchers.wordpress.com/">White Hats Crew</a>, Fred Williams, Muris Kurgaš, <a href="http://websec.ca/">Pedro Joaquim</a>, chaeo, Nicolas DeRouet, Eduardo Laborin, Florian Frank, Axel Martinez, Victor Mignot, <a href="http://www.openssl.org/">OpenSSl</a>.</string>
     <string name="dialog_about_license">Licence</string>
-    <string name="dialog_about_license_desc">Cette application est sous GPLv3.\n\nVous pouvez lire les termes <a href="http://www.gnu.org/licenses/gpl-3.0.html">ici</a>.</string>
+    <string name="dialog_about_license_desc">This application is under the GPLv3.\n\nYou can read its terms <a href="http://www.gnu.org/licenses/gpl-3.0.html">here</a>.\n\n
+        RouterKeygen is built using open source software:\n<a href="https://github.com/JakeWharton/ActionBarSherlock">ActionBarSherlock</a>\n<a href="https://github.com/iPaulPro/aFileChooser">aFileChooser</a>.\n\n  The license terms for this projects can be read by following the link.</string> <!-- UNTRANSLATED -->
     <string name="msg_app_updated">Cette application est à la dernière version.</string>
     <string name="update_title">Mise à jour disponible</string>
     <string name="update_message">La version <xliff:g id="version">%1$s</xliff:g> est disponible. Télécharger la dernière version sur notre site web.</string>
-    <string name="cancel_download">Do you want to cancel the dictionary download?</string>  <!-- UNTRANSLATED -->
-    <string name="cancel_auto_test">Do you want to cancel the keys testing?</string>  <!-- UNTRANSLATED -->
+    <string name="cancel_download">Annuler le téléchargement du dictionnaire ?</string>
+    <string name="cancel_auto_test">Annuler le test des clefs ?</string>
 
     <!-- PREFERENCES STRINGS -->
     <string name="pref_hinton_wifion">Activer le Wifi automatiquement</string>
     <string name="pref_hintoff_wifion">Ne pas activer le Wifi automatiquement</string>
     <string name="pref_wifion">Auto Wifi On</string>
-    <string name="pref_dict_select">Select Dictionary</string>  <!-- UNTRANSLATED -->
-    <string name="pref_dict_select_des">Select the dictionary file</string>  <!-- UNTRANSLATED -->
+    <string name="pref_dict_select">Sélectionner le dictionnaire</string>
+    <string name="pref_dict_select_des">Sélectionner le fichier de dictionnaire</string>
     <string name="pref_1section">Options générales</string>
     <string name="pref_2section">A propos</string>
     <string name="pref_donate_paypal">Don (Paypal)</string>
     <string name="pref_donate_google_play">Don (Google Play)</string>
-    <string name="pref_donate_why">Acheter moi un café si vous aimez l\'application</string>
+    <string name="pref_donate_why">Achetez-moi un café si vous aimez l\'application</string>
     <string name="pref_about">A propos de Router Keygen</string>
     <string name="pref_about_desc">Router Keygen calcule les clés par défaut de nombreux routerus.\n\n<a href="http://code.google.com/p/android-thomson-key-solver/">Site web</a>\n\nVersion: </string>
     <string name="pref_native">Calcule natif</string>
@@ -98,12 +97,15 @@
     <string name="pref_hintoff_thomson3g">Utilisation de dictionnaire pour générer des clés.</string>
     <string name="pref_thomson_section">Options pour Thomson</string>
     <string name="pref_update">Vérifier les mises à jour</string>
-    <string name="pref_msg_download_running">The dictionary is already being downloaded.</string> <!-- UNTRANSLATED -->
-    <string name="pref_autoscan">Auto Scan</string> <!-- UNTRANSLATED -->
-    <string name="pref_hinton_autoscan">Scan will be repeated every few seconds.</string> <!-- UNTRANSLATED -->
-    <string name="pref_hintoff_autoscan">Scan is always manual.</string> <!-- UNTRANSLATED -->
-    <string name="pref_autoscan_interval">Auto Scan Interval</string> <!-- UNTRANSLATED -->
-    <string name="pref_hint_autoscan_interval">Period of the automatic scan.</string> <!-- UNTRANSLATED -->
+    <string name="pref_msg_download_running">Le dictionnaire est déjà en cours de téléchargement.</string>
+    <string name="pref_autoscan">Balayage automatique</string>
+    <string name="pref_hinton_autoscan">Le balayage se répétera automatiquement.</string>
+    <string name="pref_hintoff_autoscan">Balayage toujours manuel.</string>
+    <string name="pref_autoscan_interval">Intervalle du balayage automatique</string>
+    <string name="pref_hint_autoscan_interval">Période du balayage automatique&#8230;</string>
+    <string name="pref_analytics">Google Analytics</string>  <!-- UNTRANSLATED -->
+    <string name="pref_hinton_analytics">Usage and crashes are being tracked anonymously</string>  <!-- UNTRANSLATED -->
+    <string name="pref_hintoff_analytics">Usage and crashes are not being tracked</string>  <!-- UNTRANSLATED -->
 
 
     <!-- ERROR MESSAGE STRINGS -->
@@ -131,7 +133,7 @@
     <string name="msg_err_essid_no_match">Le SSID calculé ne correspond pas à celui prévu.</string>
     <string name="msg_err_native">Erreur dans le calcul natif. Merci d\'informer notre équipe.</string>
     <string name="msg_nomemoryonsdcard">Le stockage externe n\'a pas assez d\'espace libre.</string>
-    <string name="msg_no_write_permissions">Impossible to write to the selected file.</string> <!-- UNTRANSLATED -->
+    <string name="msg_no_write_permissions">Impossible d\'écrire vers le fichier sélectionné.</string>
     <string name="msg_error">Erreur</string>
     <string name="pref_msg_err_backup_dic">Erreur durant la sauvegarde du dictionnaire précédent</string>
     <string name="pref_msg_err_rename_dic">Erreur de renommage du dictionnaire téléchargé.</string>
@@ -145,17 +147,18 @@
     <string name="msg_saved_key_file">sauvegardé sur la carte SD.</string>
     <string name="pref_msg_no_network">Il n\'y a pas d\'accès au réseau.</string>
     <string name="msg_err_webdic_table">Erreur lors du traitement des clés en ligne.</string>
-    <string name="msg_unspported_network">A valid network was not recognized. Please check the SSID and the MAC address.</string> <!-- UNTRANSLATED -->
-    <string name="msg_invalid_mac">A valid MAC address wasn\'t entered so it will be ignored.</string> <!-- UNTRANSLATED -->
-    <string name="msg_error_key_testing">Error trying to test the key.</string> <!-- UNTRANSLATED -->
-    <string name="msg_no_correct_keys">No correct keys.</string> <!-- UNTRANSLATED -->
-    <string name="msg_auto_connect_running">The auto connect process is already running.</string> <!-- UNTRANSLATED -->
+    <string name="msg_unspported_network">Un réseau valid n\'a pas été reconnu. Merci de vérifier le SSID ou l\'adresse MAC.</string>
+    <string name="msg_invalid_mac">Ceci sera ignoré car aucune adresse mac valide n\'a été saisie.</string>
+    <string name="msg_error_key_testing">Erreur lors du test de la clef.</string>
+    <string name="msg_no_correct_keys">Aucune clef valide.</string>
+    <string name="msg_auto_connect_running">Le processus d\'auto-connexion est déjà en cours.</string>
+    <string name="msg_auto_connect_warning">This feature doesn\'t work well with weak networks.</string> <!-- UNTRANSLATED -->
 
     <!-- FILE CHOOSER -->
-    <string name="empty_directory">Empty Directory</string><!-- UNTRANSLATED -->
-    <string name="storage_removed">Storage was removed or unmounted.</string><!-- UNTRANSLATED -->
-    <string name="choose_file">Select a file</string><!-- UNTRANSLATED -->
-    <string name="error_selecting_file">Error selecting File</string><!-- UNTRANSLATED -->
+    <string name="empty_directory">Dossier vide</string>
+    <string name="storage_removed">Stockage retiré ou démonté.</string>
+    <string name="choose_file">Sélectionner un fichier</string>
+    <string name="error_selecting_file">Erreur lors de la sélection du fichier</string>
 
 
     <!-- AUTOCOMPLETE SUPPORT -->
@@ -197,6 +200,14 @@
         <item>MEO-</item>
         <item>Optimus</item>
         <item>OptimusFibra</item>
+        <item>Cabovisao-</item>
+        <item>AXTEL-</item>
+        <item>AXTEL-XTREMO-</item>
+        <item>InterCable</item>
+        <item>ptv</item>
+        <item>MAXCOM</item>
+        <item>TeleTu</item>
+        <item>wifimedia_R-</item>
     </string-array>
 
 </resources>

@@ -8,12 +8,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
 import org.exobel.routerkeygen.algorithms.AliceKeygen;
 import org.exobel.routerkeygen.algorithms.AndaredKeygen;
 import org.exobel.routerkeygen.algorithms.AxtelKeygen;
+import org.exobel.routerkeygen.algorithms.CabovisaoSagemKeygen;
 import org.exobel.routerkeygen.algorithms.ComtrendKeygen;
 import org.exobel.routerkeygen.algorithms.ConnKeygen;
 import org.exobel.routerkeygen.algorithms.DiscusKeygen;
@@ -24,20 +22,28 @@ import org.exobel.routerkeygen.algorithms.HuaweiKeygen;
 import org.exobel.routerkeygen.algorithms.InfostradaKeygen;
 import org.exobel.routerkeygen.algorithms.InterCableKeygen;
 import org.exobel.routerkeygen.algorithms.Keygen;
+import org.exobel.routerkeygen.algorithms.MaxcomKeygen;
 import org.exobel.routerkeygen.algorithms.MegaredKeygen;
 import org.exobel.routerkeygen.algorithms.OnoKeygen;
 import org.exobel.routerkeygen.algorithms.OteKeygen;
 import org.exobel.routerkeygen.algorithms.PBSKeygen;
 import org.exobel.routerkeygen.algorithms.PirelliKeygen;
+import org.exobel.routerkeygen.algorithms.PtvKeygen;
 import org.exobel.routerkeygen.algorithms.SkyV1Keygen;
 import org.exobel.routerkeygen.algorithms.TecomKeygen;
+import org.exobel.routerkeygen.algorithms.TeletuKeygen;
 import org.exobel.routerkeygen.algorithms.TelseyKeygen;
 import org.exobel.routerkeygen.algorithms.ThomsonKeygen;
 import org.exobel.routerkeygen.algorithms.UnsupportedKeygen;
 import org.exobel.routerkeygen.algorithms.VerizonKeygen;
+import org.exobel.routerkeygen.algorithms.WifimediaRKeygen;
 import org.exobel.routerkeygen.algorithms.Wlan2Keygen;
 import org.exobel.routerkeygen.algorithms.Wlan6Keygen;
 import org.exobel.routerkeygen.algorithms.ZyxelKeygen;
+import org.exobel.routerkeygen.config.AliceConfigParser;
+import org.exobel.routerkeygen.config.AliceMagicInfo;
+import org.exobel.routerkeygen.config.TeleTuConfigParser;
+import org.exobel.routerkeygen.config.TeleTuMagicInfo;
 
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
@@ -47,18 +53,11 @@ import android.os.Parcelable;
 public class WirelessMatcher implements Parcelable {
 
 	private final Map<String, ArrayList<AliceMagicInfo>> supportedAlices;
+	private final Map<String, ArrayList<TeleTuMagicInfo>> supportedTeletu;
 
-	public WirelessMatcher(InputStream aliceXml) {
-		AliceHandle aliceReader = new AliceHandle();
-		SAXParserFactory factory = SAXParserFactory.newInstance();
-		SAXParser saxParser;
-		try {
-			saxParser = factory.newSAXParser();
-			saxParser.parse(aliceXml, aliceReader);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		supportedAlices = aliceReader.getSupportedAlices();
+	public WirelessMatcher(InputStream alice, InputStream teletu) {
+		supportedAlices = AliceConfigParser.parse(alice);
+		supportedTeletu = TeleTuConfigParser.parse(teletu);
 	}
 
 	public Keygen getKeygen(ScanResult result) {
@@ -71,9 +70,10 @@ public class WirelessMatcher implements Parcelable {
 	}
 
 	public Keygen getKeygen(String ssid, String mac, int level, String enc) {
+		mac = mac.toUpperCase(Locale.getDefault());
 		if (enc.equals(""))
 			enc = Keygen.OPEN;
-		if (ssid.matches("AXTEL-[0-9a-fA-F]{4}")) {
+		if (ssid.matches("(AXTEL|AXTEL-XTREMO)-[0-9a-fA-F]{4}")) {
 			final String ssidSubpart = ssid.substring(ssid.length() - 4);
 			final String macShort = mac.replace(":", "");
 			if (macShort.length() < 12
@@ -143,7 +143,7 @@ public class WirelessMatcher implements Parcelable {
 		if (ssid.matches("[aA]lice-[0-9]{8}")) {
 
 			final List<AliceMagicInfo> supported = supportedAlices.get(ssid
-					.substring(0, 9));
+					.substring(6, 9));
 			if (supported != null && supported.size() > 0) {
 				if (mac.length() < 6)
 					mac = supported.get(0).getMac();
@@ -151,6 +151,24 @@ public class WirelessMatcher implements Parcelable {
 			}
 		}
 
+		if (ssid.toLowerCase(Locale.getDefault()).contains("teletu")) {
+			final String filteredMac = mac.replace(":", "");
+			if (filteredMac.length() == 12) {
+				final List<TeleTuMagicInfo> supported = supportedTeletu
+						.get(filteredMac.substring(0, 6));
+				if (supported != null && supported.size() > 0) {
+					final int macIntValue = Integer.parseInt(
+							filteredMac.substring(6), 16);
+					for (TeleTuMagicInfo magic : supported) {
+						if (macIntValue >= magic.getRange()[0]
+								&& macIntValue <= magic.getRange()[1]) {
+							return new TeletuKeygen(ssid, mac, level, enc,
+									magic);
+						}
+					}
+				}
+			}
+		}
 		/* ssid must be of the form P1XXXXXX0000X or p1XXXXXX0000X */
 		if (ssid.matches("[Pp]1[0-9]{6}0{4}[0-9]"))
 			return new OnoKeygen(ssid, mac, level, enc);
@@ -190,8 +208,7 @@ public class WirelessMatcher implements Parcelable {
 		if (ssid.matches("InfostradaWiFi-[0-9a-zA-Z]{6}"))
 			return new InfostradaKeygen(ssid, mac, level, enc);
 
-		if (ssid.startsWith("WLAN_")
-				&& ssid.length() == 7
+		if (ssid.matches("WLAN_[0-9a-fA-F]{2}")
 				&& (mac.startsWith("00:01:38") || mac.startsWith("00:16:38")
 						|| mac.startsWith("00:01:13")
 						|| mac.startsWith("00:01:1B") || mac
@@ -204,8 +221,19 @@ public class WirelessMatcher implements Parcelable {
 		if (ssid.matches("OTE[0-9a-fA-F]{6}"))
 			return new OteKeygen(ssid, mac, level, enc);
 
+		if (ssid.matches("MAXCOM[0-9a-zA-Z]{4}"))
+			return new MaxcomKeygen(ssid, mac, level, enc);
+
 		if (ssid.matches("PBS-[0-9a-fA-F]{6}"))
 			return new PBSKeygen(ssid, mac, level, enc);
+
+		if (ssid.matches("(PTV-|ptv|ptv-)[0-9a-zA-Z]{6}"))
+			return new PtvKeygen(ssid, mac, level, enc);
+
+		if (ssid.matches("Cabovisao-[0-9a-fA-F]{4}")) {
+			if (mac.length() == 0 || mac.startsWith("C0:AC:54"))
+				return new CabovisaoSagemKeygen(ssid, mac, level, enc);
+		}
 
 		if (ssid.equals("CONN-X"))
 			return new ConnKeygen(ssid, mac, level, enc);
@@ -220,6 +248,10 @@ public class WirelessMatcher implements Parcelable {
 							mac.replace(":", "").substring(8)))
 				return new MegaredKeygen(ssid, mac, level, enc);
 		}
+
+		if (ssid.matches("wifimedia_R-[0-9a-zA-Z]{4}")
+				&& mac.replace(":", "").length() == 12)
+			return new WifimediaRKeygen(ssid, mac, level, enc);
 
 		if (ssid.length() == 5
 				&& (mac.startsWith("00:1F:90") || mac.startsWith("A8:39:44")
@@ -265,22 +297,35 @@ public class WirelessMatcher implements Parcelable {
 	}
 
 	public void writeToParcel(Parcel dest, int flags) {
-		final Set<String> keySet = supportedAlices.keySet();
-		final String[] array = keySet.toArray(new String[keySet.size()]);
-		dest.writeStringArray(array);
-		for (String key : keySet)
+		final Set<String> keySetAlice = supportedAlices.keySet();
+		final String[] arrayAlice = keySetAlice.toArray(new String[keySetAlice
+				.size()]);
+		dest.writeStringArray(arrayAlice);
+		for (String key : keySetAlice)
+			dest.writeTypedList(supportedAlices.get(key));
+		final Set<String> keySetTeletu = supportedAlices.keySet();
+		final String[] arrayTeletu = keySetTeletu
+				.toArray(new String[keySetTeletu.size()]);
+		dest.writeStringArray(arrayTeletu);
+		for (String key : keySetTeletu)
 			dest.writeTypedList(supportedAlices.get(key));
 	}
 
 	private WirelessMatcher(Parcel in) {
 		supportedAlices = new HashMap<String, ArrayList<AliceMagicInfo>>();
-		String[] keys = in.createStringArray();
-		for (String key : keys) {
+		String[] keysAlice = in.createStringArray();
+		for (String key : keysAlice) {
 			final ArrayList<AliceMagicInfo> supportedAlicesList = new ArrayList<AliceMagicInfo>();
 			in.readTypedList(supportedAlicesList, AliceMagicInfo.CREATOR);
 			supportedAlices.put(key, supportedAlicesList);
 		}
-
+		supportedTeletu = new HashMap<String, ArrayList<TeleTuMagicInfo>>();
+		String[] keysTeletu = in.createStringArray();
+		for (String key : keysTeletu) {
+			final ArrayList<TeleTuMagicInfo> supportedTeletuList = new ArrayList<TeleTuMagicInfo>();
+			in.readTypedList(supportedTeletuList, TeleTuMagicInfo.CREATOR);
+			supportedTeletu.put(key, supportedTeletuList);
+		}
 	}
 
 	public static final Parcelable.Creator<WirelessMatcher> CREATOR = new Parcelable.Creator<WirelessMatcher>() {

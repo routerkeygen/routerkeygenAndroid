@@ -45,6 +45,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -55,6 +56,7 @@ import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.text.method.LinkMovementMethod;
@@ -83,8 +85,8 @@ public class Preferences extends SherlockPreferenceActivity {
 	public static final String thomson3gPref = "thomson3g";
 	public static final String nativeCalcPref = "nativethomson";
 	public static final String autoScanPref = "autoScan";
+	public static final String analyticsPref = "analytics_enabled";
 	public static final String autoScanIntervalPref = "autoScanInterval";
-	
 
 	public final static String GOOGLE_PLAY_DOWNLOADER = "org.exobel.routerkeygendownloader";
 
@@ -92,10 +94,10 @@ public class Preferences extends SherlockPreferenceActivity {
 	private static final String PUB_DIC_CFV = "http://android-thomson-key-solver.googlecode.com/svn/trunk/RKDictionary.cfv";
 	private static final String PUB_VERSION = "http://android-thomson-key-solver.googlecode.com/svn/trunk/RouterKeygenVersion.txt";
 
-	private static final String VERSION = "3.0.3";
-	private static final String LAUNCH_DATE = "13/12/2012";
+	public static final String VERSION = "3.3.0";
+	private static final String LAUNCH_DATE = "04/02/2013";
 
-	private String version = "";
+	private String version;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -103,6 +105,19 @@ public class Preferences extends SherlockPreferenceActivity {
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+		PackageManager pm = getPackageManager();
+		boolean app_installed = false;
+		try {
+			pm.getPackageInfo("org.exobel.routerkeygendownloader",
+					PackageManager.GET_ACTIVITIES);
+			app_installed = true;
+		} catch (PackageManager.NameNotFoundException e) {
+			app_installed = false;
+		}
+		if (!app_installed) {
+			PreferenceCategory mCategory = (PreferenceCategory) findPreference("2section");
+			mCategory.removePreference(findPreference("analytics_enabled"));
+		}
 		findPreference("download").setOnPreferenceClickListener(
 				new OnPreferenceClickListener() {
 					public boolean onPreferenceClick(Preference preference) {
@@ -150,21 +165,25 @@ public class Preferences extends SherlockPreferenceActivity {
 						return true;
 					}
 				});
-		
+
 		findPreference("donate_playstore").setOnPreferenceClickListener(
 				new OnPreferenceClickListener() {
 					public boolean onPreferenceClick(Preference preference) {
 						try {
-						    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id="+GOOGLE_PLAY_DOWNLOADER)));
+							startActivity(new Intent(Intent.ACTION_VIEW, Uri
+									.parse("market://details?id="
+											+ GOOGLE_PLAY_DOWNLOADER)));
 						} catch (android.content.ActivityNotFoundException anfe) {
-						    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id="+GOOGLE_PLAY_DOWNLOADER)));
+							startActivity(new Intent(
+									Intent.ACTION_VIEW,
+									Uri.parse("http://play.google.com/store/apps/details?id="
+											+ GOOGLE_PLAY_DOWNLOADER)));
 						}
 
 						return true;
 					}
 				});
-		
-		
+
 		findPreference("update").setOnPreferenceClickListener(
 				new OnPreferenceClickListener() {
 					public boolean onPreferenceClick(Preference preference) {

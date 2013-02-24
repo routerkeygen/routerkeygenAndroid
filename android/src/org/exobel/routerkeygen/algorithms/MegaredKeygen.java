@@ -20,12 +20,14 @@ package org.exobel.routerkeygen.algorithms;
 
 import java.util.List;
 
+import org.exobel.routerkeygen.R;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
 /*
  * This is not actual an algorithm as
- * it is just the mac address with the first two characters.
+ * it is just the mac address without the first two characters.
  */
 public class MegaredKeygen extends Keygen {
 
@@ -35,6 +37,10 @@ public class MegaredKeygen extends Keygen {
 	
 	@Override
 	public List<String> getKeys() {
+		if (getMacAddress().length() != 12) {
+			setErrorCode(R.string.msg_errpirelli);
+			return null;
+		}
 		addPassword(getMacAddress().substring(2));
 		return getResults();
 	}

@@ -26,34 +26,39 @@ import org.exobel.routerkeygen.R;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class AxtelKeygen extends Keygen {
+/*
+ * This is not actual an algorithm as
+ * it is just the mac address without the first two characters.
+ */
+public class MaxcomKeygen extends Keygen {
 
-	public AxtelKeygen(String ssid, String mac, int level, String enc) {
+	public MaxcomKeygen(String ssid, String mac, int level, String enc ) {
 		super(ssid, mac, level, enc);
 	}
-
+	
 	@Override
 	public List<String> getKeys() {
 		if (getMacAddress().length() != 12) {
 			setErrorCode(R.string.msg_errpirelli);
 			return null;
 		}
-		addPassword(getMacAddress().substring(2).toUpperCase(Locale.getDefault()));
+		addPassword(getMacAddress().toUpperCase(Locale.getDefault()));
 		return getResults();
 	}
 
-	private AxtelKeygen(Parcel in) {
+	private MaxcomKeygen(Parcel in) {
 		super(in);
 	}
+	
+    public static final Parcelable.Creator<MaxcomKeygen> CREATOR = new Parcelable.Creator<MaxcomKeygen>() {
+        public MaxcomKeygen createFromParcel(Parcel in) {
+            return new MaxcomKeygen(in);
+        }
 
-	public static final Parcelable.Creator<AxtelKeygen> CREATOR = new Parcelable.Creator<AxtelKeygen>() {
-		public AxtelKeygen createFromParcel(Parcel in) {
-			return new AxtelKeygen(in);
-		}
-
-		public AxtelKeygen[] newArray(int size) {
-			return new AxtelKeygen[size];
-		}
-	};
+        public MaxcomKeygen[] newArray(int size) {
+            return new MaxcomKeygen[size];
+        }
+    };
+	
 
 }

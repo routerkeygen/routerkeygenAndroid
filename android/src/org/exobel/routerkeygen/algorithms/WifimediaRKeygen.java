@@ -26,33 +26,45 @@ import org.exobel.routerkeygen.R;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class AxtelKeygen extends Keygen {
+/**
+ * Simple algorithm for "wifimedia_R-XXXX" seen here:
+ * "http://foro.seguridadwireless.net/aplicaciones/(r-wlanxdecrypter-0-9)-generador-de-diccionarios-para-claves-por-defecto-de-r/msg264486/#msg264486"
+ * 
+ * @author Rui Araujo
+ * 
+ */
+public class WifimediaRKeygen extends Keygen {
 
-	public AxtelKeygen(String ssid, String mac, int level, String enc) {
+	public WifimediaRKeygen(String ssid, String mac, int level, String enc) {
 		super(ssid, mac, level, enc);
 	}
 
 	@Override
 	public List<String> getKeys() {
-		if (getMacAddress().length() != 12) {
+		final String mac = getMacAddress();
+		if (mac.length() != 12) {
 			setErrorCode(R.string.msg_errpirelli);
 			return null;
 		}
-		addPassword(getMacAddress().substring(2).toUpperCase(Locale.getDefault()));
+		final String possibleKey = mac.substring(0, 11).toLowerCase(
+				Locale.getDefault())
+				+ "0";
+		addPassword(possibleKey);
+		addPassword(possibleKey.toUpperCase(Locale.getDefault()));
 		return getResults();
 	}
 
-	private AxtelKeygen(Parcel in) {
+	private WifimediaRKeygen(Parcel in) {
 		super(in);
 	}
 
-	public static final Parcelable.Creator<AxtelKeygen> CREATOR = new Parcelable.Creator<AxtelKeygen>() {
-		public AxtelKeygen createFromParcel(Parcel in) {
-			return new AxtelKeygen(in);
+	public static final Parcelable.Creator<WifimediaRKeygen> CREATOR = new Parcelable.Creator<WifimediaRKeygen>() {
+		public WifimediaRKeygen createFromParcel(Parcel in) {
+			return new WifimediaRKeygen(in);
 		}
 
-		public AxtelKeygen[] newArray(int size) {
-			return new AxtelKeygen[size];
+		public WifimediaRKeygen[] newArray(int size) {
+			return new WifimediaRKeygen[size];
 		}
 	};
 

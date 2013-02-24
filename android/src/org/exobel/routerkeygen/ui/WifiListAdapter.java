@@ -23,6 +23,7 @@ import org.exobel.routerkeygen.algorithms.Keygen;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,16 +34,51 @@ import android.widget.TextView;
 public class WifiListAdapter extends BaseAdapter {
 	private Keygen[] listNetworks;
 
-	final private Resources resources;
 	final private LayoutInflater inflater;
+	private final Drawable[] supported;
+	private final Drawable[] wifiSignal;
+	private final Drawable[] wifiSignalLocked;
 
-	public WifiListAdapter(Keygen [] list, Context context) {
+	public WifiListAdapter(Keygen[] list, Context context) {
 		if (list != null)
 			this.listNetworks = list;
 		else
 			this.listNetworks = new Keygen[0];
-		resources = context.getResources();
+		final Resources resources = context.getResources();
 		inflater = LayoutInflater.from(context);
+		supported = new Drawable[2];
+		supported[0] = resources.getDrawable(R.drawable.ic_possible);
+		supported[1] = resources.getDrawable(R.drawable.ic_impossible);
+		wifiSignal = new Drawable[4];
+		wifiSignalLocked = new Drawable[4];
+		for (int i = 0; i < 4; ++i) {
+			switch (i) {
+			case 0:
+				wifiSignal[i] = resources
+						.getDrawable(R.drawable.ic_wifi_signal_1);
+				wifiSignalLocked[i] = resources
+						.getDrawable(R.drawable.ic_wifi_lock_signal_1);
+				break;
+			case 1:
+				wifiSignal[i] = resources
+						.getDrawable(R.drawable.ic_wifi_signal_2);
+				wifiSignalLocked[i] = resources
+						.getDrawable(R.drawable.ic_wifi_lock_signal_2);
+				break;
+			case 2:
+				wifiSignal[i] = resources
+						.getDrawable(R.drawable.ic_wifi_signal_3);
+				wifiSignalLocked[i] = resources
+						.getDrawable(R.drawable.ic_wifi_lock_signal_3);
+				break;
+			case 3:
+				wifiSignal[i] = resources
+						.getDrawable(R.drawable.ic_wifi_signal_4);
+				wifiSignalLocked[i] = resources
+						.getDrawable(R.drawable.ic_wifi_lock_signal_4);
+				break;
+			}
+		}
 	}
 
 	public int getCount() {
@@ -73,49 +109,14 @@ public class WifiListAdapter extends BaseAdapter {
 		holder.ssid.setText(wifi.getSsidName());
 		holder.mac.setText(wifi.getDisplayMacAddress());
 		if (wifi.isSupported())
-			holder.supported.setImageDrawable(resources.getDrawable(R.drawable.ic_possible));
+			holder.supported.setImageDrawable(supported[0]);
 		else
-			holder.supported.setImageDrawable(resources
-					.getDrawable(R.drawable.ic_impossible));
+			holder.supported.setImageDrawable(supported[1]);
 		final int strenght = wifi.getLevel();
 		if (wifi.isLocked()) {
-			switch (strenght) {
-			case 0:
-				holder.networkStrenght.setImageDrawable(resources
-						.getDrawable(R.drawable.ic_wifi_lock_signal_1));
-				break;
-			case 1:
-				holder.networkStrenght.setImageDrawable(resources
-						.getDrawable(R.drawable.ic_wifi_lock_signal_2));
-				break;
-			case 2:
-				holder.networkStrenght.setImageDrawable(resources
-						.getDrawable(R.drawable.ic_wifi_lock_signal_3));
-				break;
-			case 3:
-				holder.networkStrenght.setImageDrawable(resources
-						.getDrawable(R.drawable.ic_wifi_lock_signal_4));
-				break;
-			}
+			holder.networkStrenght.setImageDrawable(wifiSignalLocked[strenght]);
 		} else {
-			switch (strenght) {
-			case 0:
-				holder.networkStrenght.setImageDrawable(resources
-						.getDrawable(R.drawable.ic_wifi_signal_1));
-				break;
-			case 1:
-				holder.networkStrenght.setImageDrawable(resources
-						.getDrawable(R.drawable.ic_wifi_signal_2));
-				break;
-			case 2:
-				holder.networkStrenght.setImageDrawable(resources
-						.getDrawable(R.drawable.ic_wifi_signal_3));
-				break;
-			case 3:
-				holder.networkStrenght.setImageDrawable(resources
-						.getDrawable(R.drawable.ic_wifi_signal_4));
-				break;
-			}
+			holder.networkStrenght.setImageDrawable(wifiSignal[strenght]);
 		}
 		return convertView;
 	}

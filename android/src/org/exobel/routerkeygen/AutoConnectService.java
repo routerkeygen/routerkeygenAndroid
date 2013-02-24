@@ -66,6 +66,7 @@ public class AutoConnectService extends Service implements onConnectionListener 
 	private WifiManager wifi;
 	private int mNumOpenNetworksKept;
 	private int currentNetworkId = -1;
+	private boolean cancelNotification = true;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -104,6 +105,7 @@ public class AutoConnectService extends Service implements onConnectionListener 
 			stopSelf();
 			return START_NOT_STICKY;
 		}
+		cancelNotification = true;
 		attempts = 0;
 		currentNetworkId = -1;
 		network = intent.getParcelableExtra(SCAN_RESULT);
@@ -134,6 +136,7 @@ public class AutoConnectService extends Service implements onConnectionListener 
 						getSimple(getString(R.string.msg_error),
 								getString(R.string.msg_error_key_testing))
 								.build());
+				cancelNotification = false;
 				stopSelf();
 				return START_NOT_STICKY;
 			}
@@ -165,6 +168,7 @@ public class AutoConnectService extends Service implements onConnectionListener 
 					UNIQUE_ID,
 					getSimple(getString(R.string.msg_error),
 							getString(R.string.msg_error_key_testing)).build());
+			cancelNotification = false;
 			stopSelf();
 		}
 	}
@@ -173,7 +177,8 @@ public class AutoConnectService extends Service implements onConnectionListener 
 		try {
 			reenableAllHotspots();
 			unregisterReceiver(mReceiver);
-			mNotificationManager.cancel(UNIQUE_ID);
+			if (cancelNotification)
+				mNotificationManager.cancel(UNIQUE_ID);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -195,6 +200,7 @@ public class AutoConnectService extends Service implements onConnectionListener 
 					UNIQUE_ID,
 					getSimple(getString(R.string.msg_error),
 							getString(R.string.msg_no_correct_keys)).build());
+			cancelNotification = false;
 			stopSelf();
 			return;
 		}
@@ -209,6 +215,7 @@ public class AutoConnectService extends Service implements onConnectionListener 
 						getString(R.string.app_name),
 						getString(R.string.not_correct_key_testing,
 								keys.get(attempts - 1))).build());
+		cancelNotification = false;
 		stopSelf();
 
 	}
@@ -256,8 +263,8 @@ public class AutoConnectService extends Service implements onConnectionListener 
 			final RemoteViews contentView = new RemoteViews(getPackageName(),
 					R.layout.notification);
 			contentView.setTextViewText(R.id.text1, content);
-			contentView.setProgressBar(R.id.progress, keys.size(),
-					progress, false);
+			contentView.setProgressBar(R.id.progress, keys.size(), progress,
+					false);
 			final Notification not = builder.build();
 			not.contentView = contentView;
 			return not;

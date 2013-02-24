@@ -33,6 +33,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -46,18 +47,18 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.GoogleAnalytics;
 
 public class NetworksListActivity extends SherlockFragmentActivity implements
 		NetworksListFragment.OnItemSelectionListener, OnScanListener {
 
 	private boolean mTwoPane;
-
+	private NetworksListFragment networkListFragment;
 	private WirelessMatcher networkMatcher;
 	private WifiManager wifi;
 	private BroadcastReceiver scanFinished;
 	private BroadcastReceiver stateChanged;
-	private static final String donateScreenShownPref = "donateScreenShown";
-	boolean welcomeScreenShown;
+	private boolean welcomeScreenShown;
 
 	private Handler mHandler = new Handler();
 
@@ -67,77 +68,86 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 		EasyTracker.getInstance().setContext(getApplicationContext());
 		setContentView(R.layout.activity_networks_list);
 
-		final NetworksListFragment fragment = ((NetworksListFragment) getSupportFragmentManager()
+		networkListFragment = ((NetworksListFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.item_list));
 		if (findViewById(R.id.item_detail_container) != null) {
 			mTwoPane = true;
-			fragment.setActivateOnItemClick(true);
+			networkListFragment.setActivateOnItemClick(true);
 		}
 		networkMatcher = new WirelessMatcher(getResources().openRawResource(
-				R.raw.alice));
+				R.raw.alice), getResources().openRawResource(R.raw.tele2));
 		wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 
-		wifi_state = wifi.getWifiState() == WifiManager.WIFI_STATE_ENABLED
+		wifiState = wifi.getWifiState() == WifiManager.WIFI_STATE_ENABLED
 				|| wifi.getWifiState() == WifiManager.WIFI_STATE_ENABLING;
-		scanFinished = new WiFiScanReceiver(networkMatcher, wifi, fragment,
-				this);
-		stateChanged = new WifiStateReceiver(wifi);
+		scanFinished = new WiFiScanReceiver(networkMatcher, wifi,
+				networkListFragment, this);
+		stateChanged = new WifiStateReceiver(wifi, networkListFragment);
 
 		final SharedPreferences mPrefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
-		welcomeScreenShown = mPrefs.getBoolean(donateScreenShownPref, false);
+		welcomeScreenShown = mPrefs.getBoolean(Preferences.VERSION, false);
 
 		if (!welcomeScreenShown) {
-
-			final String whatsNewTitle = getString(R.string.msg_welcome_title);
-			final String whatsNewText = getString(R.string.msg_welcome_text);
-			new AlertDialog.Builder(this)
-					.setIcon(android.R.drawable.ic_dialog_alert)
-					.setTitle(whatsNewTitle)
-					.setMessage(whatsNewText)
-					.setNegativeButton(android.R.string.ok,
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int which) {
-									dialog.dismiss();
-								}
-							})
-					.setNeutralButton(R.string.bt_paypal,
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int which) {
-									final String donateLink = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=V3FFBTRTTV5DN";
-									Uri uri = Uri.parse(donateLink);
-									startActivity(new Intent(
-											Intent.ACTION_VIEW, uri));
-									dialog.dismiss();
-								}
-							})
-					.setPositiveButton(R.string.bt_google_play,
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int which) {
-									try {
-										startActivity(new Intent(
-												Intent.ACTION_VIEW,
-												Uri.parse("market://details?id="
-														+ Preferences.GOOGLE_PLAY_DOWNLOADER)));
-									} catch (android.content.ActivityNotFoundException anfe) {
-										startActivity(new Intent(
-												Intent.ACTION_VIEW,
-												Uri.parse("http://play.google.com/store/apps/details?id="
-														+ Preferences.GOOGLE_PLAY_DOWNLOADER)));
+			PackageManager pm = getPackageManager();
+			boolean app_installed = false;
+			try {
+				pm.getPackageInfo("org.exobel.routerkeygendownloader",
+						PackageManager.GET_ACTIVITIES);
+				app_installed = true;
+			} catch (PackageManager.NameNotFoundException e) {
+				app_installed = false;
+			}
+			if (!app_installed) {
+				final String whatsNewTitle = getString(R.string.msg_welcome_title);
+				final String whatsNewText = getString(R.string.msg_welcome_text);
+				new AlertDialog.Builder(this)
+						.setIcon(android.R.drawable.ic_dialog_alert)
+						.setTitle(whatsNewTitle)
+						.setMessage(whatsNewText)
+						.setNegativeButton(android.R.string.ok,
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog,
+											int which) {
+										dialog.dismiss();
 									}
-									dialog.dismiss();
-								}
-							}).show();
+								})
+						.setNeutralButton(R.string.bt_paypal,
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog,
+											int which) {
+										final String donateLink = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=V3FFBTRTTV5DN";
+										Uri uri = Uri.parse(donateLink);
+										startActivity(new Intent(
+												Intent.ACTION_VIEW, uri));
+										dialog.dismiss();
+									}
+								})
+						.setPositiveButton(R.string.bt_google_play,
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog,
+											int which) {
+										try {
+											startActivity(new Intent(
+													Intent.ACTION_VIEW,
+													Uri.parse("market://details?id="
+															+ Preferences.GOOGLE_PLAY_DOWNLOADER)));
+										} catch (android.content.ActivityNotFoundException anfe) {
+											startActivity(new Intent(
+													Intent.ACTION_VIEW,
+													Uri.parse("http://play.google.com/store/apps/details?id="
+															+ Preferences.GOOGLE_PLAY_DOWNLOADER)));
+										}
+										dialog.dismiss();
+									}
+								}).show();
+			}
 			final SharedPreferences.Editor editor = mPrefs.edit();
-			editor.putBoolean(donateScreenShownPref, true);
+			editor.putBoolean(Preferences.VERSION, true);
 			editor.commit();
 		}
 	}
 
-	
 	public void onItemSelected(Keygen keygen) {
 		if (mTwoPane) {
 			final Bundle arguments = new Bundle();
@@ -190,11 +200,16 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 		EasyTracker.getInstance().activityStart(this); // Add this method.
 		getPrefs();
 		if (wifiOn) {
-			if (!wifi.setWifiEnabled(true))
-				Toast.makeText(this, R.string.msg_wifibroken,
-						Toast.LENGTH_SHORT).show();
-			else
-				wifi_state = true;
+			try {
+				if (!wifi.setWifiEnabled(true))
+					networkListFragment.setMessage(R.string.msg_wifibroken);
+				else
+					wifiState = true;
+			} catch (SecurityException e) {
+				// Workaround for
+				// http://code.google.com/p/android/issues/detail?id=22036
+				networkListFragment.setMessage(R.string.msg_wifibroken);
+			}
 		}
 		if (autoScan) {
 			mHandler.removeCallbacks(mAutoScanTask);
@@ -247,12 +262,14 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 	public void onResume() {
 		super.onResume();
 		getPrefs();
+		GoogleAnalytics myInstance = GoogleAnalytics
+				.getInstance(getApplicationContext());
+		myInstance.setAppOptOut(!analyticsOptIn);
 	}
 
 	public void scan() {
-		if (!wifi_state && !wifiOn) {
-			Toast.makeText(this, R.string.msg_nowifi, Toast.LENGTH_SHORT)
-					.show();
+		if (!wifiState && !wifiOn) {
+			networkListFragment.setMessage(R.string.msg_nowifi);
 			return;
 		}
 		registerReceiver(scanFinished, new IntentFilter(
@@ -266,8 +283,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 			if (wifi.startScan()) {
 				setRefreshActionItemState(true);
 			} else
-				Toast.makeText(this, R.string.msg_scanfailed,
-						Toast.LENGTH_SHORT).show();
+				networkListFragment.setMessage(R.string.msg_scanfailed);
 		}
 	}
 
@@ -278,9 +294,10 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 		}
 	};
 
-	private boolean wifi_state;
+	private boolean wifiState;
 	private boolean wifiOn;
 	private boolean autoScan;
+	private boolean analyticsOptIn;
 	private long autoScanInterval;
 
 	private void getPrefs() {
@@ -292,9 +309,10 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 				.getBoolean(R.bool.autoScanDefault));
 		autoScanInterval = prefs.getInt(Preferences.autoScanIntervalPref,
 				getResources().getInteger(R.integer.autoScanIntervalDefault));
+		analyticsOptIn = prefs.getBoolean(Preferences.analyticsPref,
+				getResources().getBoolean(R.bool.analyticsDefault));
 	}
 
-	
 	public void onScanFinished(Keygen[] networks) {
 		setRefreshActionItemState(false);
 		if (!welcomeScreenShown) {
@@ -304,7 +322,6 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 		}
 	}
 
-	
 	public void onItemSelected(String mac) {
 
 		ManualDialogFragment.newInstance(networkMatcher, mac).show(

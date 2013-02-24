@@ -40,13 +40,14 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
 @SuppressWarnings("deprecation")
 public class NetworksListFragment extends SherlockFragment implements
-		OnScanListener, OnItemClickListener {
+		OnScanListener, OnItemClickListener, MessagePublisher {
 
 	private static final String STATE_ACTIVATED_POSITION = "activated_position";
 	private static final String NETWORKS_FOUND = "network_found";
@@ -129,7 +130,8 @@ public class NetworksListFragment extends SherlockFragment implements
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putParcelableArray(NETWORKS_FOUND, networksFound);
+		if (networksFound != null)
+			outState.putParcelableArray(NETWORKS_FOUND, networksFound);
 		if (mActivatedPosition != ListView.INVALID_POSITION) {
 			outState.putInt(STATE_ACTIVATED_POSITION, mActivatedPosition);
 		}
@@ -157,9 +159,13 @@ public class NetworksListFragment extends SherlockFragment implements
 			ContextMenu.ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 		final AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
+		//We may have had bad luck
+		if ( info.position >= networksFound.length )
+			return;
 		MenuInflater inflater = getActivity().getMenuInflater();
 		inflater.inflate(R.menu.networks_context_menu, menu);
-		//We are copying the values right away as the networks list is unstable.
+		// We are copying the values right away as the networks list is
+		// unstable.
 		((MenuItem) menu.findItem(R.id.copy_ssid)).setIntent(new Intent()
 				.putExtra(MENU_VALUE,
 						networksFound[info.position].getSsidName()));
@@ -179,16 +185,18 @@ public class NetworksListFragment extends SherlockFragment implements
 			ClipboardManager clipboard = (ClipboardManager) getActivity()
 					.getSystemService(Context.CLIPBOARD_SERVICE);
 			clipboard.setText(value);
-			Toast.makeText(getActivity(), getString(R.string.msg_copied, value),
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(getActivity(),
+					getString(R.string.msg_copied, value), Toast.LENGTH_SHORT)
+					.show();
 			return true;
 		}
 		case R.id.copy_mac: {
 			ClipboardManager clipboard = (ClipboardManager) getActivity()
 					.getSystemService(Context.CLIPBOARD_SERVICE);
 			clipboard.setText(value);
-			Toast.makeText(getActivity(), getString(R.string.msg_copied, value),
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(getActivity(),
+					getString(R.string.msg_copied, value), Toast.LENGTH_SHORT)
+					.show();
 			return true;
 		}
 		case R.id.use_mac:
@@ -196,6 +204,17 @@ public class NetworksListFragment extends SherlockFragment implements
 			return true;
 		}
 		return super.onContextItemSelected(item);
+	}
+
+	public void setMessage(int message) {
+		noNetworksMessage.findViewById(R.id.loading_spinner).setVisibility(
+				View.GONE);
+		listview.setVisibility(View.GONE);
+		TextView messageView = (TextView) noNetworksMessage
+				.findViewById(R.id.message);
+		messageView.setVisibility(View.VISIBLE);
+		messageView.setText(message);
+		noNetworksMessage.setVisibility(View.VISIBLE);
 	}
 
 	public void onScanFinished(Keygen[] networks) {
@@ -211,15 +230,19 @@ public class NetworksListFragment extends SherlockFragment implements
 			noNetworksMessage.findViewById(R.id.loading_spinner).setVisibility(
 					View.GONE);
 			listview.setVisibility(View.GONE);
-			noNetworksMessage.findViewById(R.id.message).setVisibility(
-					View.VISIBLE);
+			listview.setVisibility(View.GONE);
+			TextView messageView = (TextView) noNetworksMessage
+					.findViewById(R.id.message);
+			messageView.setVisibility(View.VISIBLE);
+			messageView.setText(R.string.msg_nowifidetected);
 			noNetworksMessage.setVisibility(View.VISIBLE);
 		}
 	}
 
 	public void onItemClick(AdapterView<?> list, View view, int position,
 			long id) {
-		mCallbacks.onItemSelected(networksFound[position]);
+		if (networksFound != null && networksFound.length > position)
+			mCallbacks.onItemSelected(networksFound[position]);
 	}
 
 }

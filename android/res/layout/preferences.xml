@@ -101,7 +101,18 @@
     <PreferenceCategory
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:key="2section"
         android:title="@string/pref_2section" >
+        
+        <CheckBoxPreference
+            android:id="@+id/analytics"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:defaultValue="@bool/analyticsDefault"
+            android:key="analytics_enabled"
+            android:summaryOff="@string/pref_hintoff_analytics"
+            android:summaryOn="@string/pref_hinton_analytics"
+            android:title="@string/pref_analytics" />
 
         <Preference
             android:layout_width="wrap_content"
