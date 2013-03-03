@@ -83,12 +83,22 @@ public class KeygenTest {
 
 	@Test
 	public void testOTE() {
-		Keygen keygen = matcher.getKeygen("OTE37cb4c", "", 0, "");
+		Keygen keygen = matcher.getKeygen("OTE37cb4c", "B0:75:D5:37:CB:4C", 0, "");
 		assertTrue("Keygen should be OTE",keygen instanceof OteKeygen);
 		List<String> results = keygen.getKeys();
 		assertEquals("Errors should not happen",0, keygen.getErrorCode());
 		assertEquals("There should be only one result", 1, results.size());
 		assertEquals("The password should be b075d537cb4c", "b075d537cb4c", results.get(0));		
+	}
+
+	@Test
+	public void testOTEBAUD() {
+		Keygen keygen = matcher.getKeygen("OTEcb4c", "00:13:33:37:CB:4C", 0, "");
+		assertTrue("Keygen should be OTEBaud",keygen instanceof OteBAUDKeygen);
+		List<String> results = keygen.getKeys();
+		assertEquals("Errors should not happen",0, keygen.getErrorCode());
+		assertEquals("There should be only one result", 1, results.size());
+		assertEquals("The password should be b075d537cb4c", "000133337cb4c", results.get(0));		
 	}
 	
 

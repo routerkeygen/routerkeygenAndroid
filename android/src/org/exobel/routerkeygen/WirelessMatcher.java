@@ -25,6 +25,7 @@ import org.exobel.routerkeygen.algorithms.Keygen;
 import org.exobel.routerkeygen.algorithms.MaxcomKeygen;
 import org.exobel.routerkeygen.algorithms.MegaredKeygen;
 import org.exobel.routerkeygen.algorithms.OnoKeygen;
+import org.exobel.routerkeygen.algorithms.OteBAUDKeygen;
 import org.exobel.routerkeygen.algorithms.OteKeygen;
 import org.exobel.routerkeygen.algorithms.PBSKeygen;
 import org.exobel.routerkeygen.algorithms.PirelliKeygen;
@@ -183,7 +184,6 @@ public class WirelessMatcher implements Parcelable {
 					|| mac.startsWith("38:72:C0") || mac.startsWith("30:39:F2"))
 				return new ComtrendKeygen(ssid, mac, level, enc);
 		}
-
 		if (ssid.matches("SKY[0-9]{5}")
 				&& (mac.startsWith("C4:3D:C7") || mac.startsWith("E0:46:9A")
 						|| mac.startsWith("E0:91:F5")
@@ -218,7 +218,14 @@ public class WirelessMatcher implements Parcelable {
 		if (ssid.matches("(WLAN|WiFi|YaCom)[0-9a-zA-Z]{6}"))
 			return new Wlan6Keygen(ssid, mac, level, enc);
 
-		if (ssid.matches("OTE[0-9a-fA-F]{6}"))
+		if ((ssid.matches("OTE[0-9a-fA-F]{4}")) && (mac.startsWith("00:13:33")))
+			return new OteBAUDKeygen(ssid, mac, level, enc);
+		if ((ssid.matches("OTE[0-9a-fA-F]{6}"))
+				&& ((mac.startsWith("C8:7B:5B"))
+						|| (mac.startsWith("FC:C8:97"))
+						|| (mac.startsWith("68:1A:B2"))
+						|| (mac.startsWith("B0:75:D5")) || (mac
+							.startsWith("38:46:08"))))
 			return new OteKeygen(ssid, mac, level, enc);
 
 		if (ssid.matches("MAXCOM[0-9a-zA-Z]{4}"))

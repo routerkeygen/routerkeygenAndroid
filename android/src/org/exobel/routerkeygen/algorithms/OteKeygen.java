@@ -19,47 +19,46 @@
 package org.exobel.routerkeygen.algorithms;
 
 import java.util.List;
+import java.util.Locale;
+
+import org.exobel.routerkeygen.R;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 /*
  * This is not actual an algorithm as
- * it is just needed to add "b075d5" to last 6 characters
- * from the SSID
+ * it is just needed to use the mac address.
+ * This only works with some OTEXXXXXX
  */
 public class OteKeygen extends Keygen {
 
-	private final String ssidIdentifier;
-	public OteKeygen(String ssid, String mac, int level, String enc ) {
+	public OteKeygen(String ssid, String mac, int level, String enc) {
 		super(ssid, mac, level, enc);
-		ssidIdentifier = ssid.substring(ssid.length()-6);
 	}
-	
+
 	@Override
 	public List<String> getKeys() {
-		addPassword("b075d5"+ssidIdentifier);
+		if (getMacAddress().length() != 12) {
+			setErrorCode(R.string.msg_errpirelli);
+			return null;
+		}
+		addPassword(getMacAddress().toLowerCase(Locale.getDefault()));
 		return getResults();
 	}
 
 	private OteKeygen(Parcel in) {
 		super(in);
-		ssidIdentifier = in.readString();
 	}
 
-	public void writeToParcel(Parcel dest, int flags) {
-		super.writeToParcel(dest, flags);
-		dest.writeString(ssidIdentifier);
-	}
-	
-    public static final Parcelable.Creator<OteKeygen> CREATOR = new Parcelable.Creator<OteKeygen>() {
-        public OteKeygen createFromParcel(Parcel in) {
-            return new OteKeygen(in);
-        }
+	public static final Parcelable.Creator<OteKeygen> CREATOR = new Parcelable.Creator<OteKeygen>() {
+		public OteKeygen createFromParcel(Parcel in) {
+			return new OteKeygen(in);
+		}
 
-        public OteKeygen[] newArray(int size) {
-            return new OteKeygen[size];
-        }
-    };
+		public OteKeygen[] newArray(int size) {
+			return new OteKeygen[size];
+		}
+	};
 
 }
