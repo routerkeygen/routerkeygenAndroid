@@ -21,37 +21,24 @@ package org.exobel.routerkeygen.config;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
-public class AliceConfigParser {
+public class OTEHuaweiConfigParser {
 
-	public static Map<String, ArrayList<AliceMagicInfo>> parse(InputStream in) {
-		Map<String, ArrayList<AliceMagicInfo>> supportedAlices = new HashMap<String, ArrayList<AliceMagicInfo>>();
+	public static String[] parse(InputStream in) {
+		final String[] supportedOTE = new String[61440];
 		final BufferedReader bufferedInput = new BufferedReader(
 				new InputStreamReader(in));
+		int j = 0;
 		try {
 			String line;
-			while ((line = bufferedInput.readLine()) != null) {
-				final String[] infos = line.split(",");
-				final String name = infos[0];
-				ArrayList<AliceMagicInfo> supported = supportedAlices.get(name);
-				if (supported == null) {
-					supported = new ArrayList<AliceMagicInfo>(5);
-					supportedAlices.put(name, supported);
-				}
-				final String serial = infos[1];
-				int[] magic = new int[2];
-				magic[0] = Integer.parseInt(infos[2]); // k
-				magic[1] = Integer.parseInt(infos[3]); // q
-				final String mac = infos[4];
-				supported.add(new AliceMagicInfo(name, magic, serial, mac));
-			}
+			while ((line = bufferedInput.readLine()) != null)
+				supportedOTE[j++] = line;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return supportedAlices;
+		if (j != supportedOTE.length)
+			throw new RuntimeException();
+		return supportedOTE;
 	}
 
 }

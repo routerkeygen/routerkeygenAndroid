@@ -1,12 +1,13 @@
 package org.exobel.routerkeygen;
 
-import java.io.InputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.zip.ZipInputStream;
 
 import org.exobel.routerkeygen.algorithms.AliceKeygen;
 import org.exobel.routerkeygen.algorithms.AndaredKeygen;
@@ -26,6 +27,7 @@ import org.exobel.routerkeygen.algorithms.MaxcomKeygen;
 import org.exobel.routerkeygen.algorithms.MegaredKeygen;
 import org.exobel.routerkeygen.algorithms.OnoKeygen;
 import org.exobel.routerkeygen.algorithms.OteBAUDKeygen;
+import org.exobel.routerkeygen.algorithms.OteHuaweiKeygen;
 import org.exobel.routerkeygen.algorithms.OteKeygen;
 import org.exobel.routerkeygen.algorithms.PBSKeygen;
 import org.exobel.routerkeygen.algorithms.PirelliKeygen;
@@ -43,6 +45,7 @@ import org.exobel.routerkeygen.algorithms.Wlan6Keygen;
 import org.exobel.routerkeygen.algorithms.ZyxelKeygen;
 import org.exobel.routerkeygen.config.AliceConfigParser;
 import org.exobel.routerkeygen.config.AliceMagicInfo;
+import org.exobel.routerkeygen.config.OTEHuaweiConfigParser;
 import org.exobel.routerkeygen.config.TeleTuConfigParser;
 import org.exobel.routerkeygen.config.TeleTuMagicInfo;
 
@@ -50,15 +53,26 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 public class WirelessMatcher implements Parcelable {
 
 	private final Map<String, ArrayList<AliceMagicInfo>> supportedAlices;
 	private final Map<String, ArrayList<TeleTuMagicInfo>> supportedTeletu;
+	private final String[] supportedOTE;
 
-	public WirelessMatcher(InputStream alice, InputStream teletu) {
-		supportedAlices = AliceConfigParser.parse(alice);
-		supportedTeletu = TeleTuConfigParser.parse(teletu);
+	public WirelessMatcher(ZipInputStream magicInfo) throws IOException {
+		magicInfo.getNextEntry();
+		supportedTeletu = TeleTuConfigParser.parse(magicInfo);
+		magicInfo.getNextEntry();
+		supportedAlices = AliceConfigParser.parse(magicInfo);
+		magicInfo.getNextEntry();
+		long begin = System.currentTimeMillis();
+		supportedOTE = OTEHuaweiConfigParser.parse(magicInfo);
+		long end = System.currentTimeMillis() - begin;
+		if (BuildConfig.DEBUG)
+			Log.d(WirelessMatcher.class.getName(), "Time to parse:" + end);
+		magicInfo.close();
 	}
 
 	public Keygen getKeygen(ScanResult result) {
@@ -218,16 +232,27 @@ public class WirelessMatcher implements Parcelable {
 		if (ssid.matches("(WLAN|WiFi|YaCom)[0-9a-zA-Z]{6}"))
 			return new Wlan6Keygen(ssid, mac, level, enc);
 
-		if ((ssid.matches("OTE[0-9a-fA-F]{4}")) && (mac.startsWith("00:13:33")))
+		if (ssid.matches("OTE[0-9a-fA-F]{4}") && mac.startsWith("00:13:33"))
 			return new OteBAUDKeygen(ssid, mac, level, enc);
-		if ((ssid.matches("OTE[0-9a-fA-F]{6}"))
+
+		if (ssid.matches("OTE[0-9a-fA-F]{6}")
 				&& ((mac.startsWith("C8:7B:5B"))
 						|| (mac.startsWith("FC:C8:97"))
 						|| (mac.startsWith("68:1A:B2"))
 						|| (mac.startsWith("B0:75:D5")) || (mac
 							.startsWith("38:46:08"))))
 			return new OteKeygen(ssid, mac, level, enc);
-
+		if (ssid.toUpperCase(Locale.getDefault()).startsWith("OTE")
+				&& (mac.startsWith("E8:39:DF:F5")
+						|| mac.startsWith("E8:39:DF:F6") || mac
+							.startsWith("E8:39:DF:FD"))) {
+			final String filteredMac = mac.replace(":", "");
+			final int target = Integer.parseInt(filteredMac.substring(8), 16);
+			if (filteredMac.length() == 12
+					&& target > (OteHuaweiKeygen.MAGIC_NUMBER - supportedOTE.length))
+				return new OteHuaweiKeygen(ssid, mac, level, enc,
+						supportedOTE[OteHuaweiKeygen.MAGIC_NUMBER - target]);
+		}
 		if (ssid.matches("MAXCOM[0-9a-zA-Z]{4}"))
 			return new MaxcomKeygen(ssid, mac, level, enc);
 
@@ -316,6 +341,7 @@ public class WirelessMatcher implements Parcelable {
 		dest.writeStringArray(arrayTeletu);
 		for (String key : keySetTeletu)
 			dest.writeTypedList(supportedAlices.get(key));
+		dest.writeArray(supportedOTE);
 	}
 
 	private WirelessMatcher(Parcel in) {
@@ -333,6 +359,7 @@ public class WirelessMatcher implements Parcelable {
 			in.readTypedList(supportedTeletuList, TeleTuMagicInfo.CREATOR);
 			supportedTeletu.put(key, supportedTeletuList);
 		}
+		supportedOTE = (String[]) in.readArray(String.class.getClassLoader());
 	}
 
 	public static final Parcelable.Creator<WirelessMatcher> CREATOR = new Parcelable.Creator<WirelessMatcher>() {

@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TeleTuConfigParser {
-	
+
 	public static Map<String, ArrayList<TeleTuMagicInfo>> parse(InputStream in) {
 		Map<String, ArrayList<TeleTuMagicInfo>> supportedTeleTu = new HashMap<String, ArrayList<TeleTuMagicInfo>>();
 		final BufferedReader bufferedInput = new BufferedReader(
@@ -53,12 +53,6 @@ public class TeleTuConfigParser {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-			try {
-				bufferedInput.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 		}
 		return supportedTeleTu;
 	}

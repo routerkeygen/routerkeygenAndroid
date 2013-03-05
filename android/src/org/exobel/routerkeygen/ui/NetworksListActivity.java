@@ -19,6 +19,9 @@
 
 package org.exobel.routerkeygen.ui;
 
+import java.io.IOException;
+import java.util.zip.ZipInputStream;
+
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.WiFiScanReceiver;
 import org.exobel.routerkeygen.WiFiScanReceiver.OnScanListener;
@@ -34,6 +37,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Resources.NotFoundException;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -74,8 +78,14 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 			mTwoPane = true;
 			networkListFragment.setActivateOnItemClick(true);
 		}
-		networkMatcher = new WirelessMatcher(getResources().openRawResource(
-				R.raw.alice), getResources().openRawResource(R.raw.tele2));
+		try {
+			networkMatcher = new WirelessMatcher(new ZipInputStream(
+					getResources().openRawResource(R.raw.magic_info)));
+		} catch (NotFoundException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 		wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 
 		wifiState = wifi.getWifiState() == WifiManager.WIFI_STATE_ENABLED
