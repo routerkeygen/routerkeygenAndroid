@@ -10,15 +10,17 @@
 #include <QString>
 #include "Keygen.h"
 #include "AliceMagicInfo.h"
+#include "TeleTuMagicInfo.h"
 #include <QVector>
 #include <QMap>
 class WirelessMatcher {
 public:
-	WirelessMatcher();
-	virtual ~WirelessMatcher();
+    WirelessMatcher();virtual
+    ~WirelessMatcher();
 	Keygen * getKeygen(QString ssid, QString mac, int level, QString enc);
 private:
     QMap<QString ,QVector<AliceMagicInfo *> *> * supportedAlice;
+    QMap<QString ,QVector<TeleTuMagicInfo *> *> * supportedTeletu;
 
 };
 

@@ -16,36 +16,38 @@
  * You should have received a copy of the GNU General Public License
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "AliceConfigParser.h"
+#include "TeleTuConfigParser.h"
 #include <iostream>
 #include <stdio.h>
 #include <QFile>
 #include <QTextStream>
 #include <QStringList>
 
-QMap<QString ,QVector<AliceMagicInfo *> *> * AliceConfigParser::readFile(const QString &fileName) {
+QMap<QString ,QVector<TeleTuMagicInfo *> *> * TeleTuConfigParser::readFile(const QString &fileName) {
     QFile file(fileName);
     if(!file.open(QIODevice::ReadOnly)) {
         return NULL;
     }
     QTextStream in(&file);
-    QMap<QString ,QVector<AliceMagicInfo *> *> * supportedAlices = new QMap<QString ,QVector<AliceMagicInfo *> *>();
+    QMap<QString ,QVector<TeleTuMagicInfo *> *> * supportedTeleTus = new QMap<QString ,QVector<TeleTuMagicInfo *> *>();
     while(!in.atEnd()) {
         QString line = in.readLine();
-        QStringList infos = line.split(",");
+        QStringList infos = line.split(" ");
         QString name = infos[0];
-        QVector<AliceMagicInfo*> * supported = supportedAlices->value(name);
+        QVector<TeleTuMagicInfo*> * supported = supportedTeleTus
+                ->value(name);
         if (supported == NULL) {
-            supported = new QVector<AliceMagicInfo*>();
-            supportedAlices->insert(name, supported);
+            supported = new QVector<TeleTuMagicInfo*>();
+            supportedTeleTus->insert(name, supported);
         }
-        QString serial = infos[1];
-        int * magic = new int[2];
-        magic[0] = infos[2].toInt(NULL,10); // k
-        magic[1] = infos[3].toInt(NULL,10); // q
-        QString mac = infos[4];
-        supported->append(new AliceMagicInfo(name, magic, serial, mac));
+        int * range = new int[2];
+        range[0] = infos[1].toInt(NULL,16); // from
+        range[1] = infos[2].toInt(NULL,16); // to
+        QString serial = infos[3];
+        int base = infos[4].toInt(NULL,16);
+        int divider = infos[5].toInt(NULL,10);
+        supported->append(new TeleTuMagicInfo(range, serial, base, divider));
     }
     file.close();
-    return supportedAlices;
+    return supportedTeleTus;
 }

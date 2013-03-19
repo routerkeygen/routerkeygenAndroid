@@ -36,8 +36,8 @@
 #include <stdlib.h>
 
 RouterKeygen::RouterKeygen(QWidget *parent) :
-		QMainWindow(parent), ui(new Ui::RouterKeygen), loading(NULL), loadingText(
-				NULL) {
+        QMainWindow(parent), ui(new Ui::RouterKeygen), loading(NULL), loadingText(NULL),
+        router(NULL), calculator(NULL) {
 	ui->setupUi(this);
 	connect(ui->calculateButton, SIGNAL( clicked() ), this,
 			SLOT( manualCalculation() ));
@@ -72,9 +72,7 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
 	ui->ssidInput->setCompleter(completer);
 	ui->networkslist->setSelectionBehavior(QAbstractItemView::SelectRows);
 	ui->networkslist->setEditTriggers(QAbstractItemView::NoEditTriggers);
-	ui->passwordsList->installEventFilter(this);
-	this->router = NULL;
-	this->calculator = NULL;
+    ui->passwordsList->installEventFilter(this);
 
 	//Set widget ration
 	ui->splitter->setStretchFactor(0, 2);

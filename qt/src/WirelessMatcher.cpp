@@ -7,7 +7,9 @@
 
 #include "WirelessMatcher.h"
 #include "AliceConfigParser.h"
+#include "TeleTuConfigParser.h"
 #include "TecomKeygen.h"
+#include "TeleTuKeygen.h"
 #include "ThomsonKeygen.h"
 #include "VerizonKeygen.h"
 #include "InfostradaKeygen.h"
@@ -25,17 +27,22 @@
 #include "HuaweiKeygen.h"
 #include "AliceKeygen.h"
 #include "ConnKeygen.h"
+#include "AxtelKeygen.h"
 #include "AndaredKeygen.h"
 #include "MegaredKeygen.h"
+#include "MaxcomKeygen.h"
+#include "InterCableKeygen.h"
 #include "OteKeygen.h"
 #include "OteBAUDKeygen.h"
 #include "PBSKeygen.h"
+#include "PtvKeygen.h"
 #include "EasyBoxKeygen.h"
 #include "CabovisaoSagemKeygen.h"
 #include <QRegExp>
 
 WirelessMatcher::WirelessMatcher() {
-    supportedAlice = AliceConfigParser::readFile(":/alice/alice.txt");
+    supportedAlice = AliceConfigParser::readFile(":/config/alice.txt");
+    supportedTeletu = TeleTuConfigParser::readFile(":/config/tele2.txt");
 }
 
 WirelessMatcher::~WirelessMatcher() {
@@ -49,6 +56,17 @@ WirelessMatcher::~WirelessMatcher() {
 	}
     supportedAlice->clear();
     delete supportedAlice;
+    keys = supportedTeletu->keys();
+    for (int i = 0; i < keys.size(); ++i) {
+        QVector<TeleTuMagicInfo *> * supported = supportedTeletu->value(
+                keys.at(i));
+        for (int j = 0; j < supported->size(); ++j)
+            delete supported->at(j);
+        delete supported;
+    }
+    supportedTeletu->clear();
+    delete supportedTeletu;
+
 }
 
 Keygen * WirelessMatcher::getKeygen(QString ssid, QString mac, int level,
@@ -57,6 +75,16 @@ Keygen * WirelessMatcher::getKeygen(QString ssid, QString mac, int level,
 	//	enc = Keygen.OPEN;
     mac = mac.toUpper();
 
+    if (ssid.count(QRegExp("(AXTEL|AXTEL-XTREMO)-[0-9a-fA-F]{4}"))==1) {
+        QString ssidSubpart = ssid.right(4);
+        QString macShort = mac.replace(":", "");
+        if (macShort.length() == 12
+                && ( ssidSubpart.toLower() == macShort.right(4).toLower()))
+            return new AxtelKeygen(ssid, mac, level, enc);
+    }
+
+    if (ssid.startsWith("InterCable") && mac.startsWith("00:15"))
+        return new InterCableKeygen(ssid, mac, level, enc);
 	if (ssid.count(QRegExp("Discus--?[0-9a-fA-F]{6}")) == 1)
 		return new DiscusKeygen(ssid, mac, level, enc);
 
@@ -128,7 +156,27 @@ Keygen * WirelessMatcher::getKeygen(QString ssid, QString mac, int level,
 			return new AliceKeygen(ssid, mac, level, enc, supported);
 		}
 	}
-
+    if (ssid.toLower().startsWith("teletu")) {
+        QString filteredMac = mac.replace(":", "");
+        if (filteredMac.length() != 12 &&
+                (ssid.count(QRegExp("TeleTu_[0-9a-fA-F]{12}")) == 1)){
+            mac = filteredMac = ssid.mid(7);
+        }
+        if (filteredMac.length() == 12) {
+            QVector<TeleTuMagicInfo *> *  supported = supportedTeletu
+                    ->value(filteredMac.left(6));
+            if (supported != NULL && supported->size() > 0) {
+                int macIntValue = filteredMac.mid(6).toInt(NULL,16);
+                for (int i = 0; i < supported->size(); ++i ) {
+                    if (macIntValue >= supported->at(i)->range[0]
+                            && macIntValue <= supported->at(i)->range[1]) {
+                        return new TeleTuKeygen(ssid, mac, level, enc,
+                                supported->at(i));
+                    }
+                }
+            }
+        }
+    }
 	/* ssid must be of the form P1XXXXXX0000X or p1XXXXXX0000X */
 	if (ssid.count(QRegExp("[Pp]1[0-9]{6}0{4}[0-9]")) == 1)
 		return new OnoKeygen(ssid, mac, level, enc);
@@ -176,8 +224,19 @@ Keygen * WirelessMatcher::getKeygen(QString ssid, QString mac, int level,
 	if (ssid.count(QRegExp("OTE[0-9a-fA-F]{6}")) == 1)
 		return new OteKeygen(ssid, mac, level, enc);
 
+    if (ssid.count(QRegExp("MAXCOM[0-9a-zA-Z]{4}")) == 1)
+        return new MaxcomKeygen(ssid, mac, level, enc);
+
 	if (ssid.count(QRegExp("PBS-[0-9a-fA-F]{6}")) == 1)
 		return new PBSKeygen(ssid, mac, level, enc);
+
+    if (ssid.count(QRegExp("(PTV-|ptv|ptv-)[0-9a-zA-Z]{6}")) == 1)
+        return new PtvKeygen(ssid, mac, level, enc);
+
+    if (ssid.count(QRegExp("Cabovisao-[0-9a-fA-F]{4}")) == 1) {
+        if (mac.length() == 0 || mac.startsWith("C0:AC:54"))
+            return new CabovisaoSagemKeygen(ssid, mac, level, enc);
+    }
 
 	if (ssid == "CONN-X")
 		return new ConnKeygen(ssid, mac, level, enc);
@@ -192,10 +251,6 @@ Keygen * WirelessMatcher::getKeygen(QString ssid, QString mac, int level,
 			return new MegaredKeygen(ssid, mac, level, enc);
 	}
 
-    if (ssid.count(QRegExp("Cabovisao-[0-9a-fA-F]{4}")) == 1) {
-        if (mac.length() == 0 || mac.startsWith("C0:AC:54"))
-            return new CabovisaoSagemKeygen(ssid, mac, level, enc);
-    }
 
 	if (ssid.length() == 5
 			&& (mac.startsWith("00:1F:90") || mac.startsWith("A8:39:44")
