@@ -23,10 +23,12 @@
 #include "AndaredKeygen.h"
 #include "MegaredKeygen.h"
 #include "OteKeygen.h"
+#include "OteBAUDKeygen.h"
 #include "PBSKeygen.h"
 #include "EasyBoxKeygen.h"
 #include "CabovisaoSagemKeygen.h"
 #include "WirelessMatcher.h"
+#include <QDebug>
 
 class AlgorithmsTest: public QObject
 {
@@ -89,8 +91,6 @@ private slots:
             QCOMPARE(results.at(0),QString("F9C8C9DEF"));
         }
 
-
-/*
         void testOTE() {
             Keygen * keygen = matcher.getKeygen("OTE37cb4c", "B0:75:D5:37:CB:4C", 0, "");
             QCOMPARE(typeid(*keygen), typeid(OteKeygen) );
@@ -108,7 +108,7 @@ private slots:
             QCOMPARE(results.at(0),QString("000133337cb4c"));
         }
 
-*/
+
 
         void testCONN() {
             Keygen * keygen = matcher.getKeygen("CONN-X", "", 0, "");

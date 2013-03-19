@@ -65,7 +65,7 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
 			<< "WiFi" << "YaCom" << "SKY" << "TECOM-AH4222-" << "TECOM-AH4021-"
 			<< "InfostradaWiFi-" << "TN_private_" << "CYTA" << "PBS" << "CONN"
 			<< "OTE" << "Vodafone-" << "EasyBox-" << "Arcor-" << "Megared"
-			<< "Optimus" << "OptimusFibra" << "MEO-";
+            << "Optimus" << "OptimusFibra" << "MEO-" << "Cabovisao-";
 	QCompleter *completer = new QCompleter(wordList, this);
 	completer->setCaseSensitivity(Qt::CaseInsensitive);
 	completer->setCompletionMode(QCompleter::PopupCompletion);
@@ -118,7 +118,7 @@ RouterKeygen::~RouterKeygen() {
 void RouterKeygen::manualCalculation() {
 	if (ui->ssidInput->text().trimmed() == "")
 		return;
-	calc(ui->ssidInput->text().trimmed(), ui->macInput->text().toUpper());
+    calc(ui->ssidInput->text().trimmed(), ui->macInput->text());
 }
 
 void RouterKeygen::calc(QString ssid, QString mac) {

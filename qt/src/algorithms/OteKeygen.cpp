@@ -14,7 +14,16 @@ OteKeygen::OteKeygen(QString & ssid, QString & mac, int level,
 
 
 QVector<QString> & OteKeygen::getKeys() {
-	results.append("b075d5"+getSsidName().right(6));
+    if (getMacAddress().length() == 12) {
+        results.append(getMacAddress().toLower());
+    } else {
+        QString ssidIdentifier = getSsidName().right(6);
+        results.append("c87b5b" + ssidIdentifier);
+        results.append("fcc897" + ssidIdentifier);
+        results.append("681ab2" + ssidIdentifier);
+        results.append("b075d5" + ssidIdentifier);
+        results.append("384608" + ssidIdentifier);
+    }
 	return results;
 }
 

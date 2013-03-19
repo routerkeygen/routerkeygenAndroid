@@ -18,7 +18,7 @@ public:
 	virtual ~WirelessMatcher();
 	Keygen * getKeygen(QString ssid, QString mac, int level, QString enc);
 private:
-    QMap<QString ,QVector<AliceMagicInfo *> *> supportedAlice;
+    QMap<QString ,QVector<AliceMagicInfo *> *> * supportedAlice;
 
 };
 

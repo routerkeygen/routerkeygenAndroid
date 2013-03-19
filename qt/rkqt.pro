@@ -1,14 +1,10 @@
 # -------------------------------------------------
 # Project created by QtCreator 2011-04-12T00:20:13
 # -------------------------------------------------
-QT += core \
-    gui \
-    xml
+QT += core gui
 TARGET = RouterKeygen
 TEMPLATE = app
-SOURCES += src/algorithms/AliceHandler.cpp \
-    src/algorithms/AliceMagicInfo.cpp \
-    src/RouterKeygen.cpp \
+SOURCES += src/RouterKeygen.cpp \
     src/algorithms/ZyxelKeygen.cpp \
     src/algorithms/Wlan6Keygen.cpp \
     src/algorithms/Wlan2Keygen.cpp \
@@ -31,6 +27,7 @@ SOURCES += src/algorithms/AliceHandler.cpp \
     src/algorithms/EasyBoxKeygen.cpp \
     src/algorithms/PBSKeygen.cpp \
     src/algorithms/OteKeygen.cpp \
+    src/algorithms/OteBAUDKeygen.cpp \
     src/algorithms/MegaredKeygen.cpp \
     src/algorithms/AndaredKeygen.cpp \
     src/algorithms/ConnKeygen.cpp \
@@ -39,7 +36,11 @@ SOURCES += src/algorithms/AliceHandler.cpp \
     src/WirelessMatcher.cpp \
     src/division.c \
     src/main.cpp \
-    src/sha256.cpp
+    src/sha256.cpp \
+    src/algorithms/CabovisaoSagemKeygen.cpp \
+    src/config/AliceConfigParser.cpp \
+    src/config/AliceMagicInfo.cpp
+
 HEADERS += src/include/ZyxelKeygen.h \
     src/include/Wlan6Keygen.h \
     src/include/Wlan2Keygen.h \
@@ -57,12 +58,13 @@ HEADERS += src/include/ZyxelKeygen.h \
     src/include/DlinkKeygen.h \
     src/include/DiscusKeygen.h \
     src/include/ComtrendKeygen.h \
-    src/include/AliceMagicInfo.h \
-    src/include/AliceHandler.h \
+    src/include/AliceMagicInfo.h \\
+    src/include/AliceConfigParser.h \
     src/include/AliceKeygen.h \
     src/wifi/QWifiManagerPrivate.h \
     src/include/EasyBoxKeygen.h \
     src/include/OteKeygen.h \
+    src/include/OteBAUDKeygen.h \
     src/include/PBSKeygen.h \
     src/include/MegaredKeygen.h \
     src/include/AndaredKeygen.h \
@@ -73,8 +75,11 @@ HEADERS += src/include/ZyxelKeygen.h \
     src/include/Keygen.h \
     src/include/KeygenThread.h \
     src/include/WirelessMatcher.h \
-    src/include/unknown.h
+    src/include/unknown.h \
+    src/include/CabovisaoSagemKeygen.h
+
 INCLUDEPATH += src/include/
+
 win32{
     SOURCES += src/wifi/QWifiManagerPrivateWin.cpp \
         src/sha1/sha1dgst.c \
@@ -114,5 +119,8 @@ symbian {
         0x800000
 }
 RESOURCES += resources.qrc
-
 TRANSLATIONS = lang/routerkeygen_pt.ts
+
+HEADERS +=
+
+SOURCES +=

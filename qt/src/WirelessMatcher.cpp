@@ -6,8 +6,7 @@
  */
 
 #include "WirelessMatcher.h"
-#include "AliceHandler.h"
-
+#include "AliceConfigParser.h"
 #include "TecomKeygen.h"
 #include "ThomsonKeygen.h"
 #include "VerizonKeygen.h"
@@ -29,31 +28,35 @@
 #include "AndaredKeygen.h"
 #include "MegaredKeygen.h"
 #include "OteKeygen.h"
+#include "OteBAUDKeygen.h"
 #include "PBSKeygen.h"
 #include "EasyBoxKeygen.h"
+#include "CabovisaoSagemKeygen.h"
+#include <QRegExp>
 
 WirelessMatcher::WirelessMatcher() {
-	AliceHandler aliceReader;
-	aliceReader.readFile(":/alice/alice.xml");
-	supportedAlice = aliceReader.getSupportedAlice();
+    supportedAlice = AliceConfigParser::readFile(":/alice/alice.txt");
 }
 
 WirelessMatcher::~WirelessMatcher() {
-	QList<QString> keys = supportedAlice.keys();
+    QList<QString> keys = supportedAlice->keys();
 	for (int i = 0; i < keys.size(); ++i) {
-		QVector<AliceMagicInfo *> * supported = supportedAlice.value(
+        QVector<AliceMagicInfo *> * supported = supportedAlice->value(
 				keys.at(i));
 		for (int j = 0; j < supported->size(); ++j)
 			delete supported->at(j);
 		delete supported;
 	}
-	supportedAlice.clear();
+    supportedAlice->clear();
+    delete supportedAlice;
 }
 
 Keygen * WirelessMatcher::getKeygen(QString ssid, QString mac, int level,
 		QString enc) {
 	//	if (enc.equals(""))
 	//	enc = Keygen.OPEN;
+    mac = mac.toUpper();
+
 	if (ssid.count(QRegExp("Discus--?[0-9a-fA-F]{6}")) == 1)
 		return new DiscusKeygen(ssid, mac, level, enc);
 
@@ -117,9 +120,9 @@ Keygen * WirelessMatcher::getKeygen(QString ssid, QString mac, int level,
 	}
 	if (ssid.count(QRegExp("[aA]lice-[0-9]{8}")) == 1) {
 
-		QVector<AliceMagicInfo *> * supported = supportedAlice.value(
-				ssid.left(9));
-		if (supported != 0 && supported->size() > 0) {
+        QVector<AliceMagicInfo *> * supported = supportedAlice->value(
+                ssid.mid(6,3));
+        if (supported != NULL && supported->size() > 0) {
 			if (mac.length() < 6)
 				mac = supported->at(0)->mac;
 			return new AliceKeygen(ssid, mac, level, enc, supported);
@@ -167,6 +170,9 @@ Keygen * WirelessMatcher::getKeygen(QString ssid, QString mac, int level,
 	if (ssid.count(QRegExp("(WLAN|WiFi|YaCom)[0-9a-zA-Z]{6}")) == 1)
 		return new Wlan6Keygen(ssid, mac, level, enc);
 
+    if ((ssid.count(QRegExp("OTE[0-9a-fA-F]{4}"))==1) && mac.startsWith("00:13:33"))
+        return new OteBAUDKeygen(ssid, mac, level, enc);
+
 	if (ssid.count(QRegExp("OTE[0-9a-fA-F]{6}")) == 1)
 		return new OteKeygen(ssid, mac, level, enc);
 
@@ -186,10 +192,15 @@ Keygen * WirelessMatcher::getKeygen(QString ssid, QString mac, int level,
 			return new MegaredKeygen(ssid, mac, level, enc);
 	}
 
+    if (ssid.count(QRegExp("Cabovisao-[0-9a-fA-F]{4}")) == 1) {
+        if (mac.length() == 0 || mac.startsWith("C0:AC:54"))
+            return new CabovisaoSagemKeygen(ssid, mac, level, enc);
+    }
+
 	if (ssid.length() == 5
 			&& (mac.startsWith("00:1F:90") || mac.startsWith("A8:39:44")
 					|| mac.startsWith("00:18:01") || mac.startsWith("00:20:E0")
-					|| mac.startsWith("00:0F:B3") || mac.startsWith("00:1E:A7")
+                    || mac.startsWith("00:0F:B3") || mac.startsWith("00:1E:A7")
 					|| mac.startsWith("00:15:05") || mac.startsWith("00:24:7B")
 					|| mac.startsWith("00:26:62") || mac.startsWith("00:26:B8")))
 		return new VerizonKeygen(ssid, mac, level, enc);

@@ -16,23 +16,27 @@
  * You should have received a copy of the GNU General Public License
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "AliceHandler.h"
+#include "AliceConfigParser.h"
 #include <iostream>
 #include <stdio.h>
+#include <QFile>
+#include <QTextStream>
+#include <QStringList>
 
-bool AliceHandler::isSupported() {
+/*
+bool AliceConfigParser::isSupported() {
 	return !this->supportedAlice.isEmpty();
 }
 
-QMap<QString, QVector<AliceMagicInfo *> *> AliceHandler::getSupportedAlice() {
+QMap<QQString, QVector<AliceMagicInfo *> *> AliceConfigParser::getSupportedAlice() {
 	return this->supportedAlice;
 }
 
-bool AliceHandler::startElement(const QString & , const QString & ,
-		const QString & qName, const QXmlAttributes &attributes) {
+bool AliceConfigParser::startElement(const QQString & , const QQString & ,
+        const QQString & qName, const QXmlAttributes &attributes) {
 	int magic[2];
-	QString serial;
-	QString mac;
+    QQString serial;
+    QQString mac;
 	bool status;
 	if (attributes.count() == 0)
 		return true;
@@ -50,17 +54,36 @@ bool AliceHandler::startElement(const QString & , const QString & ,
 	return true;
 }
 
-bool AliceHandler::fatalError(const QXmlParseException &exception) {
+bool AliceConfigParser::fatalError(const QXmlParseException &exception) {
 	std::cerr << "Parse error at line " << exception.lineNumber() << ", "
 			<< "column " << exception.columnNumber() << ": "
 			<< qPrintable(exception.message()) << std::endl;
 	return false;
 }
-bool AliceHandler::readFile(const QString &fileName) {
-	QFile file(fileName);
-	QXmlInputSource inputSource(&file);
-	QXmlSimpleReader reader;
-	reader.setContentHandler(this);
-	reader.setErrorHandler(this);
-	return reader.parse(inputSource);
+*/
+QMap<QString ,QVector<AliceMagicInfo *> *> * AliceConfigParser::readFile(const QString &fileName) {
+    QFile file(fileName);
+    if(!file.open(QIODevice::ReadOnly)) {
+        return NULL;
+    }
+    QTextStream in(&file);
+    QMap<QString ,QVector<AliceMagicInfo *> *> * supportedAlices = new QMap<QString ,QVector<AliceMagicInfo *> *>();
+    while(!in.atEnd()) {
+        QString line = in.readLine();
+        QStringList infos = line.split(",");
+        QString name = infos[0];
+        QVector<AliceMagicInfo*> * supported = supportedAlices->value(name);
+        if (supported == NULL) {
+            supported = new QVector<AliceMagicInfo*>();
+            supportedAlices->insert(name, supported);
+        }
+        QString serial = infos[1];
+        int * magic = new int[2];
+        magic[0] = infos[2].toInt(NULL,10); // k
+        magic[1] = infos[3].toInt(NULL,10); // q
+        QString mac = infos[4];
+        supported->append(new AliceMagicInfo(name, magic, serial, mac));
+    }
+    file.close();
+    return supportedAlices;
 }
