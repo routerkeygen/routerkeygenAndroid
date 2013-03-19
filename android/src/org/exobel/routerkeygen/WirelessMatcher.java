@@ -32,7 +32,7 @@ import org.exobel.routerkeygen.algorithms.PirelliKeygen;
 import org.exobel.routerkeygen.algorithms.PtvKeygen;
 import org.exobel.routerkeygen.algorithms.SkyV1Keygen;
 import org.exobel.routerkeygen.algorithms.TecomKeygen;
-import org.exobel.routerkeygen.algorithms.TeletuKeygen;
+import org.exobel.routerkeygen.algorithms.TeleTuKeygen;
 import org.exobel.routerkeygen.algorithms.TelseyKeygen;
 import org.exobel.routerkeygen.algorithms.ThomsonKeygen;
 import org.exobel.routerkeygen.algorithms.UnsupportedKeygen;
@@ -152,8 +152,11 @@ public class WirelessMatcher implements Parcelable {
 			}
 		}
 
-		if (ssid.toLowerCase(Locale.getDefault()).contains("teletu")) {
-			final String filteredMac = mac.replace(":", "");
+		if (ssid.toLowerCase(Locale.getDefault()).startsWith("teletu")) {
+			String filteredMac = mac.replace(":", "");
+			if (filteredMac.length() != 12
+					&& ssid.matches("TeleTu_[0-9a-fA-F]{12}"))
+				mac = filteredMac = ssid.substring(7);
 			if (filteredMac.length() == 12) {
 				final List<TeleTuMagicInfo> supported = supportedTeletu
 						.get(filteredMac.substring(0, 6));
@@ -163,7 +166,7 @@ public class WirelessMatcher implements Parcelable {
 					for (TeleTuMagicInfo magic : supported) {
 						if (macIntValue >= magic.getRange()[0]
 								&& macIntValue <= magic.getRange()[1]) {
-							return new TeletuKeygen(ssid, mac, level, enc,
+							return new TeleTuKeygen(ssid, mac, level, enc,
 									magic);
 						}
 					}
@@ -220,8 +223,8 @@ public class WirelessMatcher implements Parcelable {
 
 		if (ssid.matches("OTE[0-9a-fA-F]{4}") && (mac.startsWith("00:13:33")))
 			return new OteBAUDKeygen(ssid, mac, level, enc);
-		
-		if (ssid.matches("OTE[0-9a-fA-F]{6}") )
+
+		if (ssid.matches("OTE[0-9a-fA-F]{6}"))
 			/*
 			 * && ((mac.startsWith("C8:7B:5B")) || (mac.startsWith("FC:C8:97"))
 			 * || (mac.startsWith("68:1A:B2")) || (mac.startsWith("B0:75:D5"))

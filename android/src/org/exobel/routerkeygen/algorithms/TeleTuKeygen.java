@@ -20,6 +20,7 @@ package org.exobel.routerkeygen.algorithms;
 
 import java.util.List;
 
+import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.config.TeleTuMagicInfo;
 
 import android.os.Parcel;
@@ -32,11 +33,11 @@ import android.os.Parcelable;
  * The serial number is the decimal string of the difference between the last 6 bytes
  * of the mac address and a magic number and then divided by another magic number.
  */
-public class TeletuKeygen extends Keygen {
+public class TeleTuKeygen extends Keygen {
 
 	final private TeleTuMagicInfo magicInfo;
 
-	public TeletuKeygen(String ssid, String mac, int level, String enc,
+	public TeleTuKeygen(String ssid, String mac, int level, String enc,
 			TeleTuMagicInfo magicInfo) {
 		super(ssid, mac, level, enc);
 		this.magicInfo = magicInfo;
@@ -44,6 +45,10 @@ public class TeletuKeygen extends Keygen {
 
 	@Override
 	public List<String> getKeys() {
+		if (getMacAddress().length() != 12) {
+			setErrorCode(R.string.msg_errpirelli);
+			return null;
+		}
 		String serialEnd = Integer.toString((Integer.parseInt(getMacAddress()
 				.substring(6), 16) - magicInfo.getBase())
 				/ magicInfo.getDivider());
@@ -54,7 +59,7 @@ public class TeletuKeygen extends Keygen {
 		return getResults();
 	}
 
-	private TeletuKeygen(Parcel in) {
+	private TeleTuKeygen(Parcel in) {
 		super(in);
 		magicInfo = in.readParcelable(TeleTuMagicInfo.class.getClassLoader());
 	}
@@ -64,13 +69,13 @@ public class TeletuKeygen extends Keygen {
 		dest.writeParcelable(magicInfo, flags);
 	}
 
-	public static final Parcelable.Creator<TeletuKeygen> CREATOR = new Parcelable.Creator<TeletuKeygen>() {
-		public TeletuKeygen createFromParcel(Parcel in) {
-			return new TeletuKeygen(in);
+	public static final Parcelable.Creator<TeleTuKeygen> CREATOR = new Parcelable.Creator<TeleTuKeygen>() {
+		public TeleTuKeygen createFromParcel(Parcel in) {
+			return new TeleTuKeygen(in);
 		}
 
-		public TeletuKeygen[] newArray(int size) {
-			return new TeletuKeygen[size];
+		public TeleTuKeygen[] newArray(int size) {
+			return new TeleTuKeygen[size];
 		}
 	};
 

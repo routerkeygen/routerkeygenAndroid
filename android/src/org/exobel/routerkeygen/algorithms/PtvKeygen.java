@@ -41,7 +41,7 @@ public class PtvKeygen extends Keygen {
 			setErrorCode(R.string.msg_errpirelli);
 			return null;
 		}
-		addPassword(getMacAddress().substring(2,12));
+		addPassword(getMacAddress().substring(2));
 		return getResults();
 	}
 
