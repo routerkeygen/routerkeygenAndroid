@@ -36,8 +36,8 @@
 #include <stdlib.h>
 
 RouterKeygen::RouterKeygen(QWidget *parent) :
-		QMainWindow(parent), ui(new Ui::RouterKeygen), loading(NULL), loadingText(
-				NULL) {
+        QMainWindow(parent), ui(new Ui::RouterKeygen), loading(NULL), loadingText(NULL),
+        router(NULL), calculator(NULL) {
 	ui->setupUi(this);
 	connect(ui->calculateButton, SIGNAL( clicked() ), this,
 			SLOT( manualCalculation() ));
@@ -58,23 +58,21 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
 	loadingAnim->setParent(this);
 	/*Auto-Complete!*/
 	QStringList wordList;
-	wordList << "Thomson" << "Blink" << "SpeedTouch" << "O2Wireless"
-			<< "Orange-" << "INFINITUM" << "BigPond" << "Otenet" << "Bbox-"
-			<< "DMAX" << "privat" << "DLink-" << "Discus--" << "eircom"
-			<< "FASTWEB-1-" << "Alice-" << "WLAN_" << "WLAN" << "JAZZTEL_"
-			<< "WiFi" << "YaCom" << "SKY" << "TECOM-AH4222-" << "TECOM-AH4021-"
-			<< "InfostradaWiFi-" << "TN_private_" << "CYTA" << "PBS" << "CONN"
-			<< "OTE" << "Vodafone-" << "EasyBox-" << "Arcor-" << "Megared"
-			<< "Optimus" << "OptimusFibra" << "MEO-";
+    wordList << "Alice-" <<  "Arcor-" << "AXTEL-" << "AXTEL-XTREMO-" << "Bbox-" <<
+             "BigPond" << "Blink" << "Cabovisao-" << "CONN" << "CYTA" << "Discus--"<<
+             "DLink-" << "DMAX" << "EasyBox-" << "eircom" << "FASTWEB-1-" << "INFINITUM" <<
+             "InfostradaWiFi-" << "InterCable" << "JAZZTEL_" << "MAXCOM" << "Megared" <<
+             "MEO-" << "O2Wireless" << "Optimus" << "OptimusFibra" << "Orange-" << "OTE" <<
+             "Otenet" << "PBS" << "privat" << "ptv" << "SKY" << "SpeedTouch" << "TECOM-AH4222-" <<
+             "TECOM-AH4021-" << "TeleTu" << "Thomson" << "TN_private_" << "Vodafone-" << "WiFi" <<
+             "wifimedia_R-" << "WLAN_" << "WLAN" << "YaCom";
 	QCompleter *completer = new QCompleter(wordList, this);
 	completer->setCaseSensitivity(Qt::CaseInsensitive);
 	completer->setCompletionMode(QCompleter::PopupCompletion);
 	ui->ssidInput->setCompleter(completer);
 	ui->networkslist->setSelectionBehavior(QAbstractItemView::SelectRows);
 	ui->networkslist->setEditTriggers(QAbstractItemView::NoEditTriggers);
-	ui->passwordsList->installEventFilter(this);
-	this->router = NULL;
-	this->calculator = NULL;
+    ui->passwordsList->installEventFilter(this);
 
 	//Set widget ration
 	ui->splitter->setStretchFactor(0, 2);
@@ -118,7 +116,7 @@ RouterKeygen::~RouterKeygen() {
 void RouterKeygen::manualCalculation() {
 	if (ui->ssidInput->text().trimmed() == "")
 		return;
-	calc(ui->ssidInput->text().trimmed(), ui->macInput->text().toUpper());
+    calc(ui->ssidInput->text().trimmed(), ui->macInput->text());
 }
 
 void RouterKeygen::calc(QString ssid, QString mac) {

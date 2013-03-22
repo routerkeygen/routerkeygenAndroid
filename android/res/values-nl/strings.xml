@@ -159,51 +159,51 @@
 
     <!-- AUTOCOMPLETE SUPPORT -->
     <string-array name="supported_routers">
-        <item>Thomson</item>
-        <item>Blink</item>
-        <item>SpeedTouch</item>
-        <item>O2Wireless</item>
-        <item>Orange-</item>
-        <item>INFINITUM</item>
-        <item>BigPond</item>
-        <item>Otenet</item>
-        <item>Bbox-</item>
-        <item>DMAX</item>
-        <item>privat</item>
-        <item>DLink-</item>
-        <item tools:ignore="TypographyDashes">Discus--</item>
-        <item>eircom</item>
-        <item>FASTWEB-1-</item>
         <item>Alice-</item>
-        <item>WLAN_</item>
-        <item>WLAN</item>
-        <item>JAZZTEL_</item>
-        <item>WiFi</item>
-        <item>YaCom</item>
-        <item>SKY</item>
-        <item>TECOM-AH4222-</item>
-        <item>TECOM-AH4021-</item>
-        <item>InfostradaWiFi-</item>
-        <item>TN_private_</item>
-        <item>Cyta</item>
-        <item>PBS</item>
-        <item>CONN</item>
-        <item>OTE</item>
-        <item>Vodafone-</item>
-        <item>EasyBox-</item>
         <item>Arcor-</item>
-        <item>Megared</item>
-        <item>MEO-</item>
-        <item>Optimus</item>
-        <item>OptimusFibra</item>
-        <item>Cabovisao-</item>
         <item>AXTEL-</item>
         <item>AXTEL-XTREMO-</item>
+        <item>Bbox-</item>
+        <item>BigPond</item>
+        <item>Blink</item>
+        <item>Cabovisao-</item>
+        <item>CONN</item>
+        <item>CYTA</item>
+        <item tools:ignore="TypographyDashes">Discus--</item>
+        <item>DLink-</item>
+        <item>DMAX</item>
+        <item>EasyBox-</item>
+        <item>eircom</item>
+        <item>FASTWEB-1-</item>
+        <item>INFINITUM</item>
+        <item>InfostradaWiFi-</item>
         <item>InterCable</item>
-        <item>ptv</item>
+        <item>JAZZTEL_</item>
         <item>MAXCOM</item>
+        <item>Megared</item>
+        <item>MEO-</item>
+        <item>O2Wireless</item>
+        <item>Optimus</item>
+        <item>OptimusFibra</item>
+        <item>Orange-</item>
+        <item>OTE</item>
+        <item>Otenet</item>
+        <item>PBS</item>
+        <item>privat</item>
+        <item>ptv</item>
+        <item>SKY</item>
+        <item>SpeedTouch</item>
+        <item>TECOM-AH4222-</item>
+        <item>TECOM-AH4021-</item>
         <item>TeleTu</item>
+        <item>Thomson</item>
+        <item>TN_private_</item>
+        <item>Vodafone-</item>
+        <item>WiFi</item>
         <item>wifimedia_R-</item>
+        <item>WLAN_</item>
+        <item>WLAN</item>
+        <item>YaCom</item>
     </string-array>
 
 </resources>

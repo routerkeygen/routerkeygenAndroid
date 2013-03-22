@@ -197,7 +197,7 @@ public class TelseyKeygen extends Keygen implements Parcelable{
 	@Override
 	public List<String> getKeys() {
 		JenkinsHash hash = new JenkinsHash();
-		if ( getMacAddress().equals("") ) 
+		if ( getMacAddress().length() < 12 ) 
 		{
 			setErrorCode(R.string.msg_nomac);
 			return null;
