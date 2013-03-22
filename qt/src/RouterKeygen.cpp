@@ -32,12 +32,15 @@
 #include <QClipboard>
 #include <QWidgetAction>
 #include "QWifiManager.h"
+#include "welcomedialog.h"
+#include "AboutDialog.h"
 #include <QDesktopServices>
+#include <QUrl>
 #include <stdlib.h>
 
 RouterKeygen::RouterKeygen(QWidget *parent) :
-        QMainWindow(parent), ui(new Ui::RouterKeygen), loading(NULL), loadingText(NULL),
-        router(NULL), calculator(NULL) {
+        QMainWindow(parent), ui(new Ui::RouterKeygen), router(NULL),calculator(NULL),
+        loading(NULL), loadingText(NULL) {
 	ui->setupUi(this);
 	connect(ui->calculateButton, SIGNAL( clicked() ), this,
 			SLOT( manualCalculation() ));
@@ -45,6 +48,9 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
 			SLOT( refreshNetworks() ));
 	connect(ui->networkslist, SIGNAL( cellClicked(int,int) ), this,
 			SLOT( tableRowSelected(int,int) ));
+    connect(ui->menuAbout->actions().at(0),SIGNAL(triggered()), this, SLOT(donatePaypal()));
+    connect(ui->menuAbout->actions().at(1), SIGNAL(triggered()),this, SLOT(donateGooglePlay()) );
+    connect(ui->menuAbout->actions().at(2), SIGNAL(triggered()), this,SLOT(showAboutDialog()) );
 #if !defined(Q_OS_WIN) && !defined(Q_OS_MAC)
 	connect(ui->forceRefresh, SIGNAL( stateChanged(int) ), this,
 			SLOT( forceRefreshToggle(int) ));
@@ -97,6 +103,28 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
     scanFinished(QWifiManager::SCAN_OK);
 	wifiManager->startScan();
 
+}
+
+void RouterKeygen::showWithDialog(){
+    QMainWindow::show();
+    if ( settings->value(VERSION, true).toBool()){
+        settings->setValue(VERSION, false);
+        WelcomeDialog * welcome = new WelcomeDialog(this);
+        welcome->show();
+    }
+}
+
+void RouterKeygen::showAboutDialog(){
+    AboutDialog *  aboutDialog = new AboutDialog(this);
+    aboutDialog->show();
+}
+
+void  RouterKeygen::donatePaypal(){
+    QDesktopServices::openUrl(QUrl("https://www.paypal.com/pt/cgi-bin/webscr?cmd=_flow&SESSION=i5165NLrZfxUoHKUVuudmu6le5tVb6c0CX_9CP45rrU1Az-XgWgJbZ5bfJW&dispatch=5885d80a13c0db1f8e263663d3faee8d5348ead9d61c709ee8c979deef3ea735"));
+}
+
+void RouterKeygen::donateGooglePlay(){
+    QDesktopServices::openUrl(QUrl("https://play.google.com/store/apps/details?id=org.exobel.routerkeygendownloader"));
 }
 
 RouterKeygen::~RouterKeygen() {
@@ -391,3 +419,4 @@ void RouterKeygen::cleanLoadingAnimation() {
 const QString RouterKeygen::RUN_ON_START_UP = "RUN_ON_START_UP";
 const QString RouterKeygen::RUN_IN_BACKGROUND = "RUN_IN_BACKGROUND";
 const QString RouterKeygen::FORCE_REFRESH = "FORCE_REFRESH";
+const QString RouterKeygen::VERSION = "3";

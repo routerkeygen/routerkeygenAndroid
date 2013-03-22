@@ -21,12 +21,7 @@ class RouterKeygen : public QMainWindow
 public:
     explicit RouterKeygen(QWidget *parent = 0);
     ~RouterKeygen();
-public slots:
-    void refreshNetworks();
-    void manualCalculation();
-    void scanFinished(int);
-    void tableRowSelected(int, int);
-    void getResults();
+    void showWithDialog();
 
 protected:
     bool eventFilter(QObject *obj, QEvent *event);
@@ -37,6 +32,14 @@ private slots:
     void forceRefreshToggle(int);
     void backgroundRunToggle(bool);
     void startUpRunToggle(bool);
+    void refreshNetworks();
+    void manualCalculation();
+    void scanFinished(int);
+    void tableRowSelected(int, int);
+    void getResults();
+    void donatePaypal();
+    void donateGooglePlay();
+    void showAboutDialog();
 
 private:
     void addNetworkToTray(const QString & ssid, int level, bool locked );
@@ -62,6 +65,7 @@ private:
     const static QString RUN_ON_START_UP;
     const static QString RUN_IN_BACKGROUND;
     const static QString FORCE_REFRESH;
+    const static QString VERSION;
 };
 
 #endif // ROUTERKEYGEN_H

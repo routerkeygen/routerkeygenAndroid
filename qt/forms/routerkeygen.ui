@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>934</width>
-    <height>431</height>
+    <height>443</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,6 +16,9 @@
   <property name="windowIcon">
    <iconset resource="../resources.qrc">
     <normaloff>:/images/icon.png</normaloff>:/images/icon.png</iconset>
+  </property>
+  <property name="dockOptions">
+   <set>QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks</set>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QSplitter" name="splitter">
@@ -79,7 +82,7 @@
          <item>
           <widget class="QLineEdit" name="macInput">
            <property name="inputMask">
-            <string>HH:HH:HH:HH:HH:HH; </string>
+            <string>HH:HH:HH:HH:HH:HH</string>
            </property>
           </widget>
          </item>
@@ -187,6 +190,40 @@
    </widget>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>934</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuAbout">
+    <property name="title">
+     <string>About</string>
+    </property>
+    <addaction name="actionDonate"/>
+    <addaction name="actionDonate_Google_Play"/>
+    <addaction name="actionAbout"/>
+   </widget>
+   <addaction name="menuAbout"/>
+  </widget>
+  <action name="actionDonate">
+   <property name="text">
+    <string>Paypal</string>
+   </property>
+  </action>
+  <action name="actionDonate_Google_Play">
+   <property name="text">
+    <string>Google Play</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About RouterKeygen</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>

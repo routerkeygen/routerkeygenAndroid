@@ -47,7 +47,9 @@ SOURCES += src/RouterKeygen.cpp \
     src/config/AliceMagicInfo.cpp \
     src/config/TeleTuConfigParser.cpp \
     src/config/TeleTuMagicInfo.cpp \
-    src/algorithms/WifimediaRKeygen.cpp
+    src/algorithms/WifimediaRKeygen.cpp \
+    src/dialog/welcomedialog.cpp \
+    src/dialog/AboutDialog.cpp
 
 HEADERS += src/include/ZyxelKeygen.h \
     src/include/Wlan6Keygen.h \
@@ -91,7 +93,9 @@ HEADERS += src/include/ZyxelKeygen.h \
     src/include/WirelessMatcher.h \
     src/include/unknown.h \
     src/include/CabovisaoSagemKeygen.h \
-    src/include/WifimediaRKeygen.h
+    src/include/WifimediaRKeygen.h \
+    src/include/welcomedialog.h \
+    src/include/AboutDialog.h
 
 INCLUDEPATH += src/include/
 
@@ -122,7 +126,9 @@ macx{
     LIBS += -lcrypto -framework Cocoa
 }
 
-FORMS += forms/routerkeygen.ui
+FORMS += forms/routerkeygen.ui \
+    forms/welcome_dialog.ui \
+    forms/aboutdialog.ui
 symbian { 
     TARGET.UID3 = 0xed94ef91
     QMAKE_CXXFLAGS.GCCE -= -fvisibility-inlines-hidden
