@@ -1,14 +1,11 @@
 # -------------------------------------------------
 # Project created by QtCreator 2011-04-12T00:20:13
 # -------------------------------------------------
-QT += core \
-    gui \
-    xml
+QT += core gui
 TARGET = RouterKeygen
 TEMPLATE = app
-SOURCES += src/algorithms/AliceHandler.cpp \
-    src/algorithms/AliceMagicInfo.cpp \
-    src/RouterKeygen.cpp \
+SOURCES += src/RouterKeygen.cpp \
+    src/algorithms/AxtelKeygen.cpp \
     src/algorithms/ZyxelKeygen.cpp \
     src/algorithms/Wlan6Keygen.cpp \
     src/algorithms/Wlan2Keygen.cpp \
@@ -16,10 +13,12 @@ SOURCES += src/algorithms/AliceHandler.cpp \
     src/algorithms/ThomsonKeygen.cpp \
     src/algorithms/TelseyKeygen.cpp \
     src/algorithms/TecomKeygen.cpp \
+    src/algorithms/TeletuKeygen.cpp \
     src/algorithms/PirelliKeygen.cpp \
     src/algorithms/Skyv1Keygen.cpp \
     src/algorithms/OnoKeygen.cpp \
     src/algorithms/InfostradaKeygen.cpp \
+    src/algorithms/InterCableKeygen.cpp \
     src/algorithms/HuaweiKeygen.cpp \
     src/algorithms/EircomKeygen.cpp \
     src/algorithms/DlinkKeygen.cpp \
@@ -30,7 +29,10 @@ SOURCES += src/algorithms/AliceHandler.cpp \
     src/wifi/QWifiManagerPrivate.cpp \
     src/algorithms/EasyBoxKeygen.cpp \
     src/algorithms/PBSKeygen.cpp \
+    src/algorithms/PtvKeygen.cpp \
     src/algorithms/OteKeygen.cpp \
+    src/algorithms/OteBAUDKeygen.cpp \
+    src/algorithms/MaxcomKeygen.cpp \
     src/algorithms/MegaredKeygen.cpp \
     src/algorithms/AndaredKeygen.cpp \
     src/algorithms/ConnKeygen.cpp \
@@ -39,7 +41,14 @@ SOURCES += src/algorithms/AliceHandler.cpp \
     src/WirelessMatcher.cpp \
     src/division.c \
     src/main.cpp \
-    src/sha256.cpp
+    src/sha256.cpp \
+    src/algorithms/CabovisaoSagemKeygen.cpp \
+    src/config/AliceConfigParser.cpp \
+    src/config/AliceMagicInfo.cpp \
+    src/config/TeleTuConfigParser.cpp \
+    src/config/TeleTuMagicInfo.cpp \
+    src/algorithms/WifimediaRKeygen.cpp
+
 HEADERS += src/include/ZyxelKeygen.h \
     src/include/Wlan6Keygen.h \
     src/include/Wlan2Keygen.h \
@@ -47,6 +56,7 @@ HEADERS += src/include/ZyxelKeygen.h \
     src/include/ThomsonKeygen.h \
     src/include/TelseyKeygen.h \
     src/include/TecomKeygen.h \
+    src/include/TeletuKeygen.h \
     src/include/Skyv1Keygen.h \
     src/include/RouterKeygen.h \
     src/include/PirelliKeygen.h \
@@ -58,13 +68,19 @@ HEADERS += src/include/ZyxelKeygen.h \
     src/include/DiscusKeygen.h \
     src/include/ComtrendKeygen.h \
     src/include/AliceMagicInfo.h \
-    src/include/AliceHandler.h \
+    src/include/AliceConfigParser.h \
+    src/include/TeleTuConfigParser.h \
+    src/include/TeleTuMagicInfo.h \
     src/include/AliceKeygen.h \
+    src/include/AxtelKeygen.h \
     src/wifi/QWifiManagerPrivate.h \
     src/include/EasyBoxKeygen.h \
     src/include/OteKeygen.h \
+    src/include/OteBAUDKeygen.h \
     src/include/PBSKeygen.h \
+    src/include/PtvKeygen.h \
     src/include/MegaredKeygen.h \
+    src/include/MaxcomKeygen.h \
     src/include/AndaredKeygen.h \
     src/include/ConnKeygen.h \
     src/include/QScanResult.h \
@@ -73,8 +89,12 @@ HEADERS += src/include/ZyxelKeygen.h \
     src/include/Keygen.h \
     src/include/KeygenThread.h \
     src/include/WirelessMatcher.h \
-    src/include/unknown.h
+    src/include/unknown.h \
+    src/include/CabovisaoSagemKeygen.h \
+    src/include/WifimediaRKeygen.h
+
 INCLUDEPATH += src/include/
+
 win32{
     SOURCES += src/wifi/QWifiManagerPrivateWin.cpp \
         src/sha1/sha1dgst.c \
@@ -114,5 +134,4 @@ symbian {
         0x800000
 }
 RESOURCES += resources.qrc
-
 TRANSLATIONS = lang/routerkeygen_pt.ts

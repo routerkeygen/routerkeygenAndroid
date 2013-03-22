@@ -42,8 +42,8 @@ QVector<QString> & AliceKeygen::getKeys() {
 
 	for (int j = 0; j < supportedAlice->size(); ++j) {/*For pre AGPF 4.5.0sx*/
 		QString serialStr = supportedAlice->at(j)->serial + "X";
-		int Q = supportedAlice->at(j)->magic[0];
-		int k = supportedAlice->at(j)->magic[1];
+        int k = supportedAlice->at(j)->magic[0];
+        int Q = supportedAlice->at(j)->magic[1];
 		int serial = (getSsidName().right(8).toInt(&status, 10) - Q) / k;
 		QString tmp = "";
 		tmp.setNum(serial);
@@ -78,8 +78,7 @@ QVector<QString> & AliceKeygen::getKeys() {
 
 		/*For post AGPF 4.5.0sx*/
 		QString macEth = macS.left(6);
-		int extraNumber = 0;
-		while (extraNumber <= 9) {
+        for (int extraNumber = 0;extraNumber < 10; ++extraNumber) {
 			QString calc = "";
 			calc.setNum(extraNumber);
 			calc += getSsidName().right(8);
@@ -88,8 +87,7 @@ QVector<QString> & AliceKeygen::getKeys() {
 			if (macEth.at(5) == calc.at(0)) {
 				macEth += calc.right(6);
 				break;
-			}
-			extraNumber++;
+            }
 		}
 
 		for (int i = 0; i < 12; i += 2)

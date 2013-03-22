@@ -117,7 +117,9 @@ QVector<QString> & ThomsonKeygen::getKeys() {
 		throw ERROR;
 	QMutex resultsLocker;
 	int totalThreads = QThread::idealThreadCount();
-	int work = n / totalThreads;
+    if ( totalThreads <= 0 )
+        totalThreads = 1;
+    int work = n / totalThreads;
 	int beggining = 0;
 	QStack<ThomsonTask *> queue;
 	for ( int i = 0 ; i < totalThreads-1; ++i )

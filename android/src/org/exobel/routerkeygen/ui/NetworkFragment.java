@@ -226,6 +226,7 @@ public class NetworkFragment extends SherlockFragment {
 				message.append('\n');
 			}
 			try {
+				getPrefs();
 				final String path = new File(dicFile).getParent();
 				final BufferedWriter out = new BufferedWriter(new FileWriter(
 						(path != null ? path

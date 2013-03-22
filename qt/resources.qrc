@@ -1,8 +1,9 @@
 <RCC>
     <qresource prefix="/">
-        <file>alice/alice.xml</file>
         <file>images/icon.png</file>
         <file>images/loading.gif</file>
         <file>routerkeygen.desktop</file>
+        <file>config/tele2.txt</file>
+        <file>config/alice.txt</file>
     </qresource>
 </RCC>

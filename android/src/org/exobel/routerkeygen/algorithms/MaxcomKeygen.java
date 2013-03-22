@@ -28,7 +28,7 @@ import android.os.Parcelable;
 
 /*
  * This is not actual an algorithm as
- * it is just the mac address without the first two characters.
+ * it is just the mac address.
  */
 public class MaxcomKeygen extends Keygen {
 

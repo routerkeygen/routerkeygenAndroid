@@ -20,6 +20,7 @@ package org.exobel.routerkeygen.algorithms;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import android.net.wifi.ScanResult;
 import android.os.Parcel;
@@ -67,11 +68,11 @@ public abstract class Keygen implements Comparable<Keygen>, Parcelable {
 	}
 
 	public String getMacAddress() {
-		return macAddress.replace(":", "");
+		return macAddress.replace(":", "").toUpperCase(Locale.getDefault());
 	}
 
 	public String getDisplayMacAddress() {
-		return macAddress;
+		return macAddress.toUpperCase(Locale.getDefault());
 	}
 
 
