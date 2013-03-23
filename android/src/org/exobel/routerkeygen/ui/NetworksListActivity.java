@@ -37,7 +37,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.res.Resources.NotFoundException;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -45,11 +44,14 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.google.ads.AdRequest;
+import com.google.ads.AdView;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.GoogleAnalytics;
 
@@ -73,7 +75,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 		setContentView(R.layout.activity_networks_list);
 
 		networkListFragment = ((NetworksListFragment) getSupportFragmentManager()
-				.findFragmentById(R.id.item_list));
+				.findFragmentById(R.id.frag_networks_list));
 		if (findViewById(R.id.item_detail_container) != null) {
 			mTwoPane = true;
 			networkListFragment.setActivateOnItemClick(true);
@@ -81,8 +83,6 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 		try {
 			networkMatcher = new WirelessMatcher(new ZipInputStream(
 					getResources().openRawResource(R.raw.magic_info)));
-		} catch (NotFoundException e1) {
-			e1.printStackTrace();
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
@@ -94,20 +94,28 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 				networkListFragment, this);
 		stateChanged = new WifiStateReceiver(wifi, networkListFragment);
 
+		final PackageManager pm = getPackageManager();
+		boolean app_installed = false;
+		try {
+			pm.getPackageInfo("org.exobel.routerkeygendownloader",
+					PackageManager.GET_ACTIVITIES);
+			app_installed = true;
+		} catch (PackageManager.NameNotFoundException e) {
+			app_installed = false;
+		}
+		// Look up the AdView as a resource and load a request.
+		AdView adView = (AdView) this.findViewById(R.id.adView);
+		if (app_installed) {
+			final ViewGroup vg = (ViewGroup) adView.getParent();
+			vg.removeView(adView);
+		} else
+			adView.loadAd(new AdRequest());
+
 		final SharedPreferences mPrefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
 		welcomeScreenShown = mPrefs.getBoolean(Preferences.VERSION, false);
 
 		if (!welcomeScreenShown) {
-			PackageManager pm = getPackageManager();
-			boolean app_installed = false;
-			try {
-				pm.getPackageInfo("org.exobel.routerkeygendownloader",
-						PackageManager.GET_ACTIVITIES);
-				app_installed = true;
-			} catch (PackageManager.NameNotFoundException e) {
-				app_installed = false;
-			}
 			if (!app_installed) {
 				final String whatsNewTitle = getString(R.string.msg_welcome_title);
 				final String whatsNewText = getString(R.string.msg_welcome_text);

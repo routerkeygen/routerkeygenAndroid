@@ -1,13 +1,21 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center" >
+
+    <ListView
+        android:id="@+id/networks_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
 
     <LinearLayout
         android:id="@+id/message_group"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
         android:gravity="center" >
 
         <ProgressBar
@@ -30,10 +38,4 @@
             android:visibility="gone" />
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/networks_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone" />
-
-</FrameLayout>
+</RelativeLayout>

@@ -57,9 +57,9 @@ import android.util.Log;
 
 public class WirelessMatcher implements Parcelable {
 
-	private final Map<String, ArrayList<AliceMagicInfo>> supportedAlices;
-	private final Map<String, ArrayList<TeleTuMagicInfo>> supportedTeletu;
-	private final String[] supportedOTE;
+	private Map<String, ArrayList<AliceMagicInfo>> supportedAlices;
+	private Map<String, ArrayList<TeleTuMagicInfo>> supportedTeletu;
+	private String[] supportedOTE;
 
 	public WirelessMatcher(ZipInputStream magicInfo) throws IOException {
 		magicInfo.getNextEntry();
