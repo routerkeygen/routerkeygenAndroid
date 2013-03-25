@@ -186,8 +186,15 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.manual_input:
-			ManualDialogFragment.newInstance().show(
-					getSupportFragmentManager(), "ManualInput");
+			if (mTwoPane) {
+				getSupportFragmentManager()
+						.beginTransaction()
+						.replace(R.id.item_detail_container,
+								ManualInputFragment.newInstance())
+						.addToBackStack(null).commit();
+			} else {
+				startActivity(new Intent(this, ManualInputActivity.class));
+			}
 			return true;
 		case R.id.wifi_scan:
 			scan();
@@ -329,8 +336,16 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 	}
 
 	public void onItemSelected(String mac) {
-		ManualDialogFragment.newInstance(mac).show(getSupportFragmentManager(),
-				"ManualInput");
+		if (mTwoPane) {
+			getSupportFragmentManager()
+					.beginTransaction()
+					.replace(R.id.item_detail_container,
+							ManualInputFragment.newInstance(mac))
+					.addToBackStack(null).commit();
+		} else {
+			startActivity(new Intent(this, ManualInputActivity.class).putExtra(
+					ManualInputFragment.MAC_ADDRESS_ARG, mac));
+		}
 	}
 
 }

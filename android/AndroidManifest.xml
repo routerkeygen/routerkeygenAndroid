@@ -62,6 +62,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".NetworksListActivity" />
         </activity>
+        <activity
+            android:name=".ui.ManualInputActivity"
+            android:configChanges="screenSize|keyboard|orientation"
+            android:label="@string/menu_manual" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".NetworksListActivity" />
+        </activity>
 
         <service android:name=".DictionaryDownloadService" />
         <service android:name=".AutoConnectService" />

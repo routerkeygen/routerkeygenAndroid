@@ -10,13 +10,7 @@ import org.exobel.routerkeygen.algorithms.UnsupportedKeygen;
 import org.exobel.routerkeygen.ui.NetworksListFragment.OnItemSelectionListener;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
-import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
-import android.content.DialogInterface.OnClickListener;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -24,6 +18,7 @@ import android.text.Spanned;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -31,52 +26,49 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockDialogFragment;
+import com.actionbarsherlock.app.SherlockFragment;
 
-public class ManualDialogFragment extends SherlockDialogFragment {
-	private final static String MAC_ADDRESS_ARG = "mac_address";
+public class ManualInputFragment extends SherlockFragment {
+	public final static String MAC_ADDRESS_ARG = "mac_address";
+	private View loading;
+	private View mainView;
 
-	public static ManualDialogFragment newInstance() {
-		ManualDialogFragment frag = new ManualDialogFragment();
+	public static ManualInputFragment newInstance() {
+		ManualInputFragment frag = new ManualInputFragment();
 		frag.setArguments(Bundle.EMPTY);
 		return frag;
 	}
 
-	public static ManualDialogFragment newInstance(String mac) {
+	public static ManualInputFragment newInstance(String mac) {
 		Bundle args = new Bundle();
-		args.putString(MAC_ADDRESS_ARG, mac);
-		ManualDialogFragment frag = new ManualDialogFragment();
+		if (mac != null)
+			args.putString(MAC_ADDRESS_ARG, mac);
+		ManualInputFragment frag = new ManualInputFragment();
 		frag.setArguments(args);
 		return frag;
 	}
 
 	@Override
-	public Dialog onCreateDialog(Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 		final String macAddress;
 		if (getArguments().containsKey(MAC_ADDRESS_ARG))
 			macAddress = getArguments().getString(MAC_ADDRESS_ARG);
 		else
 			macAddress = null;
-		AlertDialog.Builder builder = new Builder(getActivity());
-		final LayoutInflater inflater = (LayoutInflater) getActivity()
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		final View layout = inflater.inflate(R.layout.manual_input, null);
-		builder.setTitle(getString(R.string.menu_manual));
-		/* Need to do this to renew the dialog to show the MAC input */
-		builder.setOnCancelListener(new OnCancelListener() {
-			public void onCancel(DialogInterface dialog) {
-				dismissAllowingStateLoss();
-			}
-		});
+		final View root = inflater
+				.inflate(R.layout.fragment_manual_input, null);
+		mainView = root.findViewById(R.id.manual_root);
+		loading = root.findViewById(R.id.loading_spinner);
 		final String[] routers = getResources().getStringArray(
 				R.array.supported_routers);
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
 				android.R.layout.simple_dropdown_item_1line, routers);
-		final AutoCompleteTextView edit = (AutoCompleteTextView) layout
+		final AutoCompleteTextView edit = (AutoCompleteTextView) root
 				.findViewById(R.id.manual_autotext);
 		edit.setAdapter(adapter);
 		edit.setThreshold(1);
-		final InputFilter filterMAC = new InputFilter() {
+		final InputFilter filterSSID = new InputFilter() {
 			public CharSequence filter(CharSequence source, int start, int end,
 					Spanned dest, int dstart, int dend) {
 				for (int i = start; i < end; i++) {
@@ -90,16 +82,16 @@ public class ManualDialogFragment extends SherlockDialogFragment {
 				return null;
 			}
 		};
-		edit.setFilters(new InputFilter[] { filterMAC });
+		edit.setFilters(new InputFilter[] { filterSSID });
 		final EditText macs[] = new EditText[6];
-		layout.findViewById(R.id.manual_mac_root).setVisibility(View.VISIBLE);
+		root.findViewById(R.id.manual_mac_root).setVisibility(View.VISIBLE);
 		edit.setImeOptions(EditorInfo.IME_ACTION_NEXT);
-		macs[0] = (EditText) layout.findViewById(R.id.input_mac_pair1);
-		macs[1] = (EditText) layout.findViewById(R.id.input_mac_pair2);
-		macs[2] = (EditText) layout.findViewById(R.id.input_mac_pair3);
-		macs[3] = (EditText) layout.findViewById(R.id.input_mac_pair4);
-		macs[4] = (EditText) layout.findViewById(R.id.input_mac_pair5);
-		macs[5] = (EditText) layout.findViewById(R.id.input_mac_pair6);
+		macs[0] = (EditText) root.findViewById(R.id.input_mac_pair1);
+		macs[1] = (EditText) root.findViewById(R.id.input_mac_pair2);
+		macs[2] = (EditText) root.findViewById(R.id.input_mac_pair3);
+		macs[3] = (EditText) root.findViewById(R.id.input_mac_pair4);
+		macs[4] = (EditText) root.findViewById(R.id.input_mac_pair5);
+		macs[5] = (EditText) root.findViewById(R.id.input_mac_pair6);
 		if (macAddress != null) {
 			macs[0].setText(macAddress.substring(0, 2));
 			macs[1].setText(macAddress.substring(2, 4));
@@ -150,24 +142,8 @@ public class ManualDialogFragment extends SherlockDialogFragment {
 				}
 			});
 		}
-
-		builder.setPositiveButton(getString(R.string.bt_manual_calc),
-				new OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-					}
-				});
-		builder.setNegativeButton(getString(R.string.bt_manual_cancel),
-				new OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						dismissAllowingStateLoss();
-					}
-				});
-		setCancelable(false);
-		builder.setView(layout);
-		AlertDialog dialog = builder.create();
-		dialog.show();
-		Button theButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
-		theButton.setOnClickListener(new View.OnClickListener() {
+		Button calc = (Button) root.findViewById(R.id.bt_calc);
+		calc.setOnClickListener(new View.OnClickListener() {
 
 			public void onClick(View v) {
 				String ssid = edit.getText().toString().trim();
@@ -191,22 +167,17 @@ public class ManualDialogFragment extends SherlockDialogFragment {
 
 				if (ssid.equals(""))
 					return;
-				Keygen keygen = WirelessMatcher.getKeygen(ssid, mac.toString()
-						.toUpperCase(Locale.getDefault()), 0, "",
-						new ZipInputStream(getActivity().getResources()
-								.openRawResource(R.raw.magic_info)));
-				if (keygen instanceof UnsupportedKeygen) {
-					Toast.makeText(getActivity(),
-							R.string.msg_unspported_network, Toast.LENGTH_SHORT)
-							.show();
-					return;
-				}
-				dismissAllowingStateLoss();
-				mCallbacks.onItemSelected(keygen);
-
+				new KeygenMatcherTask(ssid, mac.toString().toUpperCase(
+						Locale.getDefault())).execute();
 			}
 		});
-		return dialog;
+		Button cancel = (Button) root.findViewById(R.id.bt_cancel);
+		cancel.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				getActivity().onBackPressed();
+			}
+		});
+		return root;
 	}
 
 	private static OnItemSelectionListener sDummyCallbacks = new OnItemSelectionListener() {
@@ -230,4 +201,45 @@ public class ManualDialogFragment extends SherlockDialogFragment {
 		mCallbacks = (OnItemSelectionListener) activity;
 	}
 
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		mCallbacks = sDummyCallbacks;
+	}
+
+	private class KeygenMatcherTask extends AsyncTask<Void, Void, Keygen> {
+		private final String ssid;
+		private final String mac;
+
+		public KeygenMatcherTask(String ssid, String mac) {
+			this.ssid = ssid;
+			this.mac = mac;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			mainView.setVisibility(View.GONE);
+			loading.setVisibility(View.VISIBLE);
+		}
+
+		@Override
+		protected void onPostExecute(Keygen keygen) {
+			loading.setVisibility(View.GONE);
+			mainView.setVisibility(View.VISIBLE);
+			if (keygen instanceof UnsupportedKeygen) {
+				Toast.makeText(getActivity(), R.string.msg_unspported_network,
+						Toast.LENGTH_SHORT).show();
+				return;
+			}
+			mCallbacks.onItemSelected(keygen);
+		}
+
+		@Override
+		protected Keygen doInBackground(Void... params) {
+			return WirelessMatcher.getKeygen(ssid, mac, 0, "",
+					new ZipInputStream(getActivity().getResources()
+							.openRawResource(R.raw.magic_info)));
+		}
+
+	}
 }
