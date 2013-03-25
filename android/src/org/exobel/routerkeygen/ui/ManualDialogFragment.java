@@ -1,6 +1,7 @@
 package org.exobel.routerkeygen.ui;
 
 import java.util.Locale;
+import java.util.zip.ZipInputStream;
 
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.WirelessMatcher;
@@ -33,23 +34,16 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockDialogFragment;
 
 public class ManualDialogFragment extends SherlockDialogFragment {
-	private final static String WIRELESS_MATCHER_ARG = "wirelessMatcher";
 	private final static String MAC_ADDRESS_ARG = "mac_address";
 
-	private WirelessMatcher matcher;
-
-	public static ManualDialogFragment newInstance(WirelessMatcher matcher) {
-		Bundle args = new Bundle();
-		args.putParcelable(WIRELESS_MATCHER_ARG, matcher);
+	public static ManualDialogFragment newInstance() {
 		ManualDialogFragment frag = new ManualDialogFragment();
-		frag.setArguments(args);
+		frag.setArguments(Bundle.EMPTY);
 		return frag;
 	}
 
-	public static ManualDialogFragment newInstance(WirelessMatcher matcher,
-			String mac) {
+	public static ManualDialogFragment newInstance(String mac) {
 		Bundle args = new Bundle();
-		args.putParcelable(WIRELESS_MATCHER_ARG, matcher);
 		args.putString(MAC_ADDRESS_ARG, mac);
 		ManualDialogFragment frag = new ManualDialogFragment();
 		frag.setArguments(args);
@@ -63,7 +57,6 @@ public class ManualDialogFragment extends SherlockDialogFragment {
 			macAddress = getArguments().getString(MAC_ADDRESS_ARG);
 		else
 			macAddress = null;
-		matcher = getArguments().getParcelable(WIRELESS_MATCHER_ARG);
 		AlertDialog.Builder builder = new Builder(getActivity());
 		final LayoutInflater inflater = (LayoutInflater) getActivity()
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -198,7 +191,10 @@ public class ManualDialogFragment extends SherlockDialogFragment {
 
 				if (ssid.equals(""))
 					return;
-				Keygen keygen = matcher.getKeygen(ssid, mac.toString().toUpperCase(Locale.getDefault()), 0, "");
+				Keygen keygen = WirelessMatcher.getKeygen(ssid, mac.toString()
+						.toUpperCase(Locale.getDefault()), 0, "",
+						new ZipInputStream(getActivity().getResources()
+								.openRawResource(R.raw.magic_info)));
 				if (keygen instanceof UnsupportedKeygen) {
 					Toast.makeText(getActivity(),
 							R.string.msg_unspported_network, Toast.LENGTH_SHORT)

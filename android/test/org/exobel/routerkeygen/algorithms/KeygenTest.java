@@ -5,28 +5,20 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.zip.ZipInputStream;
 
 import org.exobel.routerkeygen.WirelessMatcher;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class KeygenTest {
-	/* Non working on this branch */
-	static WirelessMatcher matcher;
-
-	@BeforeClass
-	public static void initMatcher() throws IOException {
-		matcher = new WirelessMatcher(new ZipInputStream(new FileInputStream(
-				"../res/raw/magic_info.zip")));
-	}
 
 	@Test
-	public void testAlice() {
-		Keygen keygen = matcher.getKeygen("Alice-37588990",
-				"00:23:8e:48:e7:d4", 0, "");
+	public void testAlice() throws FileNotFoundException {
+		Keygen keygen = WirelessMatcher.getKeygen("Alice-37588990",
+				"00:23:8e:48:e7:d4", 0, "", new ZipInputStream(
+						new FileInputStream("../res/raw/magic_info.zip")));
 		assertTrue("Keygen should be Alice", keygen instanceof AliceKeygen);
 		List<String> results = keygen.getKeys();
 		assertEquals("Errors should not happen", 0, keygen.getErrorCode());
@@ -42,19 +34,23 @@ public class KeygenTest {
 	}
 
 	@Test
-	public void testCONN() {
-		Keygen keygen = matcher.getKeygen("CONN-X", "", 0, "");
+	public void testCONN() throws FileNotFoundException {
+		Keygen keygen = WirelessMatcher.getKeygen("CONN-X", "", 0, "",
+				new ZipInputStream(new FileInputStream(
+						"../res/raw/magic_info.zip")));
 		assertTrue("Keygen should be Conn", keygen instanceof ConnKeygen);
 		List<String> results = keygen.getKeys();
 		assertEquals("Errors should not happen", 0, keygen.getErrorCode());
 		assertEquals("There should be only one result", 1, results.size());
-		assertEquals("The password should be 1234567890123", "1234567890123",results.get(0));
+		assertEquals("The password should be 1234567890123", "1234567890123",
+				results.get(0));
 	}
 
 	@Test
-	public void testDiscus() {
-		Keygen keygen = matcher.getKeygen("Discus--DA1CC5",
-				"00:1C:A2:DA:1C:C5", 0, "");
+	public void testDiscus() throws FileNotFoundException {
+		Keygen keygen = WirelessMatcher.getKeygen("Discus--DA1CC5",
+				"00:1C:A2:DA:1C:C5", 0, "", new ZipInputStream(
+						new FileInputStream("../res/raw/magic_info.zip")));
 		assertTrue("Keygen should be Discus", keygen instanceof DiscusKeygen);
 		List<String> results = keygen.getKeys();
 		assertEquals("Errors should not happen", 0, keygen.getErrorCode());
@@ -64,9 +60,10 @@ public class KeygenTest {
 	}
 
 	@Test
-	public void testDlink() {
-		Keygen keygen = matcher.getKeygen("DLink-123456", "12:34:56:78:9a:bc",
-				0, "");
+	public void testDlink() throws FileNotFoundException {
+		Keygen keygen = WirelessMatcher.getKeygen("DLink-123456",
+				"12:34:56:78:9a:bc", 0, "", new ZipInputStream(
+						new FileInputStream("../res/raw/magic_info.zip")));
 		assertTrue("Keygen should be Dlink", keygen instanceof DlinkKeygen);
 		List<String> results = keygen.getKeys();
 		assertEquals("Errors should not happen", 0, keygen.getErrorCode());
@@ -76,9 +73,10 @@ public class KeygenTest {
 	}
 
 	@Test
-	public void testEasyBox() {
-		Keygen keygen = new EasyBoxKeygen("Arcor-910B02", "00:12:BF:91:0B:EC",
-				0, "");
+	public void testEasyBox() throws FileNotFoundException {
+		Keygen keygen = WirelessMatcher.getKeygen("Arcor-910B02",
+				"00:12:BF:91:0B:EC", 0, "", new ZipInputStream(
+						new FileInputStream("../res/raw/magic_info.zip")));
 		assertTrue("Keygen should be Easybox", keygen instanceof EasyBoxKeygen);
 		List<String> results = keygen.getKeys();
 		assertEquals("Errors should not happen", 0, keygen.getErrorCode());
@@ -88,9 +86,10 @@ public class KeygenTest {
 	}
 
 	@Test
-	public void testEircom() {
-		Keygen keygen = matcher.getKeygen("eircom2633 7520",
-				"00:0f:cc:59:b0:9c", 0, "");
+	public void testEircom() throws FileNotFoundException {
+		Keygen keygen = WirelessMatcher.getKeygen("eircom2633 7520",
+				"00:0f:cc:59:b0:9c", 0, "", new ZipInputStream(
+						new FileInputStream("../res/raw/magic_info.zip")));
 		assertTrue("Keygen should be Eircom", keygen instanceof EircomKeygen);
 		List<String> results = keygen.getKeys();
 		assertEquals("Errors should not happen", 0, keygen.getErrorCode());
@@ -100,20 +99,23 @@ public class KeygenTest {
 	}
 
 	@Test
-	public void testHuawei() {
-		Keygen keygen = matcher.getKeygen("INFINITUM1be2", "64:16:F0:35:1C:FD",
-				0, "");
+	public void testHuawei() throws FileNotFoundException {
+		Keygen keygen = WirelessMatcher.getKeygen("INFINITUM1be2",
+				"64:16:F0:35:1C:FD", 0, "", new ZipInputStream(
+						new FileInputStream("../res/raw/magic_info.zip")));
 		assertTrue("Keygen should be Huawei", keygen instanceof HuaweiKeygen);
 		List<String> results = keygen.getKeys();
 		assertEquals("Errors should not happen", 0, keygen.getErrorCode());
 		assertEquals("There should be only one result", 1, results.size());
-		assertEquals("The password should be 3432333133", "3432333133",results.get(0));
+		assertEquals("The password should be 3432333133", "3432333133",
+				results.get(0));
 	}
 
 	@Test
-	public void testMegared() {
-		Keygen keygen = matcher.getKeygen("Megared60EC", "FC:75:16:9F:60:EC",
-				0, "");
+	public void testMegared() throws FileNotFoundException {
+		Keygen keygen = WirelessMatcher.getKeygen("Megared60EC",
+				"FC:75:16:9F:60:EC", 0, "", new ZipInputStream(
+						new FileInputStream("../res/raw/magic_info.zip")));
 		assertTrue("Keygen should be Megared", keygen instanceof MegaredKeygen);
 		List<String> results = keygen.getKeys();
 		assertEquals("Errors should not happen", 0, keygen.getErrorCode());
@@ -122,24 +124,29 @@ public class KeygenTest {
 				results.get(0));
 		assertFalse(
 				"Keygen should not be Megared",
-				matcher.getKeygen("Megared60EC", "FC:75:16:9F:60:EB", 0, "") instanceof MegaredKeygen);
+				WirelessMatcher.getKeygen("Megared60EC", "FC:75:16:9F:60:EB",
+						0, "", new ZipInputStream(new FileInputStream(
+								"../res/raw/magic_info.zip"))) instanceof MegaredKeygen);
 	}
 
 	@Test
-	public void testOTE() {
-		Keygen keygen = matcher.getKeygen("OTE37cb4c", "B0:75:D5:37:CB:4C", 0,
-				"");
+	public void testOTE() throws FileNotFoundException {
+		Keygen keygen = WirelessMatcher.getKeygen("OTE37cb4c",
+				"B0:75:D5:37:CB:4C", 0, "", new ZipInputStream(
+						new FileInputStream("../res/raw/magic_info.zip")));
 		assertTrue("Keygen should be OTE", keygen instanceof OteKeygen);
 		List<String> results = keygen.getKeys();
 		assertEquals("Errors should not happen", 0, keygen.getErrorCode());
 		assertEquals("There should be only one result", 1, results.size());
-		assertEquals("The password should be b075d537cb4c", "b075d537cb4c",results.get(0));
+		assertEquals("The password should be b075d537cb4c", "b075d537cb4c",
+				results.get(0));
 	}
 
 	@Test
-	public void testOTEBAUD() {
-		Keygen keygen = matcher
-				.getKeygen("OTEcb4c", "00:13:33:37:CB:4C", 0, "");
+	public void testOTEBAUD() throws FileNotFoundException {
+		Keygen keygen = WirelessMatcher.getKeygen("OTEcb4c",
+				"00:13:33:37:CB:4C", 0, "", new ZipInputStream(
+						new FileInputStream("../res/raw/magic_info.zip")));
 		assertTrue("Keygen should be OTEBaud", keygen instanceof OteBAUDKeygen);
 		List<String> results = keygen.getKeys();
 		assertEquals("Errors should not happen", 0, keygen.getErrorCode());
@@ -149,9 +156,23 @@ public class KeygenTest {
 	}
 
 	@Test
-	public void testPBS() {
-		Keygen keygen = matcher.getKeygen("PBS-11222E", "38:22:9D:11:22:2E", 0,
-				"");
+	public void testOTEHuawei() throws FileNotFoundException {
+		Keygen keygen = WirelessMatcher.getKeygen("OTEcb4c",
+				"E8:39:DF:F5:12:34", 0, "", new ZipInputStream(
+						new FileInputStream("../res/raw/magic_info.zip")));
+		assertTrue("Keygen should be OTEHuawei", keygen instanceof OteHuaweiKeygen);
+		List<String> results = keygen.getKeys();
+		assertEquals("Errors should not happen", 0, keygen.getErrorCode());
+		assertEquals("There should be only one result", 1, results.size());
+		//assertEquals("The password should be b075d537cb4c", "000133337cb4c",
+		//		results.get(0));
+	}
+
+	@Test
+	public void testPBS() throws FileNotFoundException {
+		Keygen keygen = WirelessMatcher.getKeygen("PBS-11222E",
+				"38:22:9D:11:22:2E", 0, "", new ZipInputStream(
+						new FileInputStream("../res/raw/magic_info.zip")));
 		assertTrue("Keygen should be PBS", keygen instanceof PBSKeygen);
 		List<String> results = keygen.getKeys();
 		assertEquals("Errors should not happen", 0, keygen.getErrorCode());
@@ -162,8 +183,10 @@ public class KeygenTest {
 	}
 
 	@Test
-	public void testTeletu() {
-		Keygen keygen = matcher.getKeygen("TeleTu_00238EE528C7", "00:23:8E:E5:28:C7", 0, "");
+	public void testTeletu() throws FileNotFoundException {
+		Keygen keygen = WirelessMatcher.getKeygen("TeleTu_00238EE528C7",
+				"00:23:8E:E5:28:C7", 0, "", new ZipInputStream(
+						new FileInputStream("../res/raw/magic_info.zip")));
 		assertTrue("Keygen should be TeleTu", keygen instanceof TeleTuKeygen);
 		List<String> results = keygen.getKeys();
 		assertEquals("Errors should not happen", 0, keygen.getErrorCode());
@@ -174,9 +197,10 @@ public class KeygenTest {
 	}
 
 	@Test
-	public void testWifimediaR() {
-		Keygen keygen = matcher.getKeygen("wifimedia_R-1234",
-				"00:26:5B:1E:28:A5", 0, "");
+	public void testWifimediaR() throws FileNotFoundException {
+		Keygen keygen = WirelessMatcher.getKeygen("wifimedia_R-1234",
+				"00:26:5B:1E:28:A5", 0, "", new ZipInputStream(
+						new FileInputStream("../res/raw/magic_info.zip")));
 		assertTrue("Keygen should be WifimediaR",
 				keygen instanceof WifimediaRKeygen);
 		List<String> results = keygen.getKeys();
@@ -189,9 +213,10 @@ public class KeygenTest {
 	}
 
 	@Test
-	public void testWAN6X() {
-		Keygen keygen = matcher.getKeygen("WLAN123456", "11:22:33:44:55:66", 0,
-				"");
+	public void testWAN6X() throws FileNotFoundException {
+		Keygen keygen = WirelessMatcher.getKeygen("WLAN123456",
+				"11:22:33:44:55:66", 0, "", new ZipInputStream(
+						new FileInputStream("../res/raw/magic_info.zip")));
 		assertTrue("Keygen should be Wlan6", keygen instanceof Wlan6Keygen);
 		List<String> results = keygen.getKeys();
 		assertTrue("Error should  happen", keygen.getErrorCode() != 0);

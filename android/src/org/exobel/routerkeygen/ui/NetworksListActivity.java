@@ -19,14 +19,10 @@
 
 package org.exobel.routerkeygen.ui;
 
-import java.io.IOException;
-import java.util.zip.ZipInputStream;
-
 import org.exobel.routerkeygen.R;
-import org.exobel.routerkeygen.WiFiScanReceiver;
-import org.exobel.routerkeygen.WiFiScanReceiver.OnScanListener;
+import org.exobel.routerkeygen.WifiScanReceiver;
+import org.exobel.routerkeygen.WifiScanReceiver.OnScanListener;
 import org.exobel.routerkeygen.WifiStateReceiver;
-import org.exobel.routerkeygen.WirelessMatcher;
 import org.exobel.routerkeygen.algorithms.Keygen;
 
 import android.app.AlertDialog;
@@ -60,7 +56,6 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 
 	private boolean mTwoPane;
 	private NetworksListFragment networkListFragment;
-	private WirelessMatcher networkMatcher;
 	private WifiManager wifi;
 	private BroadcastReceiver scanFinished;
 	private BroadcastReceiver stateChanged;
@@ -80,18 +75,11 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 			mTwoPane = true;
 			networkListFragment.setActivateOnItemClick(true);
 		}
-		try {
-			networkMatcher = new WirelessMatcher(new ZipInputStream(
-					getResources().openRawResource(R.raw.magic_info)));
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
 		wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 
 		wifiState = wifi.getWifiState() == WifiManager.WIFI_STATE_ENABLED
 				|| wifi.getWifiState() == WifiManager.WIFI_STATE_ENABLING;
-		scanFinished = new WiFiScanReceiver(networkMatcher, wifi,
-				networkListFragment, this);
+		scanFinished = new WifiScanReceiver(wifi, networkListFragment, this);
 		stateChanged = new WifiStateReceiver(wifi, networkListFragment);
 
 		final PackageManager pm = getPackageManager();
@@ -198,7 +186,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.manual_input:
-			ManualDialogFragment.newInstance(networkMatcher).show(
+			ManualDialogFragment.newInstance().show(
 					getSupportFragmentManager(), "ManualInput");
 			return true;
 		case R.id.wifi_scan:
@@ -341,9 +329,8 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 	}
 
 	public void onItemSelected(String mac) {
-
-		ManualDialogFragment.newInstance(networkMatcher, mac).show(
-				getSupportFragmentManager(), "ManualInput");
+		ManualDialogFragment.newInstance(mac).show(getSupportFragmentManager(),
+				"ManualInput");
 	}
 
 }

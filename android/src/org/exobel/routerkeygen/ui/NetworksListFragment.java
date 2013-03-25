@@ -20,7 +20,7 @@
 package org.exobel.routerkeygen.ui;
 
 import org.exobel.routerkeygen.R;
-import org.exobel.routerkeygen.WiFiScanReceiver.OnScanListener;
+import org.exobel.routerkeygen.WifiScanReceiver.OnScanListener;
 import org.exobel.routerkeygen.algorithms.Keygen;
 
 import android.app.Activity;
