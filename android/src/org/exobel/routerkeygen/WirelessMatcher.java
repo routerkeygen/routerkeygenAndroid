@@ -57,6 +57,7 @@ public class WirelessMatcher {
 	private static Map<String, ArrayList<AliceMagicInfo>> supportedAlices = null;
 	private static Map<String, ArrayList<TeleTuMagicInfo>> supportedTeletu = null;
 	private static String[] supportedOTE = null;
+
 	public static Keygen getKeygen(ScanResult result, ZipInputStream magicInfo) {
 		final Keygen keygen = getKeygen(result.SSID,
 				result.BSSID.toUpperCase(Locale.getDefault()),
@@ -302,7 +303,7 @@ public class WirelessMatcher {
 			return new VerizonKeygen(ssid, mac, level, enc);
 
 		if (ssid.matches("INFINITUM[0-9a-zA-Z]{4}")
-				&& (mac.startsWith("00:25:9E") || mac.startsWith("00:25:68")
+				|| (mac.startsWith("00:25:9E") || mac.startsWith("00:25:68")
 						|| mac.startsWith("00:22:A1")
 						|| mac.startsWith("00:1E:10")
 						|| mac.startsWith("00:18:82")

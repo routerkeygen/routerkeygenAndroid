@@ -176,7 +176,7 @@ public class NetworkFragment extends SherlockFragment {
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		if (keygen.isSupported())
+		if (keygen.getSupportState() != Keygen.UNSUPPORTED)
 			inflater.inflate(R.menu.share_keys, menu);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
@@ -297,7 +297,7 @@ public class NetworkFragment extends SherlockFragment {
 
 		@Override
 		protected void onPreExecute() {
-			if (!keygen.isSupported()) {
+			if (keygen.getSupportState() == Keygen.UNSUPPORTED) {
 				root.findViewById(R.id.loading_spinner)
 						.setVisibility(View.GONE);
 				messages.setText(R.string.msg_unspported);

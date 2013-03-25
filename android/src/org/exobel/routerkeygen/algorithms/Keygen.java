@@ -27,13 +27,17 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public abstract class Keygen implements Comparable<Keygen>, Parcelable {
-    // Constants used for different security types
-    public static final String PSK = "PSK";
-    public static final String WEP = "WEP";
-    public static final String EAP = "EAP";
-    public static final String OPEN = "Open";
-    
-    private ScanResult scanResult;
+	// Constants used for different security types
+	public static final String PSK = "PSK";
+	public static final String WEP = "WEP";
+	public static final String EAP = "EAP";
+	public static final String OPEN = "Open";
+
+	public static final int SUPPORTED = 2;
+	public static final int MAYBE_SUP = 1;
+	public static final int UNSUPPORTED = 0;
+
+	private ScanResult scanResult;
 	final private String ssidName;
 	final private String macAddress;
 	final private int level;
@@ -75,11 +79,9 @@ public abstract class Keygen implements Comparable<Keygen>, Parcelable {
 		return macAddress.toUpperCase(Locale.getDefault());
 	}
 
-
 	public String getSsidName() {
 		return ssidName;
 	}
-
 
 	abstract public List<String> getKeys();
 
@@ -91,8 +93,8 @@ public abstract class Keygen implements Comparable<Keygen>, Parcelable {
 		this.errorCode = errorCode;
 	}
 
-	public boolean isSupported() {
-		return true;
+	public int getSupportState() {
+		return SUPPORTED;
 	}
 
 	public int getLevel() {
@@ -112,15 +114,13 @@ public abstract class Keygen implements Comparable<Keygen>, Parcelable {
 	}
 
 	public int compareTo(Keygen another) {
-		if (isSupported() && another.isSupported()) {
+		if (getSupportState() == another.getSupportState()) {
 			if (another.level == this.level)
 				return ssidName.compareTo(another.ssidName);
 			else
 				return another.level - level;
-		} else if (isSupported())
-			return -1;
-		else
-			return 1;
+		} else
+			return another.getSupportState() - getSupportState();
 	}
 
 	public int describeContents() {
@@ -162,25 +162,24 @@ public abstract class Keygen implements Comparable<Keygen>, Parcelable {
 			scanResult = in.readParcelable(ScanResult.class.getClassLoader());
 
 	}
-	
-	public boolean isLocked(){
+
+	public boolean isLocked() {
 		return !OPEN.equals(getScanResultSecurity(this));
 	}
-	
 
-    /**
-     * @return The security of a given {@link ScanResult}.
-     */
-    public static String getScanResultSecurity(Keygen scanResult) {
-        final String cap = scanResult.encryption;
-        final String[] securityModes = { WEP, PSK, EAP };
-        for (int i = securityModes.length - 1; i >= 0; i--) {
-            if (cap.contains(securityModes[i])) {
-                return securityModes[i];
-            }
-        }
-        
-        return OPEN;
-    }
+	/**
+	 * @return The security of a given {@link ScanResult}.
+	 */
+	public static String getScanResultSecurity(Keygen scanResult) {
+		final String cap = scanResult.encryption;
+		final String[] securityModes = { WEP, PSK, EAP };
+		for (int i = securityModes.length - 1; i >= 0; i--) {
+			if (cap.contains(securityModes[i])) {
+				return securityModes[i];
+			}
+		}
+
+		return OPEN;
+	}
 
 }

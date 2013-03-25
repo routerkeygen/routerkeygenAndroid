@@ -490,6 +490,7 @@ public class ThomsonKeygen extends Keygen {
 	public void setErrorDict(boolean errorDict) {
 		this.errorDict = errorDict;
 	}
+
 	public void setDictionary(String dic) {
 		dictionaryPath = dic;
 	}
@@ -529,5 +530,16 @@ public class ThomsonKeygen extends Keygen {
 			return new ThomsonKeygen[size];
 		}
 	};
+
+	@Override
+	public int getSupportState() {
+		if (getMacAddress().length() < 12)
+			return SUPPORTED;
+		// It is a new generation router which the probability of working is
+		// very low.
+		if (getMacAddress().substring(6).equals(ssidIdentifier))
+			return MAYBE_SUP;
+		return SUPPORTED;
+	}
 
 }

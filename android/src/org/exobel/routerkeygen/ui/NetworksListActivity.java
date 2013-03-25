@@ -164,7 +164,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 					.replace(R.id.item_detail_container, fragment).commit();
 
 		} else {
-			if (!keygen.isSupported()) {
+			if (keygen.getSupportState() == Keygen.UNSUPPORTED) {
 				Toast.makeText(this, R.string.msg_unspported,
 						Toast.LENGTH_SHORT).show();
 				return;

@@ -86,7 +86,7 @@ public class ManualInputActivity extends SherlockFragmentActivity implements
 	}
 
 	public void onItemSelected(Keygen keygen) {
-		if (!keygen.isSupported()) {
+		if (keygen.getSupportState() == Keygen.UNSUPPORTED) {
 			Toast.makeText(this, R.string.msg_unspported,
 					Toast.LENGTH_SHORT).show();
 			return;
