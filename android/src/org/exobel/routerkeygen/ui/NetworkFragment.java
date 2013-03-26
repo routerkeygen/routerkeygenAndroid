@@ -40,6 +40,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.AsyncTask.Status;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -164,8 +165,12 @@ public class NetworkFragment extends SherlockFragment {
 
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		if (passwordList == null)
+		if (passwordList == null) {
+			if (thread.getStatus() == Status.FINISHED
+					|| thread.getStatus() == Status.RUNNING)
+				thread = new KeygenThread(keygen);
 			thread.execute();
+		}
 	}
 
 	@Override

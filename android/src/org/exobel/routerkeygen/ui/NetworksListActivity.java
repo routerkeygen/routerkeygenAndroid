@@ -190,8 +190,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 				getSupportFragmentManager()
 						.beginTransaction()
 						.replace(R.id.item_detail_container,
-								ManualInputFragment.newInstance())
-						.addToBackStack(null).commit();
+								ManualInputFragment.newInstance()).commit();
 			} else {
 				startActivity(new Intent(this, ManualInputActivity.class));
 			}
@@ -340,8 +339,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 			getSupportFragmentManager()
 					.beginTransaction()
 					.replace(R.id.item_detail_container,
-							ManualInputFragment.newInstance(mac))
-					.addToBackStack(null).commit();
+							ManualInputFragment.newInstance(mac)).commit();
 		} else {
 			startActivity(new Intent(this, ManualInputActivity.class).putExtra(
 					ManualInputFragment.MAC_ADDRESS_ARG, mac));
