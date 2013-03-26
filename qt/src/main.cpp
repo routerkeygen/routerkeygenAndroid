@@ -20,7 +20,8 @@
 #include "RouterKeygen.h"
 #include <cstring>
 
-int main(int argc, char *argv[])
+int main(int argc, char *
+         argv[])
 {
     QApplication a(argc, argv);
     RouterKeygen w;
@@ -30,6 +31,9 @@ int main(int argc, char *argv[])
     if ( argc > 1 ){
     	if ( strcmp("-h", argv[1]) != 0)
             w.showWithDialog();
+        else{
+
+        }
     }
     else
         w.showWithDialog();

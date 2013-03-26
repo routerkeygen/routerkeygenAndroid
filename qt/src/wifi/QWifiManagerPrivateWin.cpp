@@ -61,7 +61,7 @@ void QWifiManagerPrivateWin::parseResults() {
 	emit scanFinished(QWifiManager::SCAN_OK);
 }
 
-void QWifiManagerPrivateWin::timerEvent(QTimerEvent *event)
+void QWifiManagerPrivateWin::timerEvent(QTimerEvent *)
 {
    // qDebug() << "Rescanning";
     startScan();

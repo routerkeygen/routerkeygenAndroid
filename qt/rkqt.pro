@@ -1,7 +1,7 @@
 # -------------------------------------------------
 # Project created by QtCreator 2011-04-12T00:20:13
 # -------------------------------------------------
-QT += core gui
+QT += core gui console
 TARGET = RouterKeygen
 TEMPLATE = app
 SOURCES += src/RouterKeygen.cpp \
@@ -49,7 +49,9 @@ SOURCES += src/RouterKeygen.cpp \
     src/config/TeleTuMagicInfo.cpp \
     src/algorithms/WifimediaRKeygen.cpp \
     src/dialog/welcomedialog.cpp \
-    src/dialog/AboutDialog.cpp
+    src/dialog/AboutDialog.cpp \
+    src/config/OTEHuaweiConfigParser.cpp \
+    src/algorithms/OteHuaweiKeygen.cpp
 
 HEADERS += src/include/ZyxelKeygen.h \
     src/include/Wlan6Keygen.h \
@@ -95,7 +97,9 @@ HEADERS += src/include/ZyxelKeygen.h \
     src/include/CabovisaoSagemKeygen.h \
     src/include/WifimediaRKeygen.h \
     src/include/welcomedialog.h \
-    src/include/AboutDialog.h
+    src/include/AboutDialog.h \
+    src/include/OTEHuaweiConfigParser.h \
+    src/include/OteHuaweiKeygen.h
 
 INCLUDEPATH += src/include/
 

@@ -11,6 +11,7 @@
 #include "Keygen.h"
 #include "AliceMagicInfo.h"
 #include "TeleTuMagicInfo.h"
+#include <QStringList>
 #include <QVector>
 #include <QMap>
 class WirelessMatcher {
@@ -21,6 +22,7 @@ public:
 private:
     QMap<QString ,QVector<AliceMagicInfo *> *> * supportedAlice;
     QMap<QString ,QVector<TeleTuMagicInfo *> *> * supportedTeletu;
+    QStringList * supportedOTE;
 
 };
 

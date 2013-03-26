@@ -43,6 +43,8 @@ SOURCES += \
     ../src/config/TeleTuConfigParser.cpp \
     ../src/config/TeleTuMagicInfo.cpp \
     ../src/algorithms/WifimediaRKeygen.cpp \
+    ../src/config/OTEHuaweiConfigParser.cpp \
+    ../src/algorithms/OteHuaweiKeygen.cpp \
     AlgorithmsTest.cpp
 
 HEADERS += ../src/include/ZyxelKeygen.h \
@@ -82,7 +84,9 @@ HEADERS += ../src/include/ZyxelKeygen.h \
     ../src/include/WirelessMatcher.h \
     ../src/include/unknown.h \
     ../src/include/CabovisaoSagemKeygen.h \
-    ../src/include/WifimediaRKeygen.h
+    ../src/include/WifimediaRKeygen.h \
+    ../src/include/OTEHuaweiConfigParser.h \
+    ../src/include/OteHuaweiKeygen.h
 
 INCLUDEPATH += ../src/include/
 win32{

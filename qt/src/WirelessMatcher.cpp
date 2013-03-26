@@ -8,6 +8,7 @@
 #include "WirelessMatcher.h"
 #include "AliceConfigParser.h"
 #include "TeleTuConfigParser.h"
+#include "OTEHuaweiConfigParser.h"
 #include "TecomKeygen.h"
 #include "TeleTuKeygen.h"
 #include "ThomsonKeygen.h"
@@ -34,6 +35,7 @@
 #include "InterCableKeygen.h"
 #include "OteKeygen.h"
 #include "OteBAUDKeygen.h"
+#include "OteHuaweiKeygen.h"
 #include "PBSKeygen.h"
 #include "PtvKeygen.h"
 #include "EasyBoxKeygen.h"
@@ -43,6 +45,7 @@
 WirelessMatcher::WirelessMatcher() {
     supportedAlice = AliceConfigParser::readFile(":/config/alice.txt");
     supportedTeletu = TeleTuConfigParser::readFile(":/config/tele2.txt");
+    supportedOTE = OTEHuaweiConfigParser::readFile(":/config/ote_huawei.txt");
 }
 
 WirelessMatcher::~WirelessMatcher() {
@@ -66,7 +69,7 @@ WirelessMatcher::~WirelessMatcher() {
     }
     supportedTeletu->clear();
     delete supportedTeletu;
-
+    delete supportedOTE;
 }
 
 Keygen * WirelessMatcher::getKeygen(QString ssid, QString mac, int level,
@@ -223,6 +226,16 @@ Keygen * WirelessMatcher::getKeygen(QString ssid, QString mac, int level,
 
 	if (ssid.count(QRegExp("OTE[0-9a-fA-F]{6}")) == 1)
 		return new OteKeygen(ssid, mac, level, enc);
+
+    if (ssid.toUpper().startsWith("OTE") && (mac.startsWith("E8:39:DF:F5")
+       || mac.startsWith("E8:39:DF:F6") || mac.startsWith("E8:39:DF:FD"))) {
+        QString filteredMac = mac.replace(":", "");
+        int target = filteredMac.mid(8).toInt(NULL, 16);
+        if (filteredMac.length() == 12
+                && target > (OteHuaweiKeygen::MAGIC_NUMBER - supportedOTE->length()))
+            return new OteHuaweiKeygen(ssid, mac, level, enc,
+                    supportedOTE->at(OteHuaweiKeygen::MAGIC_NUMBER - target));
+    }
 
     if (ssid.count(QRegExp("MAXCOM[0-9a-zA-Z]{4}")) == 1)
         return new MaxcomKeygen(ssid, mac, level, enc);
