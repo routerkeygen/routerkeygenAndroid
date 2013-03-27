@@ -29,6 +29,7 @@ QMap<QString ,QVector<TeleTuMagicInfo *> *> * TeleTuConfigParser::readFile(const
         return NULL;
     }
     QTextStream in(&file);
+    int range[2];
     QMap<QString ,QVector<TeleTuMagicInfo *> *> * supportedTeleTus = new QMap<QString ,QVector<TeleTuMagicInfo *> *>();
     while(!in.atEnd()) {
         QString line = in.readLine();
@@ -40,7 +41,6 @@ QMap<QString ,QVector<TeleTuMagicInfo *> *> * TeleTuConfigParser::readFile(const
             supported = new QVector<TeleTuMagicInfo*>();
             supportedTeleTus->insert(name, supported);
         }
-        int * range = new int[2];
         range[0] = infos[1].toInt(NULL,16); // from
         range[1] = infos[2].toInt(NULL,16); // to
         QString serial = infos[3];

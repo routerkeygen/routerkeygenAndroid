@@ -29,6 +29,7 @@ QMap<QString ,QVector<AliceMagicInfo *> *> * AliceConfigParser::readFile(const Q
         return NULL;
     }
     QTextStream in(&file);
+    int magic[2];
     QMap<QString ,QVector<AliceMagicInfo *> *> * supportedAlices = new QMap<QString ,QVector<AliceMagicInfo *> *>();
     while(!in.atEnd()) {
         QString line = in.readLine();
@@ -40,7 +41,6 @@ QMap<QString ,QVector<AliceMagicInfo *> *> * AliceConfigParser::readFile(const Q
             supportedAlices->insert(name, supported);
         }
         QString serial = infos[1];
-        int * magic = new int[2];
         magic[0] = infos[2].toInt(NULL,10); // k
         magic[1] = infos[3].toInt(NULL,10); // q
         QString mac = infos[4];
