@@ -102,6 +102,7 @@ HEADERS += src/include/ZyxelKeygen.h \
     src/include/OteHuaweiKeygen.h
 
 INCLUDEPATH += src/include/
+QMAKE_CXXFLAGS += -fstack-protector-all  -Wstack-protector --param ssp-buffer-size=4  -ftrapv
 
 win32{
     SOURCES += src/wifi/QWifiManagerPrivateWin.cpp \

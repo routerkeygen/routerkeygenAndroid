@@ -7,8 +7,10 @@
 #include <QSystemTrayIcon>
 #include <QMenu>
 #include "KeygenThread.h"
+#include "AboutDialog.h"
 #include "QWifiManager.h"
 #include <QSettings>
+#include <QCompleter>
 
 namespace Ui {
     class RouterKeygen;
@@ -20,7 +22,7 @@ class RouterKeygen : public QMainWindow
 
 public:
     explicit RouterKeygen(QWidget *parent = 0);
-    ~RouterKeygen();
+    virtual ~RouterKeygen();
     void showWithDialog();
 
 protected:
@@ -57,10 +59,15 @@ private:
     QLabel * loadingText;
     QSystemTrayIcon *trayIcon;
     QMenu *trayMenu;
+    QCompleter *completer;
+    AboutDialog *  aboutDialog;
+    QAction * startUpAction;
+    QAction * runInBackgroundAction;
     bool runInBackground;
     bool runOnStartUp;
     //SETTINGS VALUES
     QSettings * settings;
+    QStringList wordList;
 
     const static QString RUN_ON_START_UP;
     const static QString RUN_IN_BACKGROUND;

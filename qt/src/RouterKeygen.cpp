@@ -41,7 +41,7 @@
 
 RouterKeygen::RouterKeygen(QWidget *parent) :
         QMainWindow(parent), ui(new Ui::RouterKeygen), router(NULL),calculator(NULL),
-        loading(NULL), loadingText(NULL) {
+        loading(NULL), loadingText(NULL), aboutDialog(NULL) {
     ui->setupUi(this);
     connect(ui->calculateButton, SIGNAL( clicked() ), this,
             SLOT( manualCalculation() ));
@@ -49,22 +49,25 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
             SLOT( refreshNetworks() ));
     connect(ui->networkslist, SIGNAL( cellClicked(int,int) ), this,
             SLOT( tableRowSelected(int,int) ));
+
     connect(ui->menuAbout->actions().at(0),SIGNAL(triggered()), this, SLOT(donatePaypal()));
     connect(ui->menuAbout->actions().at(1), SIGNAL(triggered()),this, SLOT(donateGooglePlay()) );
     connect(ui->menuAbout->actions().at(2), SIGNAL(triggered()), this,SLOT(showAboutDialog()) );
+
+    
 #if !defined(Q_OS_WIN) && !defined(Q_OS_MAC)
     connect(ui->forceRefresh, SIGNAL( stateChanged(int) ), this,
             SLOT( forceRefreshToggle(int) ));
 #else
     ui->forceRefresh->setVisible(false); // it is not needed in Windows
 #endif
+
     wifiManager = new QWifiManager();
     connect(wifiManager, SIGNAL( scanFinished(int) ), this,
             SLOT( scanFinished(int) ));
     loadingAnim = new QMovie(":/images/loading.gif");
     loadingAnim->setParent(this);
-    /*Auto-Complete!*/
-    QStringList wordList;
+    //Auto-Complete!
     wordList << "Alice-" <<  "Arcor-" << "AXTEL-" << "AXTEL-XTREMO-" << "Bbox-" <<
             "BigPond" << "Blink" << "Cabovisao-" << "CONN" << "CYTA" << "Discus--"<<
             "DLink-" << "DMAX" << "EasyBox-" << "eircom" << "FASTWEB-1-" << "INFINITUM" <<
@@ -73,7 +76,7 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
             "Otenet" << "PBS" << "privat" << "ptv" << "SKY" << "SpeedTouch" << "TECOM-AH4222-" <<
             "TECOM-AH4021-" << "TeleTu" << "Thomson" << "TN_private_" << "Vodafone-" << "WiFi" <<
             "wifimedia_R-" << "WLAN_" << "WLAN" << "YaCom";
-    QCompleter *completer = new QCompleter(wordList, this);
+    completer = new QCompleter(wordList, this);
     completer->setCaseSensitivity(Qt::CaseInsensitive);
     completer->setCompletionMode(QCompleter::PopupCompletion);
     ui->ssidInput->setCompleter(completer);
@@ -81,19 +84,18 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
     ui->networkslist->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->passwordsList->installEventFilter(this);
 
-    //Set widget ration
-    ui->splitter->setStretchFactor(0, 2);
-    ui->splitter->setStretchFactor(1, 1);
-
-    // set up and show the system tray icon
-
     // build menu
     trayMenu = new QMenu(this);
     trayIcon = new QSystemTrayIcon(this);
+    // set up and show the system tray icon
     trayIcon->setIcon(windowIcon());
     trayIcon->setContextMenu(trayMenu);
     trayIcon->show();
-
+    
+    //Set widget ration
+    ui->splitter->setStretchFactor(0, 2);
+    ui->splitter->setStretchFactor(1, 1);
+    
     settings = new QSettings("Exobel", "RouterKeygen");
     bool forceRefresh = settings->value(FORCE_REFRESH, false).toBool();
     wifiManager->setForceScan(forceRefresh);
@@ -101,13 +103,25 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
     runInBackground = settings->value(RUN_IN_BACKGROUND, true).toBool();
     runOnStartUp = settings->value(RUN_ON_START_UP, false).toBool();
     qApp->setQuitOnLastWindowClosed(!runInBackground);
+
+    startUpAction = ui->menuPreferences->addAction(tr("Run on Start up"));
+    startUpAction->setCheckable(true);
+    startUpAction->setChecked(runOnStartUp);
+    connect(startUpAction, SIGNAL(toggled(bool)), this,
+            SLOT(startUpRunToggle(bool)));
+
+    runInBackgroundAction = ui->menuPreferences->addAction(tr("Run in the background"));
+    runInBackgroundAction->setCheckable(true);
+    runInBackgroundAction->setChecked(runInBackground);
+    connect(runInBackgroundAction, SIGNAL(toggled(bool)), this,
+            SLOT(backgroundRunToggle(bool)));
+
     scanFinished(QWifiManager::SCAN_OK);
     wifiManager->startScan();
-
 }
 
 void RouterKeygen::showWithDialog(){
-    QMainWindow::show();
+    show();
     if ( settings->value(VERSION, true).toBool()){
         settings->setValue(VERSION, false);
         WelcomeDialog * welcome = new WelcomeDialog(this);
@@ -116,7 +130,8 @@ void RouterKeygen::showWithDialog(){
 }
 
 void RouterKeygen::showAboutDialog(){
-    AboutDialog *  aboutDialog = new AboutDialog(this);
+    if ( aboutDialog == NULL )
+        aboutDialog = new AboutDialog(this);
     aboutDialog->show();
 }
 
@@ -141,6 +156,12 @@ RouterKeygen::~RouterKeygen() {
         }
         delete calculator;
     }
+    delete settings;
+    trayMenu->clear();
+    delete trayMenu;
+    delete trayIcon;
+    if ( aboutDialog != NULL )
+        delete aboutDialog;
 }
 void RouterKeygen::manualCalculation() {
     if (ui->ssidInput->text().trimmed() == "")
@@ -225,17 +246,8 @@ void RouterKeygen::scanFinished(int code) {
                 trayMenu->addAction(tr("\tNone were detected"))->setEnabled(false);
             }
             trayMenu->addSeparator();
-            QAction * startUp = trayMenu->addAction(tr("Run on Start up"));
-            startUp->setCheckable(true);
-            startUp->setChecked(runOnStartUp);
-            connect(startUp, SIGNAL(toggled(bool)), this,
-                    SLOT(startUpRunToggle(bool)));
-            QAction * backgroundRun = trayMenu->addAction(
-                    tr("Run in the background"));
-            backgroundRun->setCheckable(true);
-            backgroundRun->setChecked(runInBackground);
-            connect(backgroundRun, SIGNAL(toggled(bool)), this,
-                    SLOT(backgroundRunToggle(bool)));
+            trayMenu->addAction(startUpAction);
+            trayMenu->addAction(runInBackgroundAction);
             trayMenu->addSeparator();
             QAction * exitAction = trayMenu->addAction(tr("Exit"));
             connect(exitAction, SIGNAL(triggered()), qApp, SLOT(quit()));

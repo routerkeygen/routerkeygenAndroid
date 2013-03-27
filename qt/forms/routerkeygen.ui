@@ -82,7 +82,7 @@
          <item>
           <widget class="QLineEdit" name="macInput">
            <property name="inputMask">
-            <string>HH:HH:HH:HH:HH:HH</string>
+            <string>HH:HH:HH:HH:HH:HH; </string>
            </property>
           </widget>
          </item>
@@ -120,6 +120,24 @@
          <bool>false</bool>
         </attribute>
         <attribute name="verticalHeaderShowSortIndicator" stdset="0">
+         <bool>false</bool>
+        </attribute>
+        <attribute name="verticalHeaderStretchLastSection">
+         <bool>false</bool>
+        </attribute>
+        <attribute name="horizontalHeaderStretchLastSection">
+         <bool>true</bool>
+        </attribute>
+        <attribute name="horizontalHeaderCascadingSectionResizes">
+         <bool>true</bool>
+        </attribute>
+        <attribute name="verticalHeaderShowSortIndicator" stdset="0">
+         <bool>false</bool>
+        </attribute>
+        <attribute name="horizontalHeaderHighlightSections">
+         <bool>false</bool>
+        </attribute>
+        <attribute name="verticalHeaderHighlightSections">
          <bool>false</bool>
         </attribute>
         <attribute name="verticalHeaderStretchLastSection">
@@ -165,7 +183,7 @@
         <item>
          <widget class="QCheckBox" name="forceRefresh">
           <property name="text">
-           <string>Force Scan (Note:requires root privileges in Linux)</string>
+           <string>Force Scan (Note:requires root privileges)</string>
           </property>
          </widget>
         </item>
@@ -196,7 +214,7 @@
      <x>0</x>
      <y>0</y>
      <width>934</width>
-     <height>20</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuAbout">
@@ -207,6 +225,12 @@
     <addaction name="actionDonate_Google_Play"/>
     <addaction name="actionAbout"/>
    </widget>
+   <widget class="QMenu" name="menuPreferences">
+    <property name="title">
+     <string>Preferences</string>
+    </property>
+   </widget>
+   <addaction name="menuPreferences"/>
    <addaction name="menuAbout"/>
   </widget>
   <action name="actionDonate">
@@ -222,6 +246,22 @@
   <action name="actionAbout">
    <property name="text">
     <string>About RouterKeygen</string>
+   </property>
+  </action>
+  <action name="actionRun_on_Start_up">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Run on Start up</string>
+   </property>
+  </action>
+  <action name="actionRun_in_the_background">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Run in the background</string>
    </property>
   </action>
  </widget>
