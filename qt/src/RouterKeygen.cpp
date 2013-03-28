@@ -35,13 +35,14 @@
 #include "welcomedialog.h"
 #include "AboutDialog.h"
 #include <QDesktopServices>
+#include <QDateTime>
 #include <QFile>
 #include <QUrl>
 #include <stdlib.h>
 
 RouterKeygen::RouterKeygen(QWidget *parent) :
         QMainWindow(parent), ui(new Ui::RouterKeygen), router(NULL),calculator(NULL),
-        loading(NULL), loadingText(NULL), aboutDialog(NULL) {
+        loading(NULL), loadingText(NULL), aboutDialog(NULL), welcomeDialog(NULL) {
     ui->setupUi(this);
     connect(ui->calculateButton, SIGNAL( clicked() ), this,
             SLOT( manualCalculation() ));
@@ -122,10 +123,11 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
 
 void RouterKeygen::showWithDialog(){
     show();
-    if ( settings->value(VERSION, true).toBool()){
-        settings->setValue(VERSION, false);
-        WelcomeDialog * welcome = new WelcomeDialog(this);
-        welcome->show();
+    if ( ( QDateTime::currentDateTime().toTime_t()- settings->value(WELCOME_DIALOG, 0).toUInt()) > 0 ){
+        settings->setValue(WELCOME_DIALOG, QDateTime::currentDateTime().toTime_t() );
+        if ( welcomeDialog == NULL )
+            welcomeDialog = new WelcomeDialog(this);
+        welcomeDialog->show();
     }
 }
 
@@ -162,6 +164,8 @@ RouterKeygen::~RouterKeygen() {
     delete trayIcon;
     if ( aboutDialog != NULL )
         delete aboutDialog;
+    if ( welcomeDialog != NULL )
+        delete welcomeDialog;
 }
 void RouterKeygen::manualCalculation() {
     if (ui->ssidInput->text().trimmed() == "")
@@ -432,4 +436,5 @@ void RouterKeygen::cleanLoadingAnimation() {
 const QString RouterKeygen::RUN_ON_START_UP = "RUN_ON_START_UP";
 const QString RouterKeygen::RUN_IN_BACKGROUND = "RUN_IN_BACKGROUND";
 const QString RouterKeygen::FORCE_REFRESH = "FORCE_REFRESH";
-const QString RouterKeygen::VERSION = "3";
+const QString RouterKeygen::WELCOME_DIALOG = "WELCOME_DIALOG_TIME";
+const unsigned int RouterKeygen::SECONDS_IN_WEEK = 7 * 24 * 3600;

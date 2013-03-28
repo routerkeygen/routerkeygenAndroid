@@ -8,6 +8,7 @@
 #include <QMenu>
 #include "KeygenThread.h"
 #include "AboutDialog.h"
+#include "welcomedialog.h"
 #include "QWifiManager.h"
 #include <QSettings>
 #include <QCompleter>
@@ -57,10 +58,11 @@ private:
     QMovie * loadingAnim;
     QLabel * loading;
     QLabel * loadingText;
+    AboutDialog *  aboutDialog;
+    WelcomeDialog * welcomeDialog;
     QSystemTrayIcon *trayIcon;
     QMenu *trayMenu;
     QCompleter *completer;
-    AboutDialog *  aboutDialog;
     QAction * startUpAction;
     QAction * runInBackgroundAction;
     bool runInBackground;
@@ -72,7 +74,8 @@ private:
     const static QString RUN_ON_START_UP;
     const static QString RUN_IN_BACKGROUND;
     const static QString FORCE_REFRESH;
-    const static QString VERSION;
+    const static QString WELCOME_DIALOG;
+    const static unsigned int SECONDS_IN_WEEK;
 };
 
 #endif // ROUTERKEYGEN_H
