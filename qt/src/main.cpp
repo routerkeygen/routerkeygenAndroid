@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Rui Araújo, Luís Fonseca
+ * Copyright 2013 Rui Araújo, Luís Fonseca
  *
  * This file is part of Router Keygen.
  *
@@ -17,13 +17,21 @@
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <QtGui/QApplication>
+#include <QTranslator>
+#include <QLocale>
 #include "RouterKeygen.h"
 #include <cstring>
 
 int main(int argc, char *
          argv[])
 {
-    QApplication a(argc, argv);
+    QApplication app(argc, argv);
+    QTranslator translator;
+    QApplication::setApplicationName("RouterKeygen");
+    QApplication::setApplicationVersion("1.0.0");
+    QString qmFile = app.applicationName().toLower() + "_" + QLocale::system().name();
+    if ( translator.load(qmFile,":/lang") )
+        app.installTranslator(&translator);
     RouterKeygen w;
 #if defined(Q_WS_S60)
     w.showMaximized();
@@ -39,5 +47,5 @@ int main(int argc, char *
         w.showWithDialog();
 #endif
 
-    return a.exec();
+    return app.exec();
 }

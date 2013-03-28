@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Rui Araújo, Luís Fonseca
+ * Copyright 2013 Rui Araújo, Luís Fonseca
  *
  * This file is part of Router Keygen.
  *
@@ -243,7 +243,7 @@ void RouterKeygen::scanFinished(int code) {
                     ui->networkslist->setItem(i, 3, new QTableWidgetItem(tr("No")));
             }
             if (!foundVulnerable) {
-                trayMenu->addAction(tr("\tNone were detected"))->setEnabled(false);
+                trayMenu->addAction(tr("None were detected"))->setEnabled(false);
             }
             trayMenu->addSeparator();
             trayMenu->addAction(startUpAction);
@@ -270,7 +270,7 @@ void RouterKeygen::scanFinished(int code) {
         break;
 
     case QWifiManager::ERROR_NO_WIFI_ENABLED:
-        ui->statusBar->showMessage(tr("The wifi card is not enabled"));
+        ui->statusBar->showMessage(tr("The wifi device is not enabled"));
         break;
     }
 

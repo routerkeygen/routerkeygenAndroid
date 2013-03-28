@@ -6,5 +6,6 @@
         <file>config/tele2.txt</file>
         <file>config/alice.txt</file>
         <file>config/ote_huawei.txt</file>
+        <file>lang/routerkeygen_pt_PT.qm</file>
     </qresource>
 </RCC>

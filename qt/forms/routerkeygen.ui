@@ -235,12 +235,12 @@
   </widget>
   <action name="actionDonate">
    <property name="text">
-    <string>Paypal</string>
+    <string>Donate (Paypal)</string>
    </property>
   </action>
   <action name="actionDonate_Google_Play">
    <property name="text">
-    <string>Google Play</string>
+    <string>Donate (Google Play)</string>
    </property>
   </action>
   <action name="actionAbout">
