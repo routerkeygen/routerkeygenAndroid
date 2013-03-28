@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Rui Araújo, Luís Fonseca
+ * Copyright 2013 Rui Araújo, Luís Fonseca
  *
  * This file is part of Router Keygen.
  *
