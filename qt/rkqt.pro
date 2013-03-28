@@ -1,7 +1,9 @@
 # -------------------------------------------------
 # Project created by QtCreator 2011-04-12T00:20:13
 # -------------------------------------------------
-QT += core gui console
+QT += core \
+    gui \
+    network
 TARGET = RouterKeygen
 TEMPLATE = app
 SOURCES += src/RouterKeygen.cpp \
@@ -51,8 +53,8 @@ SOURCES += src/RouterKeygen.cpp \
     src/dialog/welcomedialog.cpp \
     src/dialog/AboutDialog.cpp \
     src/config/OTEHuaweiConfigParser.cpp \
-    src/algorithms/OteHuaweiKeygen.cpp
-
+    src/algorithms/OteHuaweiKeygen.cpp \
+    src/dialog/UpdateDialog.cpp
 HEADERS += src/include/ZyxelKeygen.h \
     src/include/Wlan6Keygen.h \
     src/include/Wlan2Keygen.h \
@@ -99,12 +101,15 @@ HEADERS += src/include/ZyxelKeygen.h \
     src/include/welcomedialog.h \
     src/include/AboutDialog.h \
     src/include/OTEHuaweiConfigParser.h \
-    src/include/OteHuaweiKeygen.h
-
+    src/include/OteHuaweiKeygen.h \
+    src/include/UpdateDialog.h
 INCLUDEPATH += src/include/
-QMAKE_CXXFLAGS += -fstack-protector-all  -Wstack-protector --param ssp-buffer-size=4  -ftrapv
-
-win32{
+QMAKE_CXXFLAGS += -fstack-protector-all \
+    -Wstack-protector \
+    --param \
+    ssp-buffer-size=4 \
+    -ftrapv
+win32 { 
     SOURCES += src/wifi/QWifiManagerPrivateWin.cpp \
         src/sha1/sha1dgst.c \
         src/sha1/sha1-586.win32.S
@@ -114,26 +119,26 @@ win32{
         src/include/opensslconf.h \
         src/include/md32_common.h
 }
-unix:!macx{
+unix:!macx { 
     QT += dbus
     SOURCES += src/wifi/QWifiManagerPrivateUnix.cpp
     HEADERS += src/wifi/QWifiManagerPrivateUnix.h
     INCLUDEPATH += /usr/include/NetworkManager
     LIBS += -lcrypto
 }
-
-
-macx{
+macx { 
     SOURCES += src/wifi/QWifiManagerPrivateMac.cpp
     OBJECTIVE_SOURCES += src/mac/macloginitemsmanager.mm
-    HEADERS += src/wifi/QWifiManagerPrivateMac.h\
-    src/include/macloginitemsmanager.h
-    LIBS += -lcrypto -framework Cocoa
+    HEADERS += src/wifi/QWifiManagerPrivateMac.h \
+        src/include/macloginitemsmanager.h
+    LIBS += -lcrypto \
+        -framework \
+        Cocoa
 }
-
 FORMS += forms/routerkeygen.ui \
     forms/welcome_dialog.ui \
-    forms/aboutdialog.ui
+    forms/aboutdialog.ui \
+    forms/UpdateDialog.ui
 symbian { 
     TARGET.UID3 = 0xed94ef91
     QMAKE_CXXFLAGS.GCCE -= -fvisibility-inlines-hidden

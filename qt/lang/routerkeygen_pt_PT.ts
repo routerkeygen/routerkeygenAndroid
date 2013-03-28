@@ -161,13 +161,13 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="../forms/routerkeygen.ui" line="158"/>
-        <location filename="../src/RouterKeygen.cpp" line="255"/>
+        <location filename="../src/RouterKeygen.cpp" line="303"/>
         <source>Strength</source>
         <translation>Força</translation>
     </message>
     <message>
         <location filename="../forms/routerkeygen.ui" line="163"/>
-        <location filename="../src/RouterKeygen.cpp" line="255"/>
+        <location filename="../src/RouterKeygen.cpp" line="303"/>
         <source>Supported</source>
         <translation>Suportado</translation>
     </message>
@@ -187,19 +187,24 @@ p, li { white-space: pre-wrap; }
         <translation>Sobre</translation>
     </message>
     <message>
-        <location filename="../forms/routerkeygen.ui" line="230"/>
+        <location filename="../forms/routerkeygen.ui" line="232"/>
         <source>Preferences</source>
         <translation>Preferências</translation>
     </message>
     <message>
-        <location filename="../forms/routerkeygen.ui" line="238"/>
+        <location filename="../forms/routerkeygen.ui" line="240"/>
         <source>Donate (Paypal)</source>
         <translation>Doar (Paypal)</translation>
     </message>
     <message>
-        <location filename="../forms/routerkeygen.ui" line="243"/>
+        <location filename="../forms/routerkeygen.ui" line="245"/>
         <source>Donate (Google Play)</source>
         <translation>Doar (Google Play)</translation>
+    </message>
+    <message>
+        <location filename="../forms/routerkeygen.ui" line="271"/>
+        <source>Check for Updates</source>
+        <translation>Verificar Actualizações</translation>
     </message>
     <message>
         <source>Paypal</source>
@@ -210,7 +215,7 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Google Play</translation>
     </message>
     <message>
-        <location filename="../forms/routerkeygen.ui" line="248"/>
+        <location filename="../forms/routerkeygen.ui" line="266"/>
         <source>About RouterKeygen</source>
         <translation>Sobre o RouterKeygen</translation>
     </message>
@@ -224,42 +229,42 @@ p, li { white-space: pre-wrap; }
         <translation>Senhas Calculadas</translation>
     </message>
     <message>
-        <location filename="../src/RouterKeygen.cpp" line="183"/>
+        <location filename="../src/RouterKeygen.cpp" line="231"/>
         <source>Invalid MAC. It will not be used.</source>
         <translation>MAC inválido. Não será usado.</translation>
     </message>
     <message>
-        <location filename="../src/RouterKeygen.cpp" line="189"/>
+        <location filename="../src/RouterKeygen.cpp" line="237"/>
         <source>Unsupported network. Check the MAC address and the SSID.</source>
         <translation>Rede não suportada. Verifique o endereço MAC e o SSID.</translation>
     </message>
     <message>
-        <location filename="../src/RouterKeygen.cpp" line="193"/>
+        <location filename="../src/RouterKeygen.cpp" line="241"/>
         <source>Calculating keys. This can take a while.</source>
         <translation>Calculando senhas. Este processo poderá ser longo.</translation>
     </message>
     <message>
-        <location filename="../src/RouterKeygen.cpp" line="209"/>
+        <location filename="../src/RouterKeygen.cpp" line="257"/>
         <source>Scanning the network</source>
         <translation>A procurar redes</translation>
     </message>
     <message>
-        <location filename="../src/RouterKeygen.cpp" line="223"/>
+        <location filename="../src/RouterKeygen.cpp" line="271"/>
         <source>Vulnerable networks</source>
         <translation>Redes vulneráveis</translation>
     </message>
     <message>
-        <location filename="../src/RouterKeygen.cpp" line="238"/>
+        <location filename="../src/RouterKeygen.cpp" line="286"/>
         <source>Yes</source>
         <translation>Sim</translation>
     </message>
     <message>
-        <location filename="../src/RouterKeygen.cpp" line="243"/>
+        <location filename="../src/RouterKeygen.cpp" line="291"/>
         <source>No</source>
         <translation>Não</translation>
     </message>
     <message>
-        <location filename="../src/RouterKeygen.cpp" line="273"/>
+        <location filename="../src/RouterKeygen.cpp" line="321"/>
         <source>The wifi device is not enabled</source>
         <translation>O dispositivo wifi não está ativo</translation>
     </message>
@@ -268,71 +273,122 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">\tNenhuma rede detetada</translation>
     </message>
     <message>
-        <location filename="../src/RouterKeygen.cpp" line="246"/>
+        <location filename="../src/RouterKeygen.cpp" line="294"/>
         <source>None were detected</source>
         <translation>Nenhuma rede detetada</translation>
     </message>
     <message>
-        <location filename="../forms/routerkeygen.ui" line="256"/>
+        <location filename="../forms/routerkeygen.ui" line="253"/>
         <location filename="../src/RouterKeygen.cpp" line="107"/>
         <source>Run on Start up</source>
         <translation>Correr no Arranque</translation>
     </message>
     <message>
-        <location filename="../forms/routerkeygen.ui" line="264"/>
+        <location filename="../forms/routerkeygen.ui" line="261"/>
         <location filename="../src/RouterKeygen.cpp" line="113"/>
         <source>Run in the background</source>
         <translation>Correr em plano de fundo</translation>
     </message>
     <message>
-        <location filename="../src/RouterKeygen.cpp" line="252"/>
+        <location filename="../src/RouterKeygen.cpp" line="146"/>
+        <source>Checking for updates</source>
+        <translation>A verificar atualizações</translation>
+    </message>
+    <message>
+        <location filename="../src/RouterKeygen.cpp" line="170"/>
+        <source>The application is already at the latest version.</source>
+        <translation>A aplicação já está na última versão.</translation>
+    </message>
+    <message>
+        <location filename="../src/RouterKeygen.cpp" line="179"/>
+        <location filename="../src/RouterKeygen.cpp" line="184"/>
+        <source>Error while checking for updates</source>
+        <translation>Erro ao verificar por atualizações</translation>
+    </message>
+    <message>
+        <location filename="../src/RouterKeygen.cpp" line="300"/>
         <source>Exit</source>
         <translation>Sair</translation>
     </message>
     <message>
-        <location filename="../src/RouterKeygen.cpp" line="265"/>
+        <location filename="../src/RouterKeygen.cpp" line="313"/>
         <source>Network Manager was not detected</source>
         <translation>Gestor de Rede não foi detectado</translation>
     </message>
     <message>
-        <location filename="../src/RouterKeygen.cpp" line="269"/>
+        <location filename="../src/RouterKeygen.cpp" line="317"/>
         <source>No Wifi device detected</source>
         <translation>Nenhum dispositivo Wifi detetado</translation>
     </message>
     <message>
-        <location filename="../src/RouterKeygen.cpp" line="298"/>
+        <location filename="../src/RouterKeygen.cpp" line="346"/>
         <source>Error while calculating.</source>
         <translation>Erro ao calcular.</translation>
     </message>
     <message>
-        <location filename="../src/RouterKeygen.cpp" line="305"/>
+        <location filename="../src/RouterKeygen.cpp" line="353"/>
         <source>No keys were calculated.</source>
         <translation>Não foi possível calcular uma senha.</translation>
     </message>
     <message>
-        <location filename="../src/RouterKeygen.cpp" line="312"/>
+        <location filename="../src/RouterKeygen.cpp" line="360"/>
         <source>Calculation finished</source>
         <translation>Cálculo terminado</translation>
     </message>
     <message>
-        <location filename="../src/RouterKeygen.cpp" line="313"/>
+        <location filename="../src/RouterKeygen.cpp" line="361"/>
         <source>Calculated Passwords for %1</source>
         <translation>Senhas calculadas para %1</translation>
     </message>
     <message>
-        <location filename="../src/RouterKeygen.cpp" line="337"/>
+        <location filename="../src/RouterKeygen.cpp" line="385"/>
         <source>Copy</source>
         <translation>Copiar</translation>
     </message>
     <message>
-        <location filename="../src/RouterKeygen.cpp" line="339"/>
+        <location filename="../src/RouterKeygen.cpp" line="387"/>
         <source>Copy this key</source>
         <translation>Copiar esta chave</translation>
     </message>
     <message>
-        <location filename="../src/RouterKeygen.cpp" line="352"/>
+        <location filename="../src/RouterKeygen.cpp" line="400"/>
         <source>%1 copied</source>
         <translation>%1 copiado</translation>
+    </message>
+</context>
+<context>
+    <name>UpdateDialog</name>
+    <message>
+        <location filename="../forms/UpdateDialog.ui" line="14"/>
+        <source>Updates available</source>
+        <translation>Actualização disponível</translation>
+    </message>
+    <message>
+        <location filename="../forms/UpdateDialog.ui" line="29"/>
+        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;There is a newer version available.&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Open the website to download the latest version.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Está disponível a versão mais recente.&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Abra o website para descarregar a última versão.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="../forms/UpdateDialog.ui" line="42"/>
+        <source>Open Website</source>
+        <translation>Abrir Website</translation>
+    </message>
+    <message>
+        <location filename="../forms/UpdateDialog.ui" line="49"/>
+        <source>Close</source>
+        <translation>Fechar</translation>
     </message>
 </context>
 <context>

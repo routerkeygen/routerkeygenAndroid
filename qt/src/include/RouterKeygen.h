@@ -9,9 +9,11 @@
 #include "KeygenThread.h"
 #include "AboutDialog.h"
 #include "welcomedialog.h"
+#include "UpdateDialog.h"
 #include "QWifiManager.h"
 #include <QSettings>
 #include <QCompleter>
+#include <QNetworkReply>
 
 namespace Ui {
     class RouterKeygen;
@@ -43,12 +45,15 @@ private slots:
     void donatePaypal();
     void donateGooglePlay();
     void showAboutDialog();
+    void checkUpdates();
+    void onNetworkReply(QNetworkReply*);
 
 private:
     void addNetworkToTray(const QString & ssid, int level, bool locked );
     void setLoadingAnimation(const QString& text);
     void cleanLoadingAnimation();
     void calc(QString ssid, QString mac );
+    void enableUI(bool enable);
     Ui::RouterKeygen *ui;
     QVector<QString> listKeys;
     WirelessMatcher matcher;

@@ -223,6 +223,8 @@
     </property>
     <addaction name="actionDonate"/>
     <addaction name="actionDonate_Google_Play"/>
+    <addaction name="separator"/>
+    <addaction name="actionCheck_for_Updates"/>
     <addaction name="actionAbout"/>
    </widget>
    <widget class="QMenu" name="menuPreferences">
@@ -243,11 +245,6 @@
     <string>Donate (Google Play)</string>
    </property>
   </action>
-  <action name="actionAbout">
-   <property name="text">
-    <string>About RouterKeygen</string>
-   </property>
-  </action>
   <action name="actionRun_on_Start_up">
    <property name="checkable">
     <bool>true</bool>
@@ -262,6 +259,16 @@
    </property>
    <property name="text">
     <string>Run in the background</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About RouterKeygen</string>
+   </property>
+  </action>
+  <action name="actionCheck_for_Updates">
+   <property name="text">
+    <string>Check for Updates</string>
    </property>
   </action>
  </widget>

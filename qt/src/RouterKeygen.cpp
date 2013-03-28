@@ -19,7 +19,6 @@
 #include "RouterKeygen.h"
 #include "ui_routerkeygen.h"
 #include <QMessageBox>
-#include "WirelessMatcher.h"
 #include "macloginitemsmanager.h"
 #include <QCompleter>
 #include <QStringList>
@@ -31,13 +30,12 @@
 #include <QDebug>
 #include <QClipboard>
 #include <QWidgetAction>
-#include "QWifiManager.h"
-#include "welcomedialog.h"
-#include "AboutDialog.h"
 #include <QDesktopServices>
 #include <QDateTime>
 #include <QFile>
 #include <QUrl>
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
 #include <stdlib.h>
 
 RouterKeygen::RouterKeygen(QWidget *parent) :
@@ -51,9 +49,10 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
     connect(ui->networkslist, SIGNAL( cellClicked(int,int) ), this,
             SLOT( tableRowSelected(int,int) ));
 
-    connect(ui->menuAbout->actions().at(0),SIGNAL(triggered()), this, SLOT(donatePaypal()));
-    connect(ui->menuAbout->actions().at(1), SIGNAL(triggered()),this, SLOT(donateGooglePlay()) );
-    connect(ui->menuAbout->actions().at(2), SIGNAL(triggered()), this,SLOT(showAboutDialog()) );
+    connect(ui->actionDonate,SIGNAL(triggered()), this, SLOT(donatePaypal()));
+    connect(ui->actionDonate_Google_Play, SIGNAL(triggered()),this, SLOT(donateGooglePlay()) );
+    connect(ui->actionAbout, SIGNAL(triggered()), this,SLOT(showAboutDialog()) );
+    connect(ui->actionCheck_for_Updates, SIGNAL(triggered()), this,SLOT(checkUpdates()));
 
     
 #if !defined(Q_OS_WIN) && !defined(Q_OS_MAC)
@@ -123,7 +122,7 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
 
 void RouterKeygen::showWithDialog(){
     show();
-    if ( ( QDateTime::currentDateTime().toTime_t()- settings->value(WELCOME_DIALOG, 0).toUInt()) > 0 ){
+    if ( ( QDateTime::currentDateTime().toTime_t()- settings->value(WELCOME_DIALOG, 0).toUInt()) > SECONDS_IN_WEEK ){
         settings->setValue(WELCOME_DIALOG, QDateTime::currentDateTime().toTime_t() );
         if ( welcomeDialog == NULL )
             welcomeDialog = new WelcomeDialog(this);
@@ -137,20 +136,63 @@ void RouterKeygen::showAboutDialog(){
     aboutDialog->show();
 }
 
-void  RouterKeygen::donatePaypal(){
-    QDesktopServices::openUrl(QUrl("https://www.paypal.com/pt/cgi-bin/webscr?cmd=_flow&SESSION=i5165NLrZfxUoHKUVuudmu6le5tVb6c0CX_9CP45rrU1Az-XgWgJbZ5bfJW&dispatch=5885d80a13c0db1f8e263663d3faee8d5348ead9d61c709ee8c979deef3ea735"));
+void  RouterKeygen::checkUpdates(){
+    QNetworkAccessManager* mNetworkManager = new QNetworkAccessManager(this);
+    QObject::connect(mNetworkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onNetworkReply(QNetworkReply*)));
+
+    enableUI(false);
+    setLoadingAnimation(tr("Checking for updates"));
+    QUrl url("http://android-thomson-key-solver.googlecode.com/svn/trunk/RouterKeygenVersionPC.txt");
+    mNetworkManager->get(QNetworkRequest(url));
+}
+
+
+void RouterKeygen::onNetworkReply(QNetworkReply* reply){
+    QString replyString;
+    const unsigned int RESPONSE_OK = 200;
+    cleanLoadingAnimation();
+    enableUI(true);
+    if(reply->error() == QNetworkReply::NoError)
+    {
+        unsigned int httpstatuscode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toUInt();
+        switch(httpstatuscode)
+        {
+        case RESPONSE_OK:
+            if (reply->isReadable())
+            {
+                //Assuming this is a human readable file replyString now contains the file
+                replyString = QString::fromUtf8(reply->readAll().data()).trimmed();
+                if ( replyString == QApplication::applicationVersion() ){
+                    ui->statusBar->showMessage(tr("The application is already at the latest version."));
+                }
+                else{
+                    UpdateDialog * updateDialog = new UpdateDialog(this);
+                    updateDialog->show();
+                }
+            }
+            break;
+        default:
+            ui->statusBar->showMessage(tr("Error while checking for updates"));
+            break;
+        }
+    }
+    else {
+        ui->statusBar->showMessage(tr("Error while checking for updates"));
+    }
+    reply->deleteLater();
 }
 
 void RouterKeygen::donateGooglePlay(){
     QDesktopServices::openUrl(QUrl("https://play.google.com/store/apps/details?id=org.exobel.routerkeygendownloader"));
 }
 
+void  RouterKeygen::donatePaypal(){
+    QDesktopServices::openUrl(QUrl("https://www.paypal.com/pt/cgi-bin/webscr?cmd=_flow&SESSION=i5165NLrZfxUoHKUVuudmu6le5tVb6c0CX_9CP45rrU1Az-XgWgJbZ5bfJW&dispatch=5885d80a13c0db1f8e263663d3faee8d5348ead9d61c709ee8c979deef3ea735"));
+}
 RouterKeygen::~RouterKeygen() {
     delete ui;
     delete loadingAnim;
     delete wifiManager;
-    if (router != NULL)
-        delete router;
     if (calculator != NULL) {
         if (calculator->isRunning()) {
             router->stop();
@@ -158,14 +200,13 @@ RouterKeygen::~RouterKeygen() {
         }
         delete calculator;
     }
+    delete router;
     delete settings;
     trayMenu->clear();
     delete trayMenu;
     delete trayIcon;
-    if ( aboutDialog != NULL )
-        delete aboutDialog;
-    if ( welcomeDialog != NULL )
-        delete welcomeDialog;
+    delete aboutDialog;
+    delete welcomeDialog;
 }
 void RouterKeygen::manualCalculation() {
     if (ui->ssidInput->text().trimmed() == "")
@@ -177,8 +218,7 @@ void RouterKeygen::calc(QString ssid, QString mac) {
     if (calculator != NULL) {
         return; //ignore while a calculator is still running
     }
-    if (router != NULL)
-        delete router;
+    delete router;
     if (ssid == "")
         return;
     if (mac.length() < 17) {
@@ -197,8 +237,7 @@ void RouterKeygen::calc(QString ssid, QString mac) {
     setLoadingAnimation(tr("Calculating keys. This can take a while."));
     this->calculator = new KeygenThread(router);
     connect(this->calculator, SIGNAL( finished() ), this, SLOT( getResults() ));
-    ui->calculateButton->setEnabled(false);
-    ui->refreshScan->setEnabled(false);
+    enableUI(false);
     this->calculator->start();
 }
 
@@ -208,16 +247,14 @@ void RouterKeygen::tableRowSelected(int row, int) {
 }
 
 void RouterKeygen::refreshNetworks() {
-    ui->refreshScan->setEnabled(false);
-    ui->calculateButton->setEnabled(false);
+    enableUI(false);
     setLoadingAnimation(tr("Scanning the network"));
     wifiManager->startScan();
 }
 
 void RouterKeygen::scanFinished(int code) {
     cleanLoadingAnimation();
-    ui->refreshScan->setEnabled(true);
-    ui->calculateButton->setEnabled(true);
+    enableUI(true);
     switch (code) {
     case QWifiManager::SCAN_OK: {
             ui->networkslist->clear();
@@ -296,8 +333,7 @@ void RouterKeygen::addNetworkToTray(const QString & ssid, int level, bool locked
 
 void RouterKeygen::getResults() {
     cleanLoadingAnimation();
-    ui->calculateButton->setEnabled(true);
-    ui->refreshScan->setEnabled(true);
+    enableUI(true);
     if (calculator->hadError()) {
         ui->statusBar->showMessage(tr("Error while calculating."));
         delete calculator;
@@ -431,6 +467,14 @@ void RouterKeygen::cleanLoadingAnimation() {
     ui->statusBar->removeWidget(loadingText);
     loading = NULL;
     loadingText = NULL;
+}
+
+
+void RouterKeygen::enableUI(bool enable){
+    ui->actionCheck_for_Updates->setEnabled(enable);
+    ui->refreshScan->setEnabled(enable);
+    ui->calculateButton->setEnabled(enable);
+    ui->networkslist->setEnabled(enable);
 }
 
 const QString RouterKeygen::RUN_ON_START_UP = "RUN_ON_START_UP";
