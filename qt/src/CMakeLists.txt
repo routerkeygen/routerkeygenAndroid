@@ -131,6 +131,9 @@ INCLUDE_DIRECTORIES(
   .
 )
 
+CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/cmake/version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/version.h)
+
+
 #Put here UI files
 SET(ROUTERKEYGEN_UIS
     forms/routerkeygen.ui

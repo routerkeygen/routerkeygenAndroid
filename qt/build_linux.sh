@@ -7,8 +7,6 @@ QT4_URL="https://android-thomson-key-solver.googlecode.com/files/qt4-4.8-win32-b
 SRC_FOLDER=`pwd` #assumed to be the current folder, change to compile in another location
 ROOT_FOLDER=`pwd`
 BUILD_FOLDER=$ROOT_FOLDER/linux
-cd $BUILD_FOLDER
-
 mkdir -p $BUILD_FOLDER
 cd $BUILD_FOLDER
 

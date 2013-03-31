@@ -24,14 +24,15 @@
 #include "WirelessMatcher.h"
 #include "Keygen.h"
 #include "qcmdlineparser/qcmdlineparser.h"
+#include "version.h"
 
 int main(int argc, char *
          argv[])
 {
     QApplication app(argc, argv);
     QTranslator translator;
-    QApplication::setApplicationName("RouterKeygen");
-    QApplication::setApplicationVersion("1.0.0");
+    QApplication::setApplicationName(PROJECT_NAME);
+    QApplication::setApplicationVersion(PROJECT_VERSION);
     QString qmFile = app.applicationName().toLower() + "_" + QLocale::system().name();
     if ( translator.load(qmFile,":/lang") )
         app.installTranslator(&translator);

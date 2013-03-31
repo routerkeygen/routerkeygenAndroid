@@ -37,6 +37,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <stdlib.h>
+#include "version.h"
 
 RouterKeygen::RouterKeygen(QWidget *parent) :
         QMainWindow(parent), ui(new Ui::RouterKeygen), router(NULL),calculator(NULL),
@@ -196,7 +197,7 @@ void  RouterKeygen::donatePaypal(){
 
 
 void  RouterKeygen::feedback(){
-    QDesktopServices::openUrl(QUrl("mailto:exobel@gmail.com?subject=RouterKeygen Feedback&body=I love you! ;)"));
+    QDesktopServices::openUrl(QUrl("mailto:"+ QString(PROJECT_CONTACT) +"?subject=RouterKeygen Feedback "+ QString(SYSNAME) +"&body=I love you! ;)"));
 }
 
 

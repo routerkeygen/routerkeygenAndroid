@@ -1,5 +1,8 @@
-#ifndef CONFIG_H
-#define CONFIG_H
+#ifndef VERSION_H
+#define VERSION_H
+
+/* Project name */
+#cmakedefine PROJECT_NAME "@PROJECT_NAME_SHORT@"
 
 /* Host computer name */
 #cmakedefine HOSTNAME "@HOSTNAME@"
@@ -9,9 +12,6 @@
 
 /* Version */
 #cmakedefine PROJECT_VERSION "@PROJECT_VERSION@"
-
-/* Version Codename */
-#cmakedefine CODENAME "@CODENAME@"
 
 /* Copyright string */
 #cmakedefine PROJECT_COPYRIGHT "@PROJECT_COPYRIGHT@"
@@ -23,4 +23,4 @@
 #cmakedefine ORG_WEBSITE "@ORG_WEBSITE@"
 
 
-#endif //CONFIG_H
+#endif //VERSION_H
