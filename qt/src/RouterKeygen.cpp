@@ -226,8 +226,7 @@ void RouterKeygen::calc(QString ssid, QString mac) {
         return;
     if (mac.length() < 17) {
         mac = "";
-        if (mac.length() != 5)
-            ui->statusBar->showMessage(tr("Invalid MAC. It will not be used."));
+        ui->statusBar->showMessage(tr("Invalid MAC. It will not be used."));
     }
 
     router = matcher.getKeygen(ssid, mac, 0, "");

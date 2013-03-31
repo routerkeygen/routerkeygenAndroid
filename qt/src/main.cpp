@@ -48,7 +48,12 @@ int main(int argc, char *
     }
     if ( options.contains("s") || options.contains("m") ){
         WirelessMatcher m;
-        Keygen * keygen = m.getKeygen(options.value("s", "").toString(),options.value("m", "").toString() );
+        QString mac = options.value("m", "").toString().toUpper();
+        if ( mac.length()>0 && mac.count(QRegExp("^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$")) == 0 ){
+            mac = "";
+            std::cout << QObject::tr("Invalid MAC. It will not be used.").toAscii().data() << '\n';
+        }
+        Keygen * keygen = m.getKeygen(options.value("s", "").toString(),mac );
         if ( keygen == NULL ){
             std::cout << QObject::tr("Unsupported network. Check the MAC address and the SSID.").toAscii().data() << '\n';
             return -2;
