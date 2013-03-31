@@ -44,7 +44,7 @@ int main(int argc, char *
     QString error = "";
     QVariantMap options = parser.parse(QCoreApplication::arguments(), &error);
     if ( !error.isEmpty() ){
-        std::cout << error.toUtf8().data() << '\n' <<  parser.help().toUtf8().data();
+        std::cout << error.toUtf8().data() << std::endl <<  parser.help().toUtf8().data();
         return -1;
     }
     if ( options.contains("s") || options.contains("m") ){
@@ -52,26 +52,26 @@ int main(int argc, char *
         QString mac = options.value("m", "").toString().toUpper();
         if ( mac.length()>0 && mac.count(QRegExp("^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$")) == 0 ){
             mac = "";
-            std::cout << QObject::tr("Invalid MAC. It will not be used.").toUtf8().data() << '\n';
+            std::cout << QObject::tr("Invalid MAC. It will not be used.").toUtf8().data() << std::endl;
         }
         Keygen * keygen = m.getKeygen(options.value("s", "").toString(),mac );
         if ( keygen == NULL ){
-            std::cout << QObject::tr("Unsupported network. Check the MAC address and the SSID.").toUtf8().data() << '\n';
+            std::cout << QObject::tr("Unsupported network. Check the MAC address and the SSID.").toUtf8().data() << std::endl;
             return -2;
         }
-        std::cout << QObject::tr("Calculating keys. This can take a while.").toUtf8().data() << '\n';
+        std::cout << QObject::tr("Calculating keys. This can take a while.").toUtf8().data() << std::endl;
         try{
             QVector<QString> results = keygen->getResults();
             if (results.isEmpty()) {
-                std::cout << QObject::tr("No keys were calculated.").toUtf8().data() << '\n';
+                std::cout << QObject::tr("No keys were calculated.").toUtf8().data() << std::endl;
             }else{
-                std::cout << QObject::tr("Calculated Passwords for %1").arg(keygen->getSsidName()).toUtf8().data() << '\n';
+                std::cout << QObject::tr("Calculated Passwords for %1").arg(keygen->getSsidName()).toUtf8().data() << std::endl;
                 for (int i = 0; i < results.size(); ++i)
-                    std::cout <<  results.at(i).toLatin1().data() << '\n';
+                    std::cout <<  results.at(i).toLatin1().data() << std::endl;
             }
             return 0;
         }catch (int e){
-            std::cout << QObject::tr("Error while calculating.").toUtf8().data() << '\n';
+            std::cout << QObject::tr("Error while calculating.").toUtf8().data() << std::endl;
             delete keygen;
             return -3;
         }

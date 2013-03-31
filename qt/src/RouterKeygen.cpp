@@ -36,6 +36,7 @@
 #include <QUrl>
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
+#include <QTextStream>
 #include <stdlib.h>
 #include "version.h"
 
@@ -436,13 +437,22 @@ void RouterKeygen::startUpRunToggle(bool state) {
     QString newFile = "/home/" + QString(getenv("USER"))
                       + "/.config/autostart/routerkeygen.desktop";
     if (runOnStartUp) {
-        //QFile autoStart(":/routerkeygen.desktop");
-        //if (!autoStart.copy(newFile))
-        //    qDebug() << "Error while copying file";
-        QFile::setPermissions(newFile,
-                              QFile::ReadOwner | QFile::WriteOwner | QFile::ReadUser
-                              | QFile::WriteUser | QFile::ReadGroup | QFile::ReadGroup
-                              | QFile::ReadOther);
+        QFile file(newFile);
+        if ( file.open(QIODevice::ReadWrite) )
+        {
+            QTextStream stream( &file );
+            stream << "[Desktop Entry]" << endl;
+            stream << "Type=Application" << endl;
+            stream << "Terminal=false" << endl;
+            stream << "Exec=" << QCoreApplication::applicationFilePath() << " --no-gui" << endl;
+            stream << "Name=" <<  QCoreApplication::applicationName() << endl;
+            stream.flush();
+            QFile::setPermissions(newFile,
+                                  QFile::ReadOwner | QFile::WriteOwner | QFile::ReadUser
+                                  | QFile::WriteUser | QFile::ReadGroup | QFile::ReadGroup
+                                  | QFile::ReadOther);
+
+        }
     } else {
         if (QFile::exists(newFile))
             QFile::remove(newFile);
