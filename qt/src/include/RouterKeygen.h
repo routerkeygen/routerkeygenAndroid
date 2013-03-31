@@ -43,6 +43,7 @@ private slots:
     void tableRowSelected(int, int);
     void getResults();
     void donatePaypal();
+    void feedback();
     void donateGooglePlay();
     void showAboutDialog();
     void checkUpdates();

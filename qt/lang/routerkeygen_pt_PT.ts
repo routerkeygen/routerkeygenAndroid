@@ -22,15 +22,15 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt;&quot;&gt;Router Keygen calculates default passwords for several common routers.&lt;br /&gt;&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;http://code.google.com/p/android-thomson-key-solver/&quot;&gt;&lt;span style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; text-decoration: underline; color:#0000ff;&quot;&gt;Project&apos;s Website&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Sans Serif&apos;; font-size:9pt;&quot;&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt;&quot;&gt;Version: 1.0.0&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt;&quot;&gt;Version: %1&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt;&quot;&gt;Router Keygen calcula senhas de origem para vários routers.&lt;br /&gt;&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;http://code.google.com/p/android-thomson-key-solver/&quot;&gt;&lt;span style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; text-decoration: underline; color:#0000ff;&quot;&gt;Website do Projecto&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;http://code.google.com/p/android-thomson-key-solver/&quot;&gt;&lt;span style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; text-decoration: underline; color:#0000ff;&quot;&gt;Website do Projeto&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Sans Serif&apos;; font-size:9pt;&quot;&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt;&quot;&gt;Versão: 1.0.0&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt;&quot;&gt;Versão: %1&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../src/forms/aboutdialog.ui" line="51"/>
@@ -224,13 +224,13 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="../src/forms/routerkeygen.ui" line="158"/>
-        <location filename="../src/RouterKeygen.cpp" line="298"/>
+        <location filename="../src/RouterKeygen.cpp" line="306"/>
         <source>Strength</source>
         <translation>Força</translation>
     </message>
     <message>
         <location filename="../src/forms/routerkeygen.ui" line="163"/>
-        <location filename="../src/RouterKeygen.cpp" line="298"/>
+        <location filename="../src/RouterKeygen.cpp" line="306"/>
         <source>Supported</source>
         <translation>Suportado</translation>
     </message>
@@ -271,8 +271,8 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="../src/forms/routerkeygen.ui" line="277"/>
-        <source>Feedback</source>
-        <translation>Comentários</translation>
+        <source>Feedback and Bugs</source>
+        <translation>Comentários e Problemas</translation>
     </message>
     <message>
         <location filename="../src/forms/routerkeygen.ui" line="267"/>
@@ -285,125 +285,125 @@ p, li { white-space: pre-wrap; }
         <translation>Senhas Calculadas</translation>
     </message>
     <message>
-        <location filename="../src/RouterKeygen.cpp" line="229"/>
+        <location filename="../src/RouterKeygen.cpp" line="237"/>
         <source>Invalid MAC. It will not be used.</source>
         <translation>MAC inválido. Não será usado.</translation>
     </message>
     <message>
-        <location filename="../src/RouterKeygen.cpp" line="235"/>
+        <location filename="../src/RouterKeygen.cpp" line="243"/>
         <source>Unsupported network. Check the MAC address and the SSID.</source>
         <translation>Rede não suportada. Verifique o endereço MAC e o SSID.</translation>
     </message>
     <message>
-        <location filename="../src/RouterKeygen.cpp" line="239"/>
+        <location filename="../src/RouterKeygen.cpp" line="247"/>
         <source>Calculating keys. This can take a while.</source>
         <translation>Calculando senhas. Este processo poderá ser longo.</translation>
     </message>
     <message>
-        <location filename="../src/RouterKeygen.cpp" line="253"/>
+        <location filename="../src/RouterKeygen.cpp" line="261"/>
         <source>Scanning the network</source>
         <translation>A procurar redes</translation>
     </message>
     <message>
-        <location filename="../src/RouterKeygen.cpp" line="266"/>
+        <location filename="../src/RouterKeygen.cpp" line="274"/>
         <source>Vulnerable networks</source>
         <translation>Redes vulneráveis</translation>
     </message>
     <message>
-        <location filename="../src/RouterKeygen.cpp" line="281"/>
+        <location filename="../src/RouterKeygen.cpp" line="289"/>
         <source>Yes</source>
         <translation>Sim</translation>
     </message>
     <message>
-        <location filename="../src/RouterKeygen.cpp" line="286"/>
+        <location filename="../src/RouterKeygen.cpp" line="294"/>
         <source>No</source>
         <translation>Não</translation>
     </message>
     <message>
-        <location filename="../src/RouterKeygen.cpp" line="316"/>
+        <location filename="../src/RouterKeygen.cpp" line="324"/>
         <source>The wifi device is not enabled</source>
         <translation>O dispositivo wifi não está ativo</translation>
     </message>
     <message>
-        <location filename="../src/RouterKeygen.cpp" line="289"/>
+        <location filename="../src/RouterKeygen.cpp" line="297"/>
         <source>None were detected</source>
         <translation>Nenhuma rede detetada</translation>
     </message>
     <message>
         <location filename="../src/forms/routerkeygen.ui" line="254"/>
-        <location filename="../src/RouterKeygen.cpp" line="110"/>
+        <location filename="../src/RouterKeygen.cpp" line="111"/>
         <source>Run on Start up</source>
         <translation>Correr no Arranque</translation>
     </message>
     <message>
         <location filename="../src/forms/routerkeygen.ui" line="262"/>
-        <location filename="../src/RouterKeygen.cpp" line="116"/>
+        <location filename="../src/RouterKeygen.cpp" line="117"/>
         <source>Run in the background</source>
         <translation>Correr em plano de fundo</translation>
     </message>
     <message>
-        <location filename="../src/RouterKeygen.cpp" line="147"/>
+        <location filename="../src/RouterKeygen.cpp" line="148"/>
         <source>Checking for updates</source>
         <translation>A verificar atualizações</translation>
     </message>
     <message>
-        <location filename="../src/RouterKeygen.cpp" line="169"/>
+        <location filename="../src/RouterKeygen.cpp" line="170"/>
         <source>The application is already at the latest version.</source>
         <translation>A aplicação já está na última versão.</translation>
     </message>
     <message>
-        <location filename="../src/RouterKeygen.cpp" line="178"/>
-        <location filename="../src/RouterKeygen.cpp" line="183"/>
+        <location filename="../src/RouterKeygen.cpp" line="179"/>
+        <location filename="../src/RouterKeygen.cpp" line="184"/>
         <source>Error while checking for updates</source>
         <translation>Erro ao verificar por atualizações</translation>
     </message>
     <message>
-        <location filename="../src/RouterKeygen.cpp" line="295"/>
+        <location filename="../src/RouterKeygen.cpp" line="303"/>
         <source>Exit</source>
         <translation>Sair</translation>
     </message>
     <message>
-        <location filename="../src/RouterKeygen.cpp" line="308"/>
+        <location filename="../src/RouterKeygen.cpp" line="316"/>
         <source>Network Manager was not detected</source>
         <translation>Gestor de Rede não foi detectado</translation>
     </message>
     <message>
-        <location filename="../src/RouterKeygen.cpp" line="312"/>
+        <location filename="../src/RouterKeygen.cpp" line="320"/>
         <source>No Wifi device detected</source>
         <translation>Nenhum dispositivo Wifi detetado</translation>
     </message>
     <message>
-        <location filename="../src/RouterKeygen.cpp" line="340"/>
+        <location filename="../src/RouterKeygen.cpp" line="348"/>
         <source>Error while calculating.</source>
         <translation>Erro ao calcular.</translation>
     </message>
     <message>
-        <location filename="../src/RouterKeygen.cpp" line="347"/>
+        <location filename="../src/RouterKeygen.cpp" line="355"/>
         <source>No keys were calculated.</source>
         <translation>Não foi possível calcular uma senha.</translation>
     </message>
     <message>
-        <location filename="../src/RouterKeygen.cpp" line="354"/>
+        <location filename="../src/RouterKeygen.cpp" line="362"/>
         <source>Calculation finished</source>
         <translation>Cálculo terminado</translation>
     </message>
     <message>
-        <location filename="../src/RouterKeygen.cpp" line="355"/>
+        <location filename="../src/RouterKeygen.cpp" line="363"/>
         <source>Calculated Passwords for %1</source>
         <translation>Senhas calculadas para %1</translation>
     </message>
     <message>
-        <location filename="../src/RouterKeygen.cpp" line="379"/>
+        <location filename="../src/RouterKeygen.cpp" line="387"/>
         <source>Copy</source>
         <translation>Copiar</translation>
     </message>
     <message>
-        <location filename="../src/RouterKeygen.cpp" line="381"/>
+        <location filename="../src/RouterKeygen.cpp" line="389"/>
         <source>Copy this key</source>
         <translation>Copiar esta chave</translation>
     </message>
     <message>
-        <location filename="../src/RouterKeygen.cpp" line="394"/>
+        <location filename="../src/RouterKeygen.cpp" line="402"/>
         <source>%1 copied</source>
         <translation>%1 copiado</translation>
     </message>

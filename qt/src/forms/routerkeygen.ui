@@ -274,7 +274,7 @@
   </action>
   <action name="actionFeedback">
    <property name="text">
-    <string>Feedback</string>
+    <string>Feedback and Bugs</string>
    </property>
   </action>
  </widget>

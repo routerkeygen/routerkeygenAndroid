@@ -17,6 +17,7 @@
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "AboutDialog.h"
+#include <QtGui/QApplication>
 #include "ui_aboutdialog.h"
 
 AboutDialog::AboutDialog(QWidget *parent) :
@@ -24,6 +25,7 @@ AboutDialog::AboutDialog(QWidget *parent) :
     ui(new Ui::AboutDialog)
 {
     ui->setupUi(this);
+    ui->desc->setHtml(ui->desc->toHtml().arg(QCoreApplication::applicationVersion()));
 }
 
 AboutDialog::~AboutDialog()

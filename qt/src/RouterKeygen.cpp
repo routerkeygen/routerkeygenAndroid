@@ -54,6 +54,7 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
 
     connect(ui->actionDonate,SIGNAL(triggered()), this, SLOT(donatePaypal()));
     connect(ui->actionDonate_Google_Play, SIGNAL(triggered()),this, SLOT(donateGooglePlay()) );
+    connect(ui->actionFeedback, SIGNAL(triggered()), this,SLOT(feedback()));
     connect(ui->actionAbout, SIGNAL(triggered()), this,SLOT(showAboutDialog()) );
     connect(ui->actionCheck_for_Updates, SIGNAL(triggered()), this,SLOT(checkUpdates()));
 
@@ -192,6 +193,13 @@ void RouterKeygen::donateGooglePlay(){
 void  RouterKeygen::donatePaypal(){
     QDesktopServices::openUrl(QUrl("https://www.paypal.com/pt/cgi-bin/webscr?cmd=_flow&SESSION=i5165NLrZfxUoHKUVuudmu6le5tVb6c0CX_9CP45rrU1Az-XgWgJbZ5bfJW&dispatch=5885d80a13c0db1f8e263663d3faee8d5348ead9d61c709ee8c979deef3ea735"));
 }
+
+
+void  RouterKeygen::feedback(){
+    QDesktopServices::openUrl(QUrl("mailto:exobel@gmail.com?subject=RouterKeygen Feedback&body=I love you! ;)"));
+}
+
+
 RouterKeygen::~RouterKeygen() {
     delete ui;
     delete loadingAnim;
