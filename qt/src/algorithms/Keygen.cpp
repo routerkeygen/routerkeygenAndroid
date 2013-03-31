@@ -53,7 +53,7 @@ int Keygen::getLevel() const {
 
 QString Keygen::getMacAddress() const {
 	QString mac = this->macAddress;
-        return mac.replace(":-.", "");
+        return mac.replace(":", "").replace("-", "");
 }
 
 QString Keygen::getSsidName() const {
