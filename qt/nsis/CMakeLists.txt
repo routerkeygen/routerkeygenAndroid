@@ -9,10 +9,10 @@ SET(NSIS_OUTPUT_FILE "${PROJECT_NAME}.exe")
 IF(WIN32)
     SET(NSIS_OUTPUT_DIR "${CMAKE_BINARY_DIR}/bin/")
     # Check contribs existence
-    IF(EXISTS "${CMAKE_SOURCE_DIR}/contribs/")
-        MESSAGE(STATUS "Contribs found!")
+    IF(EXISTS "${CMAKE_SOURCE_DIR}/win32/")
+        MESSAGE(STATUS "WIN32 found!")
         # Copy necessary libraries required at runtime
-        FILE(COPY "${CMAKE_SOURCE_DIR}/contribs/bin/"
+        FILE(COPY "${CMAKE_SOURCE_DIR}/win32/bin/"
              DESTINATION ${NSIS_OUTPUT_DIR}
              FILES_MATCHING PATTERN "*.dll")
         MESSAGE(STATUS "Configuring NSIS")
@@ -25,7 +25,7 @@ IF(WIN32)
             WORKING_DIRECTORY "${NSIS_OUTPUT_DIR}"
             )
         ADD_DEPENDENCIES(installer cmakeqt)
-    ELSE(EXISTS "${CMAKE_SOURCE_DIR}/contribs/")
-        MESSAGE(WARNING "Contribs not available, you won't be able to create an installer. Read INSTALL.win32 for details.")
-    ENDIF(EXISTS "${CMAKE_SOURCE_DIR}/contribs/")
+    ELSE(EXISTS "${CMAKE_SOURCE_DIR}/win32/")
+        MESSAGE(WARNING "win32 not available, you won't be able to create an installer. Read INSTALL.win32 for details.")
+    ENDIF(EXISTS "${CMAKE_SOURCE_DIR}/win32/")
 ENDIF(WIN32)

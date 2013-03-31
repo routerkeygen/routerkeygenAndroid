@@ -1,23 +1,24 @@
 #!/bin/sh
 
 QT4_FILE="qt4-4.8-win32-bin.tar.bz2"
-QT4_URL="http://rohityadav.in/files/contribs/qt4-4.8-win32-bin.tar.bz2"
+QT4_URL="https://android-thomson-key-solver.googlecode.com/files/qt4-4.8-win32-bin.tar.bz2"
+
 
 ROOT_FOLDER=`pwd`
-DOWNLOADS_FOLDER=$ROOT_FOLDER/downloads
+BUILD_FOLDER=$ROOT_FOLDER/win32
+DOWNLOADS_FOLDER=$BUILD_FOLDER/downloads
 
 # Get the dependencies, Qt
 mkdir -p $DOWNLOADS_FOLDER
 cd $DOWNLOADS_FOLDER
 
 if [ ! -f $QT4_FILE ]; then
-    #wget $QT4_URL ;
-    echo "Qt4";
+    wget $QT4_URL;
 else
     echo "Qt4 OK";
 fi
 
-cd $ROOT_FOLDER
+cd $BUILD_FOLDER
 
 # bin and dlls
 mkdir bin && mkdir include
@@ -28,3 +29,8 @@ cd include && ln -sf qt4/src && cd ..
 
 # make tools/moc.exe executable
 chmod +x tools/moc.exe
+
+
+cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/toolchain-win32.cmake -DQT_MOC_EXECUTABLE=tools/moc.exe -DCMAKE_BUILD_TYPE=Release ..
+make
+make installer
