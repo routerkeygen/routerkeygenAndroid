@@ -19,8 +19,11 @@
 #include <QtGui/QApplication>
 #include <QTranslator>
 #include <QLocale>
+#include <iostream>
 #include "RouterKeygen.h"
-#include <cstring>
+#include "WirelessMatcher.h"
+#include "Keygen.h"
+#include "qcmdlineparser/qcmdlineparser.h"
 
 int main(int argc, char *
          argv[])
@@ -32,15 +35,43 @@ int main(int argc, char *
     QString qmFile = app.applicationName().toLower() + "_" + QLocale::system().name();
     if ( translator.load(qmFile,":/lang") )
         app.installTranslator(&translator);
-    RouterKeygen w;
-    if ( argc > 1 ){
-    	if ( strcmp("-h", argv[1]) != 0)
-            w.showWithDialog();
-        else{
-
+    QCmdLineParser parser;
+    parser.setApplicationName(QCoreApplication::applicationName());
+    parser.addOption("-s", QCmdLineArgument::StoreValue, QObject::tr("SSID"), "--ssid");
+    parser.addOption("-m", QCmdLineArgument::StoreValue, QObject::tr("MAC address"), "--mac");
+    parser.addOption("--no-gui", QCmdLineArgument::StoreTrue, QObject::tr("No UI launch"));
+    QString error = "";
+    QVariantMap options = parser.parse(QCoreApplication::arguments(), &error);
+    if ( !error.isEmpty() ){
+        std::cout << error.toAscii().data() << '\n' <<  parser.help().toAscii().data();
+        return -1;
+    }
+    if ( options.contains("s") || options.contains("m") ){
+        WirelessMatcher m;
+        Keygen * keygen = m.getKeygen(options.value("s", "").toString(),options.value("m", "").toString() );
+        if ( keygen == NULL ){
+            std::cout << QObject::tr("Unsupported network. Check the MAC address and the SSID.").toAscii().data() << '\n';
+            return -2;
+        }
+        std::cout << QObject::tr("Calculating keys. This can take a while.").toAscii().data() << '\n';
+        try{
+            QVector<QString> results = keygen->getResults();
+            if (results.isEmpty()) {
+                std::cout << QObject::tr("No keys were calculated.").toAscii().data() << '\n';
+            }else{
+                std::cout << QObject::tr("Calculated Passwords for %1").arg(keygen->getSsidName()).toAscii().data() << '\n';
+                for (int i = 0; i < results.size(); ++i)
+                    std::cout <<  results.at(i).toAscii().data() << '\n';
+            }
+            return 0;
+        }catch (int e){
+            std::cout << QObject::tr("Error while calculating.").toAscii().data() << '\n';
+            delete keygen;
+            return -3;
         }
     }
-    else
+    RouterKeygen w;
+    if ( !options.value("no-gui", false).toBool() )
         w.showWithDialog();
     return app.exec();
 }

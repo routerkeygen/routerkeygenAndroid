@@ -54,6 +54,8 @@ SET(ROUTERKEYGEN_SRCS
     config/OTEHuaweiConfigParser.cpp
     algorithms/OteHuaweiKeygen.cpp
     dialog/UpdateDialog.cpp
+    qcmdlineparser/qcmdlineargument.cpp
+    qcmdlineparser/qcmdlineparser.cpp
 )
 SET(ROUTERKEYGEN_HDRS
     include/RouterKeygen.h
@@ -104,6 +106,8 @@ SET(ROUTERKEYGEN_HDRS
     include/WifimediaRKeygen.h
     include/OTEHuaweiConfigParser.h
     include/OteHuaweiKeygen.h
+    qcmdlineparser/qcmdlineargument.h
+    qcmdlineparser/qcmdlineparser.h
 )
 
 set(HEADERS_HAVING_Q_OBJECT)

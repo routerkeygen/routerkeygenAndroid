@@ -27,7 +27,7 @@
 #include <QContextMenuEvent>
 #include <QMouseEvent>
 #include <QMenu>
-#include <QDebug>
+#include <QIcon>
 #include <QClipboard>
 #include <QWidgetAction>
 #include <QDesktopServices>
@@ -42,6 +42,9 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
         QMainWindow(parent), ui(new Ui::RouterKeygen), router(NULL),calculator(NULL),
         loading(NULL), loadingText(NULL), aboutDialog(NULL), welcomeDialog(NULL) {
     ui->setupUi(this);
+#if !defined(Q_OS_WIN) && !defined(Q_OS_MAC)
+    setWindowIcon(QIcon(":/tray_icon.png"));
+#endif
     connect(ui->calculateButton, SIGNAL( clicked() ), this,
             SLOT( manualCalculation() ));
     connect(ui->refreshScan, SIGNAL( clicked() ), this,
@@ -88,7 +91,7 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
     trayMenu = new QMenu(this);
     trayIcon = new QSystemTrayIcon(this);
     // set up and show the system tray icon
-    trayIcon->setIcon(windowIcon());
+    trayIcon->setIcon(QIcon(":/tray_icon.png"));
     trayIcon->setContextMenu(trayMenu);
     trayIcon->show();
     
@@ -424,7 +427,6 @@ void RouterKeygen::startUpRunToggle(bool state) {
 #else
     QString newFile = "/home/" + QString(getenv("USER"))
                       + "/.config/autostart/routerkeygen.desktop";
-    qDebug() << newFile;
     if (runOnStartUp) {
         //QFile autoStart(":/routerkeygen.desktop");
         //if (!autoStart.copy(newFile))
@@ -435,15 +437,14 @@ void RouterKeygen::startUpRunToggle(bool state) {
                               | QFile::ReadOther);
     } else {
         if (QFile::exists(newFile))
-            if (!QFile::remove(newFile))
-                qDebug() << "Error while removing file";
+            QFile::remove(newFile);
     }
 #endif
 #endif
 #ifdef Q_OS_WIN
     QSettings settings("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",QSettings::NativeFormat);
     if (runOnStartUp) {
-        settings.setValue("RouterKeygen", QCoreApplication::applicationFilePath().replace('/','\\')+ " -h");
+        settings.setValue("RouterKeygen", QCoreApplication::applicationFilePath().replace('/','\\')+ " --no-gui");
     } else {
         settings.remove("RouterKeygen");
     }
