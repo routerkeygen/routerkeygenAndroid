@@ -102,6 +102,5 @@ unix{
 }
 
 
-RESOURCES += ../resources.qrc
-TRANSLATIONS = ../lang/routerkeygen_pt.ts
+RESOURCES += ../resources/resources.qrc
 
