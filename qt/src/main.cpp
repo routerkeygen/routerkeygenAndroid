@@ -33,9 +33,6 @@ int main(int argc, char *
     if ( translator.load(qmFile,":/lang") )
         app.installTranslator(&translator);
     RouterKeygen w;
-#if defined(Q_WS_S60)
-    w.showMaximized();
-#else
     if ( argc > 1 ){
     	if ( strcmp("-h", argv[1]) != 0)
             w.showWithDialog();
@@ -45,7 +42,5 @@ int main(int argc, char *
     }
     else
         w.showWithDialog();
-#endif
-
     return app.exec();
 }

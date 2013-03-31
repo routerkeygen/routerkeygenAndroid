@@ -54,9 +54,9 @@
 #include <QRegExp>
 
 WirelessMatcher::WirelessMatcher() {
-    supportedAlice = AliceConfigParser::readFile(":/config/alice.txt");
-    supportedTeletu = TeleTuConfigParser::readFile(":/config/tele2.txt");
-    supportedOTE = OTEHuaweiConfigParser::readFile(":/config/ote_huawei.txt");
+    supportedAlice = AliceConfigParser::readFile(":/alice.txt");
+    supportedTeletu = TeleTuConfigParser::readFile(":/tele2.txt");
+    supportedOTE = OTEHuaweiConfigParser::readFile(":/ote_huawei.txt");
 }
 
 WirelessMatcher::~WirelessMatcher() {

@@ -65,7 +65,7 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
     wifiManager = new QWifiManager();
     connect(wifiManager, SIGNAL( scanFinished(int) ), this,
             SLOT( scanFinished(int) ));
-    loadingAnim = new QMovie(":/images/loading.gif");
+    loadingAnim = new QMovie(":/loading.gif");
     loadingAnim->setParent(this);
     //Auto-Complete!
     wordList << "Alice-" <<  "Arcor-" << "AXTEL-" << "AXTEL-XTREMO-" << "Bbox-" <<
@@ -426,9 +426,9 @@ void RouterKeygen::startUpRunToggle(bool state) {
                       + "/.config/autostart/routerkeygen.desktop";
     qDebug() << newFile;
     if (runOnStartUp) {
-        QFile autoStart(":/routerkeygen.desktop");
-        if (!autoStart.copy(newFile))
-            qDebug() << "Error while copying file";
+        //QFile autoStart(":/routerkeygen.desktop");
+        //if (!autoStart.copy(newFile))
+        //    qDebug() << "Error while copying file";
         QFile::setPermissions(newFile,
                               QFile::ReadOwner | QFile::WriteOwner | QFile::ReadUser
                               | QFile::WriteUser | QFile::ReadGroup | QFile::ReadGroup
