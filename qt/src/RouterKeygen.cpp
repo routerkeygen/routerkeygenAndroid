@@ -224,7 +224,7 @@ void RouterKeygen::calc(QString ssid, QString mac) {
     delete router;
     if (ssid == "")
         return;
-    if (mac.length() < 17) {
+    if ( mac.length()>0 && mac.count(QRegExp("^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$")) == 0 ) {
         mac = "";
         ui->statusBar->showMessage(tr("Invalid MAC. It will not be used."));
     }

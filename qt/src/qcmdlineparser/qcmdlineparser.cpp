@@ -176,7 +176,7 @@ int QCmdLineParser::QCmdLineParserPrivate::checkOptimalArg(const QCmdLineArgumen
         // we are concatened arguments and are the last one, throw a error!
         const bool imTheLastArg = (i + 1) >= args.length();
         if ((j == -1 && imTheLastArg) || (j + 1 < args[i].length() && imTheLastArg)) {
-            *error = tr("argument %1: expected one argument").arg(arg->name());
+            *error = tr("Argument %1: expected one argument").arg(arg->name());
         } else {
             const QString value = (j == -1 || (j + 1 >= args[i].length())) ? args[++i] : args[i].mid(j);
             if (arg->validate(value))
@@ -249,7 +249,7 @@ QString QCmdLineParser::QCmdLineParserPrivate::usage(const QString& applicationN
     // two times
     QString usage;
     QTextStream s(&usage);
-    s << tr("usage: %1").arg(applicationName);
+    s << tr("Usage: %1").arg(applicationName);
 
     foreach (const QCmdLineArgument arg, m_optionalArgs) {
         s << " [" << arg.name();
@@ -275,7 +275,7 @@ QString QCmdLineParser::help() const
     s << usage() << "\n\n";
     if (!m_d->m_description.isEmpty())
         s << m_d->m_description << "\n\n";
-    s << tr("optional arguments:\n");
+    s << tr("Optional arguments:\n");
 
     int fieldWidth = 0;
     QList<QCmdLineArgument>::const_iterator it = m_d->m_optionalArgs.begin();
