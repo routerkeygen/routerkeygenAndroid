@@ -35,10 +35,6 @@ bool Keygen::isStopped() const {
 	return this->stopRequested;
 }
 
-bool Keygen::isSupported() const {
-	return true;
-}
-
 QString Keygen::getEncryption() const {
 	return encryption;
 }
@@ -53,7 +49,7 @@ int Keygen::getLevel() const {
 
 QString Keygen::getMacAddress() const {
 	QString mac = this->macAddress;
-	return mac.replace(QChar(':'), "");
+        return mac.replace(":", "").replace("-", "");
 }
 
 QString Keygen::getSsidName() const {
@@ -72,6 +68,9 @@ bool Keygen::isLocked() {
 	return OPEN != getScanResultSecurity(this);
 }
 
+int Keygen::getSupportState() const{
+return SUPPORTED;
+}
 /**
  * @return The security of a given {@link ScanResult}.
  */

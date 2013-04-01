@@ -17,7 +17,7 @@ public:
 private:
 	QVector<QString> & getKeys() ;
 	const static QString lookup;
-	const static char saltSHA256[/*32*/];
+    const static unsigned char saltSHA256[/*32*/];
 };
 
 #endif /* PBSKEYGEN_H_ */

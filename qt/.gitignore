@@ -1,8 +1,5 @@
-
-
-debug
-release
-Makefile*
-rkqt.pro.user
-ui_routerkeygen.h
-RouterKeygen
+CMakeLists.txt.user
+linux
+win32
+lang/*.qrc
+lang/*.qm

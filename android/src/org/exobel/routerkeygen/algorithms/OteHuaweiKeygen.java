@@ -29,9 +29,9 @@ public class OteHuaweiKeygen extends Keygen {
 		final int point;
 		if (series.equals("E8FD"))
 			point = 0;
-		else if (series.equals("E8FD"))
+		else if (series.equals("E8F5"))
 			point = 1;
-		else if (series.equals("E8FD"))
+		else if (series.equals("E8F6"))
 			point = 2;
 		else
 			return getResults();

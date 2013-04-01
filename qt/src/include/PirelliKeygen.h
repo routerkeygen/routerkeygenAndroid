@@ -27,7 +27,7 @@ public:
 	~PirelliKeygen();
 private:
 	QVector<QString> & getKeys();
-	const static char  saltMD5[];
+    const static unsigned char saltMD5[];
 	QCryptographicHash * hash;
 	QString ssidIdentifier;
 };

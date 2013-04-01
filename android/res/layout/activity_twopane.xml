@@ -1,21 +1,39 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginRight="16dp"
-    android:showDividers="middle"
-    tools:context=".NetworksListActivity">
-    <fragment
-        android:id="@+id/item_list"
-        android:name="org.exobel.routerkeygen.ui.NetworksListFragment"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="3"/>
+    android:layout_height="match_parent" >
 
-    <FrameLayout android:id="@+id/item_detail_container"
-        android:layout_width="0dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="5" />
+        android:layout_above="@+id/adView"
+        android:layout_marginRight="10dp"
+        android:baselineAligned="false"
+        android:orientation="horizontal"
+        android:showDividers="middle"
+        tools:context=".NetworksListActivity" >
 
-</LinearLayout>
+        <fragment
+            android:id="@+id/frag_networks_list"
+            android:name="org.exobel.routerkeygen.ui.NetworksListFragment"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            tools:layout="@layout/fragment_networks_list" />
+
+        <FrameLayout
+            android:id="@+id/item_detail_container"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5" />
+    </LinearLayout>
+
+    <include
+        android:id="@+id/adView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        layout="@layout/adview" />
+
+</RelativeLayout>

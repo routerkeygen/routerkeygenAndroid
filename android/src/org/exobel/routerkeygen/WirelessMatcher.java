@@ -1,12 +1,12 @@
 package org.exobel.routerkeygen;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
+import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.exobel.routerkeygen.algorithms.AliceKeygen;
@@ -51,40 +51,29 @@ import org.exobel.routerkeygen.config.TeleTuMagicInfo;
 
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.util.Log;
 
-public class WirelessMatcher implements Parcelable {
+public class WirelessMatcher {
 
-	private final Map<String, ArrayList<AliceMagicInfo>> supportedAlices;
-	private final Map<String, ArrayList<TeleTuMagicInfo>> supportedTeletu;
-	private final String[] supportedOTE;
+	private static Map<String, ArrayList<AliceMagicInfo>> supportedAlices = null;
+	private static Map<String, ArrayList<TeleTuMagicInfo>> supportedTeletu = null;
+	private static String[] supportedOTE = null;
 
-	public WirelessMatcher(ZipInputStream magicInfo) throws IOException {
-		magicInfo.getNextEntry();
-		supportedTeletu = TeleTuConfigParser.parse(magicInfo);
-		magicInfo.getNextEntry();
-		supportedAlices = AliceConfigParser.parse(magicInfo);
-		magicInfo.getNextEntry();
-		long begin = System.currentTimeMillis();
-		supportedOTE = OTEHuaweiConfigParser.parse(magicInfo);
-		long end = System.currentTimeMillis() - begin;
-		if (BuildConfig.DEBUG)
-			Log.d(WirelessMatcher.class.getName(), "Time to parse:" + end);
-		magicInfo.close();
-	}
-
-	public Keygen getKeygen(ScanResult result) {
+	public static Keygen getKeygen(ScanResult result, ZipInputStream magicInfo) {
 		final Keygen keygen = getKeygen(result.SSID,
 				result.BSSID.toUpperCase(Locale.getDefault()),
 				WifiManager.calculateSignalLevel(result.level, 4),
-				result.capabilities);
+				result.capabilities, magicInfo);
+		try {
+			magicInfo.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		keygen.setScanResult(result);
 		return keygen;
 	}
 
-	public Keygen getKeygen(String ssid, String mac, int level, String enc) {
+	public synchronized static Keygen getKeygen(String ssid, String mac,
+			int level, String enc, ZipInputStream magicInfo) {
 		mac = mac.toUpperCase(Locale.getDefault());
 		if (enc.equals(""))
 			enc = Keygen.OPEN;
@@ -156,7 +145,10 @@ public class WirelessMatcher implements Parcelable {
 			return new TelseyKeygen(ssid, mac, level, enc);
 		}
 		if (ssid.matches("[aA]lice-[0-9]{8}")) {
-
+			if (supportedAlices == null) {
+				supportedAlices = AliceConfigParser.parse(getEntry("alice.txt",
+						magicInfo));
+			}
 			final List<AliceMagicInfo> supported = supportedAlices.get(ssid
 					.substring(6, 9));
 			if (supported != null && supported.size() > 0) {
@@ -167,6 +159,10 @@ public class WirelessMatcher implements Parcelable {
 		}
 
 		if (ssid.toLowerCase(Locale.getDefault()).startsWith("teletu")) {
+			if (supportedTeletu == null) {
+				supportedTeletu = TeleTuConfigParser.parse(getEntry(
+						"tele2.txt", magicInfo));
+			}
 			String filteredMac = mac.replace(":", "");
 			if (filteredMac.length() != 12
 					&& ssid.matches("TeleTu_[0-9a-fA-F]{12}"))
@@ -250,6 +246,10 @@ public class WirelessMatcher implements Parcelable {
 				&& (mac.startsWith("E8:39:DF:F5")
 						|| mac.startsWith("E8:39:DF:F6") || mac
 							.startsWith("E8:39:DF:FD"))) {
+			if (supportedOTE == null) {
+				supportedOTE = OTEHuaweiConfigParser.parse(getEntry(
+						"ote_huawei.txt", magicInfo));
+			}
 			final String filteredMac = mac.replace(":", "");
 			final int target = Integer.parseInt(filteredMac.substring(8), 16);
 			if (filteredMac.length() == 12
@@ -303,7 +303,7 @@ public class WirelessMatcher implements Parcelable {
 			return new VerizonKeygen(ssid, mac, level, enc);
 
 		if (ssid.matches("INFINITUM[0-9a-zA-Z]{4}")
-				&& (mac.startsWith("00:25:9E") || mac.startsWith("00:25:68")
+				|| (mac.startsWith("00:25:9E") || mac.startsWith("00:25:68")
 						|| mac.startsWith("00:22:A1")
 						|| mac.startsWith("00:1E:10")
 						|| mac.startsWith("00:18:82")
@@ -329,52 +329,18 @@ public class WirelessMatcher implements Parcelable {
 
 	}
 
-	public int describeContents() {
-		return 0;
+	private static InputStream getEntry(String filename,
+			ZipInputStream magicInfo) {
+		ZipEntry entry = null;
+		try {
+			do {
+				entry = magicInfo.getNextEntry();
+			} while (entry != null && !filename.equals(entry.getName()));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (entry != null)
+			return magicInfo;
+		return null;
 	}
-
-	public void writeToParcel(Parcel dest, int flags) {
-		final Set<String> keySetAlice = supportedAlices.keySet();
-		final String[] arrayAlice = keySetAlice.toArray(new String[keySetAlice
-				.size()]);
-		dest.writeStringArray(arrayAlice);
-		for (String key : keySetAlice)
-			dest.writeTypedList(supportedAlices.get(key));
-		final Set<String> keySetTeletu = supportedAlices.keySet();
-		final String[] arrayTeletu = keySetTeletu
-				.toArray(new String[keySetTeletu.size()]);
-		dest.writeStringArray(arrayTeletu);
-		for (String key : keySetTeletu)
-			dest.writeTypedList(supportedAlices.get(key));
-		dest.writeArray(supportedOTE);
-	}
-
-	private WirelessMatcher(Parcel in) {
-		supportedAlices = new HashMap<String, ArrayList<AliceMagicInfo>>();
-		String[] keysAlice = in.createStringArray();
-		for (String key : keysAlice) {
-			final ArrayList<AliceMagicInfo> supportedAlicesList = new ArrayList<AliceMagicInfo>();
-			in.readTypedList(supportedAlicesList, AliceMagicInfo.CREATOR);
-			supportedAlices.put(key, supportedAlicesList);
-		}
-		supportedTeletu = new HashMap<String, ArrayList<TeleTuMagicInfo>>();
-		String[] keysTeletu = in.createStringArray();
-		for (String key : keysTeletu) {
-			final ArrayList<TeleTuMagicInfo> supportedTeletuList = new ArrayList<TeleTuMagicInfo>();
-			in.readTypedList(supportedTeletuList, TeleTuMagicInfo.CREATOR);
-			supportedTeletu.put(key, supportedTeletuList);
-		}
-		supportedOTE = (String[]) in.readArray(String.class.getClassLoader());
-	}
-
-	public static final Parcelable.Creator<WirelessMatcher> CREATOR = new Parcelable.Creator<WirelessMatcher>() {
-		public WirelessMatcher createFromParcel(Parcel in) {
-			return new WirelessMatcher(in);
-		}
-
-		public WirelessMatcher[] newArray(int size) {
-			return new WirelessMatcher[size];
-		}
-	};
-
 }

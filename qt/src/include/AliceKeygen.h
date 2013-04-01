@@ -29,7 +29,7 @@ class AliceKeygen : public Keygen
     	QVector<QString> & getKeys();
         QVector<AliceMagicInfo *> * supportedAlice;
     	const static QString preInitCharset;
-    	const static char specialSeq[/*32*/];
+        const static unsigned char specialSeq[/*32*/];
 };
 
 #endif // ALICEKEYGEN_H

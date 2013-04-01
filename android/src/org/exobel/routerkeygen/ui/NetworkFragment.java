@@ -40,6 +40,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.AsyncTask.Status;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -164,8 +165,12 @@ public class NetworkFragment extends SherlockFragment {
 
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		if (passwordList == null)
+		if (passwordList == null) {
+			if (thread.getStatus() == Status.FINISHED
+					|| thread.getStatus() == Status.RUNNING)
+				thread = new KeygenThread(keygen);
 			thread.execute();
+		}
 	}
 
 	@Override
@@ -176,7 +181,7 @@ public class NetworkFragment extends SherlockFragment {
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		if (keygen.isSupported())
+		if (keygen.getSupportState() != Keygen.UNSUPPORTED)
 			inflater.inflate(R.menu.share_keys, menu);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
@@ -297,7 +302,7 @@ public class NetworkFragment extends SherlockFragment {
 
 		@Override
 		protected void onPreExecute() {
-			if (!keygen.isSupported()) {
+			if (keygen.getSupportState() == Keygen.UNSUPPORTED) {
 				root.findViewById(R.id.loading_spinner)
 						.setVisibility(View.GONE);
 				messages.setText(R.string.msg_unspported);

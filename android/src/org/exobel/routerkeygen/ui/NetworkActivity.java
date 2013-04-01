@@ -23,16 +23,20 @@ import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.algorithms.Keygen;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.view.ViewGroup;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.google.ads.AdRequest;
+import com.google.ads.AdView;
 import com.google.analytics.tracking.android.EasyTracker;
 
 public class NetworkActivity extends SherlockFragmentActivity {
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -40,6 +44,22 @@ public class NetworkActivity extends SherlockFragmentActivity {
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+		final PackageManager pm = getPackageManager();
+		boolean app_installed = false;
+		try {
+			pm.getPackageInfo("org.exobel.routerkeygendownloader",
+					PackageManager.GET_ACTIVITIES);
+			app_installed = true;
+		} catch (PackageManager.NameNotFoundException e) {
+			app_installed = false;
+		}
+		// Look up the AdView as a resource and load a request.
+		AdView adView = (AdView) this.findViewById(R.id.adView);
+		if (app_installed) {
+			final ViewGroup vg = (ViewGroup) adView.getParent();
+			vg.removeView(adView);
+		} else
+			adView.loadAd(new AdRequest());
 		if (savedInstanceState == null) {
 			Bundle arguments = new Bundle();
 			final Keygen keygen = (Keygen) getIntent().getParcelableExtra(

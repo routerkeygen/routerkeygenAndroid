@@ -19,14 +19,10 @@
 
 package org.exobel.routerkeygen.ui;
 
-import java.io.IOException;
-import java.util.zip.ZipInputStream;
-
 import org.exobel.routerkeygen.R;
-import org.exobel.routerkeygen.WiFiScanReceiver;
-import org.exobel.routerkeygen.WiFiScanReceiver.OnScanListener;
+import org.exobel.routerkeygen.WifiScanReceiver;
+import org.exobel.routerkeygen.WifiScanReceiver.OnScanListener;
 import org.exobel.routerkeygen.WifiStateReceiver;
-import org.exobel.routerkeygen.WirelessMatcher;
 import org.exobel.routerkeygen.algorithms.Keygen;
 
 import android.app.AlertDialog;
@@ -37,7 +33,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.res.Resources.NotFoundException;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -45,11 +40,14 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.google.ads.AdRequest;
+import com.google.ads.AdView;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.GoogleAnalytics;
 
@@ -58,7 +56,6 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 
 	private boolean mTwoPane;
 	private NetworksListFragment networkListFragment;
-	private WirelessMatcher networkMatcher;
 	private WifiManager wifi;
 	private BroadcastReceiver scanFinished;
 	private BroadcastReceiver stateChanged;
@@ -73,41 +70,40 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 		setContentView(R.layout.activity_networks_list);
 
 		networkListFragment = ((NetworksListFragment) getSupportFragmentManager()
-				.findFragmentById(R.id.item_list));
+				.findFragmentById(R.id.frag_networks_list));
 		if (findViewById(R.id.item_detail_container) != null) {
 			mTwoPane = true;
 			networkListFragment.setActivateOnItemClick(true);
-		}
-		try {
-			networkMatcher = new WirelessMatcher(new ZipInputStream(
-					getResources().openRawResource(R.raw.magic_info)));
-		} catch (NotFoundException e1) {
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			e1.printStackTrace();
 		}
 		wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 
 		wifiState = wifi.getWifiState() == WifiManager.WIFI_STATE_ENABLED
 				|| wifi.getWifiState() == WifiManager.WIFI_STATE_ENABLING;
-		scanFinished = new WiFiScanReceiver(networkMatcher, wifi,
-				networkListFragment, this);
+		scanFinished = new WifiScanReceiver(wifi, networkListFragment, this);
 		stateChanged = new WifiStateReceiver(wifi, networkListFragment);
+
+		final PackageManager pm = getPackageManager();
+		boolean app_installed = false;
+		try {
+			pm.getPackageInfo("org.exobel.routerkeygendownloader",
+					PackageManager.GET_ACTIVITIES);
+			app_installed = true;
+		} catch (PackageManager.NameNotFoundException e) {
+			app_installed = false;
+		}
+		// Look up the AdView as a resource and load a request.
+		AdView adView = (AdView) this.findViewById(R.id.adView);
+		if (app_installed) {
+			final ViewGroup vg = (ViewGroup) adView.getParent();
+			vg.removeView(adView);
+		} else
+			adView.loadAd(new AdRequest());
 
 		final SharedPreferences mPrefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
 		welcomeScreenShown = mPrefs.getBoolean(Preferences.VERSION, false);
 
 		if (!welcomeScreenShown) {
-			PackageManager pm = getPackageManager();
-			boolean app_installed = false;
-			try {
-				pm.getPackageInfo("org.exobel.routerkeygendownloader",
-						PackageManager.GET_ACTIVITIES);
-				app_installed = true;
-			} catch (PackageManager.NameNotFoundException e) {
-				app_installed = false;
-			}
 			if (!app_installed) {
 				final String whatsNewTitle = getString(R.string.msg_welcome_title);
 				final String whatsNewText = getString(R.string.msg_welcome_text);
@@ -168,7 +164,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 					.replace(R.id.item_detail_container, fragment).commit();
 
 		} else {
-			if (!keygen.isSupported()) {
+			if (keygen.getSupportState() == Keygen.UNSUPPORTED) {
 				Toast.makeText(this, R.string.msg_unspported,
 						Toast.LENGTH_SHORT).show();
 				return;
@@ -190,8 +186,14 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.manual_input:
-			ManualDialogFragment.newInstance(networkMatcher).show(
-					getSupportFragmentManager(), "ManualInput");
+			if (mTwoPane) {
+				getSupportFragmentManager()
+						.beginTransaction()
+						.replace(R.id.item_detail_container,
+								ManualInputFragment.newInstance()).commit();
+			} else {
+				startActivity(new Intent(this, ManualInputActivity.class));
+			}
 			return true;
 		case R.id.wifi_scan:
 			scan();
@@ -333,9 +335,15 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 	}
 
 	public void onItemSelected(String mac) {
-
-		ManualDialogFragment.newInstance(networkMatcher, mac).show(
-				getSupportFragmentManager(), "ManualInput");
+		if (mTwoPane) {
+			getSupportFragmentManager()
+					.beginTransaction()
+					.replace(R.id.item_detail_container,
+							ManualInputFragment.newInstance(mac)).commit();
+		} else {
+			startActivity(new Intent(this, ManualInputActivity.class).putExtra(
+					ManualInputFragment.MAC_ADDRESS_ARG, mac));
+		}
 	}
 
 }

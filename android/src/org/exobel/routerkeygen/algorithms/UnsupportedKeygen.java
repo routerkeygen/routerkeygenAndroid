@@ -18,8 +18,8 @@ public class UnsupportedKeygen extends Keygen{
 	}
 
 	@Override
-	public boolean isSupported() {
-		return false;
+	public int getSupportState() {
+		return UNSUPPORTED;
 	}
 
 

@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.exobel.routerkeygen"
     android:installLocation="auto"
-    android:versionCode="26"
-    android:versionName="3.3.0" >
+    android:versionCode="27"
+    android:versionName="3.5.0" >
 
     <uses-sdk
         android:minSdkVersion="7"
@@ -28,10 +28,14 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
 
+    <meta-data
+        android:name="ADMOB_ALLOW_LOCATION_FOR_ADS"
+        android:value="true" />
+
     <application
         android:name=".RouterKeygenApplication"
-        android:allowClearUserData="true"
         android:allowBackup="true"
+        android:allowClearUserData="true"
         android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:theme="@style/Theme.Sherlock" >
@@ -58,6 +62,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".NetworksListActivity" />
         </activity>
+        <activity
+            android:name=".ui.ManualInputActivity"
+            android:configChanges="screenSize|keyboard|orientation"
+            android:label="@string/menu_manual" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".NetworksListActivity" />
+        </activity>
 
         <service android:name=".DictionaryDownloadService" />
         <service android:name=".AutoConnectService" />
@@ -70,6 +82,9 @@
             android:name="com.ipaulpro.afilechooser.FileChooserActivity"
             android:icon="@drawable/ic_chooser"
             android:label="@string/choose_file" />
+        <activity
+            android:name="com.google.ads.AdActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
     </application>
 
 </manifest>

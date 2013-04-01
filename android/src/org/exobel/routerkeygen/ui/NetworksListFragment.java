@@ -20,7 +20,7 @@
 package org.exobel.routerkeygen.ui;
 
 import org.exobel.routerkeygen.R;
-import org.exobel.routerkeygen.WiFiScanReceiver.OnScanListener;
+import org.exobel.routerkeygen.WifiScanReceiver.OnScanListener;
 import org.exobel.routerkeygen.algorithms.Keygen;
 
 import android.app.Activity;
@@ -38,8 +38,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -78,16 +78,10 @@ public class NetworksListFragment extends SherlockFragment implements
 	}
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-	}
-
-	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
-		FrameLayout root = (FrameLayout) inflater.inflate(
+		RelativeLayout root = (RelativeLayout) inflater.inflate(
 				R.layout.fragment_networks_list, container, false);
 		listview = (ListView) root.findViewById(R.id.networks_list);
 		noNetworksMessage = root.findViewById(R.id.message_group);
@@ -159,8 +153,8 @@ public class NetworksListFragment extends SherlockFragment implements
 			ContextMenu.ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 		final AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
-		//We may have had bad luck
-		if ( info.position >= networksFound.length )
+		// We may have had bad luck
+		if (info.position >= networksFound.length)
 			return;
 		MenuInflater inflater = getActivity().getMenuInflater();
 		inflater.inflate(R.menu.networks_context_menu, menu);

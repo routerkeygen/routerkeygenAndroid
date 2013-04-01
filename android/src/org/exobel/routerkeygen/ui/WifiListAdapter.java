@@ -46,9 +46,10 @@ public class WifiListAdapter extends BaseAdapter {
 			this.listNetworks = new Keygen[0];
 		final Resources resources = context.getResources();
 		inflater = LayoutInflater.from(context);
-		supported = new Drawable[2];
+		supported = new Drawable[3];
 		supported[0] = resources.getDrawable(R.drawable.ic_possible);
-		supported[1] = resources.getDrawable(R.drawable.ic_impossible);
+		supported[1] = resources.getDrawable(R.drawable.ic_maybe);
+		supported[2] = resources.getDrawable(R.drawable.ic_impossible);
 		wifiSignal = new Drawable[4];
 		wifiSignalLocked = new Drawable[4];
 		for (int i = 0; i < 4; ++i) {
@@ -108,10 +109,17 @@ public class WifiListAdapter extends BaseAdapter {
 		final ViewHolder holder = (ViewHolder) convertView.getTag();
 		holder.ssid.setText(wifi.getSsidName());
 		holder.mac.setText(wifi.getDisplayMacAddress());
-		if (wifi.isSupported())
+		switch(wifi.getSupportState()){
+		case Keygen.SUPPORTED:
 			holder.supported.setImageDrawable(supported[0]);
-		else
+			break;
+		case Keygen.MAYBE_SUP:
 			holder.supported.setImageDrawable(supported[1]);
+			break;
+		case Keygen.UNSUPPORTED:
+			holder.supported.setImageDrawable(supported[2]);
+			break;
+		}
 		final int strenght = wifi.getLevel();
 		if (wifi.isLocked()) {
 			holder.networkStrenght.setImageDrawable(wifiSignalLocked[strenght]);

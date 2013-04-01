@@ -28,6 +28,7 @@
 #include "InterCableKeygen.h"
 #include "OteKeygen.h"
 #include "OteBAUDKeygen.h"
+#include "OteHuaweiKeygen.h"
 #include "PBSKeygen.h"
 #include "PtvKeygen.h"
 #include "EasyBoxKeygen.h"
@@ -134,6 +135,16 @@ private slots:
         QVector<QString> results = keygen->getResults();
         QCOMPARE(results.size(),1);
         QCOMPARE(results.at(0),QString("000133337cb4c"));
+    }
+
+    void testOTEHuawei() {
+        Keygen * keygen = matcher.getKeygen("OTEcb4c",
+                "E8:39:DF:F5:12:34", 0, "");
+        QVERIFY2(keygen != NULL, "An algorithm was not detected");
+        QCOMPARE(typeid(*keygen), typeid(OteHuaweiKeygen) );
+        QVector<QString> results = keygen->getResults();
+        QCOMPARE(results.size(),1);
+        //QCOMPARE(results.at(0),QString("000133337cb4c"));
     }
 
     void testPBS() {
