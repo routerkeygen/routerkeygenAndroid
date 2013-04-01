@@ -26,7 +26,7 @@ AliceKeygen::AliceKeygen(QString & ssid, QString & mac, int level, QString enc,
 
 const QString AliceKeygen::preInitCharset =
 		"0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvWxyz0123";
-const char AliceKeygen::specialSeq[/*32*/] = { 0x64, 0xC6, 0xDD, 0xE3, 0xE5,
+const unsigned char AliceKeygen::specialSeq[/*32*/] = { 0x64, 0xC6, 0xDD, 0xE3, 0xE5,
 		0x79, 0xB6, 0xD9, 0x86, 0x96, 0x8D, 0x34, 0x45, 0xD2, 0x3B, 0x15, 0xCA,
 		0xAF, 0x12, 0x84, 0x02, 0xAC, 0x56, 0x00, 0x05, 0xCE, 0x20, 0x75, 0x91,
 		0x3F, 0xDC, 0xE8 };

@@ -28,7 +28,7 @@ PirelliKeygen::PirelliKeygen(QString & ssid, QString & mac, int level,
 PirelliKeygen::~PirelliKeygen() {
 	delete hash;
 }
-const char PirelliKeygen::saltMD5[] = { 0x22, 0x33, 0x11, 0x34, 0x02, 0x81,
+const unsigned char PirelliKeygen::saltMD5[] = { 0x22, 0x33, 0x11, 0x34, 0x02, 0x81,
 		0xFA, 0x22, 0x11, 0x41, 0x68, 0x11, 0x12, 0x01, 0x05, 0x22, 0x71, 0x42,
 		0x10, 0x66 };
 
@@ -42,7 +42,7 @@ QVector<QString> & PirelliKeygen::getKeys() {
 		throw ERROR;
 	hash->reset();
 	hash->addData(macBytes, 6);
-	hash->addData(saltMD5, 20);
+    hash->addData((const char *)saltMD5, 20);
 	QByteArray resultHash = hash->result();
 	char key[5];
 	/*Grouping in five groups fo five bits*/

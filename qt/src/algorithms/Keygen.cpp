@@ -35,10 +35,6 @@ bool Keygen::isStopped() const {
 	return this->stopRequested;
 }
 
-bool Keygen::isSupported() const {
-	return true;
-}
-
 QString Keygen::getEncryption() const {
 	return encryption;
 }
@@ -72,6 +68,9 @@ bool Keygen::isLocked() {
 	return OPEN != getScanResultSecurity(this);
 }
 
+int Keygen::getSupportState() const{
+return SUPPORTED;
+}
 /**
  * @return The security of a given {@link ScanResult}.
  */

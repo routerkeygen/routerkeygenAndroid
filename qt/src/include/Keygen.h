@@ -24,11 +24,12 @@
 class Keygen {
 public:
 	const static int ERROR = 0;
+    const static int SUPPORTED = 0;
+    const static int MAYBE = 1;
 	Keygen(QString & ssid, QString & mac, int level, QString enc);
 	QVector<QString> & getResults();
 	void stop();
-	bool isStopped() const;
-	virtual bool isSupported() const;
+    bool isStopped() const;
 	QString getEncryption() const;
 	QString getError() const;
 	int getLevel() const;
@@ -38,6 +39,8 @@ public:
 	virtual ~Keygen() {
 	}
 	bool isLocked();
+
+    int getSupportState() const;
 
 	static QString getScanResultSecurity(Keygen * scanResult);
 
