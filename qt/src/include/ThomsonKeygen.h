@@ -6,6 +6,7 @@ class ThomsonKeygen: public Keygen {
 
 public:
 	ThomsonKeygen(QString & ssid, QString & mac, int level, QString enc);
+    int getSupportState() const;
 	~ThomsonKeygen(){}
 private:
 	QVector<QString> & getKeys();

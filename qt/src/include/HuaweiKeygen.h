@@ -24,6 +24,7 @@ class HuaweiKeygen : public Keygen
 {
     public:
         HuaweiKeygen(QString & ssid, QString & mac, int level, QString enc);
+        int getSupportState() const;
     private:
     	QVector<QString> & getKeys();
 };

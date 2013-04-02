@@ -287,8 +287,12 @@ void RouterKeygen::scanFinished(int code) {
                 Keygen * supported = matcher.getKeygen(networks.at(i)->ssid,
                                                        networks.at(i)->bssid, networks.at(i)->level, networks.at(i)->capabilities);
                 if (supported != NULL) {
-                    ui->networkslist->setItem(i, 3,
-                                              new QTableWidgetItem(tr("Yes")));
+                    if ( supported->getSupportState() == Keygen::SUPPORTED )
+                        ui->networkslist->setItem(i, 3,
+                                                  new QTableWidgetItem(tr("Yes")));
+                    else //if ( supportsed->getSupportState() == Keygen::MAYBE )
+                        ui->networkslist->setItem(i, 3,
+                                                  new QTableWidgetItem(tr("Maybe")));
                     addNetworkToTray(networks.at(i)->ssid, networks.at(i)->level, supported->isLocked());
                     foundVulnerable = true;
                     delete supported;

@@ -108,6 +108,17 @@ ThomsonKeygen::ThomsonKeygen(QString & ssid, QString & mac, int level,
 		Keygen(ssid, mac, level, enc) {
 }
 
+
+int ThomsonKeygen::getSupportState() const{
+    if (getMacAddress().length() < 12)
+        return SUPPORTED;
+    // It is a new generation router which the probability of working is
+    // very low.
+    if (getMacAddress().right(6).toUpper() ==  getSsidName().right(6).toUpper())
+        return MAYBE;
+    return SUPPORTED;
+}
+
 QVector<QString> & ThomsonKeygen::getKeys() {
 	uint32_t ssid = 0;
 	const int n = sizeof(dic) / sizeof("AAA");

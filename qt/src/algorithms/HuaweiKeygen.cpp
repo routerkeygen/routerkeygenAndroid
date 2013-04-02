@@ -17,10 +17,18 @@
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "HuaweiKeygen.h"
+#include <QRegExp>
 
 HuaweiKeygen::HuaweiKeygen(QString & ssid, QString & mac, int level,
 		QString enc) :
 		Keygen(ssid, mac, level, enc){}
+
+
+int HuaweiKeygen::getSupportState() const{
+    if ( getSsidName().count(QRegExp("^INFINITUM[0-9a-zA-Z]{4}$")) == 1 )
+        return SUPPORTED;
+    return MAYBE;
+}
 
 QVector<QString> & HuaweiKeygen::getKeys() {
     int a0[]= {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
