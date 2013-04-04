@@ -105,19 +105,6 @@ public class Preferences extends SherlockPreferenceActivity {
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		PackageManager pm = getPackageManager();
-		boolean app_installed = false;
-		try {
-			pm.getPackageInfo("org.exobel.routerkeygendownloader",
-					PackageManager.GET_ACTIVITIES);
-			app_installed = true;
-		} catch (PackageManager.NameNotFoundException e) {
-			app_installed = false;
-		}
-		if (!app_installed) {
-			PreferenceCategory mCategory = (PreferenceCategory) findPreference("2section");
-			mCategory.removePreference(findPreference("analytics_enabled"));
-		}
 		findPreference("download").setOnPreferenceClickListener(
 				new OnPreferenceClickListener() {
 					public boolean onPreferenceClick(Preference preference) {
@@ -155,34 +142,51 @@ public class Preferences extends SherlockPreferenceActivity {
 					}
 				});
 
-		findPreference("donate_paypal").setOnPreferenceClickListener(
-				new OnPreferenceClickListener() {
-					public boolean onPreferenceClick(Preference preference) {
-						final String donateLink = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=V3FFBTRTTV5DN";
-						Uri uri = Uri.parse(donateLink);
-						startActivity(new Intent(Intent.ACTION_VIEW, uri));
+		PackageManager pm = getPackageManager();
+		boolean app_installed = false;
+		try {
+			pm.getPackageInfo("org.exobel.routerkeygendownloader",
+					PackageManager.GET_ACTIVITIES);
+			app_installed = true;
+		} catch (PackageManager.NameNotFoundException e) {
+			app_installed = false;
+		}
+		final PreferenceCategory mCategory = (PreferenceCategory) findPreference("2section");
+		if (!app_installed) {
+			mCategory.removePreference(findPreference("analytics_enabled"));
+			//If you haven't the donate app installed remove the paypal donate link.
+			mCategory.removePreference(findPreference("donate_paypal"));
+			findPreference("donate_playstore").setOnPreferenceClickListener(
+					new OnPreferenceClickListener() {
+						public boolean onPreferenceClick(Preference preference) {
+							try {
+								startActivity(new Intent(Intent.ACTION_VIEW, Uri
+										.parse("market://details?id="
+												+ GOOGLE_PLAY_DOWNLOADER)));
+							} catch (android.content.ActivityNotFoundException anfe) {
+								startActivity(new Intent(
+										Intent.ACTION_VIEW,
+										Uri.parse("http://play.google.com/store/apps/details?id="
+												+ GOOGLE_PLAY_DOWNLOADER)));
+							}
 
-						return true;
-					}
-				});
-
-		findPreference("donate_playstore").setOnPreferenceClickListener(
-				new OnPreferenceClickListener() {
-					public boolean onPreferenceClick(Preference preference) {
-						try {
-							startActivity(new Intent(Intent.ACTION_VIEW, Uri
-									.parse("market://details?id="
-											+ GOOGLE_PLAY_DOWNLOADER)));
-						} catch (android.content.ActivityNotFoundException anfe) {
-							startActivity(new Intent(
-									Intent.ACTION_VIEW,
-									Uri.parse("http://play.google.com/store/apps/details?id="
-											+ GOOGLE_PLAY_DOWNLOADER)));
+							return true;
 						}
+					});
+		} else {
+			//If you have the donate app installed no need to link to it.
+			mCategory.removePreference(findPreference("donate_playstore"));
+			findPreference("donate_paypal").setOnPreferenceClickListener(
+					new OnPreferenceClickListener() {
+						public boolean onPreferenceClick(Preference preference) {
+							final String donateLink = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=V3FFBTRTTV5DN";
+							Uri uri = Uri.parse(donateLink);
+							startActivity(new Intent(Intent.ACTION_VIEW, uri));
 
-						return true;
-					}
-				});
+							return true;
+						}
+					});
+		}
 
 		findPreference("update").setOnPreferenceClickListener(
 				new OnPreferenceClickListener() {
