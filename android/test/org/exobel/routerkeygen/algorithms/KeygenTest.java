@@ -160,12 +160,13 @@ public class KeygenTest {
 		Keygen keygen = WirelessMatcher.getKeygen("OTEcb4c",
 				"E8:39:DF:F5:12:34", 0, "", new ZipInputStream(
 						new FileInputStream("../res/raw/magic_info.zip")));
-		assertTrue("Keygen should be OTEHuawei", keygen instanceof OteHuaweiKeygen);
+		assertTrue("Keygen should be OTEHuawei",
+				keygen instanceof OteHuaweiKeygen);
 		List<String> results = keygen.getKeys();
 		assertEquals("Errors should not happen", 0, keygen.getErrorCode());
 		assertEquals("There should be only one result", 1, results.size());
-		//assertEquals("The password should be b075d537cb4c", "000133337cb4c",
-		//		results.get(0));
+		assertEquals("The password should be 54919345", "54919345",
+				results.get(0));
 	}
 
 	@Test
