@@ -38,7 +38,10 @@ public class HuaweiKeygen extends Keygen {
 
 	public HuaweiKeygen(String ssid, String mac, int level, String enc) {
 		super(ssid, mac, level, enc);
-		ssidIdentifier = ssid.substring(ssid.length() - 4);
+		if (getSsidName().matches("INFINITUM[0-9a-zA-Z]{4}"))
+			ssidIdentifier = ssid.substring(ssid.length() - 4);
+		else
+			ssidIdentifier = "";
 	}
 
 	// Java adaptation of mac2wepkey.py from
@@ -149,7 +152,7 @@ public class HuaweiKeygen extends Keygen {
 				+ Integer.toString(key[yc]) + Integer.toString(key[yd])
 				+ Integer.toString(key[ye]));
 		if (!ssidIdentifier.equalsIgnoreCase(ssidFinal)
-				&& getSsidName().startsWith("INFINITUM")) {
+				&& getSsidName().matches("INFINITUM[0-9a-zA-Z]{4}")) {
 			setErrorCode(R.string.msg_err_essid_no_match);
 		}
 		return getResults();
