@@ -95,7 +95,7 @@ public class Preferences extends SherlockPreferenceActivity {
 	private static final String PUB_VERSION = "http://android-thomson-key-solver.googlecode.com/svn/trunk/RouterKeygenVersion.txt";
 
 	public static final String VERSION = "3.5.1";
-	private static final String LAUNCH_DATE = "13/04/2013";
+	private static final String LAUNCH_DATE = "14/04/2013";
 
 	private String version;
 

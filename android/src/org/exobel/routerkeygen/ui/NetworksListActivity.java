@@ -25,6 +25,7 @@ import org.exobel.routerkeygen.WifiScanReceiver.OnScanListener;
 import org.exobel.routerkeygen.WifiStateReceiver;
 import org.exobel.routerkeygen.algorithms.Keygen;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -35,9 +36,11 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,7 +56,7 @@ import com.google.analytics.tracking.android.GoogleAnalytics;
 
 public class NetworksListActivity extends SherlockFragmentActivity implements
 		NetworksListFragment.OnItemSelectionListener, OnScanListener {
-
+	private final static String LAST_DIALOG_TIME = "last_time";
 	private boolean mTwoPane;
 	private NetworksListFragment networkListFragment;
 	private WifiManager wifi;
@@ -63,6 +66,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 
 	private Handler mHandler = new Handler();
 
+	@TargetApi(Build.VERSION_CODES.GINGERBREAD)
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -103,7 +107,21 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 				.getDefaultSharedPreferences(this);
 		welcomeScreenShown = mPrefs.getBoolean(Preferences.VERSION, false);
 
-		if (!welcomeScreenShown) {
+		final long timePassed = System.currentTimeMillis()
+				- mPrefs.getLong(LAST_DIALOG_TIME, 0);
+		if (!welcomeScreenShown || (timePassed > DateUtils.WEEK_IN_MILLIS)) {
+			final SharedPreferences.Editor editor = mPrefs.edit();
+			editor.putBoolean(Preferences.VERSION, true);
+			editor.putLong(LAST_DIALOG_TIME, System.currentTimeMillis());
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+				editor.apply();
+			} else {
+				new Thread(new Runnable() {
+					public void run() {
+						editor.commit();
+					}
+				}).start();
+			}
 			if (!app_installed) {
 				final String whatsNewTitle = getString(R.string.msg_welcome_title);
 				final String whatsNewText = getString(R.string.msg_welcome_text);
@@ -148,9 +166,6 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 									}
 								}).show();
 			}
-			final SharedPreferences.Editor editor = mPrefs.edit();
-			editor.putBoolean(Preferences.VERSION, true);
-			editor.commit();
 		}
 	}
 
