@@ -71,7 +71,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 
 		networkListFragment = ((NetworksListFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.frag_networks_list));
-		if (findViewById(R.id.item_detail_container) != null) {
+		if (findViewById(R.id.keygen_fragment) != null) {
 			mTwoPane = true;
 			networkListFragment.setActivateOnItemClick(true);
 		}
@@ -161,7 +161,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 			final NetworkFragment fragment = new NetworkFragment();
 			fragment.setArguments(arguments);
 			getSupportFragmentManager().beginTransaction()
-					.replace(R.id.item_detail_container, fragment).commit();
+					.replace(R.id.keygen_fragment, fragment).commit();
 
 		} else {
 			if (keygen.getSupportState() == Keygen.UNSUPPORTED) {
@@ -189,7 +189,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 			if (mTwoPane) {
 				getSupportFragmentManager()
 						.beginTransaction()
-						.replace(R.id.item_detail_container,
+						.replace(R.id.keygen_fragment,
 								ManualInputFragment.newInstance()).commit();
 			} else {
 				startActivity(new Intent(this, ManualInputActivity.class));
@@ -338,7 +338,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 		if (mTwoPane) {
 			getSupportFragmentManager()
 					.beginTransaction()
-					.replace(R.id.item_detail_container,
+					.replace(R.id.keygen_fragment,
 							ManualInputFragment.newInstance(mac)).commit();
 		} else {
 			startActivity(new Intent(this, ManualInputActivity.class).putExtra(

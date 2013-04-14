@@ -37,6 +37,7 @@
             android:id="@+id/icon"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
+            android:contentDescription="@null"
             android:focusable="false"
             android:scaleType="fitXY"
             android:src="@drawable/ic_impossible" />
@@ -55,26 +56,29 @@
             android:id="@+id/wifiName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
+            android:ellipsize="marquee"
             android:focusable="false"
-            android:maxLines="1"
+            android:marqueeRepeatLimit="marquee_forever"
             android:scrollHorizontally="true"
             android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="#ffffff"
+            android:textIsSelectable="false"
             android:textSize="20sp" />
 
         <TextView
             android:id="@+id/wifiMAC"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
+            android:ellipsize="marquee"
             android:focusable="false"
+            android:marqueeRepeatLimit="marquee_forever"
             android:maxLines="1"
             android:scrollHorizontally="true"
             android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="#545454" />
+            android:textColor="#545454"
+            android:textIsSelectable="false" />
     </LinearLayout>
 
     <LinearLayout
@@ -89,6 +93,7 @@
             android:id="@+id/strenght"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="@null"
             android:focusable="false"
             android:src="@drawable/ic_wifi_lock_signal_1" />
     </LinearLayout>

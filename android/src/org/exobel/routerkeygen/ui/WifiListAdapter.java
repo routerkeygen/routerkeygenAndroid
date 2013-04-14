@@ -24,6 +24,7 @@ import org.exobel.routerkeygen.algorithms.Keygen;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.text.TextUtils.TruncateAt;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -108,7 +109,11 @@ public class WifiListAdapter extends BaseAdapter {
 
 		final ViewHolder holder = (ViewHolder) convertView.getTag();
 		holder.ssid.setText(wifi.getSsidName());
+		holder.ssid.setSelected(true);
+		holder.ssid.setEllipsize(TruncateAt.MARQUEE);
 		holder.mac.setText(wifi.getDisplayMacAddress());
+		holder.mac.setSelected(true);
+		holder.mac.setEllipsize(TruncateAt.MARQUEE);
 		switch(wifi.getSupportState()){
 		case Keygen.SUPPORTED:
 			holder.supported.setImageDrawable(supported[0]);

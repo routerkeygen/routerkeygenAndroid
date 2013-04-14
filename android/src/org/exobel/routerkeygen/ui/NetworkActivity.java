@@ -69,7 +69,7 @@ public class NetworkActivity extends SherlockFragmentActivity {
 			NetworkFragment fragment = new NetworkFragment();
 			fragment.setArguments(arguments);
 			getSupportFragmentManager().beginTransaction()
-					.add(R.id.item_detail_container, fragment).commit();
+					.add(R.id.keygen_fragment, fragment).commit();
 		}
 	}
 

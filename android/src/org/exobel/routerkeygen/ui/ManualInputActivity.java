@@ -45,7 +45,7 @@ public class ManualInputActivity extends SherlockFragmentActivity implements
 		if (savedInstanceState == null) {
 			getSupportFragmentManager()
 					.beginTransaction()
-					.add(R.id.item_detail_container,
+					.add(R.id.keygen_fragment,
 							ManualInputFragment
 									.newInstance(getIntent()
 											.getStringExtra(

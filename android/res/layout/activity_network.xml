@@ -5,7 +5,7 @@
     tools:context=".NetworkActivity" >
 
     <FrameLayout
-        android:id="@+id/item_detail_container"
+        android:id="@+id/keygen_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/adView" />
