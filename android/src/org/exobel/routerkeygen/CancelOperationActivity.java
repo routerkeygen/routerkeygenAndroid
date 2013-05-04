@@ -7,7 +7,6 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 
 public class CancelOperationActivity extends Activity {
@@ -33,12 +32,7 @@ public class CancelOperationActivity extends Activity {
 	@TargetApi(11)
 	@Override
 	protected Dialog onCreateDialog(int id) {
-		final AlertDialog.Builder builder;
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-			builder = new AlertDialog.Builder(this,
-					R.style.Theme_Sherlock_Dialog);
-		else
-			builder = new AlertDialog.Builder(this);
+		final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		String message = getIntent().getStringExtra(MESSAGE);
 		if (message == null)
 			message = getString(android.R.string.cancel) + "?";
