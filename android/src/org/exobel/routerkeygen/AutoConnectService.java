@@ -89,12 +89,8 @@ public class AutoConnectService extends Service implements onConnectionListener 
 
 		mReceiver = new AutoConnectManager(wifi, this);
 
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1)
-			mNumOpenNetworksKept = Settings.Secure.getInt(getContentResolver(),
-					Settings.Secure.WIFI_NUM_OPEN_NETWORKS_KEPT, 10);
-		else
-			mNumOpenNetworksKept = Settings.Secure.getInt(getContentResolver(),
-					Settings.Global.WIFI_NUM_OPEN_NETWORKS_KEPT, 10);
+		mNumOpenNetworksKept = Settings.Secure.getInt(getContentResolver(),
+				Settings.Secure.WIFI_NUM_OPEN_NETWORKS_KEPT, 10);
 
 	}
 

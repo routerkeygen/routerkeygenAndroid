@@ -29,6 +29,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.zip.ZipInputStream;
@@ -112,7 +113,7 @@ public class ThomsonKeygen extends Keygen {
 
 		if (!internetAlgorithm) {
 			if (!localCalc())
-				return null;
+				nativeCalc();
 		} else {
 			if (!internetCalc())
 				return null;
@@ -123,6 +124,52 @@ public class ThomsonKeygen extends Keygen {
 			return null;
 		}
 		return getResults();
+	}
+
+	private void nativeCalc() {
+		byte[] name = new byte[3];
+		byte[] pass = new byte[5];
+		byte[] hash = new byte[19];
+		cp[0] = (byte) (char) 'C';
+		cp[1] = (byte) (char) 'P';
+		cp[2] = (byte) (char) '0';for (int y = 4; y < 13; y++) {
+			cp[2] = (byte) Character.forDigit((y / 10), 10);
+			cp[3] = (byte) Character.forDigit((y % 10), 10);
+			for (int w = 1; w <= 52; w++) {
+				cp[4] = (byte) Character.forDigit((w / 10), 10);
+				cp[5] = (byte) Character.forDigit((w % 10), 10);
+				for (int a = 0; a < AlphabetCodes.charectbytes.length; a++) {
+					cp[6] = AlphabetCodes.charectbytes[a][0];
+					cp[7] = AlphabetCodes.charectbytes[a][1];
+					for (int b = 0; b < AlphabetCodes.charectbytes.length; b++) {
+						cp[8] = AlphabetCodes.charectbytes[b][0];
+						cp[9] = AlphabetCodes.charectbytes[b][1];
+						for (int c = 0; c < AlphabetCodes.charectbytes.length; c++) {
+							cp[10] = AlphabetCodes.charectbytes[c][0];
+							cp[11] = AlphabetCodes.charectbytes[c][1];
+							md.reset();
+							md.update(cp);
+							hash = md.digest();
+							name[0] = hash[17];
+							name[1] = hash[18];
+							name[2] = hash[19];
+							if ( Arrays.equals(routerESSID, name) ){
+								pass[0] = hash[0];
+								pass[1] = hash[1];
+								pass[2] = hash[2];
+								pass[3] = hash[3];
+								pass[4] = hash[4];
+								try {
+									addPassword(AlphabetCodes.getHexString(pass));
+								} catch (UnsupportedEncodingException e) {
+									e.printStackTrace();
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
 	private boolean internetCalc() {
@@ -323,45 +370,14 @@ public class ThomsonKeygen extends Keygen {
 			setErrorCode(R.string.msg_errordict);
 			return false;
 		}
-		if (version > 4) {
+		if (version != 4) {
 			setErrorCode(R.string.msg_errversion);
 			errorDict = true;
 			return false;
 		}
 
-		if (version == 1)
-			firstDic();
-		else if (version == 2)
-			secondDic();
-		else if (version == 3)
-			return thirdDic();
-		else if (version == 4)
+		
 			forthDic();
-		return true;
-	}
-
-	static {
-		System.loadLibrary("thomson");
-	}
-
-	private native String[] thirdDicNative(byte[] essid, byte[] entry, int size);
-
-	// This has been implemented natively for instant resolution!
-	private boolean thirdDic() {
-		String[] results;
-		try {
-			results = this.thirdDicNative(routerESSID, entry, entry.length);
-		} catch (Exception e) {
-			setErrorCode(R.string.msg_err_native);
-			return false;
-		} catch (LinkageError e) {
-			setErrorCode(R.string.err_misbuilt_apk);
-			return false;
-		}
-		if (isStopRequested())
-			return false;
-		for (int i = 0; i < results.length; ++i)
-			addPassword(results[i]);
 		return true;
 	}
 
@@ -410,90 +426,6 @@ public class ThomsonKeygen extends Keygen {
 			}
 		}
 	}
-
-	private void secondDic() {
-		cp[0] = (byte) (char) 'C';
-		cp[1] = (byte) (char) 'P';
-		for (int offset = 0; offset < len; offset += 3) {
-			if (isStopRequested())
-				return;
-			sequenceNumber = ((0xFF & entry[offset + 0]) << 16)
-					| ((0xFF & entry[offset + 1]) << 8)
-					| (0xFF & entry[offset + 2]);
-			c = sequenceNumber % 36;
-			b = sequenceNumber / 36 % 36;
-			a = sequenceNumber / (36 * 36) % 36;
-			year = sequenceNumber / (36 * 36 * 36 * 52) + 4;
-			week = (sequenceNumber / (36 * 36 * 36)) % 52 + 1;
-			cp[2] = (byte) Character.forDigit((year / 10), 10);
-			cp[3] = (byte) Character.forDigit((year % 10), 10);
-			cp[4] = (byte) Character.forDigit((week / 10), 10);
-			cp[5] = (byte) Character.forDigit((week % 10), 10);
-			cp[6] = charectbytes0[a];
-			cp[7] = charectbytes1[a];
-			cp[8] = charectbytes0[b];
-			cp[9] = charectbytes1[b];
-			cp[10] = charectbytes0[c];
-			cp[11] = charectbytes1[c];
-			md.reset();
-			md.update(cp);
-			final byte[] hash = md.digest();
-			if (hash[19] != routerESSID[2])
-				continue;
-			if (hash[18] != routerESSID[1])
-				continue;
-			if (hash[17] != routerESSID[0])
-				continue;
-
-			try {
-				addPassword(StringUtils.getHexString(hash).substring(0, 10)
-						.toUpperCase(Locale.getDefault()));
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	private void firstDic() {
-		cp[0] = (byte) (char) 'C';
-		cp[1] = (byte) (char) 'P';
-		for (int offset = 0; offset < len; offset += 4) {
-			if (isStopRequested())
-				return;
-
-			if (entry[offset] != routerESSID[2])
-				continue;
-			sequenceNumber = ((0xFF & entry[offset + 1]) << 16)
-					| ((0xFF & entry[offset + 2]) << 8)
-					| (0xFF & entry[offset + 3]);
-			c = sequenceNumber % 36;
-			b = sequenceNumber / 36 % 36;
-			a = sequenceNumber / (36 * 36) % 36;
-			year = sequenceNumber / (36 * 36 * 36 * 52) + 4;
-			week = (sequenceNumber / (36 * 36 * 36)) % 52 + 1;
-			cp[2] = (byte) Character.forDigit((year / 10), 10);
-			cp[3] = (byte) Character.forDigit((year % 10), 10);
-			cp[4] = (byte) Character.forDigit((week / 10), 10);
-			cp[5] = (byte) Character.forDigit((week % 10), 10);
-			cp[6] = charectbytes0[a];
-			cp[7] = charectbytes1[a];
-			cp[8] = charectbytes0[b];
-			cp[9] = charectbytes1[b];
-			cp[10] = charectbytes0[c];
-			cp[11] = charectbytes1[c];
-			md.reset();
-			md.update(cp);
-			final byte[] hash = md.digest();
-
-			try {
-				addPassword(StringUtils.getHexString(hash).substring(0, 10)
-						.toUpperCase(Locale.getDefault()));
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
 	public void setWebdic(InputStream webdic) {
 		this.webdic = webdic;
 	}

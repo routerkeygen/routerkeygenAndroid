@@ -6,18 +6,9 @@
 
     <fragment
         android:id="@+id/frag_networks_list"
-        android:name="org.exobel.routerkeygen.ui.NetworksListFragment"
+        android:name="org.exobel.routerkeygen.ui.ManualInputFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/adView"
-        tools:layout="@layout/fragment_networks_list" />
-
-    <include
-        android:id="@+id/adView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        layout="@layout/adview" />
+        tools:layout="@layout/fragment_manual_input" />
 
 </RelativeLayout>

@@ -28,7 +28,6 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.net.UnknownHostException;
 
 import org.exobel.routerkeygen.AdsUtils;
@@ -58,7 +57,6 @@ import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
-import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.text.method.LinkMovementMethod;
@@ -85,21 +83,15 @@ public class Preferences extends SherlockPreferenceActivity {
 	public static final String dicLocalPref = "dictionaryPath";
 	public static final String wifiOnPref = "wifion";
 	public static final String thomson3gPref = "thomson3g";
-	public static final String nativeCalcPref = "nativethomson";
 	public static final String autoScanPref = "autoScan";
 	public static final String analyticsPref = "analytics_enabled";
 	public static final String autoScanIntervalPref = "autoScanInterval";
 
-	public final static String GOOGLE_PLAY_DOWNLOADER = "org.doublecheck.wifiscanner";
-
 	public static final String PUB_DOWNLOAD = "http://android-thomson-key-solver.googlecode.com/files/RouterKeygen_v3.dic";
 	private static final String PUB_DIC_CFV = "http://android-thomson-key-solver.googlecode.com/svn/trunk/RKDictionary.cfv";
-	private static final String PUB_VERSION = "http://android-thomson-key-solver.googlecode.com/svn/trunk/RouterKeygenVersion.txt";
 
 	public static final String VERSION = "3.7.0";
 	private static final String LAUNCH_DATE = "18/07/2013";
-
-	private String version;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -144,111 +136,6 @@ public class Preferences extends SherlockPreferenceActivity {
 					}
 				});
 
-		boolean app_installed = AdsUtils.checkDonation(this);
-		final PreferenceCategory mCategory = (PreferenceCategory) findPreference("2section");
-		if (!app_installed) {
-			mCategory.removePreference(findPreference("analytics_enabled"));
-			// If you haven't the donate app installed remove the paypal donate
-			// link.
-			mCategory.removePreference(findPreference("donate_paypal"));
-			findPreference("donate_playstore").setOnPreferenceClickListener(
-					new OnPreferenceClickListener() {
-						public boolean onPreferenceClick(Preference preference) {
-							try {
-								startActivity(new Intent(Intent.ACTION_VIEW,
-										Uri.parse("market://details?id="
-												+ GOOGLE_PLAY_DOWNLOADER)));
-							} catch (android.content.ActivityNotFoundException anfe) {
-								startActivity(new Intent(
-										Intent.ACTION_VIEW,
-										Uri.parse("http://play.google.com/store/apps/details?id="
-												+ GOOGLE_PLAY_DOWNLOADER)));
-							}
-							Toast.makeText(getApplicationContext(),
-									R.string.msg_donation, Toast.LENGTH_LONG)
-									.show();
-							return true;
-						}
-					});
-		} else {
-			// If you have the donate app installed no need to link to it.
-			mCategory.removePreference(findPreference("donate_playstore"));
-			findPreference("donate_paypal").setOnPreferenceClickListener(
-					new OnPreferenceClickListener() {
-						public boolean onPreferenceClick(Preference preference) {
-							final String donateLink = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=V3FFBTRTTV5DN";
-							Uri uri = Uri.parse(donateLink);
-							startActivity(new Intent(Intent.ACTION_VIEW, uri));
-
-							return true;
-						}
-					});
-		}
-
-		findPreference("update").setOnPreferenceClickListener(
-				new OnPreferenceClickListener() {
-					public boolean onPreferenceClick(Preference preference) {
-						new AsyncTask<Void, Void, Integer>() {
-							protected void onPreExecute() {
-								showDialog(DIALOG_CHECK_DOWNLOAD_SERVER);
-							}
-
-							protected Integer doInBackground(Void... params) {
-
-								// Comparing this version with the online
-								// version
-								try {
-									URLConnection con = new URL(PUB_VERSION)
-											.openConnection();
-									DataInputStream dis = new DataInputStream(
-											con.getInputStream());
-									final byte[] versionData = new byte[6];
-									dis.read(versionData);
-									version = new String(versionData).trim();
-
-									// Check our version
-									if (VERSION.equals(version)) {
-										// All is well
-										return 1;
-									}
-									return 0;
-
-								} catch (UnknownHostException e) {
-									return -1;
-								} catch (Exception e) {
-									return null;
-								}
-							}
-
-							protected void onPostExecute(Integer result) {
-								removeDialog(DIALOG_CHECK_DOWNLOAD_SERVER);
-								if (isFinishing())
-									return;
-								if (result == null) {
-									showDialog(DIALOG_ERROR);
-									return;
-								}
-								switch (result) {
-								case -1:
-									Toast.makeText(Preferences.this,
-											R.string.msg_errthomson3g,
-											Toast.LENGTH_SHORT).show();
-									break;
-								case 0:
-									showDialog(DIALOG_UPDATE_NEEDED);
-									break;
-								case 1:
-									Toast.makeText(Preferences.this,
-											R.string.msg_app_updated,
-											Toast.LENGTH_SHORT).show();
-									break;
-								}
-
-							}
-						}.execute();
-						return true;
-					}
-				});
 		findPreference("changelog").setOnPreferenceClickListener(
 				new OnPreferenceClickListener() {
 					public boolean onPreferenceClick(Preference preference) {
@@ -355,8 +242,7 @@ public class Preferences extends SherlockPreferenceActivity {
 	private static final int DIALOG_CHECK_DOWNLOAD_SERVER = 1003;
 	private static final int DIALOG_ERROR_TOO_ADVANCED = 1004;
 	private static final int DIALOG_ERROR = 1005;
-	private static final int DIALOG_UPDATE_NEEDED = 1006;
-	private static final int DIALOG_CHANGELOG = 1007;
+	private static final int DIALOG_CHANGELOG = 1006;
 
 	protected Dialog onCreateDialog(int id) {
 		AlertDialog.Builder builder = new Builder(this);
@@ -419,28 +305,6 @@ public class Preferences extends SherlockPreferenceActivity {
 							removeDialog(DIALOG_ASK_DOWNLOAD);
 						}
 					});
-			break;
-		}
-		case DIALOG_UPDATE_NEEDED: {
-			builder.setTitle(R.string.update_title)
-					.setMessage(getString(R.string.update_message, version))
-					.setNegativeButton(R.string.bt_close,
-							new OnClickListener() {
-
-								public void onClick(DialogInterface dialog,
-										int which) {
-									removeDialog(DIALOG_UPDATE_NEEDED);
-								}
-							})
-					.setPositiveButton(R.string.bt_website,
-							new OnClickListener() {
-
-								public void onClick(DialogInterface dialog,
-										int which) {
-									startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri
-											.parse("http://code.google.com/p/android-thomson-key-solver/downloads/list")));
-								}
-							});
 			break;
 		}
 		case DIALOG_CHECK_DOWNLOAD_SERVER: {

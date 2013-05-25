@@ -19,7 +19,6 @@
 
 package org.exobel.routerkeygen.ui;
 
-import org.exobel.routerkeygen.AdsUtils;
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.algorithms.WiFiNetwork;
 
@@ -41,7 +40,6 @@ public class NetworkActivity extends SherlockFragmentActivity {
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		AdsUtils.loadAdIfNeeded(this);
 		if (savedInstanceState == null) {
 			Bundle arguments = new Bundle();
 			final WiFiNetwork wiFiNetwork = (WiFiNetwork) getIntent().getParcelableExtra(

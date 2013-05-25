@@ -19,7 +19,6 @@
 
 package org.exobel.routerkeygen.ui;
 
-import org.exobel.routerkeygen.AdsUtils;
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.UpdateCheckerService;
 import org.exobel.routerkeygen.WifiScanReceiver;
@@ -28,7 +27,6 @@ import org.exobel.routerkeygen.WifiStateReceiver;
 import org.exobel.routerkeygen.algorithms.Keygen;
 import org.exobel.routerkeygen.algorithms.WiFiNetwork;
 
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -42,7 +40,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
@@ -55,7 +52,7 @@ import com.google.analytics.tracking.android.GoogleAnalytics;
 
 public class NetworksListActivity extends SherlockFragmentActivity implements
 		NetworksListFragment.OnItemSelectionListener, OnScanListener {
-	private final static String LAST_DIALOG_TIME = "last_time";
+	private final static String FIRST_TIME = "first_time";
 	private boolean mTwoPane;
 	private NetworksListFragment networkListFragment;
 	private WifiManager wifi;
@@ -65,7 +62,6 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 
 	private Handler mHandler = new Handler();
 
-	@TargetApi(Build.VERSION_CODES.GINGERBREAD)
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -85,17 +81,13 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 		scanFinished = new WifiScanReceiver(wifi, networkListFragment, this);
 		stateChanged = new WifiStateReceiver(wifi, networkListFragment);
 
-		AdsUtils.loadAdIfNeeded(this);
 		final SharedPreferences mPrefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
-		welcomeScreenShown = mPrefs.getBoolean(Preferences.VERSION, false);
+		welcomeScreenShown = mPrefs.getBoolean(FIRST_TIME, false);
 
-		final long timePassed = System.currentTimeMillis()
-				- mPrefs.getLong(LAST_DIALOG_TIME, 0);
-		if (!welcomeScreenShown || (timePassed > DateUtils.WEEK_IN_MILLIS)) {
+		if (!welcomeScreenShown) {
 			final SharedPreferences.Editor editor = mPrefs.edit();
-			editor.putBoolean(Preferences.VERSION, true);
-			editor.putLong(LAST_DIALOG_TIME, System.currentTimeMillis());
+			editor.putBoolean(FIRST_TIME, true);
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
 				editor.apply();
 			} else {
@@ -105,56 +97,20 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 					}
 				}).start();
 			}
-			// Checking for updates every week
-			startService(new Intent(getApplicationContext(),
-					UpdateCheckerService.class));
-			if (!AdsUtils.checkDonation(this)) {
-				final String whatsNewTitle = getString(R.string.msg_welcome_title);
-				final String whatsNewText = getString(R.string.msg_welcome_text);
-				new AlertDialog.Builder(this)
-						.setIcon(android.R.drawable.ic_dialog_alert)
-						.setTitle(whatsNewTitle)
-						.setMessage(whatsNewText)
-						.setNegativeButton(R.string.bt_dont_donate,
-								new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog,
-											int which) {
-										dialog.dismiss();
-									}
-								})
-						.setNeutralButton(R.string.bt_paypal,
-								new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog,
-											int which) {
-										final String donateLink = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=V3FFBTRTTV5DN";
-										Uri uri = Uri.parse(donateLink);
-										startActivity(new Intent(
-												Intent.ACTION_VIEW, uri));
-										dialog.dismiss();
-									}
-								})
-						.setPositiveButton(R.string.bt_google_play,
-								new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog,
-											int which) {
-										try {
-											startActivity(new Intent(
-													Intent.ACTION_VIEW,
-													Uri.parse("market://details?id="
-															+ Preferences.GOOGLE_PLAY_DOWNLOADER)));
-										} catch (android.content.ActivityNotFoundException anfe) {
-											startActivity(new Intent(
-													Intent.ACTION_VIEW,
-													Uri.parse("http://play.google.com/store/apps/details?id="
-															+ Preferences.GOOGLE_PLAY_DOWNLOADER)));
-										}
-										Toast.makeText(getApplicationContext(),
-												R.string.msg_donation,
-												Toast.LENGTH_LONG).show();
-										dialog.dismiss();
-									}
-								}).show();
-			}
+			final String whatsNewTitle = getString(R.string.msg_welcome_title);
+			final String whatsNewText = getString(R.string.msg_welcome_text);
+			new AlertDialog.Builder(this)
+					.setIcon(android.R.drawable.ic_dialog_alert)
+					.setTitle(whatsNewTitle)
+					.setMessage(whatsNewText)
+					.setNegativeButton(android.R.string.ok,
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int which) {
+									dialog.dismiss();
+								}
+							}).show();
+
 		}
 	}
 
@@ -216,27 +172,6 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 		super.onStart();
 		EasyTracker.getInstance().activityStart(this); // Add this method.
 		getPrefs();
-		if (wifiOn) {
-			try {
-				if (!wifi.setWifiEnabled(true))
-					networkListFragment.setMessage(R.string.msg_wifibroken);
-				else
-					wifiState = true;
-			} catch (SecurityException e) {
-				// Workaround for
-				// http://code.google.com/p/android/issues/detail?id=22036
-				networkListFragment.setMessage(R.string.msg_wifibroken);
-			}
-		}
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-		getPrefs();
-		GoogleAnalytics myInstance = GoogleAnalytics
-				.getInstance(getApplicationContext());
-		myInstance.setAppOptOut(!analyticsOptIn);
 		if (autoScan) {
 			mHandler.removeCallbacks(mAutoScanTask);
 			mHandler.postDelayed(mAutoScanTask, autoScanInterval * 1000L);
@@ -293,7 +228,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 	}
 
 	public void scan() {
-		if (!wifiState && !wifiOn) {
+		if (!wifiState ) {
 			networkListFragment.setMessage(R.string.msg_nowifi);
 			return;
 		}
@@ -321,7 +256,6 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 	};
 
 	private boolean wifiState;
-	private boolean wifiOn;
 	private boolean autoScan;
 	private boolean analyticsOptIn;
 	private long autoScanInterval;
@@ -329,8 +263,6 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 	private void getPrefs() {
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(getBaseContext());
-		wifiOn = prefs.getBoolean(Preferences.wifiOnPref, getResources()
-				.getBoolean(R.bool.wifiOnDefault));
 		autoScan = prefs.getBoolean(Preferences.autoScanPref, getResources()
 				.getBoolean(R.bool.autoScanDefault));
 		autoScanInterval = prefs.getInt(Preferences.autoScanIntervalPref,

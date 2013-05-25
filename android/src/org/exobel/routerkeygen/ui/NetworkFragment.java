@@ -31,7 +31,6 @@ import org.exobel.routerkeygen.AutoConnectService;
 import org.exobel.routerkeygen.BuildConfig;
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.algorithms.Keygen;
-import org.exobel.routerkeygen.algorithms.NativeThomson;
 import org.exobel.routerkeygen.algorithms.ThomsonKeygen;
 import org.exobel.routerkeygen.algorithms.WiFiNetwork;
 
@@ -350,57 +349,23 @@ public class NetworkFragment extends SherlockFragment {
 		private final static int SHOW_MESSAGE_NO_SPINNER = 2;
 
 		@Override
-		protected List<String> doInBackground(Void... params) {
-			final List<String> result = new ArrayList<String>();
-			for (Keygen keygen : wifiNetwork.getKeygens()) {
-				if (keygen instanceof ThomsonKeygen) {
-					getPrefs();
-					((ThomsonKeygen) keygen).setDictionary(dicFile);
-					((ThomsonKeygen) keygen).setInternetAlgorithm(thomson3g);
-					((ThomsonKeygen) keygen).setWebdic(getActivity()
-							.getResources().openRawResource(R.raw.webdic));
-				}
-				try {
-					final List<String> keygenResult = calcKeys(keygen);
-					if (keygenResult != null)
-						result.addAll(keygenResult);
-				} catch (Exception e) {
-					ACRA.getErrorReporter().putCustomData("ssid",
-							wifiNetwork.getSsidName());
-					ACRA.getErrorReporter().putCustomData("mac",
-							wifiNetwork.getMacAddress());
-					ACRA.getErrorReporter().handleException(e);
-					if (keygen instanceof ThomsonKeygen) {
-						((ThomsonKeygen) keygen).setErrorDict(true);// native
-																	// should
-						// never crash
-					}
-				}
-				if (nativeCalc && (keygen instanceof ThomsonKeygen)) {
-					if (((ThomsonKeygen) keygen).isErrorDict()) {
-						publishProgress(SHOW_MESSAGE_WITH_SPINNER,
-								R.string.msg_startingnativecalc);
-						try {
-							final Keygen nativeKeygen = new NativeThomson(
-									keygen);
-							if (isCancelled())
-								return null;
-							final List<String> keygenResult = calcKeys(nativeKeygen);
-							if (keygenResult != null)
-								result.addAll(keygenResult);
-						} catch (LinkageError e) {
-							publishProgress(SHOW_MESSAGE_NO_SPINNER,
-									R.string.err_misbuilt_apk);
-							return null;
-						} catch (Exception e) {
-							ACRA.getErrorReporter().putCustomData("ssid",
-									wifiNetwork.getSsidName());
-							ACRA.getErrorReporter().putCustomData("mac",
-									wifiNetwork.getMacAddress());
-							ACRA.getErrorReporter().handleException(e);
-						}
-					}
-				}
+		protected List<String> doInBackground(Keygen... params) {
+			if (keygen instanceof ThomsonKeygen) {
+				getPrefs();
+				((ThomsonKeygen) keygen).setDictionary(dicFile);
+				((ThomsonKeygen) keygen).setInternetAlgorithm(thomson3g);
+				((ThomsonKeygen) keygen).setWebdic(getActivity().getResources()
+						.openRawResource(R.raw.webdic));
+			}
+			List<String> result = null;
+			try {
+				result = calcKeys();
+			} catch (Exception e) {
+				ACRA.getErrorReporter().putCustomData("ssid",
+						keygen.getSsidName());
+				ACRA.getErrorReporter().putCustomData("mac",
+						keygen.getDisplayMacAddress());
+				ACRA.getErrorReporter().handleException(e);
 			}
 			return result;
 		}
@@ -425,14 +390,12 @@ public class NetworkFragment extends SherlockFragment {
 	}
 
 	private boolean thomson3g;
-	private boolean nativeCalc;
 	private String dicFile;
 
 	private void getPrefs() {
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(getActivity());
 		thomson3g = prefs.getBoolean(Preferences.thomson3gPref, false);
-		nativeCalc = prefs.getBoolean(Preferences.nativeCalcPref, true);
 		dicFile = prefs.getString(Preferences.dicLocalPref, Environment
 				.getExternalStorageDirectory().getAbsolutePath()
 				+ "RouterKeygen.dic");
