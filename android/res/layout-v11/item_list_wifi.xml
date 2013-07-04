@@ -38,6 +38,7 @@
             android:id="@+id/icon"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
+            android:contentDescription="@null"
             android:focusable="false"
             android:scaleType="fitXY"
             android:src="@drawable/ic_impossible" />
@@ -90,6 +91,7 @@
             android:id="@+id/strenght"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="@null"
             android:focusable="false"
             android:src="@drawable/ic_wifi_lock_signal_1" />
     </LinearLayout>

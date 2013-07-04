@@ -32,11 +32,13 @@ import android.content.Intent;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
+import android.os.AsyncTask.Status;
 import android.widget.Toast;
 
 public class WifiScanReceiver extends BroadcastReceiver {
 	final private OnScanListener[] scanListeners;
 	final private WifiManager wifi;
+	private KeygenMatcherTask task;
 
 	public interface OnScanListener {
 
@@ -69,7 +71,10 @@ public class WifiScanReceiver extends BroadcastReceiver {
 			context.unregisterReceiver(this);
 		} catch (Exception e) {
 		}
-		new KeygenMatcherTask(results, context).execute();
+		if (task == null || task.getStatus() == Status.FINISHED) {
+			task = new KeygenMatcherTask(results, context);
+			task.execute();
+		}
 	}
 
 	private class KeygenMatcherTask extends AsyncTask<Void, Void, Keygen[]> {
