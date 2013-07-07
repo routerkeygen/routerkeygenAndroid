@@ -162,7 +162,7 @@ public class HuaweiKeygen extends Keygen {
 	public int getSupportState() {
 		if (getSsidName().matches("INFINITUM[0-9a-zA-Z]{4}"))
 			return SUPPORTED;
-		return MAYBE_SUP;
+		return UNLIKELY_SUPPORTED;
 	}
 
 	private HuaweiKeygen(Parcel in) {

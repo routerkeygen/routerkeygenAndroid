@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-   Copyright 2012 Rui Araújo, Luís Fonseca
+   Copyright 2013 Rui Araújo, Luís Fonseca
   
    This file is part of Router Keygen.
   
@@ -43,6 +43,9 @@
     <string name="not_auto_connect_waiting">A esperar pela disconecção da ligação atual</string>
     <string name="not_auto_connect_key_testing">A testar <xliff:g id="key">%1$s</xliff:g></string>
     <string name="not_correct_key_testing"><xliff:g id="key">%1$s</xliff:g> é a senha correta.</string>
+    <string name="networklist_supported">Suportadas</string>
+    <string name="networklist_unlikely_supported">Pouco Provável</string>
+    <string name="networklist_unsupported">Não Suportadas</string>
 
     <!-- BUTTONS STRINGS -->
     <string name="bt_manual_cancel">Cancelar</string>

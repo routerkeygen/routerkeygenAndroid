@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-   Copyright 2012 Rui Araújo, Luís Fonseca
+   Copyright 2013 Rui Araújo, Luís Fonseca
   
    This file is part of Router Keygen.
   
@@ -15,7 +15,7 @@
    GNU General Public License for more details.
    
    You should have received a copy of the GNU General Public License
-   along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
+   along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
 
@@ -72,10 +72,11 @@
     <string name="msg_app_updated">Applicazione già aggiornata all\'ultima versione.</string>
     <string name="update_title">Aggiornamento disponibile</string>
     <string name="update_message">La versione <xliff:g id="version">%1$s</xliff:g> è disponibile. Vai al sito web per scaricare la nuova versione.</string>
-    <string name="cancel_download">Do you want to cancel the dictionary download?</string>
-    <!-- UNTRANSLATED -->
-    <string name="cancel_auto_test">Do you want to cancel the keys testing?</string>
-    <!-- UNTRANSLATED -->
+    <string name="cancel_download">Do you want to cancel the dictionary download?</string>  <!-- UNTRANSLATED -->
+    <string name="cancel_auto_test">Do you want to cancel the keys testing?</string>  <!-- UNTRANSLATED -->
+    <string name="networklist_supported">Supported</string> <!-- UNTRANSLATED -->
+    <string name="networklist_unlikely_supported">Unlikely Supported</string> <!-- UNTRANSLATED -->
+    <string name="networklist_unsupported">Unsupported</string> <!-- UNTRANSLATED -->
 
     <!-- PREFERENCES STRINGS -->
     <string name="pref_hinton_wifion">Attivare il wifi automaticamente</string>

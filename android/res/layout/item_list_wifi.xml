@@ -27,27 +27,11 @@
     android:padding="0dip" >
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:layout_marginRight="10dip"
-        android:focusable="false"
-        android:gravity="left" >
-
-        <ImageView
-            android:id="@+id/icon"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:contentDescription="@null"
-            android:focusable="false"
-            android:scaleType="fitXY"
-            android:src="@drawable/ic_impossible" />
-    </LinearLayout>
-
-    <LinearLayout
         android:layout_width="0dip"
         android:layout_height="wrap_content"
-        android:layout_marginRight="5dip"
-        android:layout_weight="4"
+        android:layout_marginEnd="6dip"
+        android:layout_marginStart="6dip"
+        android:layout_weight="5"
         android:focusable="false"
         android:gravity="left|center_vertical"
         android:orientation="vertical" >

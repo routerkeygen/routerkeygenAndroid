@@ -553,7 +553,7 @@ public class ThomsonKeygen extends Keygen {
 		// It is a new generation router which the probability of working is
 		// very low.
 		if (getMacAddress().substring(6).equalsIgnoreCase(ssidIdentifier))
-			return MAYBE_SUP;
+			return UNLIKELY_SUPPORTED;
 		return SUPPORTED;
 	}
 

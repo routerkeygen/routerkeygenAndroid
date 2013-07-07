@@ -43,6 +43,9 @@
     <string name="not_auto_connect_waiting">Waiting for the current network to disconnect</string>
     <string name="not_auto_connect_key_testing">Testing <xliff:g id="key">%1$s</xliff:g></string>
     <string name="not_correct_key_testing"><xliff:g id="key">%1$s</xliff:g> is the correct key.</string>
+    <string name="networklist_supported">Supported</string>
+    <string name="networklist_unlikely_supported">Unlikely Supported</string>
+    <string name="networklist_unsupported">Unsupported</string>
     <!-- BUTTONS STRINGS -->
     <string name="bt_manual_cancel">Cancel</string>
     <string name="bt_manual_calc">Calculate</string>

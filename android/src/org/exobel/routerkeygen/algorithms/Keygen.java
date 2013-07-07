@@ -34,7 +34,7 @@ public abstract class Keygen implements Comparable<Keygen>, Parcelable {
 	public static final String OPEN = "Open";
 
 	public static final int SUPPORTED = 2;
-	public static final int MAYBE_SUP = 1;
+	public static final int UNLIKELY_SUPPORTED = 1;
 	public static final int UNSUPPORTED = 0;
 
 	private ScanResult scanResult;
