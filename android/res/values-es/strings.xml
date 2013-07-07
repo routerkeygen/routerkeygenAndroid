@@ -71,6 +71,7 @@
         Router Keygen está hecho usando software de código abierto:\n<a href="https://github.com/JakeWharton/ActionBarSherlock">ActionBarSherlock</a>\n<a href="https://github.com/iPaulPro/aFileChooser">aFileChooser</a>.\n\n  Los términos de la licencia para este proyecto puden ser leidos siguiendo la liga.</string>
     <string name="msg_app_updated">Esta aplicación está en su versión más reciente disponible.</string>
     <string name="update_title">Hay una actualización disponible</string>
+    <string name="update_notification">La versión<xliff:g id="version">%1$s</xliff:g> está disponible.</string>
     <string name="update_message">La versión<xliff:g id="version">%1$s</xliff:g> está disponible. Ve al sitio Web para descargarla.</string>
     <string name="cancel_download">¿Quieres cancelar la descarga del diccionario?</string>
     <string name="cancel_auto_test">¿Quieres cancelar la prueba de las claves?</string>

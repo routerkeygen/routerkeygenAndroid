@@ -45,7 +45,7 @@ public class UpdateCheckerService extends IntentService {
 						.setTicker(getString(R.string.update_title))
 						.setContentTitle(getString(R.string.update_title))
 						.setContentText(
-								getString(R.string.update_message, version.getString("version")))
+								getString(R.string.update_notification, version.getString("version")))
 						.setOnlyAlertOnce(true)
 						.setContentIntent(
 								PendingIntent.getActivity(

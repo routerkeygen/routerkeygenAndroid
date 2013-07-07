@@ -71,6 +71,7 @@
         RouterKeygen is built using open source software:\n<a href="https://github.com/JakeWharton/ActionBarSherlock">ActionBarSherlock</a>\n<a href="https://github.com/iPaulPro/aFileChooser">aFileChooser</a>.\n\n  The license terms for this projects can be read by following the link.</string> <!-- UNTRANSLATED -->
     <string name="msg_app_updated">Applicazione già aggiornata all\'ultima versione.</string>
     <string name="update_title">Aggiornamento disponibile</string>
+    <string name="update_notification">La versione <xliff:g id="version">%1$s</xliff:g> è disponibile.</string>
     <string name="update_message">La versione <xliff:g id="version">%1$s</xliff:g> è disponibile. Vai al sito web per scaricare la nuova versione.</string>
     <string name="cancel_download">Do you want to cancel the dictionary download?</string>  <!-- UNTRANSLATED -->
     <string name="cancel_auto_test">Do you want to cancel the keys testing?</string>  <!-- UNTRANSLATED -->

@@ -74,6 +74,7 @@
         RouterKeygen is gemaakt met open source software:\n<a href="https://github.com/JakeWharton/ActionBarSherlock">ActionBarSherlock</a>\n<a href="https://github.com/iPaulPro/aFileChooser">aFileChooser</a>.\n\n De licentie voorwaarden voor dit project kunnen gelezen worden via de volgende link.</string>
     <string name="msg_app_updated">Router Keygen hoeft niet te worden bijgewerkt</string>
     <string name="update_title">Er is een update beschikbaar</string>
+    <string name="update_notification">Versie <xliff:g id="version">%1$s</xliff:g> is beschikbaar.</string>
     <string name="update_message">Versie <xliff:g id="version">%1$s</xliff:g> is beschikbaar. Ga naar de website om deze versie te downloaden</string>
     <string name="cancel_download">Woordenboek downloaden annuleren?</string>
     <string name="cancel_auto_test">Knoppen testen annuleren?</string>

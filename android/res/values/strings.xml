@@ -15,7 +15,7 @@
    GNU General Public License for more details.
    
    You should have received a copy of the GNU General Public License
-   along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
+   along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
 
@@ -73,6 +73,7 @@
         RouterKeygen is built using open source software:\n<a href="https://github.com/JakeWharton/ActionBarSherlock">ActionBarSherlock</a>\n<a href="https://github.com/iPaulPro/aFileChooser">aFileChooser</a>.\n\n  The license terms for this projects can be read by following the link.</string>
     <string name="msg_app_updated">The application is already at the latest version.</string>
     <string name="update_title">Update Available</string>
+    <string name="update_notification">There is version <xliff:g id="version">%1$s</xliff:g> available.</string>
     <string name="update_message">There is version <xliff:g id="version">%1$s</xliff:g> available. Go to the website to download the latest version.</string>
     <string name="cancel_download">Do you want to cancel the dictionary download?</string>
     <string name="cancel_auto_test">Do you want to cancel the keys testing?</string>
