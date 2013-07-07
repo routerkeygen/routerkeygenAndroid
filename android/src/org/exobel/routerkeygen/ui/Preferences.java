@@ -154,14 +154,15 @@ public class Preferences extends SherlockPreferenceActivity {
 		final PreferenceCategory mCategory = (PreferenceCategory) findPreference("2section");
 		if (!app_installed) {
 			mCategory.removePreference(findPreference("analytics_enabled"));
-			//If you haven't the donate app installed remove the paypal donate link.
+			// If you haven't the donate app installed remove the paypal donate
+			// link.
 			mCategory.removePreference(findPreference("donate_paypal"));
 			findPreference("donate_playstore").setOnPreferenceClickListener(
 					new OnPreferenceClickListener() {
 						public boolean onPreferenceClick(Preference preference) {
 							try {
-								startActivity(new Intent(Intent.ACTION_VIEW, Uri
-										.parse("market://details?id="
+								startActivity(new Intent(Intent.ACTION_VIEW,
+										Uri.parse("market://details?id="
 												+ GOOGLE_PLAY_DOWNLOADER)));
 							} catch (android.content.ActivityNotFoundException anfe) {
 								startActivity(new Intent(
@@ -174,7 +175,7 @@ public class Preferences extends SherlockPreferenceActivity {
 						}
 					});
 		} else {
-			//If you have the donate app installed no need to link to it.
+			// If you have the donate app installed no need to link to it.
 			mCategory.removePreference(findPreference("donate_playstore"));
 			findPreference("donate_paypal").setOnPreferenceClickListener(
 					new OnPreferenceClickListener() {
@@ -432,10 +433,8 @@ public class Preferences extends SherlockPreferenceActivity {
 
 								public void onClick(DialogInterface dialog,
 										int which) {
-									String url = "http://code.google.com/p/android-thomson-key-solver/downloads/list";
-									Intent i = new Intent(Intent.ACTION_VIEW);
-									i.setData(Uri.parse(url));
-									startActivity(i);
+									startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri
+											.parse("http://code.google.com/p/android-thomson-key-solver/downloads/list")));
 								}
 							});
 			break;

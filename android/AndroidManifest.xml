@@ -73,7 +73,7 @@
 
         <service android:name=".DictionaryDownloadService" />
         <service android:name=".AutoConnectService" />
-
+        <service android:name=".UpdateCheckerService" />
         <activity
             android:name=".CancelOperationActivity"
             android:excludeFromRecents="true"

@@ -20,6 +20,7 @@
 package org.exobel.routerkeygen.ui;
 
 import org.exobel.routerkeygen.R;
+import org.exobel.routerkeygen.UpdateCheckerService;
 import org.exobel.routerkeygen.WifiScanReceiver;
 import org.exobel.routerkeygen.WifiScanReceiver.OnScanListener;
 import org.exobel.routerkeygen.WifiStateReceiver;
@@ -122,6 +123,9 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 					}
 				}).start();
 			}
+			//Checking for updates every week
+			startService(new Intent(getApplicationContext(),
+					UpdateCheckerService.class));
 			if (!app_installed) {
 				final String whatsNewTitle = getString(R.string.msg_welcome_title);
 				final String whatsNewText = getString(R.string.msg_welcome_text);
