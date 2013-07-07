@@ -238,6 +238,17 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 				networkListFragment.setMessage(R.string.msg_wifibroken);
 			}
 		}
+	}
+	
+
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		getPrefs();
+		GoogleAnalytics myInstance = GoogleAnalytics
+				.getInstance(getApplicationContext());
+		myInstance.setAppOptOut(!analyticsOptIn);
 		if (autoScan) {
 			mHandler.removeCallbacks(mAutoScanTask);
 			mHandler.postDelayed(mAutoScanTask, autoScanInterval * 1000L);
@@ -246,14 +257,23 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 		scan();
 	}
 
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		try {
+			mHandler.removeCallbacks(mAutoScanTask);
+		} catch (Exception e) {
+		}
+	}
+
 	@Override
 	public void onStop() {
+		super.onStop();
 		try {
-			super.onStop();
 			EasyTracker.getInstance().activityStop(this); // Add this method.
 			unregisterReceiver(scanFinished);
 			unregisterReceiver(stateChanged);
-			mHandler.removeCallbacks(mAutoScanTask);
 		} catch (Exception e) {
 		}
 	}
@@ -283,15 +303,6 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 				refreshItem.setActionView(null);
 			}
 		}
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-		getPrefs();
-		GoogleAnalytics myInstance = GoogleAnalytics
-				.getInstance(getApplicationContext());
-		myInstance.setAppOptOut(!analyticsOptIn);
 	}
 
 	public void scan() {
