@@ -75,6 +75,7 @@
     <string name="update_message">There is version <xliff:g id="version">%1$s</xliff:g> available. Go to the website to download the latest version.</string>
     <string name="cancel_download">Do you want to cancel the dictionary download?</string>
     <string name="cancel_auto_test">Do you want to cancel the keys testing?</string>
+    <string name="msg_donation">Install the following app to remove the ads and to donate. Thank you! :-)</string>
     <!-- PREFERENCES STRINGS -->
     <string name="pref_hinton_wifion">Activate the Wifi Automatically</string>
     <string name="pref_hintoff_wifion">Do not activate the Wifi Automatically</string>

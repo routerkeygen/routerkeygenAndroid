@@ -104,7 +104,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 					}
 				}).start();
 			}
-			//Checking for updates every week
+			// Checking for updates every week
 			startService(new Intent(getApplicationContext(),
 					UpdateCheckerService.class));
 			if (!AdsUtils.checkDonation(this)) {
@@ -147,6 +147,9 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 													Uri.parse("http://play.google.com/store/apps/details?id="
 															+ Preferences.GOOGLE_PLAY_DOWNLOADER)));
 										}
+										Toast.makeText(getApplicationContext(),
+												R.string.msg_donation,
+												Toast.LENGTH_LONG).show();
 										dialog.dismiss();
 									}
 								}).show();
@@ -224,8 +227,6 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 			}
 		}
 	}
-	
-
 
 	@Override
 	public void onResume() {
@@ -241,7 +242,6 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 			mHandler.removeCallbacks(mAutoScanTask);
 		scan();
 	}
-
 
 	@Override
 	public void onPause() {

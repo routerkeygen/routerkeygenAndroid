@@ -78,6 +78,7 @@
     <string name="update_message">Versie <xliff:g id="version">%1$s</xliff:g> is beschikbaar. Ga naar de website om deze versie te downloaden</string>
     <string name="cancel_download">Woordenboek downloaden annuleren?</string>
     <string name="cancel_auto_test">Knoppen testen annuleren?</string>
+    <string name="msg_donation">Install the following app to remove the ads and to donate. Thank you! :-)</string> <!-- UNTRANSLATED -->
 
     <!-- PREFERENCES STRINGS -->
     <string name="pref_hinton_wifion">Wi-Fi automatisch inschakelen</string>

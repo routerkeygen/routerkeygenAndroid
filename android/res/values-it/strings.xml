@@ -78,6 +78,7 @@
     <string name="networklist_supported">Supported</string> <!-- UNTRANSLATED -->
     <string name="networklist_unlikely_supported">Unlikely Supported</string> <!-- UNTRANSLATED -->
     <string name="networklist_unsupported">Unsupported</string> <!-- UNTRANSLATED -->
+    <string name="msg_donation">Install the following app to remove the ads and to donate. Thank you! :-)</string> <!-- UNTRANSLATED -->
 
     <!-- PREFERENCES STRINGS -->
     <string name="pref_hinton_wifion">Attivare il wifi automaticamente</string>

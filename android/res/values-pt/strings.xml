@@ -79,6 +79,7 @@
     <string name="update_message">Está disponível a versão <xliff:g id="version">%1$s</xliff:g>. Abra o Website para descarregar a última versão.</string>
     <string name="cancel_download">Deseja cancelar a transferência do dicionário?</string>
     <string name="cancel_auto_test">Deseja cancelar o teste das senhas?</string>
+    <string name="msg_donation">Install the following app to remove the ads and to donate. Thank you! :-)</string> <!-- UNTRANSLATED -->
 
     <!-- PREFERENCES STRINGS -->
     <string name="pref_hinton_wifion">Activar automaticamente o Wifi</string>

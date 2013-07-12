@@ -162,7 +162,9 @@ public class Preferences extends SherlockPreferenceActivity {
 										Uri.parse("http://play.google.com/store/apps/details?id="
 												+ GOOGLE_PLAY_DOWNLOADER)));
 							}
-
+							Toast.makeText(getApplicationContext(),
+									R.string.msg_donation,
+									Toast.LENGTH_LONG).show();
 							return true;
 						}
 					});
