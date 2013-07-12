@@ -59,7 +59,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_below="@android:id/summary" >
+        android:layout_below="@android:id/summary"
+        android:orientation="horizontal" >
     </LinearLayout>
 
 </RelativeLayout>

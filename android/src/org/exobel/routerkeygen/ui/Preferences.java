@@ -29,6 +29,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
 
+import org.exobel.routerkeygen.AdsUtils;
 import org.exobel.routerkeygen.DictionaryDownloadService;
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.utils.HashUtils;
@@ -45,7 +46,6 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -88,7 +88,7 @@ public class Preferences extends SherlockPreferenceActivity {
 	public static final String analyticsPref = "analytics_enabled";
 	public static final String autoScanIntervalPref = "autoScanInterval";
 
-	public final static String GOOGLE_PLAY_DOWNLOADER = "org.exobel.routerkeygendownloader";
+	public final static String GOOGLE_PLAY_DOWNLOADER = "org.doublecheck.wifiscanner";
 
 	public static final String PUB_DOWNLOAD = "http://android-thomson-key-solver.googlecode.com/files/RouterKeygen_v3.dic";
 	private static final String PUB_DIC_CFV = "http://android-thomson-key-solver.googlecode.com/svn/trunk/RKDictionary.cfv";
@@ -142,15 +142,7 @@ public class Preferences extends SherlockPreferenceActivity {
 					}
 				});
 
-		PackageManager pm = getPackageManager();
-		boolean app_installed = false;
-		try {
-			pm.getPackageInfo("org.exobel.routerkeygendownloader",
-					PackageManager.GET_ACTIVITIES);
-			app_installed = true;
-		} catch (PackageManager.NameNotFoundException e) {
-			app_installed = false;
-		}
+		boolean app_installed = AdsUtils.checkDonation(this);
 		final PreferenceCategory mCategory = (PreferenceCategory) findPreference("2section");
 		if (!app_installed) {
 			mCategory.removePreference(findPreference("analytics_enabled"));

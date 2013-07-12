@@ -19,9 +19,8 @@
 package org.exobel.routerkeygen;
 
 import java.util.List;
-
 import org.exobel.routerkeygen.AutoConnectManager.onConnectionListener;
-
+import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -42,7 +41,6 @@ import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.RemoteViews;
-
 import com.farproc.wifi.connecter.Wifi;
 
 public class AutoConnectService extends Service implements onConnectionListener {
@@ -83,6 +81,7 @@ public class AutoConnectService extends Service implements onConnectionListener 
 		}
 	}
 
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
 	@SuppressWarnings("deprecation")
 	public void onCreate() {
 		wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);

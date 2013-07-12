@@ -158,6 +158,7 @@
     <string name="msg_no_correct_keys">Nessuna chiave corretta.</string>
     <string name="msg_auto_connect_running">La procedura di connessione automatica è già avviata.</string>
     <string name="msg_auto_connect_warning">This feature doesn\'t work well with weak networks.</string> <!-- UNTRANSLATED -->
+    <string name="crash_toast_text">Routerkeygen has crashed. Please send an email.</string> <!-- UNTRANSLATED -->
 
     <!-- FILE CHOOSER -->
     <string name="empty_directory">Empty Directory</string><!-- UNTRANSLATED -->

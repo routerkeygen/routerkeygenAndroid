@@ -158,6 +158,7 @@
     <string name="msg_no_correct_keys">Todas as senhas estão incorretas.</string>
     <string name="msg_auto_connect_running">O processo de teste já esta a correr.</string>
     <string name="msg_auto_connect_warning">Este teste não funciona bem com redes fracas.</string>
+    <string name="crash_toast_text">Routerkeygen teve um erro. Por favor envie um email.</string>
 
     <!-- FILE CHOOSER -->
     <string name="empty_directory">Diretoria vazia</string>

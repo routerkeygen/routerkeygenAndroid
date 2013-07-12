@@ -56,6 +56,8 @@
     <string name="bt_save_sd">Sauvegarder sur SD</string>
     <string name="bt_auto_connect">Connexion Auto</string>
     <string name="bt_website">Visiter notre site web</string>
+    <string name="bt_paypal">PayPal</string>
+    <string name="bt_google_play">Google Play</string>
 
     <!-- DIALOG STRINGS -->
     <string name="lb_manual">Entrez votre ESSID ici:</string>
@@ -157,6 +159,7 @@
     <string name="msg_no_correct_keys">Aucune clef valide.</string>
     <string name="msg_auto_connect_running">Le processus d\'auto-connexion est déjà en cours.</string>
     <string name="msg_auto_connect_warning">This feature doesn\'t work well with weak networks.</string> <!-- UNTRANSLATED -->
+    <string name="crash_toast_text">Routerkeygen has crashed. Please send an email.</string> <!-- UNTRANSLATED -->
 
     <!-- FILE CHOOSER -->
     <string name="empty_directory">Dossier vide</string>

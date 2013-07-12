@@ -108,6 +108,9 @@
     <string name="pref_hintoff_autoscan">Het zoeken gebeurt handmatig</string>
     <string name="pref_autoscan_interval">Automatisch zoekinterval</string>
     <string name="pref_hint_autoscan_interval">Periode tussen het automatisch zoeken</string>
+    <string name="pref_analytics">Google Analytics</string> <!-- UNTRANSLATED -->
+    <string name="pref_hinton_analytics">Usage and crashes are being tracked anonymously</string> <!-- UNTRANSLATED -->
+    <string name="pref_hintoff_analytics">Usage and crashes are not being tracked</string> <!-- UNTRANSLATED -->
 
     <!-- ERROR MESSAGE STRINGS -->
     <string name="msg_unspported">Deze ESSID wordt niet ondersteund</string>
@@ -154,6 +157,7 @@
     <string name="msg_no_correct_keys">Wachtwoorden incorrect</string>
     <string name="msg_auto_connect_running">Er wordt al automatisch verbonden</string>
     <string name="msg_auto_connect_warning">Deze functie werkt niet goed met zwakke netwerken.</string>
+    <string name="crash_toast_text">Routerkeygen has crashed. Please send an email.</string> <!-- UNTRANSLATED -->
 
     <!-- FILE CHOOSER -->
     <string name="empty_directory">Lege map</string>

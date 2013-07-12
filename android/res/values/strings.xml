@@ -31,8 +31,6 @@
     <string name="context_menu_copy_ssid">Copy SSID</string>
     <string name="context_menu_copy_mac">Copy MAC address</string>
     <string name="context_menu_use_mac">Use MAC address in Manual Input Dialog</string>
-    <string name="menu_preferences">Preferences</string>
-    <string name="menu_preferences">Preferences</string>
     <string name="share_msg_begin">Keys</string>
     <string name="share_title">Share Keys</string>
     <string name="msg_copied"><xliff:g id="arg">%1$s</xliff:g> was copied to clipboard!</string>
@@ -148,14 +146,13 @@
     <string name="msg_saved_key_file">saved to the SD card.</string>
     <string name="pref_msg_no_network">There is no network access.</string>
     <string name="msg_err_webdic_table">Error while processing online keys.</string>
-    <string name="msg_err_webdic_table">Error while processing online keys.</string>
     <string name="msg_unspported_network">A valid network was not recognized. Please check the SSID and the MAC address.</string>
     <string name="msg_invalid_mac">A valid MAC address wasn\'t entered so it will be ignored.</string>
     <string name="msg_error_key_testing">Error trying to test the key.</string>
     <string name="msg_no_correct_keys">No correct keys.</string>
     <string name="msg_auto_connect_running">The auto connect process is already running.</string>
     <string name="msg_auto_connect_warning">This feature doesn\'t work well with weak networks.</string>
-    <string name="crash_toast_text">Routerkeygen has crashed.</string>
+    <string name="crash_toast_text">Routerkeygen has crashed. Please send an email.</string>
     <!-- FILE CHOOSER -->
     <string name="empty_directory">Empty Directory</string>
     <string name="storage_removed">Storage was removed or unmounted.</string>

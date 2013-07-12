@@ -19,6 +19,7 @@
 
 package org.exobel.routerkeygen.ui;
 
+import org.exobel.routerkeygen.AdsUtils;
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.UpdateCheckerService;
 import org.exobel.routerkeygen.WifiScanReceiver;
@@ -34,7 +35,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Build;
@@ -44,14 +44,11 @@ import android.preference.PreferenceManager;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.google.ads.AdRequest;
-import com.google.ads.AdView;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.GoogleAnalytics;
 
@@ -87,23 +84,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 		scanFinished = new WifiScanReceiver(wifi, networkListFragment, this);
 		stateChanged = new WifiStateReceiver(wifi, networkListFragment);
 
-		final PackageManager pm = getPackageManager();
-		boolean app_installed = false;
-		try {
-			pm.getPackageInfo("org.exobel.routerkeygendownloader",
-					PackageManager.GET_ACTIVITIES);
-			app_installed = true;
-		} catch (PackageManager.NameNotFoundException e) {
-			app_installed = false;
-		}
-		// Look up the AdView as a resource and load a request.
-		AdView adView = (AdView) this.findViewById(R.id.adView);
-		if (app_installed) {
-			final ViewGroup vg = (ViewGroup) adView.getParent();
-			vg.removeView(adView);
-		} else
-			adView.loadAd(new AdRequest());
-
+		AdsUtils.loadAdIfNeeded(this);
 		final SharedPreferences mPrefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
 		welcomeScreenShown = mPrefs.getBoolean(Preferences.VERSION, false);
@@ -126,7 +107,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 			//Checking for updates every week
 			startService(new Intent(getApplicationContext(),
 					UpdateCheckerService.class));
-			if (!app_installed) {
+			if (!AdsUtils.checkDonation(this)) {
 				final String whatsNewTitle = getString(R.string.msg_welcome_title);
 				final String whatsNewText = getString(R.string.msg_welcome_text);
 				new AlertDialog.Builder(this)

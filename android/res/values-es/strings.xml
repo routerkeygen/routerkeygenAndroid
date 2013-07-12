@@ -153,6 +153,7 @@
     <string name="msg_no_correct_keys">Sin claves correctas.</string>
     <string name="msg_auto_connect_running">El proceso de auto conectar ya se está ejecutando.</string>
     <string name="msg_auto_connect_warning">Esta característica no funciona bien en redes con señal baja.</string>
+    <string name="crash_toast_text">Routerkeygen has crashed. Please send an email.</string> <!-- UNTRANSLATED -->
 
     <!-- FILE CHOOSER -->
     <string name="empty_directory">El directorio está vacío.</string>
