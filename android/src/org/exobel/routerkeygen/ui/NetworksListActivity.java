@@ -114,7 +114,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 						.setIcon(android.R.drawable.ic_dialog_alert)
 						.setTitle(whatsNewTitle)
 						.setMessage(whatsNewText)
-						.setNegativeButton(android.R.string.ok,
+						.setNegativeButton(R.string.bt_dont_donate,
 								new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog,
 											int which) {

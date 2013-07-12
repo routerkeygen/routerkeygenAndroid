@@ -57,6 +57,7 @@
     <string name="bt_website">Abrir Website</string>
     <string name="bt_paypal">PayPal</string>
     <string name="bt_google_play">Google Play</string>
+    <string name="bt_dont_donate">Não doar :-(</string>
 
     <!-- DIALOG STRINGS -->
     <string name="lb_manual">Introduza o ESSID:</string>

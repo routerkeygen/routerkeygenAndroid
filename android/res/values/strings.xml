@@ -54,6 +54,7 @@
     <string name="bt_website">Go to Website</string>
     <string name="bt_paypal">PayPal</string>
     <string name="bt_google_play">Google Play</string>
+    <string name="bt_dont_donate">Don\'t donate :-(</string>
     <!-- DIALOG STRINGS -->
     <string name="lb_manual">Input your ESSID here:</string>
     <string name="dialog_nativecalc_msg">This can take up to 2 minutes. Please wait.</string>

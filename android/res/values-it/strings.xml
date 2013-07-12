@@ -54,6 +54,7 @@
     <string name="bt_website">Vai al sito web</string>
     <string name="bt_paypal">PayPal</string>
     <string name="bt_google_play">Google Play</string>
+    <string name="bt_dont_donate">Don\'t donate :-(</string> <!-- UNTRANSLATED -->
 
     <!-- DIALOG STRINGS -->
     <string name="lb_manual">Inserisci qui il tuo ESSID:</string>
