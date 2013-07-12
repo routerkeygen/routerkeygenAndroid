@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Wifi Scanner</string>
+    <string name="msg_welcome_text_donate">Votre don permettra de motiver les auteurs et d\'améliorer cet outil open-source.</string>
+    <string name="msg_nowifidetected">Aucun réseau WIFI detecté!</string>
+    <string name="msg_nowifi">Wifi désactivé! Merci de l\'activer!</string>
+    <string name="msg_scanfailed">Scan échoué!</string>
+    <string name="msg_wifibroken">Impossible d\'activer le Wifi</string>
+    <string name="msg_scanstarted">Lancement du scan</string>
+    <string name="msg_wifienabling">Activation du Wifi</string>
+    <string name="menu_scan">Scan</string>
+
+</resources>
