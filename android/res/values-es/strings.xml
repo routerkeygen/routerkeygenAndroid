@@ -24,7 +24,7 @@
     <string name="app_name">Router Keygen</string>
     <string name="msg_welcome_title">Router Keygen</string>
     <string name="msg_welcome_text">Gracias por probar Router Keygen. Si te gustó esta aplicación, por favor considera comprar la versión de donación. El link está en el menú de preferencias. Tu donación motivará a los autores a seguir trabajando en ésta gran herramienta de código abierto.</string>
-    <string name="msg_welcome_tip">Selecciona cualquier red que tenga una barra verde para generar las claves posibles.</string>
+    <string name="msg_welcome_tip">Select any supported network to generate possible keys.</string> <!-- UNTRANSLATED -->
     <string name="menu_scan">Escanear</string>
     <string name="menu_manual">Introducción manual</string>
     <string name="menu_preferences">Preferencias</string>

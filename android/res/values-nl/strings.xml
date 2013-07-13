@@ -25,7 +25,7 @@
     <string name="app_name">Router Keygen</string>
     <string name="msg_welcome_title">Router Keygen</string>
     <string name="msg_welcome_text">Bedankt voor het uitproberen van Router Keygen. Als u deze app leuk vindt, denk er dan over na om de donatieversie te kopen. De link is te vinden in Instellingen. Uw donatie zal de ontwikkelaars aanmoedigen om deze opensource-app nog beter te maken.</string>
-    <string name="msg_welcome_tip">Kies een netwerk met een goed signaal om mogelijke wachtwoorden te berekenen</string>
+    <string name="msg_welcome_tip">Select any supported network to generate possible keys.</string> <!-- UNTRANSLATED -->
     <string name="menu_scan">Zoeken</string>
     <string name="menu_manual">Handmatig</string>
     <string name="menu_preferences">Instellingen</string>
