@@ -24,7 +24,7 @@
     <string name="app_name">Router Keygen</string>
     <string name="msg_welcome_title">Router Keygen</string>
     <string name="msg_welcome_text">Gracias por probar Router Keygen. Si te gustó esta aplicación, por favor considera comprar la versión de donación. El link está en el menú de preferencias. Tu donación motivará a los autores a seguir trabajando en ésta gran herramienta de código abierto.</string>
-    <string name="msg_welcome_tip">Select any supported network to generate possible keys.</string> <!-- UNTRANSLATED -->
+    <string name="msg_welcome_tip">Selecciona cualquier red soportada para generar una posible clave.</string>
     <string name="menu_scan">Escanear</string>
     <string name="menu_manual">Introducción manual</string>
     <string name="menu_preferences">Preferencias</string>
@@ -41,9 +41,9 @@
     <string name="not_auto_connect_waiting">Esperando a que la red actual se desconecte</string>
     <string name="not_auto_connect_key_testing">Probando <xliff:g id="key">%1$s</xliff:g></string>
     <string name="not_correct_key_testing"><xliff:g id="key">%1$s</xliff:g>es la clave correcta.</string>
-    <string name="networklist_supported">Supported</string> <!-- UNTRANSLATED -->
-    <string name="networklist_unlikely_supported">Unlikely Supported</string> <!-- UNTRANSLATED -->
-    <string name="networklist_unsupported">Unsupported</string> <!-- UNTRANSLATED -->
+    <string name="networklist_supported">Soportado</string>
+    <string name="networklist_unlikely_supported">Probablemente no Soportado</string>
+    <string name="networklist_unsupported">No Soportado</string>
     <!-- BUTTONS STRINGS -->
     <string name="bt_manual_cancel">Cancelar</string>
     <string name="bt_manual_calc">Calcular</string>
@@ -54,7 +54,7 @@
     <string name="bt_website">Ir al sitio Web</string>
     <string name="bt_paypal">PayPal</string>
     <string name="bt_google_play">Google Play</string>
-    <string name="bt_dont_donate">Don\'t donate :-(</string> <!-- UNTRANSLATED -->
+    <string name="bt_dont_donate">No donar :-(</string>
     <!-- DIALOG STRINGS -->
     <string name="lb_manual">Introduce el ESSID:</string>
     <string name="dialog_nativecalc_msg">Esto puede llevar hasta unos 2 minutos, espera por favor…</string>
@@ -66,7 +66,7 @@
     <string name="lb_manual_bssid">Dirección MAC (opcional):</string>
     <string name="dialog_about_credits">Créditos</string>
     <string name="dialog_about_credits_desc">Router Keygen es el resultado de la valiosa contribución de las siguientes personas y organizaciones:\n\n
-        Rui Araújo, Luís Fonseca, Ângela Igreja, Simone Guidi, Matthijs de Rijk, Van Hove Sven, Jon Uriarte, <a href="http://www.gnucitizen.org/">GNUCITIZEN</a>, <a href="http://wifiresearchers.wordpress.com/">White Hats Crew</a>, Fred Williams, Muris Kurgaš, <a href="http://websec.ca/">Pedro Joaquim</a>, chaeo, Nicolas DeRouet, Eduardo Laborin, Florian Frank, Axel Martínez, Victor Mignot, Martijn Gerkes, <a href="http://www.openssl.org/">OpenSSl</a>.</string>
+        Rui Araújo, Luís Fonseca, Ângela Igreja, Simone Guidi, Matthijs de Rijk, Van Hove Sven, Jon Uriarte, <a href="http://www.gnucitizen.org/">GNUCITIZEN</a>, <a href="http://wifiresearchers.wordpress.com/">White Hats Crew</a>, Fred Williams, Muris Kurgaš, <a href="http://websec.ca/">Pedro Joaquim</a>, chaeo, Nicolas DeRouet, Eduardo Laborin, Florian Frank, Axel Martínez, Victor Mignot, Martijn Gerkes, Alejandro Marquez, <a href="http://www.openssl.org/">OpenSSl</a>.</string>
     <string name="dialog_about_license">Licencia</string>
     <string name="dialog_about_license_desc">Esta aplicación está bajo licencia GPLv3.\n\nPuedes leer los términos de la licencia<a href="http://www.gnu.org/licenses/gpl-3.0.html">aquí</a>.\n\n
         Router Keygen está hecho usando software de código abierto:\n<a href="https://github.com/JakeWharton/ActionBarSherlock">ActionBarSherlock</a>\n<a href="https://github.com/iPaulPro/aFileChooser">aFileChooser</a>.\n\n  Los términos de la licencia para este proyecto puden ser leidos siguiendo la liga.</string>
@@ -76,7 +76,7 @@
     <string name="update_message">La versión<xliff:g id="version">%1$s</xliff:g> está disponible. Ve al sitio Web para descargarla.</string>
     <string name="cancel_download">¿Quieres cancelar la descarga del diccionario?</string>
     <string name="cancel_auto_test">¿Quieres cancelar la prueba de las claves?</string>
-    <string name="msg_donation">Install the following app to remove the ads and to donate. Thank you! :-)</string> <!-- UNTRANSLATED -->
+    <string name="msg_donation">Instale la siguiente aplicación para eliminar los anuncios y para donar. Gracias! :-)</string>
     <!-- PREFERENCES STRINGS -->
     <string name="pref_hinton_wifion">Activar WiFi automáticamente.</string>
     <string name="pref_hintoff_wifion">No activar WiFi automáticamente.</string>
@@ -155,7 +155,7 @@
     <string name="msg_no_correct_keys">Sin claves correctas.</string>
     <string name="msg_auto_connect_running">El proceso de auto conectar ya se está ejecutando.</string>
     <string name="msg_auto_connect_warning">Esta característica no funciona bien en redes con señal baja.</string>
-    <string name="crash_toast_text">Routerkeygen has crashed. Please send an email.</string> <!-- UNTRANSLATED -->
+    <string name="crash_toast_text">Routerkeygen ah fallado. Por favor envianos un correo.</string>
 
     <!-- FILE CHOOSER -->
     <string name="empty_directory">El directorio está vacío.</string>
