@@ -47,6 +47,7 @@ public class UpdateCheckerService extends IntentService {
 						.setContentText(
 								getString(R.string.update_notification, version.getString("version")))
 						.setOnlyAlertOnce(true)
+						.setAutoCancel(true)
 						.setContentIntent(
 								PendingIntent.getActivity(
 										getApplicationContext(), 0,
