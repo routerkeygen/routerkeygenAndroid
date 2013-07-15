@@ -94,6 +94,8 @@ public class WifiListAdapter extends BaseAdapter implements
 
 	@Override
 	public int getItemViewType(int position) {
+		if ( position >= getCount() )
+			return -1;
 		return getItem(position).type;
 	}
 
