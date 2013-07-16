@@ -28,6 +28,7 @@ import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils.TruncateAt;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,7 +95,7 @@ public class WifiListAdapter extends BaseAdapter implements
 
 	@Override
 	public int getItemViewType(int position) {
-		if ( position >= getCount() )
+		if (position >= getCount())
 			return -1;
 		return getItem(position).type;
 	}
@@ -130,9 +131,11 @@ public class WifiListAdapter extends BaseAdapter implements
 						.findViewById(R.id.strenght)));
 			} else {
 				convertView = inflater.inflate(
-						R.layout.section_list_wifi, parent, false);
+						android.R.layout.simple_list_item_1, parent, false);
 				final TextView view = (TextView) convertView;
 				view.setTypeface(typeface);
+				view.setTextSize(TypedValue.COMPLEX_UNIT_SP, 23);
+				view.setTextColor(0xFFFFFFFF);
 			}
 		} else {
 			switch (wifi.type) {
@@ -153,9 +156,11 @@ public class WifiListAdapter extends BaseAdapter implements
 			case Item.SECTION:
 				if (convertView.getTag() != null) {
 					convertView = inflater.inflate(
-							R.layout.section_list_wifi, parent, false);
+							android.R.layout.simple_list_item_1, parent, false);
 					final TextView view = (TextView) convertView;
 					view.setTypeface(typeface);
+					view.setTextSize(TypedValue.COMPLEX_UNIT_SP, 23);
+					view.setTextColor(0xFFFFFFFF);
 				}
 
 				break;
