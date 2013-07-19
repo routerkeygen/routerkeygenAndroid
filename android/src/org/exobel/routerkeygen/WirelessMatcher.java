@@ -34,6 +34,7 @@ import org.exobel.routerkeygen.algorithms.PBSKeygen;
 import org.exobel.routerkeygen.algorithms.PirelliKeygen;
 import org.exobel.routerkeygen.algorithms.PtvKeygen;
 import org.exobel.routerkeygen.algorithms.SkyV1Keygen;
+import org.exobel.routerkeygen.algorithms.Speedport500Keygen;
 import org.exobel.routerkeygen.algorithms.TecomKeygen;
 import org.exobel.routerkeygen.algorithms.TeleTuKeygen;
 import org.exobel.routerkeygen.algorithms.TelseyKeygen;
@@ -101,17 +102,6 @@ public class WirelessMatcher {
 			}
 			return new EircomKeygen(ssid, mac, level, enc);
 		}
-
-		if (mac.startsWith("00:12:BF") || mac.startsWith("00:1A:2A")
-				|| mac.startsWith("00:1D:19") || mac.startsWith("00:23:08")
-				|| mac.startsWith("00:26:4D") || mac.startsWith("50:7E:5D")
-				|| mac.startsWith("1C:C6:3C") || mac.startsWith("74:31:70")
-				|| mac.startsWith("7C:4F:B5") || mac.startsWith("88:25:2C"))
-			return new EasyBoxKeygen(ssid, mac, level, enc);
-
-		if (ssid.matches("(Thomson|Blink|SpeedTouch|O2Wireless|Orange-|INFINITUM|"
-				+ "BigPond|Otenet|Bbox-|DMAX|privat|TN_private_|CYTA|Vodafone-|Optimus|OptimusFibra|MEO-)[0-9a-fA-F]{6}"))
-			return new ThomsonKeygen(ssid, mac, level, enc);
 
 		if (ssid.matches("DLink-[0-9a-fA-F]{6}"))
 			return new DlinkKeygen(ssid, mac, level, enc);
@@ -220,8 +210,10 @@ public class WirelessMatcher {
 							.startsWith("00:19:5B")))
 			return new Wlan2Keygen(ssid, mac, level, enc);
 
-		if (mac.startsWith("00:1E:40") || mac.startsWith("00:25:5E"))
-			return new AliceGermanyKeygen(ssid, mac, level, enc);
+		if (ssid.matches("WLAN-[0-9a-fA-F]{6}")
+				&& (mac.startsWith("00:12:BF") || mac.startsWith("00:1A:2A") || mac
+						.startsWith("00:1D:19")))
+			return new Speedport500Keygen(ssid, mac, level, enc);
 
 		if (ssid.matches("(WLAN|WiFi|YaCom)[0-9a-zA-Z]{6}"))
 			return new Wlan6Keygen(ssid, mac, level, enc);
@@ -320,8 +312,28 @@ public class WirelessMatcher {
 						|| mac.startsWith("CC:96:A0") || mac
 							.startsWith("20:2B:C1")))
 			return new HuaweiKeygen(ssid, mac, level, enc);
-		return new UnsupportedKeygen(ssid, mac, level, enc);
 
+		/*
+		 * These detectors have very relaxed rules so these should be tested in
+		 * the end
+		 */
+
+		if (mac.startsWith("00:12:BF") || mac.startsWith("00:1A:2A")
+				|| mac.startsWith("00:1D:19") || mac.startsWith("00:23:08")
+				|| mac.startsWith("00:26:4D") || mac.startsWith("50:7E:5D")
+				|| mac.startsWith("1C:C6:3C") || mac.startsWith("74:31:70")
+				|| mac.startsWith("7C:4F:B5") || mac.startsWith("88:25:2C"))
+			return new EasyBoxKeygen(ssid, mac, level, enc);
+
+		if (mac.startsWith("00:1E:40") || mac.startsWith("00:25:5E"))
+			return new AliceGermanyKeygen(ssid, mac, level, enc);
+		
+		//TODO: support several algorithm at a time.
+		if (ssid.matches("(Thomson|Blink|SpeedTouch|O2Wireless|Orange-|INFINITUM|"
+				+ "BigPond|Otenet|Bbox-|DMAX|privat|TN_private_|CYTA|Vodafone-|Optimus|OptimusFibra|MEO-)[0-9a-fA-F]{6}"))
+			return new ThomsonKeygen(ssid, mac, level, enc);
+
+		return new UnsupportedKeygen(ssid, mac, level, enc);
 	}
 
 	private static InputStream getEntry(String filename,
