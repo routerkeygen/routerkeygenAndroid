@@ -9,7 +9,8 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import org.exobel.routerkeygen.algorithms.AliceKeygen;
+import org.exobel.routerkeygen.algorithms.AliceGermanyKeygen;
+import org.exobel.routerkeygen.algorithms.AliceItalyKeygen;
 import org.exobel.routerkeygen.algorithms.AndaredKeygen;
 import org.exobel.routerkeygen.algorithms.AxtelKeygen;
 import org.exobel.routerkeygen.algorithms.CabovisaoSagemKeygen;
@@ -101,20 +102,11 @@ public class WirelessMatcher {
 			return new EircomKeygen(ssid, mac, level, enc);
 		}
 
-		/*
-		 * This test MUST be done before the Thomson one because some SSID are
-		 * common and this test checks for the MAC addresses
-		 */
-		if (ssid.matches("(Arcor|EasyBox|Vodafone)(-| )[0-9a-fA-F]{6}")
-				&& (mac.startsWith("00:12:BF") || mac.startsWith("00:1A:2A")
-						|| mac.startsWith("00:1D:19")
-						|| mac.startsWith("00:23:08")
-						|| mac.startsWith("00:26:4D")
-						|| mac.startsWith("50:7E:5D")
-						|| mac.startsWith("1C:C6:3C")
-						|| mac.startsWith("74:31:70")
-						|| mac.startsWith("7C:4F:B5") || mac
-							.startsWith("88:25:2C")))
+		if (mac.startsWith("00:12:BF") || mac.startsWith("00:1A:2A")
+				|| mac.startsWith("00:1D:19") || mac.startsWith("00:23:08")
+				|| mac.startsWith("00:26:4D") || mac.startsWith("50:7E:5D")
+				|| mac.startsWith("1C:C6:3C") || mac.startsWith("74:31:70")
+				|| mac.startsWith("7C:4F:B5") || mac.startsWith("88:25:2C"))
 			return new EasyBoxKeygen(ssid, mac, level, enc);
 
 		if (ssid.matches("(Thomson|Blink|SpeedTouch|O2Wireless|Orange-|INFINITUM|"
@@ -154,7 +146,7 @@ public class WirelessMatcher {
 			if (supported != null && supported.size() > 0) {
 				if (mac.length() < 6)
 					mac = supported.get(0).getMac();
-				return new AliceKeygen(ssid, mac, level, enc, supported);
+				return new AliceItalyKeygen(ssid, mac, level, enc, supported);
 			}
 		}
 
@@ -227,6 +219,9 @@ public class WirelessMatcher {
 						|| mac.startsWith("00:01:1B") || mac
 							.startsWith("00:19:5B")))
 			return new Wlan2Keygen(ssid, mac, level, enc);
+
+		if (mac.startsWith("00:1E:40") || mac.startsWith("00:25:5E"))
+			return new AliceGermanyKeygen(ssid, mac, level, enc);
 
 		if (ssid.matches("(WLAN|WiFi|YaCom)[0-9a-zA-Z]{6}"))
 			return new Wlan6Keygen(ssid, mac, level, enc);

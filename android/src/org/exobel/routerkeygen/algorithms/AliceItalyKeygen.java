@@ -30,13 +30,13 @@ import org.exobel.routerkeygen.config.AliceMagicInfo;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class AliceKeygen extends Keygen {
+public class AliceItalyKeygen extends Keygen {
 
 	private MessageDigest md;
 	final private String ssidIdentifier;
 	final private List<AliceMagicInfo> supportedAlice;
 
-	public AliceKeygen(String ssid, String mac, int level, String enc,
+	public AliceItalyKeygen(String ssid, String mac, int level, String enc,
 			List<AliceMagicInfo> supportedAlice) {
 		super(ssid, mac, level, enc);
 		this.ssidIdentifier = ssid.substring(ssid.length() - 8);
@@ -137,7 +137,7 @@ public class AliceKeygen extends Keygen {
 	}
 
 	@SuppressWarnings("unchecked")
-	private AliceKeygen(Parcel in) {
+	private AliceItalyKeygen(Parcel in) {
 		super(in);
 		ssidIdentifier = in.readString();
 		supportedAlice = in
@@ -150,13 +150,13 @@ public class AliceKeygen extends Keygen {
 		dest.writeList(supportedAlice);
 	}
 
-	public static final Parcelable.Creator<AliceKeygen> CREATOR = new Parcelable.Creator<AliceKeygen>() {
-		public AliceKeygen createFromParcel(Parcel in) {
-			return new AliceKeygen(in);
+	public static final Parcelable.Creator<AliceItalyKeygen> CREATOR = new Parcelable.Creator<AliceItalyKeygen>() {
+		public AliceItalyKeygen createFromParcel(Parcel in) {
+			return new AliceItalyKeygen(in);
 		}
 
-		public AliceKeygen[] newArray(int size) {
-			return new AliceKeygen[size];
+		public AliceItalyKeygen[] newArray(int size) {
+			return new AliceItalyKeygen[size];
 		}
 	};
 
