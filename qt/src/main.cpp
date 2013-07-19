@@ -64,12 +64,13 @@ int main(int argc, char *
             QVector<QString> results = keygen->getResults();
             if (results.isEmpty()) {
                 std::cout << QObject::tr("No keys were calculated.").toUtf8().data() << std::endl;
+                return -1;
             }else{
                 std::cout << QObject::tr("Calculated Passwords for %1").arg(keygen->getSsidName()).toUtf8().data() << std::endl;
                 for (int i = 0; i < results.size(); ++i)
                     std::cout <<  results.at(i).toLatin1().data() << std::endl;
+                return 0;
             }
-            return 0;
         }catch (int e){
             std::cout << QObject::tr("Error while calculating.").toUtf8().data() << std::endl;
             delete keygen;

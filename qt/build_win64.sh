@@ -31,6 +31,6 @@ cd include && ln -sf qt4/src && cd ..
 chmod +x tools/moc.exe
 
 
-cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/toolchain-win64.cmake -DQT_MOC_EXECUTABLE=tools/moc.exe -DCMAKE_BUILD_TYPE=Release ..
+cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/toolchain-win64.cmake -DQT_MOC_EXECUTABLE=tools/moc.exe -DCMAKE_BUILD_TYPE=Release -DQT_QMAKE_EXECUTABLE=/usr/bin/qmake-qt4 ..
 make
 make installer
