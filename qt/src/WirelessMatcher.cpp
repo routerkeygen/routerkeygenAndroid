@@ -55,6 +55,8 @@
 #include "algorithms/PtvKeygen.h"
 #include "algorithms/EasyBoxKeygen.h"
 #include "algorithms/CabovisaoSagemKeygen.h"
+#include "algorithms/Speedport500Keygen.h"
+#include "algorithms/WifimediaRKeygen.h"
 #include <QRegExp>
 
 WirelessMatcher::WirelessMatcher() {
@@ -233,6 +235,11 @@ Keygen * WirelessMatcher::getKeygen(QString ssid, QString mac, int level,
             || mac.startsWith("00:19:5B")))
         return new Wlan2Keygen(ssid, mac, level, enc);
 
+    if (ssid.count(QRegExp("^WLAN-[0-9a-fA-F]{6}$")) == 1
+            && (mac.startsWith("00:12:BF") || mac.startsWith("00:1A:2A") || mac
+                    .startsWith("00:1D:19")))
+        return new Speedport500Keygen(ssid, mac, level, enc);
+
     if (ssid.count(QRegExp("^(WLAN|WiFi|YaCom)[0-9a-zA-Z]{6}$")) == 1)
         return new Wlan6Keygen(ssid, mac, level, enc);
 
@@ -278,6 +285,10 @@ Keygen * WirelessMatcher::getKeygen(QString ssid, QString mac, int level,
             || (ssid.right(4) == mac.replace(":", "").right(4)))
             return new MegaredKeygen(ssid, mac, level, enc);
     }
+
+    if (ssid.count(QRegExp("^wifimedia_R-[0-9a-zA-Z]{4}$")) == 1
+            && mac.replace(":", "").length() == 12)
+        return new WifimediaRKeygen(ssid, mac, level, enc);
 
 
     if (ssid.length() == 5

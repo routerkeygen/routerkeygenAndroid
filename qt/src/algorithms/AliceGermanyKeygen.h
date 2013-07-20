@@ -8,6 +8,7 @@ class AliceGermanyKeygen : public Keygen
 public:
     AliceGermanyKeygen(QString & ssid, QString & mac, int level, QString enc);
     ~AliceGermanyKeygen();
+    int getSupportState() const;
 private:
     QVector<QString> & getKeys();
     QCryptographicHash * hash;

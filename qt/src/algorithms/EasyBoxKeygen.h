@@ -13,7 +13,7 @@
 class EasyBoxKeygen: public Keygen {
 public:
 	EasyBoxKeygen(QString & ssid, QString & mac, int level, QString enc);
-
+    int getSupportState() const;
 private:
 	QVector<QString> & getKeys() ;
 };

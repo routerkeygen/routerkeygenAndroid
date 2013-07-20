@@ -1,4 +1,5 @@
 #include "AliceGermanyKeygen.h"
+#include <QRegExp>
 
 AliceGermanyKeygen::AliceGermanyKeygen(QString & ssid, QString & mac, int level,
         QString enc) :
@@ -8,7 +9,11 @@ AliceGermanyKeygen::AliceGermanyKeygen(QString & ssid, QString & mac, int level,
 AliceGermanyKeygen::~AliceGermanyKeygen(){
     delete hash;
 }
-
+int AliceGermanyKeygen::getSupportState() const{
+    if ( getSsidName().count(QRegExp("^ALICE-WLAN[0-9a-fA-F]{2}$")) == 1 )
+        return SUPPORTED;
+    return UNLIKELY;
+}
 
 QVector<QString> & AliceGermanyKeygen::getKeys() {
     QString mac = getMacAddress();
