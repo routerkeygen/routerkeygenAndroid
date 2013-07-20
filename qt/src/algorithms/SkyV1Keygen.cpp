@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "Skyv1Keygen.h"
+#include "SkyV1Keygen.h"
 #include <QCryptographicHash>
 
 SkyV1Keygen::SkyV1Keygen(QString & ssid, QString & mac, int level, QString enc) :

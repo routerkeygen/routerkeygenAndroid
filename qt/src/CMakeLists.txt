@@ -4,110 +4,40 @@
 #
 
 #Put here CPPs
-SET(ROUTERKEYGEN_SRCS
+
+file(GLOB ROUTERKEYGEN_SRCS
+    "algorithms/*.cpp"
+    "config/*.cpp"
+    "qcmdlineparser/*.cpp"
+    "dialog/*.cpp"
+)
+
+LIST( APPEND ROUTERKEYGEN_SRCS
     main.cpp
     RouterKeygen.cpp
-    algorithms/AxtelKeygen.cpp
-    algorithms/ZyxelKeygen.cpp
-    algorithms/Wlan6Keygen.cpp
-    algorithms/Wlan2Keygen.cpp
-    algorithms/VerizonKeygen.cpp
-    algorithms/ThomsonKeygen.cpp
-    algorithms/TelseyKeygen.cpp
-    algorithms/TecomKeygen.cpp
-    algorithms/TeletuKeygen.cpp
-    algorithms/PirelliKeygen.cpp
-    algorithms/Skyv1Keygen.cpp
-    algorithms/OnoKeygen.cpp
-    algorithms/InfostradaKeygen.cpp
-    algorithms/InterCableKeygen.cpp
-    algorithms/HuaweiKeygen.cpp
-    algorithms/EircomKeygen.cpp
-    algorithms/DlinkKeygen.cpp
-    algorithms/DiscusKeygen.cpp
-    algorithms/ComtrendKeygen.cpp
-    algorithms/AliceKeygen.cpp
-    algorithms/Keygen.cpp
     wifi/QWifiManagerPrivate.cpp
-    algorithms/EasyBoxKeygen.cpp
-    algorithms/PBSKeygen.cpp
-    algorithms/PtvKeygen.cpp
-    algorithms/OteKeygen.cpp
-    algorithms/OteBAUDKeygen.cpp
-    algorithms/MaxcomKeygen.cpp
-    algorithms/MegaredKeygen.cpp
-    algorithms/AndaredKeygen.cpp
-    algorithms/ConnKeygen.cpp
     wifi/QWifiManager.cpp
     KeygenThread.cpp
     WirelessMatcher.cpp
-    main.cpp
     sha256.cpp
-    algorithms/CabovisaoSagemKeygen.cpp
-    config/AliceConfigParser.cpp
-    config/AliceMagicInfo.cpp
-    config/TeleTuConfigParser.cpp
-    config/TeleTuMagicInfo.cpp
-    algorithms/WifimediaRKeygen.cpp
-    dialog/welcomedialog.cpp
-    dialog/AboutDialog.cpp
-    config/OTEHuaweiConfigParser.cpp
-    algorithms/OteHuaweiKeygen.cpp
-    dialog/UpdateDialog.cpp
-    qcmdlineparser/qcmdlineargument.cpp
-    qcmdlineparser/qcmdlineparser.cpp
 )
-SET(ROUTERKEYGEN_HDRS
-    include/RouterKeygen.h
+
+
+file(GLOB ROUTERKEYGEN_HDRS
+    "include/*Keygen.h"
+    "include/*ConfigParser.h"
+    "include/*MagicInfo.h"
+    "qcmdlineparser/*.h"
+    "include/*Dialog.h"
+)
+LIST( APPEND ROUTERKEYGEN_HDRS
     wifi/QWifiManagerPrivate.h
     include/QWifiManager.h
-    include/welcomedialog.h
-    include/AboutDialog.h
-    include/UpdateDialog.h
-    include/ZyxelKeygen.h
-    include/Wlan6Keygen.h
-    include/Wlan2Keygen.h
-    include/VerizonKeygen.h
-    include/ThomsonKeygen.h
-    include/TelseyKeygen.h
-    include/TecomKeygen.h
-    include/TeleTuKeygen.h
-    include/Skyv1Keygen.h
-    include/PirelliKeygen.h
-    include/OnoKeygen.h
-    include/InfostradaKeygen.h
-    include/HuaweiKeygen.h
-    include/EircomKeygen.h
-    include/DlinkKeygen.h
-    include/DiscusKeygen.h
-    include/ComtrendKeygen.h
-    include/AliceMagicInfo.h
-    include/AliceConfigParser.h
-    include/TeleTuConfigParser.h
-    include/TeleTuMagicInfo.h
-    include/AliceKeygen.h
-    include/AxtelKeygen.h
-    include/EasyBoxKeygen.h
-    include/OteKeygen.h
-    include/OteBAUDKeygen.h
-    include/PBSKeygen.h
-    include/PtvKeygen.h
-    include/MegaredKeygen.h
-    include/MaxcomKeygen.h
-    include/AndaredKeygen.h
-    include/ConnKeygen.h
     include/QScanResult.h
     include/sha256.h
-    include/Keygen.h
     include/KeygenThread.h
     include/WirelessMatcher.h
     include/unknown.h
-    include/CabovisaoSagemKeygen.h
-    include/WifimediaRKeygen.h
-    include/OTEHuaweiConfigParser.h
-    include/OteHuaweiKeygen.h
-    qcmdlineparser/qcmdlineargument.h
-    qcmdlineparser/qcmdlineparser.h
 )
 
 set(HEADERS_HAVING_Q_OBJECT)
@@ -171,10 +101,10 @@ IF(WIN32)
 		         sha1/sha1-586.win32.S )
 	LIST( APPEND ROUTERKEYGEN_HDRS
 		         wifi/QWifiManagerPrivateWin.h
-				 include/sha_locl.h
-				 include/sha.h
-				 include/opensslconf.h
-				 include/md32_common.h )
+                         include/sha_locl.h
+                         include/sha.h
+                         include/opensslconf.h
+                         include/md32_common.h )
     SET(GUI_TYPE WIN32)
 ENDIF(WIN32)
 
@@ -200,7 +130,7 @@ QT4_ADD_RESOURCES(ROUTERKEYGEN_RCC_SRCS ${ROUTERKEYGEN_RCC})
 QT4_WRAP_CPP(ROUTERKEYGEN_MOC_SRCS ${ROUTERKEYGEN_HDRS})
 
 
-ADD_EXECUTABLE(routerkeygen ${GUI_TYPE} ${ROUTERKEYGEN_SRCS} ${ROUTERKEYGEN_MOC_SRCS} ${ROUTERKEYGEN_UIS_H} ${ROUTERKEYGEN_RCC_SRCS} )
+ADD_EXECUTABLE(routerkeygen ${GUI_TYPE} ${ROUTERKEYGEN_SRCS} ${ROUTERKEYGEN_HDRS} ${ROUTERKEYGEN_MOC_SRCS} ${ROUTERKEYGEN_UIS_H} ${ROUTERKEYGEN_RCC_SRCS} )
 
 # Add translations
 ADD_DEPENDENCIES(routerkeygen translations)

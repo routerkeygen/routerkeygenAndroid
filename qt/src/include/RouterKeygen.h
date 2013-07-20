@@ -8,7 +8,7 @@
 #include <QMenu>
 #include "KeygenThread.h"
 #include "AboutDialog.h"
-#include "welcomedialog.h"
+#include "WelcomeDialog.h"
 #include "UpdateDialog.h"
 #include "QWifiManager.h"
 #include <QSettings>

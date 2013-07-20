@@ -26,7 +26,7 @@
 #include "VerizonKeygen.h"
 #include "InfostradaKeygen.h"
 #include "EircomKeygen.h"
-#include "Skyv1Keygen.h"
+#include "SkyV1Keygen.h"
 #include "Wlan2Keygen.h"
 #include "ComtrendKeygen.h"
 #include "ZyxelKeygen.h"
@@ -167,7 +167,7 @@ Keygen * WirelessMatcher::getKeygen(QString ssid, QString mac, int level,
         if (supported != NULL && supported->size() > 0) {
             if (mac.length() < 6)
                 mac = supported->at(0)->mac;
-            return new AliceKeygen(ssid, mac, level, enc, supported);
+            return new AliceItalyKeygen(ssid, mac, level, enc, supported);
         }
     }
     if (ssid.toLower().startsWith("teletu")) {
