@@ -115,7 +115,7 @@ int ThomsonKeygen::getSupportState() const{
     // It is a new generation router which the probability of working is
     // very low.
     if (getMacAddress().right(6).toUpper() ==  getSsidName().right(6).toUpper())
-        return MAYBE;
+        return UNLIKELY;
     return SUPPORTED;
 }
 

@@ -25,7 +25,7 @@ class Keygen {
 public:
 	const static int ERROR = 0;
     const static int SUPPORTED = 0;
-    const static int MAYBE = 1;
+    const static int UNLIKELY = 1;
 	Keygen(QString & ssid, QString & mac, int level, QString enc);
 	QVector<QString> & getResults();
 	void stop();

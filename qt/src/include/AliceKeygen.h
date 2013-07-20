@@ -21,10 +21,10 @@
 #include "Keygen.h"
 #include "AliceMagicInfo.h"
 
-class AliceKeygen : public Keygen
+class AliceItalyKeygen : public Keygen
 {
     public:
-        AliceKeygen(QString & ssid, QString & mac, int level, QString enc,  QVector<AliceMagicInfo *> * supported);
+        AliceItalyKeygen(QString & ssid, QString & mac, int level, QString enc,  QVector<AliceMagicInfo *> * supported);
     private:
     	QVector<QString> & getKeys();
         QVector<AliceMagicInfo *> * supportedAlice;

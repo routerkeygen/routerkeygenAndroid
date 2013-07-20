@@ -27,7 +27,7 @@ HuaweiKeygen::HuaweiKeygen(QString & ssid, QString & mac, int level,
 int HuaweiKeygen::getSupportState() const{
     if ( getSsidName().count(QRegExp("^INFINITUM[0-9a-zA-Z]{4}$")) == 1 )
         return SUPPORTED;
-    return MAYBE;
+    return UNLIKELY;
 }
 
 QVector<QString> & HuaweiKeygen::getKeys() {
