@@ -57,6 +57,6 @@ QVector<QString> & PirelliKeygen::getKeys() {
 	for (int i = 0; i < 5; ++i)
 		if (key[i] >= 0x0A)
 			key[i] += 0x57;
-	results.append(QString::fromAscii(QByteArray(key, 5).toHex().data()));
+    results.append(QString::fromLatin1(QByteArray(key, 5).toHex().data()));
 	return results;
 }

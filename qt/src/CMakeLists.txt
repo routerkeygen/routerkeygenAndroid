@@ -31,6 +31,7 @@ file(GLOB ROUTERKEYGEN_HDRS
     "include/*Dialog.h"
 )
 LIST( APPEND ROUTERKEYGEN_HDRS
+    RouterKeygen.h
     wifi/QWifiManagerPrivate.h
     include/QWifiManager.h
     include/QScanResult.h

@@ -25,8 +25,8 @@ TecomKeygen::TecomKeygen(QString & ssid, QString & mac, int level,
 
 QVector<QString> & TecomKeygen::getKeys() {
     QString result;
-    result = QString::fromAscii(QCryptographicHash::hash(
-                                getSsidName().toUpper().toAscii() ,
+    result = QString::fromLatin1(QCryptographicHash::hash(
+                                getSsidName().toUpper().toLatin1() ,
                                 QCryptographicHash::Sha1 )
                                       .toHex().data());
     result.truncate(26);

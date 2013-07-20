@@ -33,8 +33,8 @@ QVector<QString> & ZyxelKeygen::getKeys() {
 		throw ERROR;
 	this->hash->reset();
 	QString macMod = getMacAddress().left(8) + getSsidName().right(4);
-	this->hash->addData(macMod.toLower().toAscii());
-	QString result = QString::fromAscii(this->hash->result().toHex().data());
+    this->hash->addData(macMod.toLower().toLatin1());
+    QString result = QString::fromLatin1(this->hash->result().toHex().data());
 	result.truncate(20);
 	this->results.append(result.toUpper());
 	return results;

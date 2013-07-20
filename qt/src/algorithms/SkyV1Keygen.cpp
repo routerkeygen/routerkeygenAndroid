@@ -28,7 +28,7 @@ QVector<QString> & SkyV1Keygen::getKeys() {
 	QString mac = getMacAddress();
 	if (mac.size() != 12)
 		throw ERROR;
-	QByteArray hash = QCryptographicHash::hash(mac.toAscii(),
+    QByteArray hash = QCryptographicHash::hash(mac.toLatin1(),
 			QCryptographicHash::Md5);
 
 	QString key = "";

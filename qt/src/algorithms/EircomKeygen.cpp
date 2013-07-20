@@ -32,8 +32,8 @@ QVector<QString> & EircomKeygen::getKeys() {
 	if (!status)
 		throw ERROR;
 	result =
-			QString::fromAscii(
-					QCryptographicHash::hash(result.toAscii(),
+            QString::fromLatin1(
+                    QCryptographicHash::hash(result.toLatin1(),
 							QCryptographicHash::Sha1).toHex().data());
 	result.truncate(26);
 	results.append(result);

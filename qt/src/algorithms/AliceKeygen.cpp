@@ -65,7 +65,7 @@ QVector<QString> & AliceItalyKeygen::getKeys() {
 			/* Compute the hash */
 			sha.reset();
 			sha.addData(specialSeq, (unsigned long) sizeof(specialSeq));
-			sha.addData(serialStr.toAscii().data(), serialStr.size());
+            sha.addData(serialStr.toLatin1().data(), serialStr.size());
 			sha.addData(mac, (unsigned long) sizeof(mac));
 			sha.result((unsigned char *) hash);
 
@@ -96,7 +96,7 @@ QVector<QString> & AliceItalyKeygen::getKeys() {
 		/* Compute the hash */
 		sha.reset();
 		sha.addData(specialSeq, (unsigned long) sizeof(specialSeq));
-		sha.addData(serialStr.toAscii().data(), serialStr.size());
+        sha.addData(serialStr.toLatin1().data(), serialStr.size());
 		sha.addData(mac, (unsigned long) sizeof(mac));
 		sha.result((unsigned char *) hash);
 

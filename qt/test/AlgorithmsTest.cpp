@@ -8,7 +8,7 @@
 #include "VerizonKeygen.h"
 #include "InfostradaKeygen.h"
 #include "EircomKeygen.h"
-#include "Skyv1Keygen.h"
+#include "SkyV1Keygen.h"
 #include "Wlan2Keygen.h"
 #include "ComtrendKeygen.h"
 #include "ZyxelKeygen.h"
@@ -43,10 +43,10 @@ class AlgorithmsTest: public QObject
     WirelessMatcher matcher;
 private slots:
 
-    void testAlice() {
+    void testAliceItaly() {
         Keygen * keygen = matcher.getKeygen("Alice-37588990", "00:23:8e:48:e7:d4", 0, "");
         QVERIFY2(keygen != NULL, "An algorithm was not detected");
-        QCOMPARE(typeid(*keygen), typeid(AliceKeygen) );
+        QCOMPARE(typeid(*keygen), typeid(AliceItalyKeygen) );
         QVector<QString> results = keygen->getResults();
         QCOMPARE(results.size(),4);
         QCOMPARE(results.at(0),QString("djfveeeqyasxhhcqar8ypkcv"));
