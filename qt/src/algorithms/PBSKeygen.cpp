@@ -6,7 +6,7 @@
  */
 
 #include "PBSKeygen.h"
-#include "sha256.h"
+#include "sha/sha256.h"
 
 PBSKeygen::PBSKeygen(QString & ssid, QString & mac, int level, QString enc) :
 		Keygen(ssid, mac, level, enc) {

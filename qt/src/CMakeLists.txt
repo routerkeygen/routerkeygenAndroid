@@ -19,26 +19,24 @@ LIST( APPEND ROUTERKEYGEN_SRCS
     wifi/QWifiManager.cpp
     KeygenThread.cpp
     WirelessMatcher.cpp
-    sha256.cpp
+    sha/sha256.cpp
 )
 
 
 file(GLOB ROUTERKEYGEN_HDRS
-    "include/*Keygen.h"
-    "include/*ConfigParser.h"
-    "include/*MagicInfo.h"
+    "algorithms/*.h"
+    "config/*.h"
+    "dialog/*.h"
     "qcmdlineparser/*.h"
-    "include/*Dialog.h"
 )
 LIST( APPEND ROUTERKEYGEN_HDRS
     RouterKeygen.h
     wifi/QWifiManagerPrivate.h
-    include/QWifiManager.h
-    include/QScanResult.h
-    include/sha256.h
-    include/KeygenThread.h
-    include/WirelessMatcher.h
-    include/unknown.h
+    wifi/QWifiManager.h
+    wifi/QScanResult.h
+    sha/sha256.h
+    KeygenThread.h
+    WirelessMatcher.h
 )
 
 set(HEADERS_HAVING_Q_OBJECT)
@@ -58,7 +56,6 @@ SET(ROUTERKEYGEN_RCC
 #include paths for routerkeygen
 INCLUDE_DIRECTORIES(
   ${CMAKE_CURRENT_BINARY_DIR}
-  include 
   .
 )
 

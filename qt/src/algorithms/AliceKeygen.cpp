@@ -17,7 +17,8 @@
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "AliceKeygen.h"
-#include "sha256.h"
+#include "config/AliceMagicInfo.h"
+#include "sha/sha256.h"
 AliceItalyKeygen::AliceItalyKeygen(QString & ssid, QString & mac, int level, QString enc,
 		QVector<AliceMagicInfo *> * supported) :
 		Keygen(ssid, mac, level, enc), supportedAlice(supported) {

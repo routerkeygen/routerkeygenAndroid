@@ -17,6 +17,7 @@
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "KeygenThread.h"
+#include "algorithms/Keygen.h"
 
 KeygenThread::KeygenThread( Keygen * router): router(router) , error(false){}
 

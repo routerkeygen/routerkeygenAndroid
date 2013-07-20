@@ -16,17 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef TELETUKEYGEN_H
-#define TELETUKEYGEN_H
+#ifndef ALICEKEYGEN_H
+#define ALICEKEYGEN_H
 #include "Keygen.h"
-#include "TeleTuMagicInfo.h"
-
-class TeleTuKeygen: public Keygen {
-public:
-    TeleTuKeygen(QString & ssid, QString & mac, int level, QString enc, TeleTuMagicInfo * magicInfo);
-private:
-    TeleTuMagicInfo * magicInfo;
-	QVector<QString> & getKeys();
+class AliceMagicInfo;
+class AliceItalyKeygen : public Keygen
+{
+    public:
+        AliceItalyKeygen(QString & ssid, QString & mac, int level, QString enc,  QVector<AliceMagicInfo *> * supported);
+    private:
+    	QVector<QString> & getKeys();
+        QVector<AliceMagicInfo *> * supportedAlice;
+    	const static QString preInitCharset;
+        const static unsigned char specialSeq[/*32*/];
 };
 
-#endif // TELETUKEYGEN_H
+#endif // ALICEKEYGEN_H

@@ -19,7 +19,7 @@
 #include "RouterKeygen.h"
 #include "ui_routerkeygen.h"
 #include <QMessageBox>
-#include "macloginitemsmanager.h"
+#include "mac/macloginitemsmanager.h"
 #include <QCompleter>
 #include <QStringList>
 #include <QMovie>

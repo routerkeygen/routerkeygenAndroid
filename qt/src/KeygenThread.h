@@ -7,10 +7,11 @@
 
 #ifndef KEYGENTHREAD_H_
 #define KEYGENTHREAD_H_
-
+#include <QVector>
+#include <QString>
 #include <QThread>
-#include "Keygen.h"
 
+class Keygen;
 class KeygenThread: public QThread {
 public:
 	KeygenThread(Keygen *);

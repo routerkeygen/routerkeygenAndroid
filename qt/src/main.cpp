@@ -22,7 +22,7 @@
 #include <iostream>
 #include "RouterKeygen.h"
 #include "WirelessMatcher.h"
-#include "Keygen.h"
+#include "algorithms/Keygen.h"
 #include "qcmdlineparser/qcmdlineparser.h"
 #include "version.h"
 

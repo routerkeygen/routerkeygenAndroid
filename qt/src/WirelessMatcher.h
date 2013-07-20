@@ -8,12 +8,14 @@
 #ifndef WIRELESSMATCHER_H_
 #define WIRELESSMATCHER_H_
 #include <QString>
-#include "Keygen.h"
-#include "AliceMagicInfo.h"
-#include "TeleTuMagicInfo.h"
 #include <QStringList>
 #include <QVector>
 #include <QMap>
+
+
+class Keygen;
+class AliceMagicInfo;
+class TeleTuMagicInfo;
 class WirelessMatcher {
 public:
     WirelessMatcher();virtual
