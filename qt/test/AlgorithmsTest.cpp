@@ -2,37 +2,38 @@
 #include <typeinfo>
 #include <QString>
 #include <QVector>
-#include "TecomKeygen.h"
-#include "TeleTuKeygen.h"
-#include "ThomsonKeygen.h"
-#include "VerizonKeygen.h"
-#include "InfostradaKeygen.h"
-#include "EircomKeygen.h"
-#include "SkyV1Keygen.h"
-#include "Wlan2Keygen.h"
-#include "ComtrendKeygen.h"
-#include "ZyxelKeygen.h"
-#include "Wlan6Keygen.h"
-#include "DiscusKeygen.h"
-#include "DlinkKeygen.h"
-#include "PirelliKeygen.h"
-#include "TelseyKeygen.h"
-#include "OnoKeygen.h"
-#include "HuaweiKeygen.h"
-#include "AliceKeygen.h"
-#include "ConnKeygen.h"
-#include "AxtelKeygen.h"
-#include "AndaredKeygen.h"
-#include "MegaredKeygen.h"
-#include "MaxcomKeygen.h"
-#include "InterCableKeygen.h"
-#include "OteKeygen.h"
-#include "OteBAUDKeygen.h"
-#include "OteHuaweiKeygen.h"
-#include "PBSKeygen.h"
-#include "PtvKeygen.h"
-#include "EasyBoxKeygen.h"
-#include "CabovisaoSagemKeygen.h"
+#include "algorithms/TecomKeygen.h"
+#include "algorithms/TeleTuKeygen.h"
+#include "algorithms/ThomsonKeygen.h"
+#include "algorithms/VerizonKeygen.h"
+#include "algorithms/InfostradaKeygen.h"
+#include "algorithms/EircomKeygen.h"
+#include "algorithms/SkyV1Keygen.h"
+#include "algorithms/Wlan2Keygen.h"
+#include "algorithms/ComtrendKeygen.h"
+#include "algorithms/ZyxelKeygen.h"
+#include "algorithms/Wlan6Keygen.h"
+#include "algorithms/DiscusKeygen.h"
+#include "algorithms/DlinkKeygen.h"
+#include "algorithms/PirelliKeygen.h"
+#include "algorithms/TelseyKeygen.h"
+#include "algorithms/OnoKeygen.h"
+#include "algorithms/HuaweiKeygen.h"
+#include "algorithms/AliceItalyKeygen.h"
+#include "algorithms/AliceGermanyKeygen.h"
+#include "algorithms/ConnKeygen.h"
+#include "algorithms/AxtelKeygen.h"
+#include "algorithms/AndaredKeygen.h"
+#include "algorithms/MegaredKeygen.h"
+#include "algorithms/MaxcomKeygen.h"
+#include "algorithms/InterCableKeygen.h"
+#include "algorithms/OteKeygen.h"
+#include "algorithms/OteBAUDKeygen.h"
+#include "algorithms/OteHuaweiKeygen.h"
+#include "algorithms/PBSKeygen.h"
+#include "algorithms/PtvKeygen.h"
+#include "algorithms/EasyBoxKeygen.h"
+#include "algorithms/CabovisaoSagemKeygen.h"
 #include "WirelessMatcher.h"
 #include <QDebug>
 
@@ -53,6 +54,14 @@ private slots:
         QCOMPARE(results.at(1),QString("fsvcl1ujd3coikm49qowthn8"));
         QCOMPARE(results.at(2),QString("y7xysqmqs9jooa7rersi7ayi"));
         QCOMPARE(results.at(3),QString("9j4hm3ojq4brfdy6wcsuglwu"));
+    }
+    void testAliceGermany() {
+        Keygen * keygen = matcher.getKeygen("ALICE-WLANC3","00:1E:40:A0:84:C4", 0, "");
+        QVERIFY2(keygen != NULL, "An algorithm was not detected");
+        QCOMPARE(typeid(*keygen), typeid(AliceGermanyKeygen) );
+        QVector<QString> results = keygen->getResults();
+        QCOMPARE(results.size(),1);
+        QCOMPARE(results.at(0),QString("MGIwMjhjYTYzZmM0"));
     }
 
 

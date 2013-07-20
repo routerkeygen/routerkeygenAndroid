@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "AliceKeygen.h"
+#include "AliceItalyKeygen.h"
 #include "config/AliceMagicInfo.h"
 #include "sha/sha256.h"
 AliceItalyKeygen::AliceItalyKeygen(QString & ssid, QString & mac, int level, QString enc,

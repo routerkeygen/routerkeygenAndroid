@@ -65,10 +65,10 @@ public class AliceGermanyKeygen extends Keygen {
 			return null;
 		}
 		try {
-			int macEthLong = Integer.parseInt(mac.substring(6), 16) - 1;
-			if (macEthLong < 0)
-				macEthLong = 0xFFFFFF;
-			String macEth = Integer.toHexString(macEthLong);
+			int macEthInt = Integer.parseInt(mac.substring(6), 16) - 1;
+			if (macEthInt < 0)
+				macEthInt = 0xFFFFFF;
+			String macEth = Integer.toHexString(macEthInt);
 			while (macEth.length() < 6)
 				macEth = "0" + macEth;
 			macEth = mac.substring(0, 6) + macEth;

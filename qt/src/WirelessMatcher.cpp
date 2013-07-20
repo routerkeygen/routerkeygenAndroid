@@ -40,7 +40,8 @@
 #include "algorithms/TelseyKeygen.h"
 #include "algorithms/OnoKeygen.h"
 #include "algorithms/HuaweiKeygen.h"
-#include "algorithms/AliceKeygen.h"
+#include "algorithms/AliceItalyKeygen.h"
+#include "algorithms/AliceGermanyKeygen.h"
 #include "algorithms/ConnKeygen.h"
 #include "algorithms/AxtelKeygen.h"
 #include "algorithms/AndaredKeygen.h"
@@ -313,5 +314,10 @@ Keygen * WirelessMatcher::getKeygen(QString ssid, QString mac, int level,
             || mac.startsWith("F4:C7:14") || mac.startsWith("F8:3D:FF")
             || mac.startsWith("FC:48:EF")))
         return new HuaweiKeygen(ssid, mac, level, enc);
+
+
+    if (mac.startsWith("00:1E:40") || mac.startsWith("00:25:5E"))
+        return new AliceGermanyKeygen(ssid, mac, level, enc);
+
     return NULL;
 }

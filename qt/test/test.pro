@@ -7,25 +7,23 @@ SOURCES += \
     ../src/algorithms/*.cpp \
     ../src/WirelessMatcher.cpp \
     ../src/division.c \
-    ../src/sha256.cpp\
+    ../src/sha/sha256.cpp\
     ../src/config/*.cpp \
     AlgorithmsTest.cpp
 
-HEADERS += ../src/include/*Keygen.h \
-    ../src/include/*MagicInfo.h \
-    ../src/include/*ConfigParser.h \
-    ../src/include/sha256.h \
-    ../src/include/WirelessMatcher.h \
-    ../src/include/unknown.h
+HEADERS += ../src/algorithms/*.h \
+    ../src/config/*.h \
+    ../src/sha/sha256.h \
+    ../src/WirelessMatcher.h
 
-INCLUDEPATH += ../src/include/
+INCLUDEPATH += ../src/
 win32{
-    SOURCES += ../src/sha1/sha1dgst.c \
-        ../src/sha1/sha1-586.win32.S
-    HEADERS += src/include/sha_locl.h \
-        ../src/include/sha.h \
-        ../src/include/opensslconf.h \
-        ../src/include/md32_common.h
+    SOURCES += ../src/sha/sha1dgst.c \
+        ../src/sha/sha1-586.win32.S
+    HEADERS += src/sha/sha_locl.h \
+        ../src/sha/sha.h \
+        ../src/sha/opensslconf.h \
+        ../src/sha/md32_common.h
 }
 unix{
     LIBS += -lcrypto
