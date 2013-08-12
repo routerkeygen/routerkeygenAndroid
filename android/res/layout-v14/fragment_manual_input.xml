@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+   Copyright 2013 Rui Araújo, Luís Fonseca
+  
+   This file is part of Router Keygen.
+  
+   Router Keygen is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+   
+   Router Keygen is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+   
+   You should have received a copy of the GNU General Public License
+   along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <RelativeLayout
+        android:id="@+id/manual_root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <TextView
+            android:id="@+id/label_ssid"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dip"
+            android:clickable="false"
+            android:text="@string/lb_manual" />
+
+        <AutoCompleteTextView
+            android:id="@+id/manual_autotext"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/label_ssid"
+            android:layout_marginBottom="10dip"
+            android:layout_marginLeft="20dip"
+            android:layout_marginRight="20dip"
+            android:imeOptions="actionDone"
+            android:inputType="textFilter"
+            android:maxLines="1"
+            android:nextFocusDown="@+id/input_mac_pair1"
+            android:singleLine="true" />
+
+        <RelativeLayout
+            android:id="@+id/manual_mac_root"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/manual_autotext"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/label_bssid"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dip"
+                android:clickable="false"
+                android:text="@string/lb_manual_bssid" />
+
+            <EditText
+                android:id="@+id/input_mac_pair1"
+                android:layout_width="@dimen/mac_input_size"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/label_bssid"
+                android:layout_marginLeft="10dip"
+                android:imeOptions="actionNext"
+                android:inputType="textFilter"
+                android:maxLength="2"
+                android:nextFocusDown="@+id/input_mac_pair2"
+                android:textSize="@dimen/body_mac_input" />
+
+            <TextView
+                android:id="@+id/lb_input_mac_pair1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/label_bssid"
+                android:layout_toRightOf="@id/input_mac_pair1"
+                android:clickable="false"
+                android:text="@string/manual_mac_separator"
+                android:textSize="@dimen/separator_mac" />
+
+            <EditText
+                android:id="@+id/input_mac_pair2"
+                android:layout_width="@dimen/mac_input_size"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/label_bssid"
+                android:layout_toRightOf="@id/lb_input_mac_pair1"
+                android:imeOptions="actionNext"
+                android:inputType="textFilter"
+                android:maxLength="2"
+                android:nextFocusDown="@+id/input_mac_pair3"
+                android:textSize="@dimen/body_mac_input" />
+
+            <TextView
+                android:id="@+id/lb_input_mac_pair2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/label_bssid"
+                android:layout_toRightOf="@id/input_mac_pair2"
+                android:clickable="false"
+                android:text="@string/manual_mac_separator"
+                android:textSize="@dimen/separator_mac" />
+
+            <EditText
+                android:id="@+id/input_mac_pair3"
+                android:layout_width="@dimen/mac_input_size"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/label_bssid"
+                android:layout_toRightOf="@id/lb_input_mac_pair2"
+                android:imeOptions="actionNext"
+                android:inputType="textFilter"
+                android:maxLength="2"
+                android:nextFocusDown="@+id/input_mac_pair4"
+                android:textSize="@dimen/body_mac_input" />
+
+            <TextView
+                android:id="@+id/lb_input_mac_pair3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/label_bssid"
+                android:layout_toRightOf="@id/input_mac_pair3"
+                android:clickable="false"
+                android:text="@string/manual_mac_separator"
+                android:textSize="@dimen/separator_mac" />
+
+            <EditText
+                android:id="@+id/input_mac_pair4"
+                android:layout_width="@dimen/mac_input_size"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/label_bssid"
+                android:layout_toRightOf="@id/lb_input_mac_pair3"
+                android:imeOptions="actionNext"
+                android:inputType="textFilter"
+                android:maxLength="2"
+                android:nextFocusDown="@+id/input_mac_pair5"
+                android:textSize="@dimen/body_mac_input" />
+
+            <TextView
+                android:id="@+id/lb_input_mac_pair4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/label_bssid"
+                android:layout_toRightOf="@id/input_mac_pair4"
+                android:clickable="false"
+                android:text="@string/manual_mac_separator"
+                android:textSize="@dimen/separator_mac" />
+
+            <EditText
+                android:id="@+id/input_mac_pair5"
+                android:layout_width="@dimen/mac_input_size"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/label_bssid"
+                android:layout_toRightOf="@id/lb_input_mac_pair4"
+                android:imeOptions="actionNext"
+                android:inputType="textFilter"
+                android:maxLength="2"
+                android:nextFocusDown="@+id/input_mac_pair6"
+                android:textSize="@dimen/body_mac_input" />
+
+            <TextView
+                android:id="@+id/lb_input_mac_pair5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/label_bssid"
+                android:layout_toRightOf="@id/input_mac_pair5"
+                android:clickable="false"
+                android:text="@string/manual_mac_separator"
+                android:textSize="@dimen/separator_mac" />
+
+            <EditText
+                android:id="@+id/input_mac_pair6"
+                android:layout_width="@dimen/mac_input_size"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/label_bssid"
+                android:layout_toRightOf="@id/lb_input_mac_pair5"
+                android:imeOptions="actionDone"
+                android:inputType="textFilter"
+                android:maxLength="2"
+                android:textSize="@dimen/body_mac_input" />
+        </RelativeLayout>
+
+        <LinearLayout
+            style="?android:attr/buttonBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/bt_cancel"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/bt_manual_cancel" />
+
+            <Button
+                android:id="@+id/bt_calc"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/bt_manual_calc" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/loading_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:indeterminate="true"
+        android:visibility="gone" />
+
+</RelativeLayout>

@@ -19,6 +19,7 @@
 
 package org.exobel.routerkeygen.ui;
 
+import org.exobel.routerkeygen.AdsUtils;
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.algorithms.Keygen;
 
@@ -38,14 +39,15 @@ public class ManualInputActivity extends SherlockFragmentActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_network);
+		setContentView(R.layout.activity_single_fragment);
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+		AdsUtils.loadAdIfNeeded(this);
 		if (savedInstanceState == null) {
 			getSupportFragmentManager()
 					.beginTransaction()
-					.add(R.id.item_detail_container,
+					.add(R.id.keygen_fragment,
 							ManualInputFragment
 									.newInstance(getIntent()
 											.getStringExtra(

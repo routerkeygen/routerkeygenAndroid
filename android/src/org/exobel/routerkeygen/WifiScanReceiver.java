@@ -32,11 +32,13 @@ import android.content.Intent;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
+import android.os.AsyncTask.Status;
 import android.widget.Toast;
 
 public class WifiScanReceiver extends BroadcastReceiver {
 	final private OnScanListener[] scanListeners;
 	final private WifiManager wifi;
+	private KeygenMatcherTask task;
 
 	public interface OnScanListener {
 
@@ -69,12 +71,16 @@ public class WifiScanReceiver extends BroadcastReceiver {
 			context.unregisterReceiver(this);
 		} catch (Exception e) {
 		}
-		new KeygenMatcherTask(results, context).execute();
+		if (task == null || task.getStatus() == Status.FINISHED) {
+			task = new KeygenMatcherTask(results, context);
+			task.execute();
+		}
 	}
 
 	private class KeygenMatcherTask extends AsyncTask<Void, Void, Keygen[]> {
 		private final List<ScanResult> results;
 		private final Context context;
+		private boolean misbuiltAPK = false;
 
 		public KeygenMatcherTask(List<ScanResult> results, Context context) {
 			this.results = results;
@@ -83,6 +89,9 @@ public class WifiScanReceiver extends BroadcastReceiver {
 
 		@Override
 		protected void onPostExecute(Keygen[] networks) {
+			if (misbuiltAPK)
+				Toast.makeText(context, R.string.err_misbuilt_apk,
+						Toast.LENGTH_SHORT).show();
 			for (OnScanListener scanListener : scanListeners)
 				scanListener.onScanFinished(networks);
 		}
@@ -95,16 +104,16 @@ public class WifiScanReceiver extends BroadcastReceiver {
 				for (int j = i + 1; j < results.size(); ++j)
 					if (results.get(i).SSID.equals(results.get(j).SSID))
 						results.remove(j--);
-			try {
-				for (ScanResult result : results)
+			for (ScanResult result : results) {
+				try {
 					set.add(WirelessMatcher.getKeygen(result,
 							new ZipInputStream(context.getResources()
 									.openRawResource(R.raw.magic_info))));
-
-			} catch (LinkageError e) {
-				Toast.makeText(context, R.string.err_misbuilt_apk,
-						Toast.LENGTH_SHORT).show();
+				} catch (LinkageError e) {
+					misbuiltAPK = true;
+				}
 			}
+
 			final Keygen[] networks = new Keygen[set.size()];
 			final Iterator<Keygen> it = set.iterator();
 			int i = 0;

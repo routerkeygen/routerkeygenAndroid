@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <string name="app_name">RouterKeygen Downloader</string>
-    <string name="download">Download</string>
-    <string name="download_desc">Download the latest version available in the website.</string>
-    <string name="msg_welcome_text_donate">Bedankt voor de aanschaf van de donatieversie van Router Keygen. Uw donatie zal de ontwikkelaars aanmoedigen om deze opensource-app nog beter te maken.</string>
-
-</resources>

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
-   Copyright 2012 Rui Araújo, Luís Fonseca
+   Copyright 2013 Rui Araújo, Luís Fonseca
   
    This file is part of Router Keygen.
   
@@ -15,7 +15,7 @@
    GNU General Public License for more details.
    
    You should have received a copy of the GNU General Public License
-   along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
+   along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
 
@@ -24,15 +24,13 @@
     <string name="app_name">Router Keygen</string>
     <string name="msg_welcome_title">Router Keygen</string>
     <string name="msg_welcome_text">Thank you for trying Router Keygen. If you like this application, please consider buying the Donate version. The link is on the preference menu. Your donation will motivate the authors to improve on this great open-source tool.</string>
-    <string name="msg_welcome_tip">Select any network with a green bar to generate possible keys.</string>
+    <string name="msg_welcome_tip">Select any supported network to generate possible keys.</string>
     <string name="menu_scan">Scan</string>
     <string name="menu_manual">Manual Input</string>
     <string name="menu_preferences">Preferences</string>
     <string name="context_menu_copy_ssid">Copy SSID</string>
     <string name="context_menu_copy_mac">Copy MAC address</string>
     <string name="context_menu_use_mac">Use MAC address in Manual Input Dialog</string>
-    <string name="menu_preferences">Preferences</string>
-    <string name="menu_preferences">Preferences</string>
     <string name="share_msg_begin">Keys</string>
     <string name="share_title">Share Keys</string>
     <string name="msg_copied"><xliff:g id="arg">%1$s</xliff:g> was copied to clipboard!</string>
@@ -43,6 +41,9 @@
     <string name="not_auto_connect_waiting">Waiting for the current network to disconnect</string>
     <string name="not_auto_connect_key_testing">Testing <xliff:g id="key">%1$s</xliff:g></string>
     <string name="not_correct_key_testing"><xliff:g id="key">%1$s</xliff:g> is the correct key.</string>
+    <string name="networklist_supported">Supported</string>
+    <string name="networklist_unlikely_supported">Unlikely Supported</string>
+    <string name="networklist_unsupported">Unsupported</string>
     <!-- BUTTONS STRINGS -->
     <string name="bt_manual_cancel">Cancel</string>
     <string name="bt_manual_calc">Calculate</string>
@@ -53,6 +54,7 @@
     <string name="bt_website">Go to Website</string>
     <string name="bt_paypal">PayPal</string>
     <string name="bt_google_play">Google Play</string>
+    <string name="bt_dont_donate">Don\'t donate :-(</string>
     <!-- DIALOG STRINGS -->
     <string name="lb_manual">Input your ESSID here:</string>
     <string name="dialog_nativecalc_msg">This can take up to 2 minutes. Please wait.</string>
@@ -64,15 +66,17 @@
     <string name="lb_manual_bssid">MAC address (optional):</string>
     <string name="dialog_about_credits">Credits</string>
     <string name="dialog_about_credits_desc">Router Keygen is the result of the invaluable contribution from the  following people/organizations:\n\n
-      Rui Araújo, Luís Fonseca, Ângela Igreja, Simone Guidi, Matthijs de Rijk, Van Hove Sven, Jon Uriarte, <a href="http://www.gnucitizen.org/">GNUCITIZEN</a>, <a href="http://wifiresearchers.wordpress.com/">White Hats Crew</a>, Fred Williams, Muris Kurgaš, <a href="http://websec.ca/">Pedro Joaquim</a>, chaeo, Nicolas DeRouet, Eduardo Laborin, Florian Frank, Axel Martínez, Victor Mignot, <a href="http://www.openssl.org/">OpenSSl</a>.</string>
+      Rui Araújo, Luís Fonseca, Ângela Igreja, Simone Guidi, Matthijs de Rijk, Van Hove Sven, Jon Uriarte, <a href="http://www.gnucitizen.org/">GNUCITIZEN</a>, <a href="http://wifiresearchers.wordpress.com/">White Hats Crew</a>, Fred Williams, Muris Kurgaš, <a href="http://websec.ca/">Pedro Joaquim</a>, chaeo, Nicolas DeRouet, Eduardo Laborin, Florian Frank, Axel Martínez, Victor Mignot, Martijn Gerkes, Alejandro Marquez,<a href="http://www.openssl.org/">OpenSSl</a>.</string>
     <string name="dialog_about_license">License</string>
     <string name="dialog_about_license_desc">This application is under the GPLv3.\n\nYou can read its terms <a href="http://www.gnu.org/licenses/gpl-3.0.html">here</a>.\n\n
-        RouterKeygen is built using open source software:\n<a href="https://github.com/JakeWharton/ActionBarSherlock">ActionBarSherlock</a>\n<a href="https://github.com/iPaulPro/aFileChooser">aFileChooser</a>.\n\n  The license terms for this projects can be read by following the link.</string>
+        RouterKeygen is built using open source software:\n<a href="https://github.com/JakeWharton/ActionBarSherlock">ActionBarSherlock</a>\n<a href="https://github.com/iPaulPro/aFileChooser">aFileChooser</a>\n<a href="https://github.com/beworker/pinned-section-listview">PinnedSectionListView</a>\n<a href="https://code.google.com/p/android-wifi-connecter/">android-wifi-connecter</a>.\n\n  The license terms for this projects can be read by following the link.</string>
     <string name="msg_app_updated">The application is already at the latest version.</string>
     <string name="update_title">Update Available</string>
+    <string name="update_notification">There is version <xliff:g id="version">%1$s</xliff:g> available.</string>
     <string name="update_message">There is version <xliff:g id="version">%1$s</xliff:g> available. Go to the website to download the latest version.</string>
     <string name="cancel_download">Do you want to cancel the dictionary download?</string>
     <string name="cancel_auto_test">Do you want to cancel the keys testing?</string>
+    <string name="msg_donation">Install the following app to remove the ads and to donate. Thank you! :-)</string>
     <!-- PREFERENCES STRINGS -->
     <string name="pref_hinton_wifion">Activate the Wifi Automatically</string>
     <string name="pref_hintoff_wifion">Do not activate the Wifi Automatically</string>
@@ -144,14 +148,13 @@
     <string name="msg_saved_key_file">saved to the SD card.</string>
     <string name="pref_msg_no_network">There is no network access.</string>
     <string name="msg_err_webdic_table">Error while processing online keys.</string>
-    <string name="msg_err_webdic_table">Error while processing online keys.</string>
     <string name="msg_unspported_network">A valid network was not recognized. Please check the SSID and the MAC address.</string>
     <string name="msg_invalid_mac">A valid MAC address wasn\'t entered so it will be ignored.</string>
     <string name="msg_error_key_testing">Error trying to test the key.</string>
     <string name="msg_no_correct_keys">No correct keys.</string>
     <string name="msg_auto_connect_running">The auto connect process is already running.</string>
     <string name="msg_auto_connect_warning">This feature doesn\'t work well with weak networks.</string>
-    <string name="crash_toast_text">Routerkeygen has crashed.</string>
+    <string name="crash_toast_text">Routerkeygen has crashed. Please send an email.</string>
     <!-- FILE CHOOSER -->
     <string name="empty_directory">Empty Directory</string>
     <string name="storage_removed">Storage was removed or unmounted.</string>

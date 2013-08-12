@@ -17,40 +17,46 @@
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "WirelessMatcher.h"
-#include "AliceConfigParser.h"
-#include "TeleTuConfigParser.h"
-#include "OTEHuaweiConfigParser.h"
-#include "TecomKeygen.h"
-#include "TeleTuKeygen.h"
-#include "ThomsonKeygen.h"
-#include "VerizonKeygen.h"
-#include "InfostradaKeygen.h"
-#include "EircomKeygen.h"
-#include "Skyv1Keygen.h"
-#include "Wlan2Keygen.h"
-#include "ComtrendKeygen.h"
-#include "ZyxelKeygen.h"
-#include "Wlan6Keygen.h"
-#include "DiscusKeygen.h"
-#include "DlinkKeygen.h"
-#include "PirelliKeygen.h"
-#include "TelseyKeygen.h"
-#include "OnoKeygen.h"
-#include "HuaweiKeygen.h"
-#include "AliceKeygen.h"
-#include "ConnKeygen.h"
-#include "AxtelKeygen.h"
-#include "AndaredKeygen.h"
-#include "MegaredKeygen.h"
-#include "MaxcomKeygen.h"
-#include "InterCableKeygen.h"
-#include "OteKeygen.h"
-#include "OteBAUDKeygen.h"
-#include "OteHuaweiKeygen.h"
-#include "PBSKeygen.h"
-#include "PtvKeygen.h"
-#include "EasyBoxKeygen.h"
-#include "CabovisaoSagemKeygen.h"
+#include "config/AliceMagicInfo.h"
+#include "config/TeleTuMagicInfo.h"
+#include "config/AliceConfigParser.h"
+#include "config/TeleTuConfigParser.h"
+#include "config/OTEHuaweiConfigParser.h"
+#include "algorithms/Keygen.h"
+#include "algorithms/TecomKeygen.h"
+#include "algorithms/TeleTuKeygen.h"
+#include "algorithms/ThomsonKeygen.h"
+#include "algorithms/VerizonKeygen.h"
+#include "algorithms/InfostradaKeygen.h"
+#include "algorithms/EircomKeygen.h"
+#include "algorithms/SkyV1Keygen.h"
+#include "algorithms/Wlan2Keygen.h"
+#include "algorithms/ComtrendKeygen.h"
+#include "algorithms/ZyxelKeygen.h"
+#include "algorithms/Wlan6Keygen.h"
+#include "algorithms/DiscusKeygen.h"
+#include "algorithms/DlinkKeygen.h"
+#include "algorithms/PirelliKeygen.h"
+#include "algorithms/TelseyKeygen.h"
+#include "algorithms/OnoKeygen.h"
+#include "algorithms/HuaweiKeygen.h"
+#include "algorithms/AliceItalyKeygen.h"
+#include "algorithms/AliceGermanyKeygen.h"
+#include "algorithms/ConnKeygen.h"
+#include "algorithms/AxtelKeygen.h"
+#include "algorithms/AndaredKeygen.h"
+#include "algorithms/MegaredKeygen.h"
+#include "algorithms/MaxcomKeygen.h"
+#include "algorithms/InterCableKeygen.h"
+#include "algorithms/OteKeygen.h"
+#include "algorithms/OteBAUDKeygen.h"
+#include "algorithms/OteHuaweiKeygen.h"
+#include "algorithms/PBSKeygen.h"
+#include "algorithms/PtvKeygen.h"
+#include "algorithms/EasyBoxKeygen.h"
+#include "algorithms/CabovisaoSagemKeygen.h"
+#include "algorithms/Speedport500Keygen.h"
+#include "algorithms/WifimediaRKeygen.h"
 #include <QRegExp>
 
 WirelessMatcher::WirelessMatcher() {
@@ -167,7 +173,7 @@ Keygen * WirelessMatcher::getKeygen(QString ssid, QString mac, int level,
         if (supported != NULL && supported->size() > 0) {
             if (mac.length() < 6)
                 mac = supported->at(0)->mac;
-            return new AliceKeygen(ssid, mac, level, enc, supported);
+            return new AliceItalyKeygen(ssid, mac, level, enc, supported);
         }
     }
     if (ssid.toLower().startsWith("teletu")) {
@@ -229,6 +235,11 @@ Keygen * WirelessMatcher::getKeygen(QString ssid, QString mac, int level,
             || mac.startsWith("00:19:5B")))
         return new Wlan2Keygen(ssid, mac, level, enc);
 
+    if (ssid.count(QRegExp("^WLAN-[0-9a-fA-F]{6}$")) == 1
+            && (mac.startsWith("00:12:BF") || mac.startsWith("00:1A:2A") || mac
+                    .startsWith("00:1D:19")))
+        return new Speedport500Keygen(ssid, mac, level, enc);
+
     if (ssid.count(QRegExp("^(WLAN|WiFi|YaCom)[0-9a-zA-Z]{6}$")) == 1)
         return new Wlan6Keygen(ssid, mac, level, enc);
 
@@ -275,6 +286,10 @@ Keygen * WirelessMatcher::getKeygen(QString ssid, QString mac, int level,
             return new MegaredKeygen(ssid, mac, level, enc);
     }
 
+    if (ssid.count(QRegExp("^wifimedia_R-[0-9a-zA-Z]{4}$")) == 1
+            && mac.replace(":", "").length() == 12)
+        return new WifimediaRKeygen(ssid, mac, level, enc);
+
 
     if (ssid.length() == 5
         && (mac.startsWith("00:1F:90") || mac.startsWith("A8:39:44")
@@ -310,5 +325,10 @@ Keygen * WirelessMatcher::getKeygen(QString ssid, QString mac, int level,
             || mac.startsWith("F4:C7:14") || mac.startsWith("F8:3D:FF")
             || mac.startsWith("FC:48:EF")))
         return new HuaweiKeygen(ssid, mac, level, enc);
+
+
+    if (mac.startsWith("00:1E:40") || mac.startsWith("00:25:5E"))
+        return new AliceGermanyKeygen(ssid, mac, level, enc);
+
     return NULL;
 }

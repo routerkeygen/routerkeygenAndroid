@@ -34,7 +34,7 @@ public abstract class Keygen implements Comparable<Keygen>, Parcelable {
 	public static final String OPEN = "Open";
 
 	public static final int SUPPORTED = 2;
-	public static final int MAYBE_SUP = 1;
+	public static final int UNLIKELY_SUPPORTED = 1;
 	public static final int UNSUPPORTED = 0;
 
 	private ScanResult scanResult;
@@ -181,5 +181,18 @@ public abstract class Keygen implements Comparable<Keygen>, Parcelable {
 
 		return OPEN;
 	}
+	
+
+    public static final Parcelable.Creator<Keygen> CREATOR = new Parcelable.Creator<Keygen>() {
+
+        public Keygen[] newArray(int size) {
+            return new Keygen[size];
+        }
+
+		@Override
+		public Keygen createFromParcel(Parcel source) {
+			return null;
+		}
+    };
 
 }

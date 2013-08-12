@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
-   Copyright 2012 Rui Araújo, Luís Fonseca
+   Copyright 2013 Rui Araújo, Luís Fonseca
   
    This file is part of Router Keygen.
   
@@ -19,13 +19,12 @@
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Deze vertaling is gemaakt door Marco Brohet, Sven Van Hove, X.W. Koehoorn, Matthijs de Rijk en Florian Hoste -->
-
+    <!-- Deze vertaling is gemaakt door Marco Brohet, Sven Van Hove, X.W. Koehoorn, Matthijs de Rijk, Florian Hoste en Martijn Gerkes-->
     <!-- MISC STRINGS -->
     <string name="app_name">Router Keygen</string>
     <string name="msg_welcome_title">Router Keygen</string>
     <string name="msg_welcome_text">Bedankt voor het uitproberen van Router Keygen. Als u deze app leuk vindt, denk er dan over na om de donatieversie te kopen. De link is te vinden in Instellingen. Uw donatie zal de ontwikkelaars aanmoedigen om deze opensource-app nog beter te maken.</string>
-    <string name="msg_welcome_tip">Kies een netwerk met een goed signaal om mogelijke wachtwoorden te berekenen</string>
+    <string name="msg_welcome_tip">Selecteer een ondersteund netwerk om de mogelijke sleutels te genereren.</string>
     <string name="menu_scan">Zoeken</string>
     <string name="menu_manual">Handmatig</string>
     <string name="menu_preferences">Instellingen</string>
@@ -42,7 +41,9 @@
     <string name="not_auto_connect_waiting">Wachten op huidig netwerk om verbinding te verbreken</string>
     <string name="not_auto_connect_key_testing">Bezig met het testen van <xliff:g id="key">%1$s</xliff:g></string>
     <string name="not_correct_key_testing"><xliff:g id="key">%1$s</xliff:g> is het juiste wachtwoord</string>
-
+    <string name="networklist_supported">Ondersteund</string>
+    <string name="networklist_unlikely_supported">Eventueel ondersteund</string>
+    <string name="networklist_unsupported">Niet ondersteund</string>
     <!-- BUTTONS STRINGS -->
     <string name="bt_manual_cancel">Annuleren</string>
     <string name="bt_manual_calc">Berekenen</string>
@@ -53,7 +54,7 @@
     <string name="bt_website">Naar de website</string>
     <string name="bt_paypal">PayPal</string>
     <string name="bt_google_play">Google Play</string>
-
+    <string name="bt_dont_donate">Niet doneren :-(</string>
     <!-- DIALOG STRINGS -->
     <string name="lb_manual">ESSID:</string>
     <string name="dialog_nativecalc_msg">Dit kan tot 2 minuten duren. Een ogenblik geduld a.u.b\u2026</string>
@@ -65,16 +66,17 @@
     <string name="lb_manual_bssid">MAC-adres (optioneel):</string>
     <string name="dialog_about_credits">Credits</string>
     <string name="dialog_about_credits_desc">Router Keygen kon niet bestaan zonder de onschatbare bijdrages van :\n\n
-       Rui Araújo, Luís Fonseca, Ângela Igreja, Simone Guidi, Matthijs de Rijk, Van Hove Sven, Jon Uriarte, <a href="http://www.gnucitizen.org/">GNUCITIZEN</a>, <a href="http://wifiresearchers.wordpress.com/">White Hats Crew</a>, Fred Williams, Muris Kurgaš, <a href="http://websec.ca/">Pedro Joaquim</a>, chaeo, Nicolas DeRouet, Eduardo Laborin, Florian Frank, Axel Martinez, Victor Mignot, <a href="http://www.openssl.org/">OpenSSl</a>.</string>
+       Rui Araújo, Luís Fonseca, Ângela Igreja, Simone Guidi, Matthijs de Rijk, Van Hove Sven, Jon Uriarte, <a href="http://www.gnucitizen.org/">GNUCITIZEN</a>, <a href="http://wifiresearchers.wordpress.com/">White Hats Crew</a>, Fred Williams, Muris Kurgaš, <a href="http://websec.ca/">Pedro Joaquim</a>, chaeo, Nicolas DeRouet, Eduardo Laborin, Florian Frank, Axel Martinez, Victor Mignot, Martijn Gerkes, Alejandro Marquez, <a href="http://www.openssl.org/">OpenSSl</a>.</string>
     <string name="dialog_about_license">Licentie</string>
     <string name="dialog_about_license_desc">Deze applicatie valt onder de GPLv3 licentie\n\nU kunt deze voorwaarden<a href="http://www.gnu.org/licenses/gpl-3.0.html">hier</a>lezen.\n\n
-        RouterKeygen is gemaakt met open source software:\n<a href="https://github.com/JakeWharton/ActionBarSherlock">ActionBarSherlock</a>\n<a href="https://github.com/iPaulPro/aFileChooser">aFileChooser</a>.\n\n De licentie voorwaarden voor dit project kunnen gelezen worden via de volgende link.</string>
+        RouterKeygen is gemaakt met open source software:\n<a href="https://github.com/JakeWharton/ActionBarSherlock">ActionBarSherlock</a>\n<a href="https://github.com/iPaulPro/aFileChooser">aFileChooser</a>\n<a href="https://github.com/beworker/pinned-section-listview">PinnedSectionListView</a>\n<a href="https://code.google.com/p/android-wifi-connecter/">android-wifi-connecter</a>.\n\n De licentie voorwaarden voor dit project kunnen gelezen worden via de volgende link.</string>
     <string name="msg_app_updated">Router Keygen hoeft niet te worden bijgewerkt</string>
     <string name="update_title">Er is een update beschikbaar</string>
+    <string name="update_notification">Versie <xliff:g id="version">%1$s</xliff:g> is beschikbaar.</string>
     <string name="update_message">Versie <xliff:g id="version">%1$s</xliff:g> is beschikbaar. Ga naar de website om deze versie te downloaden</string>
     <string name="cancel_download">Woordenboek downloaden annuleren?</string>
     <string name="cancel_auto_test">Knoppen testen annuleren?</string>
-
+    <string name="msg_donation">Installeer de volgende app om de ads te verwijderen en te doneren. Bedankt! :-)</string>
     <!-- PREFERENCES STRINGS -->
     <string name="pref_hinton_wifion">Wi-Fi automatisch inschakelen</string>
     <string name="pref_hintoff_wifion">Wi-Fi handmatig inschakelen</string>
@@ -104,7 +106,9 @@
     <string name="pref_hintoff_autoscan">Het zoeken gebeurt handmatig</string>
     <string name="pref_autoscan_interval">Automatisch zoekinterval</string>
     <string name="pref_hint_autoscan_interval">Periode tussen het automatisch zoeken</string>
-
+    <string name="pref_analytics">Google Analytics</string>
+    <string name="pref_hinton_analytics">Gebruik en crashes worden anoniem bijgehouden</string>
+    <string name="pref_hintoff_analytics">Gebruik en crashes word niet bijgehouden</string>
     <!-- ERROR MESSAGE STRINGS -->
     <string name="msg_unspported">Deze ESSID wordt niet ondersteund</string>
     <string name="msg_nowifidetected">Geen Wi-Fi-toegangspunten gevonden</string>
@@ -150,13 +154,12 @@
     <string name="msg_no_correct_keys">Wachtwoorden incorrect</string>
     <string name="msg_auto_connect_running">Er wordt al automatisch verbonden</string>
     <string name="msg_auto_connect_warning">Deze functie werkt niet goed met zwakke netwerken.</string>
-
+    <string name="crash_toast_text">Routerkeygen is gecrashed. Stuur alstublieft een email.</string>
     <!-- FILE CHOOSER -->
     <string name="empty_directory">Lege map</string>
     <string name="storage_removed">Externe opslag is verwijderd of ontkoppeld</string>
     <string name="choose_file">Selecteer bestand</string>
     <string name="error_selecting_file">Fout bij selecteren van het bestand</string>
-
     <!-- AUTOCOMPLETE SUPPORT -->
     <string-array name="supported_routers">
         <item>Alice-</item>

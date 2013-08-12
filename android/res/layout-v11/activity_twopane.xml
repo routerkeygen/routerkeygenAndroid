@@ -19,14 +19,14 @@
             android:name="org.exobel.routerkeygen.ui.NetworksListFragment"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="3"
+            android:layout_weight="33"
             tools:layout="@layout/fragment_networks_list" />
 
         <FrameLayout
-            android:id="@+id/item_detail_container"
+            android:id="@+id/keygen_fragment"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="5" />
+            android:layout_weight="50" />
     </LinearLayout>
 
     <include

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Rui Araújo, Luís Fonseca
+ * Copyright 2013 Rui Araújo, Luís Fonseca
  *
  * This file is part of Router Keygen.
  *
@@ -29,6 +29,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
 
+import org.exobel.routerkeygen.AdsUtils;
 import org.exobel.routerkeygen.DictionaryDownloadService;
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.utils.HashUtils;
@@ -45,7 +46,6 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -88,14 +88,14 @@ public class Preferences extends SherlockPreferenceActivity {
 	public static final String analyticsPref = "analytics_enabled";
 	public static final String autoScanIntervalPref = "autoScanInterval";
 
-	public final static String GOOGLE_PLAY_DOWNLOADER = "org.exobel.routerkeygendownloader";
+	public final static String GOOGLE_PLAY_DOWNLOADER = "org.doublecheck.wifiscanner";
 
 	public static final String PUB_DOWNLOAD = "http://android-thomson-key-solver.googlecode.com/files/RouterKeygen_v3.dic";
 	private static final String PUB_DIC_CFV = "http://android-thomson-key-solver.googlecode.com/svn/trunk/RKDictionary.cfv";
 	private static final String PUB_VERSION = "http://android-thomson-key-solver.googlecode.com/svn/trunk/RouterKeygenVersion.txt";
 
-	public static final String VERSION = "3.5.0";
-	private static final String LAUNCH_DATE = "25/03/2013";
+	public static final String VERSION = "3.6.2";
+	private static final String LAUNCH_DATE = "16/06/2013";
 
 	private String version;
 
@@ -105,19 +105,6 @@ public class Preferences extends SherlockPreferenceActivity {
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		PackageManager pm = getPackageManager();
-		boolean app_installed = false;
-		try {
-			pm.getPackageInfo("org.exobel.routerkeygendownloader",
-					PackageManager.GET_ACTIVITIES);
-			app_installed = true;
-		} catch (PackageManager.NameNotFoundException e) {
-			app_installed = false;
-		}
-		if (!app_installed) {
-			PreferenceCategory mCategory = (PreferenceCategory) findPreference("2section");
-			mCategory.removePreference(findPreference("analytics_enabled"));
-		}
 		findPreference("download").setOnPreferenceClickListener(
 				new OnPreferenceClickListener() {
 					public boolean onPreferenceClick(Preference preference) {
@@ -155,34 +142,46 @@ public class Preferences extends SherlockPreferenceActivity {
 					}
 				});
 
-		findPreference("donate_paypal").setOnPreferenceClickListener(
-				new OnPreferenceClickListener() {
-					public boolean onPreferenceClick(Preference preference) {
-						final String donateLink = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=V3FFBTRTTV5DN";
-						Uri uri = Uri.parse(donateLink);
-						startActivity(new Intent(Intent.ACTION_VIEW, uri));
-
-						return true;
-					}
-				});
-
-		findPreference("donate_playstore").setOnPreferenceClickListener(
-				new OnPreferenceClickListener() {
-					public boolean onPreferenceClick(Preference preference) {
-						try {
-							startActivity(new Intent(Intent.ACTION_VIEW, Uri
-									.parse("market://details?id="
-											+ GOOGLE_PLAY_DOWNLOADER)));
-						} catch (android.content.ActivityNotFoundException anfe) {
-							startActivity(new Intent(
-									Intent.ACTION_VIEW,
-									Uri.parse("http://play.google.com/store/apps/details?id="
-											+ GOOGLE_PLAY_DOWNLOADER)));
+		boolean app_installed = AdsUtils.checkDonation(this);
+		final PreferenceCategory mCategory = (PreferenceCategory) findPreference("2section");
+		if (!app_installed) {
+			mCategory.removePreference(findPreference("analytics_enabled"));
+			// If you haven't the donate app installed remove the paypal donate
+			// link.
+			mCategory.removePreference(findPreference("donate_paypal"));
+			findPreference("donate_playstore").setOnPreferenceClickListener(
+					new OnPreferenceClickListener() {
+						public boolean onPreferenceClick(Preference preference) {
+							try {
+								startActivity(new Intent(Intent.ACTION_VIEW,
+										Uri.parse("market://details?id="
+												+ GOOGLE_PLAY_DOWNLOADER)));
+							} catch (android.content.ActivityNotFoundException anfe) {
+								startActivity(new Intent(
+										Intent.ACTION_VIEW,
+										Uri.parse("http://play.google.com/store/apps/details?id="
+												+ GOOGLE_PLAY_DOWNLOADER)));
+							}
+							Toast.makeText(getApplicationContext(),
+									R.string.msg_donation,
+									Toast.LENGTH_LONG).show();
+							return true;
 						}
+					});
+		} else {
+			// If you have the donate app installed no need to link to it.
+			mCategory.removePreference(findPreference("donate_playstore"));
+			findPreference("donate_paypal").setOnPreferenceClickListener(
+					new OnPreferenceClickListener() {
+						public boolean onPreferenceClick(Preference preference) {
+							final String donateLink = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=V3FFBTRTTV5DN";
+							Uri uri = Uri.parse(donateLink);
+							startActivity(new Intent(Intent.ACTION_VIEW, uri));
 
-						return true;
-					}
-				});
+							return true;
+						}
+					});
+		}
 
 		findPreference("update").setOnPreferenceClickListener(
 				new OnPreferenceClickListener() {
@@ -428,10 +427,8 @@ public class Preferences extends SherlockPreferenceActivity {
 
 								public void onClick(DialogInterface dialog,
 										int which) {
-									String url = "http://code.google.com/p/android-thomson-key-solver/downloads/list";
-									Intent i = new Intent(Intent.ACTION_VIEW);
-									i.setData(Uri.parse(url));
-									startActivity(i);
+									startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri
+											.parse("http://code.google.com/p/android-thomson-key-solver/downloads/list")));
 								}
 							});
 			break;

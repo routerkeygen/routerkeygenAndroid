@@ -40,7 +40,7 @@ QVector<QString> & OnoKeygen::getKeys() {
 	pseed[3] = 0;
 	int randNumber = 0;
 	for (int i = 0; i < val.length(); i++) {
-		pseed[i % 4] ^= (int) val.at(i).toAscii();
+        pseed[i % 4] ^= (int) val.at(i).toLatin1();
 	}
 	randNumber = pseed[0] | (pseed[1] << 8) | (pseed[2] << 16)
 			| (pseed[3] << 24);
@@ -54,8 +54,8 @@ QVector<QString> & OnoKeygen::getKeys() {
 		key += aux.toUpper();
 	}
 	results.append(key);
-	key = QString::fromAscii(
-			QCryptographicHash::hash(padto64(val).toAscii(),
+    key = QString::fromLatin1(
+            QCryptographicHash::hash(padto64(val).toLatin1(),
 					QCryptographicHash::Md5).toHex().data());
 	key.truncate(26);
 	results.append(key.toUpper());

@@ -69,7 +69,7 @@ bool Keygen::isLocked() {
 }
 
 int Keygen::getSupportState() const{
-return SUPPORTED;
+    return SUPPORTED;
 }
 /**
  * @return The security of a given {@link ScanResult}.

@@ -17,6 +17,7 @@
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "TeleTuKeygen.h"
+#include "config/TeleTuMagicInfo.h"
 #include <QCryptographicHash>
 
 TeleTuKeygen::TeleTuKeygen(QString & ssid, QString & mac, int level,

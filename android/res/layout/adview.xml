@@ -6,8 +6,7 @@
     android:layout_height="wrap_content"
     ads:adSize="SMART_BANNER"
     ads:adUnitId="a334dbb66e1e47e3"
-    ads:loadAdOnCreate="false" >
-
-    <!-- ads:testDevices="TEST_EMULATOR,E6C1590429D5BAB407DBCF377CDC90C8,016C50C81026CCA891230E24BB5FE4E9" -->
+    ads:loadAdOnCreate="false"
+    ads:testDevices="TEST_EMULATOR,E6C1590429D5BAB407DBCF377CDC90C8,016C50C81026CCA891230E24BB5FE4E9" >
 
 </com.google.ads.AdView>

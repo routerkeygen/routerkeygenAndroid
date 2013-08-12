@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-   Copyright 2012 Rui Araújo, Luís Fonseca
+   Copyright 2013 Rui Araújo, Luís Fonseca
   
    This file is part of Router Keygen.
   
@@ -26,7 +26,7 @@
     <string name="app_name">Router Keygen</string>
     <string name="msg_welcome_title">Router Keygen</string>
     <string name="msg_welcome_text"> Obrigado por experimentar a aplicação Router Keygen. Se gostou da aplicação por favor considere a hipótese de comprar a versão Donativo. O link está no menu de preferências. O seu donativo irá motivar os autores a melhorar esta grande ferramenta open-source.</string>
-    <string name="msg_welcome_tip">Seleccione qualquer rede com uma barra verde para gerar possíveis chaves.</string>
+    <string name="msg_welcome_tip">Seleccione qualquer rede suportada para gerar possíveis chaves.</string>
     <string name="menu_scan">Pesquisa</string>
     <string name="menu_manual">Entrada Manual</string>
     <string name="menu_preferences">Preferências</string>
@@ -43,6 +43,9 @@
     <string name="not_auto_connect_waiting">A esperar pela disconecção da ligação atual</string>
     <string name="not_auto_connect_key_testing">A testar <xliff:g id="key">%1$s</xliff:g></string>
     <string name="not_correct_key_testing"><xliff:g id="key">%1$s</xliff:g> é a senha correta.</string>
+    <string name="networklist_supported">Suportadas</string>
+    <string name="networklist_unlikely_supported">Pouco Provável</string>
+    <string name="networklist_unsupported">Não Suportadas</string>
 
     <!-- BUTTONS STRINGS -->
     <string name="bt_manual_cancel">Cancelar</string>
@@ -54,6 +57,7 @@
     <string name="bt_website">Abrir Website</string>
     <string name="bt_paypal">PayPal</string>
     <string name="bt_google_play">Google Play</string>
+    <string name="bt_dont_donate">Não doar :-(</string>
 
     <!-- DIALOG STRINGS -->
     <string name="lb_manual">Introduza o ESSID:</string>
@@ -66,15 +70,17 @@
     <string name="lb_manual_bssid">Endereço MAC (opcional):</string>
     <string name="dialog_about_credits">Créditos</string>
     <string name="dialog_about_credits_desc">Router Keygen é o resultado das contribuições valiosas das seguintes pessoas/organizações:\n\n
-        Rui Araújo, Luís Fonseca, Ângela Igreja, Simone Guidi, Matthijs de Rijk, Van Hove Sven, Jon Uriarte, <a href="http://www.gnucitizen.org/">GNUCITIZEN</a>, <a href="http://wifiresearchers.wordpress.com/">White Hats Crew</a>, Fred Williams, Muris Kurgaš, <a href="http://websec.ca/">Pedro Joaquim</a>, chaeo, Nicolas DeRouet, Eduardo Laborin, Florian Frank, Axel Martinez, Victor Mignot, <a href="http://www.openssl.org/">OpenSSl</a>.</string>
+        Rui Araújo, Luís Fonseca, Ângela Igreja, Simone Guidi, Matthijs de Rijk, Van Hove Sven, Jon Uriarte, <a href="http://www.gnucitizen.org/">GNUCITIZEN</a>, <a href="http://wifiresearchers.wordpress.com/">White Hats Crew</a>, Fred Williams, Muris Kurgaš, <a href="http://websec.ca/">Pedro Joaquim</a>, chaeo, Nicolas DeRouet, Eduardo Laborin, Florian Frank, Axel Martinez, Victor Mignot, Martijn Gerkes, Alejandro Marquez, <a href="http://www.openssl.org/">OpenSSl</a>.</string>
     <string name="dialog_about_license">Licença</string>
     <string name="dialog_about_license_desc">Esta aplicação está sobre a GPLv3.\n\nPode ler os termos desta <a href="http://www.gnu.org/licenses/gpl-3.0.html">aqui</a>.\n\n
-        RouterKeygen usa software open source:\n<a href="https://github.com/JakeWharton/ActionBarSherlock">ActionBarSherlock</a>\n<a href="https://github.com/iPaulPro/aFileChooser">aFileChooser</a>.\n\nOs termos das licensas podem ser lido seguindo os links.</string>
+        RouterKeygen usa software open source:\n<a href="https://github.com/JakeWharton/ActionBarSherlock">ActionBarSherlock</a>\n<a href="https://github.com/iPaulPro/aFileChooser">aFileChooser</a>\n<a href="https://github.com/beworker/pinned-section-listview">PinnedSectionListView</a>\n<a href="https://code.google.com/p/android-wifi-connecter/">android-wifi-connecter</a>.\n\nOs termos das licensas podem ser lido seguindo os links.</string>
     <string name="msg_app_updated">A aplicação já está na última versão.</string>
     <string name="update_title">Actualização Disponível</string>
+    <string name="update_notification">Está disponível a versão <xliff:g id="version">%1$s</xliff:g>.</string>
     <string name="update_message">Está disponível a versão <xliff:g id="version">%1$s</xliff:g>. Abra o Website para descarregar a última versão.</string>
     <string name="cancel_download">Deseja cancelar a transferência do dicionário?</string>
     <string name="cancel_auto_test">Deseja cancelar o teste das senhas?</string>
+    <string name="msg_donation">Instale a seguinte aplicação para remover a publicidade e fazer um donativo. Obrigado! :-)</string>
 
     <!-- PREFERENCES STRINGS -->
     <string name="pref_hinton_wifion">Activar automaticamente o Wifi</string>
@@ -154,6 +160,7 @@
     <string name="msg_no_correct_keys">Todas as senhas estão incorretas.</string>
     <string name="msg_auto_connect_running">O processo de teste já esta a correr.</string>
     <string name="msg_auto_connect_warning">Este teste não funciona bem com redes fracas.</string>
+    <string name="crash_toast_text">Routerkeygen teve um erro. Por favor envie um email.</string>
 
     <!-- FILE CHOOSER -->
     <string name="empty_directory">Diretoria vazia</string>

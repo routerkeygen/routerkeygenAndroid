@@ -60,6 +60,32 @@ public class ThomsonKeygen extends Keygen {
 	final private String ssidIdentifier;
 	private InputStream webdic;
 
+	private static boolean readFromInput(byte[] buf, int length,
+			InputStream input) throws IOException {
+		int check = 0, ret = 0;
+		while (check != length) {
+			ret = input.read(buf, check, length - check);
+			if (ret == -1) {
+				return false;
+			} else
+				check += ret;
+		}
+		return true;
+	}
+	private static boolean readFromInput(byte[] buf, int length,
+			RandomAccessFile input) throws IOException {
+		int check = 0, ret = 0;
+		while (check != length) {
+			ret = input.read(buf, check, length - check);
+			if (ret == -1) {
+				return false;
+			} else
+				check += ret;
+		}
+		return true;
+	}
+
+
 	public ThomsonKeygen(String ssid, String mac, int level, String enc) {
 		super(ssid, mac, level, enc);
 		this.errorDict = false;
@@ -106,16 +132,11 @@ public class ThomsonKeygen extends Keygen {
 			URL url;
 			ZipInputStream fis = new ZipInputStream(webdic);
 			fis.getNextEntry();
-			int check = 0, ret = 0;
-			while (check != 1024)/* ZipInputStream doens't seems to block. */
-			{
-				ret = fis.read(table, check, 1024 - check);
-				if (ret == -1) {
-					setErrorCode(R.string.msg_err_webdic_table);
-					errorDict = true;
-					return false;
-				} else
-					check += ret;
+			if (!readFromInput(table, 1024, fis)) {
+				setErrorCode(R.string.msg_err_webdic_table);
+				errorDict = true;
+				fis.close();
+				return false;
 			}
 			int totalOffset = 0;
 			int offset = 0;
@@ -138,19 +159,17 @@ public class ThomsonKeygen extends Keygen {
 				if (retLong == -1) {
 					setErrorCode(R.string.msg_err_webdic_table);
 					errorDict = true;
+					fis.close();
 					return false;
 				} else
 					checkLong += retLong;
 			}
-			check = 0;
-			while (check != 768) {
-				ret = fis.read(table, check, 768 - check);
-				if (ret == -1) {
-					setErrorCode(R.string.msg_err_webdic_table);
-					errorDict = true;
-					return false;
-				} else
-					check += ret;
+
+			if (!readFromInput(table, 768, fis)) {
+				setErrorCode(R.string.msg_err_webdic_table);
+				errorDict = true;
+				fis.close();
+				return false;
 			}
 			i = (0xFF & routerESSID[1]) * 3;
 			offset = ((0xFF & table[i]) << 16) | ((0xFF & table[i + 1]) << 8)
@@ -184,17 +203,13 @@ public class ThomsonKeygen extends Keygen {
 			URLConnection con = url.openConnection();
 			con.setRequestProperty("Range", "bytes=" + totalOffset + "-");
 			onlineFile = new DataInputStream(con.getInputStream());
-			len = 0;
-
-			this.entry = new byte[lenght];
-			while (len != lenght) {
-				ret = onlineFile.read(this.entry, len, lenght - len);
-				if (ret == -1) {
-					setErrorCode(R.string.msg_err_webdic_table);
-					errorDict = true;
-					return false;
-				} else
-					len += ret;
+			len = lenght;
+			this.entry = new byte[len];
+			if (!readFromInput(table, len, onlineFile)) {
+				setErrorCode(R.string.msg_err_webdic_table);
+				onlineFile.close();
+				errorDict = true;
+				return false;
 			}
 			onlineFile.close();
 			fis.close();
@@ -228,7 +243,7 @@ public class ThomsonKeygen extends Keygen {
 		}
 		int version = 0;
 		try {
-			if (fis.read(table) == -1) {
+			if (!readFromInput(table, 1282, fis)) {
 				setErrorCode(R.string.msg_errordict);
 				errorDict = true;
 				fis.close();
@@ -251,7 +266,7 @@ public class ThomsonKeygen extends Keygen {
 			}
 			totalOffset += offset;
 			fis.seek(totalOffset);
-			if (fis.read(table, 0, 1024) == -1) {
+			if (!readFromInput(table, 1024, fis)) {
 				setErrorCode(R.string.msg_errordict);
 				errorDict = true;
 				fis.close();
@@ -538,7 +553,7 @@ public class ThomsonKeygen extends Keygen {
 		// It is a new generation router which the probability of working is
 		// very low.
 		if (getMacAddress().substring(6).equalsIgnoreCase(ssidIdentifier))
-			return MAYBE_SUP;
+			return UNLIKELY_SUPPORTED;
 		return SUPPORTED;
 	}
 

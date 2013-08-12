@@ -55,6 +55,7 @@ public class NetworksListFragment extends SherlockFragment implements
 	private OnItemSelectionListener mCallbacks = sDummyCallbacks;
 	private int mActivatedPosition = ListView.INVALID_POSITION;
 	private ListView listview;
+	private WifiListAdapter wifiListAdapter;
 	private View noNetworksMessage;
 
 	private Keygen[] networksFound;
@@ -84,6 +85,8 @@ public class NetworksListFragment extends SherlockFragment implements
 		RelativeLayout root = (RelativeLayout) inflater.inflate(
 				R.layout.fragment_networks_list, container, false);
 		listview = (ListView) root.findViewById(R.id.networks_list);
+		wifiListAdapter = new WifiListAdapter(getActivity());
+		listview.setAdapter(wifiListAdapter);
 		noNetworksMessage = root.findViewById(R.id.message_group);
 		if (savedInstanceState != null) {
 			if (savedInstanceState.containsKey(NETWORKS_FOUND)) {
@@ -153,22 +156,22 @@ public class NetworksListFragment extends SherlockFragment implements
 			ContextMenu.ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 		final AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
-		// We may have had bad luck
-		if (info.position >= networksFound.length)
+		if (networksFound == null || wifiListAdapter.getCount() <= info.position)
 			return;
+		final Keygen keygen = wifiListAdapter.getItem(info.position).keygen;
+		if (keygen == null) // the list is unstable and it can happen
+			return;
+
 		MenuInflater inflater = getActivity().getMenuInflater();
 		inflater.inflate(R.menu.networks_context_menu, menu);
 		// We are copying the values right away as the networks list is
 		// unstable.
 		((MenuItem) menu.findItem(R.id.copy_ssid)).setIntent(new Intent()
-				.putExtra(MENU_VALUE,
-						networksFound[info.position].getSsidName()));
+				.putExtra(MENU_VALUE, keygen.getSsidName()));
 		((MenuItem) menu.findItem(R.id.copy_mac)).setIntent(new Intent()
-				.putExtra(MENU_VALUE,
-						networksFound[info.position].getDisplayMacAddress()));
+				.putExtra(MENU_VALUE, keygen.getDisplayMacAddress()));
 		((MenuItem) menu.findItem(R.id.use_mac)).setIntent(new Intent()
-				.putExtra(MENU_VALUE,
-						networksFound[info.position].getMacAddress()));
+				.putExtra(MENU_VALUE, keygen.getMacAddress()));
 	}
 
 	@Override
@@ -217,9 +220,8 @@ public class NetworksListFragment extends SherlockFragment implements
 			return;
 		if (networks.length > 0) {
 			noNetworksMessage.setVisibility(View.GONE);
+			wifiListAdapter.updateNetworks(networks);
 			listview.setVisibility(View.VISIBLE);
-			listview.setAdapter(new WifiListAdapter(networksFound,
-					getActivity()));
 		} else {
 			noNetworksMessage.findViewById(R.id.loading_spinner).setVisibility(
 					View.GONE);
@@ -235,8 +237,11 @@ public class NetworksListFragment extends SherlockFragment implements
 
 	public void onItemClick(AdapterView<?> list, View view, int position,
 			long id) {
-		if (networksFound != null && networksFound.length > position)
-			mCallbacks.onItemSelected(networksFound[position]);
+		if (networksFound != null && wifiListAdapter.getCount() > position) {
+			final Keygen keygen = wifiListAdapter.getItem(position).keygen;
+			if (keygen != null) // the list is unstable and it can happen
+				mCallbacks.onItemSelected(keygen);
+		}
 	}
 
 }

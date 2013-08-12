@@ -6,12 +6,18 @@
  */
 
 #include "EasyBoxKeygen.h"
+#include <QRegExp>
 
 EasyBoxKeygen::EasyBoxKeygen(QString & ssid, QString & mac, int level,
 		QString enc) :
 		Keygen(ssid, mac, level, enc) {
 }
 
+int EasyBoxKeygen::getSupportState() const{
+    if ( getSsidName().count(QRegExp("^(Arcor|EasyBox|Vodafone|WLAN)(-| )[0-9a-fA-F]{6}$")) == 1 )
+        return SUPPORTED;
+    return UNLIKELY;
+}
 QVector<QString> & EasyBoxKeygen::getKeys() {
 	QString mac = getMacAddress();
 	if (mac.length() != 12) {

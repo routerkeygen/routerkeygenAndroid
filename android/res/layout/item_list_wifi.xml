@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-   Copyright 2012 Rui Araújo, Luís Fonseca
+   Copyright 2013 Rui Araújo, Luís Fonseca
   
    This file is part of Router Keygen.
   
@@ -24,29 +24,16 @@
     android:focusable="false"
     android:gravity="left|center_vertical"
     android:orientation="horizontal"
-    android:padding="0dip" >
+    android:padding="0dp" >
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:layout_marginRight="10dip"
-        android:focusable="false"
-        android:gravity="left" >
-
-        <ImageView
-            android:id="@+id/icon"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:focusable="false"
-            android:scaleType="fitXY"
-            android:src="@drawable/ic_impossible" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="0dip"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginRight="5dip"
-        android:layout_weight="4"
+        android:layout_marginEnd="6dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+        android:layout_marginStart="6dp"
+        android:layout_weight="5"
         android:focusable="false"
         android:gravity="left|center_vertical"
         android:orientation="vertical" >
@@ -55,32 +42,36 @@
             android:id="@+id/wifiName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
+            android:ellipsize="marquee"
             android:focusable="false"
-            android:maxLines="1"
+            android:marqueeRepeatLimit="marquee_forever"
             android:scrollHorizontally="true"
             android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="#ffffff"
+            android:textIsSelectable="false"
             android:textSize="20sp" />
 
         <TextView
             android:id="@+id/wifiMAC"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
+            android:ellipsize="marquee"
             android:focusable="false"
+            android:marqueeRepeatLimit="marquee_forever"
             android:maxLines="1"
             android:scrollHorizontally="true"
             android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="#545454" />
+            android:textColor="#545454"
+            android:textIsSelectable="false" />
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="0dip"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginRight="10dip"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
         android:layout_weight="1"
         android:focusable="false"
         android:gravity="right|center_vertical" >
@@ -89,6 +80,7 @@
             android:id="@+id/strenght"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="@null"
             android:focusable="false"
             android:src="@drawable/ic_wifi_lock_signal_1" />
     </LinearLayout>

@@ -30,35 +30,35 @@ QVector<QString> & DlinkKeygen::getKeys() {
     if ( mac.size() < 12 )
         throw ERROR;
     char key[20];
-    key[0]=mac.at(11).toAscii();
-    key[1]=mac.at(0).toAscii();
+    key[0]=mac.at(11).toLatin1();
+    key[1]=mac.at(0).toLatin1();
 
-    key[2]=mac.at(10).toAscii();
-    key[3]=mac.at(1).toAscii();
+    key[2]=mac.at(10).toLatin1();
+    key[3]=mac.at(1).toLatin1();
 
-    key[4]=mac.at(9).toAscii();
-    key[5]=mac.at(2).toAscii();
+    key[4]=mac.at(9).toLatin1();
+    key[5]=mac.at(2).toLatin1();
 
-    key[6]=mac.at(8).toAscii();
-    key[7]=mac.at(3).toAscii();
+    key[6]=mac.at(8).toLatin1();
+    key[7]=mac.at(3).toLatin1();
 
-    key[8]=mac.at(7).toAscii();
-    key[9]=mac.at(4).toAscii();
+    key[8]=mac.at(7).toLatin1();
+    key[9]=mac.at(4).toLatin1();
 
-    key[10]=mac.at(6).toAscii();
-    key[11]=mac.at(5).toAscii();
+    key[10]=mac.at(6).toLatin1();
+    key[11]=mac.at(5).toLatin1();
 
-    key[12]=mac.at(1).toAscii();
-    key[13]=mac.at(6).toAscii();
+    key[12]=mac.at(1).toLatin1();
+    key[13]=mac.at(6).toLatin1();
 
-    key[14]=mac.at(8).toAscii();
-    key[15]=mac.at(9).toAscii();
+    key[14]=mac.at(8).toLatin1();
+    key[15]=mac.at(9).toLatin1();
 
-    key[16]=mac.at(11).toAscii();
-    key[17]=mac.at(2).toAscii();
+    key[16]=mac.at(11).toLatin1();
+    key[17]=mac.at(2).toLatin1();
 
-    key[18]=mac.at(4).toAscii();
-    key[19]=mac.at(10).toAscii();
+    key[18]=mac.at(4).toLatin1();
+    key[19]=mac.at(10).toLatin1();
     char newkey[21];
     char t;
     int index = 0;

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Wifi Scanner</string>
+    <string name="msg_welcome_text_donate">Uw donatie zal de ontwikkelaars aanmoedigen om deze opensource-app nog beter te maken.</string>
+    <string name="msg_nowifidetected">Geen Wi-Fi-toegangspunten gevonden</string>
+    <string name="msg_nowifi">Wi-Fi is niet ingeschakeld</string>
+    <string name="msg_scanfailed">Zoeken mislukt</string>
+    <string name="msg_wifibroken">Kan Wi-Fi niet inschakelen</string>
+    <string name="msg_scanstarted">Bezig met scannen\u2026</string>
+    <string name="msg_wifienabling">Wi-Fi inschakelen\u2026</string>
+    <string name="menu_scan">Zoeken</string>
+
+</resources>

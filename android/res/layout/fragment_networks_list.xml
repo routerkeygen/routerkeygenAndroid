@@ -3,7 +3,7 @@
     android:layout_height="match_parent"
     android:gravity="center" >
 
-    <ListView
+    <com.hb.views.PinnedSectionListView
         android:id="@+id/networks_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            android:paddingLeft="10dip"
+            android:paddingLeft="10dp"
             android:text="@string/msg_nowifidetected"
             android:textSize="20sp"
             android:visibility="gone" />

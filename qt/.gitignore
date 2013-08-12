@@ -3,3 +3,4 @@ linux
 win32
 lang/*.qrc
 lang/*.qm
+build-test-*

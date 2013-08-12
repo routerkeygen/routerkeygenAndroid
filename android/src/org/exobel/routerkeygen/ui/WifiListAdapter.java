@@ -18,12 +18,17 @@
  */
 package org.exobel.routerkeygen.ui;
 
+import java.util.ArrayList;
+
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.algorithms.Keygen;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.text.TextUtils.TruncateAt;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,25 +36,23 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class WifiListAdapter extends BaseAdapter {
-	private Keygen[] listNetworks;
+import com.hb.views.PinnedSectionListView;
+
+public class WifiListAdapter extends BaseAdapter implements
+		PinnedSectionListView.PinnedSectionListAdapter {
+	private ArrayList<Item> listNetworks;
 
 	final private LayoutInflater inflater;
-	private final Drawable[] supported;
 	private final Drawable[] wifiSignal;
 	private final Drawable[] wifiSignalLocked;
+	private final Typeface typeface;
 
-	public WifiListAdapter(Keygen[] list, Context context) {
-		if (list != null)
-			this.listNetworks = list;
-		else
-			this.listNetworks = new Keygen[0];
+	public WifiListAdapter(Context context) {
+		this.listNetworks = new ArrayList<WifiListAdapter.Item>();
+		typeface = Typeface.createFromAsset(context.getAssets(),
+				"fonts/Roboto-Light.ttf");
 		final Resources resources = context.getResources();
 		inflater = LayoutInflater.from(context);
-		supported = new Drawable[3];
-		supported[0] = resources.getDrawable(R.drawable.ic_possible);
-		supported[1] = resources.getDrawable(R.drawable.ic_maybe);
-		supported[2] = resources.getDrawable(R.drawable.ic_impossible);
 		wifiSignal = new Drawable[4];
 		wifiSignalLocked = new Drawable[4];
 		for (int i = 0; i < 4; ++i) {
@@ -83,11 +86,33 @@ public class WifiListAdapter extends BaseAdapter {
 	}
 
 	public int getCount() {
-		return listNetworks.length;
+		return listNetworks.size();
 	}
 
-	public Object getItem(int position) {
-		return listNetworks[position];
+	public Item getItem(int position) {
+		return listNetworks.get(position);
+	}
+
+	@Override
+	public int getItemViewType(int position) {
+		if (position >= getCount())
+			return -1;
+		return getItem(position).type;
+	}
+
+	@Override
+	public int getViewTypeCount() {
+		return 2;
+	}
+
+	@Override
+	public boolean areAllItemsEnabled() {
+		return false;
+	}
+
+	@Override
+	public boolean isEnabled(int position) {
+		return getItem(position).type == Item.ITEM;
 	}
 
 	public long getItemId(int position) {
@@ -95,36 +120,74 @@ public class WifiListAdapter extends BaseAdapter {
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {
-		final Keygen wifi = listNetworks[position];
+		final Item wifi = getItem(position);
 		if (convertView == null) {
-			convertView = inflater.inflate(R.layout.item_list_wifi, parent,
-					false);
-			convertView.setTag(new ViewHolder((TextView) convertView
-					.findViewById(R.id.wifiName), (TextView) convertView
-					.findViewById(R.id.wifiMAC), (ImageView) convertView
-					.findViewById(R.id.icon), (ImageView) convertView
-					.findViewById(R.id.strenght)));
+			if (wifi.type == Item.ITEM) {
+				convertView = inflater.inflate(R.layout.item_list_wifi, parent,
+						false);
+				convertView.setTag(new ViewHolder((TextView) convertView
+						.findViewById(R.id.wifiName), (TextView) convertView
+						.findViewById(R.id.wifiMAC), (ImageView) convertView
+						.findViewById(R.id.strenght)));
+			} else {
+				convertView = inflater.inflate(
+						android.R.layout.simple_list_item_1, parent, false);
+				final TextView view = (TextView) convertView;
+				view.setTypeface(typeface);
+				view.setTextSize(TypedValue.COMPLEX_UNIT_SP, 23);
+				view.setTextColor(0xFFFFFFFF);
+			}
+		} else {
+			switch (wifi.type) {
+			case Item.ITEM:
+				if (convertView.getTag() == null) {
+					convertView = inflater.inflate(R.layout.item_list_wifi,
+							parent, false);
+					convertView
+							.setTag(new ViewHolder((TextView) convertView
+									.findViewById(R.id.wifiName),
+									(TextView) convertView
+											.findViewById(R.id.wifiMAC),
+									(ImageView) convertView
+											.findViewById(R.id.strenght)));
+				}
+				break;
+
+			case Item.SECTION:
+				if (convertView.getTag() != null) {
+					convertView = inflater.inflate(
+							android.R.layout.simple_list_item_1, parent, false);
+					final TextView view = (TextView) convertView;
+					view.setTypeface(typeface);
+					view.setTextSize(TypedValue.COMPLEX_UNIT_SP, 23);
+					view.setTextColor(0xFFFFFFFF);
+				}
+
+				break;
+			}
 		}
 
-		final ViewHolder holder = (ViewHolder) convertView.getTag();
-		holder.ssid.setText(wifi.getSsidName());
-		holder.mac.setText(wifi.getDisplayMacAddress());
-		switch(wifi.getSupportState()){
-		case Keygen.SUPPORTED:
-			holder.supported.setImageDrawable(supported[0]);
-			break;
-		case Keygen.MAYBE_SUP:
-			holder.supported.setImageDrawable(supported[1]);
-			break;
-		case Keygen.UNSUPPORTED:
-			holder.supported.setImageDrawable(supported[2]);
-			break;
-		}
-		final int strenght = wifi.getLevel();
-		if (wifi.isLocked()) {
-			holder.networkStrenght.setImageDrawable(wifiSignalLocked[strenght]);
+		if (wifi.type == Item.ITEM) {
+			final ViewHolder holder = (ViewHolder) convertView.getTag();
+			holder.ssid.setText(wifi.keygen.getSsidName());
+			holder.ssid.setTypeface(typeface);
+			holder.ssid.setSelected(true);
+			holder.ssid.setEllipsize(TruncateAt.MARQUEE);
+			holder.mac.setText(wifi.keygen.getDisplayMacAddress());
+			holder.mac.setTypeface(typeface);
+			holder.mac.setSelected(true);
+			holder.mac.setEllipsize(TruncateAt.MARQUEE);
+			final int strenght = wifi.keygen.getLevel();
+			if (wifi.keygen.isLocked()) {
+				holder.networkStrenght
+						.setImageDrawable(wifiSignalLocked[strenght]);
+			} else {
+				holder.networkStrenght.setImageDrawable(wifiSignal[strenght]);
+			}
 		} else {
-			holder.networkStrenght.setImageDrawable(wifiSignal[strenght]);
+			TextView view = (TextView) convertView;
+			view.setText(wifi.text);
+			view.setBackgroundColor(parent.getResources().getColor(wifi.color));
 		}
 		return convertView;
 	}
@@ -132,17 +195,13 @@ public class WifiListAdapter extends BaseAdapter {
 	private static class ViewHolder {
 		final private TextView ssid;
 		final private TextView mac;
-		final private ImageView supported;
 		final private ImageView networkStrenght;
 
-		public ViewHolder(TextView ssid, TextView mac, ImageView supported,
-				ImageView networkStrenght) {
+		public ViewHolder(TextView ssid, TextView mac, ImageView networkStrenght) {
 			this.ssid = ssid;
 			this.mac = mac;
-			this.supported = supported;
 			this.networkStrenght = networkStrenght;
 		}
-
 	}
 
 	@Override
@@ -150,4 +209,55 @@ public class WifiListAdapter extends BaseAdapter {
 		return true;
 	}
 
+	public boolean isItemViewTypePinned(int viewType) {
+		return viewType == Item.SECTION;
+	}
+
+	public static class Item {
+		public static final int ITEM = 0;
+		public static final int SECTION = 1;
+
+		public final int type;
+		public final int text;
+		public final Keygen keygen;
+		public final int color;
+
+		public Item(int type, int text, Keygen keygen, int color) {
+			this.type = type;
+			this.text = text;
+			this.keygen = keygen;
+			this.color = color;
+		}
+	}
+
+	public void updateNetworks(Keygen[] list) {
+		if (list != null) {
+			listNetworks.clear();
+			int currentSupportState = -1;
+			for (Keygen k : list) {
+				if (k.getSupportState() != currentSupportState) {
+					currentSupportState = k.getSupportState();
+					switch (currentSupportState) {
+					case Keygen.SUPPORTED:
+						listNetworks.add(new Item(Item.SECTION,
+								R.string.networklist_supported, null,
+								R.color.holo_green_dark));
+						break;
+					case Keygen.UNLIKELY_SUPPORTED:
+						listNetworks.add(new Item(Item.SECTION,
+								R.string.networklist_unlikely_supported, null,
+								R.color.holo_orange_dark));
+						break;
+					case Keygen.UNSUPPORTED:
+						listNetworks.add(new Item(Item.SECTION,
+								R.string.networklist_unsupported, null,
+								R.color.holo_red_dark));
+						break;
+					}
+				}
+				listNetworks.add(new Item(Item.ITEM, 0, k, 0));
+			}
+			notifyDataSetChanged();
+		}
+	}
 }

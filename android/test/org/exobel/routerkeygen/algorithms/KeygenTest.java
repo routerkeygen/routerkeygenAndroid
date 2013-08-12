@@ -15,11 +15,11 @@ import org.junit.Test;
 public class KeygenTest {
 
 	@Test
-	public void testAlice() throws FileNotFoundException {
+	public void testAliceItaly() throws FileNotFoundException {
 		Keygen keygen = WirelessMatcher.getKeygen("Alice-37588990",
 				"00:23:8e:48:e7:d4", 0, "", new ZipInputStream(
 						new FileInputStream("../res/raw/magic_info.zip")));
-		assertTrue("Keygen should be Alice", keygen instanceof AliceKeygen);
+		assertTrue("Keygen should be Alice", keygen instanceof AliceItalyKeygen);
 		List<String> results = keygen.getKeys();
 		assertEquals("Errors should not happen", 0, keygen.getErrorCode());
 		assertEquals("There should be only 4 result", 4, results.size());
@@ -31,6 +31,20 @@ public class KeygenTest {
 				"y7xysqmqs9jooa7rersi7ayi", results.get(2));
 		assertEquals("The password should be 9j4hm3ojq4brfdy6wcsuglwu",
 				"9j4hm3ojq4brfdy6wcsuglwu", results.get(3));
+	}
+
+	@Test
+	public void testAliceGermany() throws FileNotFoundException {
+		Keygen keygen = WirelessMatcher.getKeygen("ALICE-WLANC3",
+				"00:1E:40:A0:84:C4", 0, "", new ZipInputStream(
+						new FileInputStream("../res/raw/magic_info.zip")));
+		assertTrue("Keygen should be Alice",
+				keygen instanceof AliceGermanyKeygen);
+		List<String> results = keygen.getKeys();
+		assertEquals("Errors should not happen", 0, keygen.getErrorCode());
+		assertEquals("There should be only 1 result", 1, results.size());
+		assertEquals("The password should be MGIwMjhjYTYzZmM0",
+				"MGIwMjhjYTYzZmM0", results.get(0));
 	}
 
 	@Test
@@ -160,12 +174,13 @@ public class KeygenTest {
 		Keygen keygen = WirelessMatcher.getKeygen("OTEcb4c",
 				"E8:39:DF:F5:12:34", 0, "", new ZipInputStream(
 						new FileInputStream("../res/raw/magic_info.zip")));
-		assertTrue("Keygen should be OTEHuawei", keygen instanceof OteHuaweiKeygen);
+		assertTrue("Keygen should be OTEHuawei",
+				keygen instanceof OteHuaweiKeygen);
 		List<String> results = keygen.getKeys();
 		assertEquals("Errors should not happen", 0, keygen.getErrorCode());
 		assertEquals("There should be only one result", 1, results.size());
-		//assertEquals("The password should be b075d537cb4c", "000133337cb4c",
-		//		results.get(0));
+		assertEquals("The password should be 54919345", "54919345",
+				results.get(0));
 	}
 
 	@Test
@@ -179,6 +194,27 @@ public class KeygenTest {
 		assertEquals("There should be only one result", 1, results.size());
 		assertEquals("The password should be PcL2PgUcX0VhV", "PcL2PgUcX0VhV",
 				results.get(0));
+
+	}
+
+	@Test
+	public void testSpeedport500() throws FileNotFoundException {
+		Keygen keygen = WirelessMatcher.getKeygen("WLAN-903704",
+				"00:1D:19:90:37:DD", 0, "", new ZipInputStream(
+						new FileInputStream("../res/raw/magic_info.zip")));
+		assertTrue("Keygen should be Speedport500",
+				keygen instanceof Speedport500Keygen);
+		List<String> results = keygen.getKeys();
+		assertEquals("Errors should not happen", 0, keygen.getErrorCode());
+		assertEquals("There should be 1000 results", 1000, results.size());
+		boolean found = false;
+		for (String k : results) {
+			if (k.equals("SP-0947DD059")) {
+				found = true;
+				break;
+			}
+		}
+		assertTrue("SP-0947DD059 should have been found", found);
 
 	}
 
