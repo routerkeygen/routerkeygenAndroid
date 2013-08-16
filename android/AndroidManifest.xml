@@ -4,11 +4,11 @@
     package="org.exobel.routerkeygen"
     android:installLocation="auto"
     android:versionCode="30"
-    android:versionName="3.6.2" >
+    android:versionName="3.7.0" >
 
     <uses-sdk
         android:minSdkVersion="7"
-        android:targetSdkVersion="17" />
+        android:targetSdkVersion="18" />
 
     <supports-screens
         android:anyDensity="true"
