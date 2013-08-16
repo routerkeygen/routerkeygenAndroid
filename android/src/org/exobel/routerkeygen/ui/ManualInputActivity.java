@@ -22,6 +22,7 @@ package org.exobel.routerkeygen.ui;
 import org.exobel.routerkeygen.AdsUtils;
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.algorithms.Keygen;
+import org.exobel.routerkeygen.algorithms.WiFiNetwork;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -87,14 +88,14 @@ public class ManualInputActivity extends SherlockFragmentActivity implements
 		return true;
 	}
 
-	public void onItemSelected(Keygen keygen) {
-		if (keygen.getSupportState() == Keygen.UNSUPPORTED) {
+	public void onItemSelected(WiFiNetwork wiFiNetwork) {
+		if (wiFiNetwork.getSupportState() == Keygen.UNSUPPORTED) {
 			Toast.makeText(this, R.string.msg_unspported,
 					Toast.LENGTH_SHORT).show();
 			return;
 		}
 		Intent detailIntent = new Intent(this, NetworkActivity.class);
-		detailIntent.putExtra(NetworkFragment.NETWORK_ID, keygen);
+		detailIntent.putExtra(NetworkFragment.NETWORK_ID, wiFiNetwork);
 		startActivity(detailIntent);
 	}
 

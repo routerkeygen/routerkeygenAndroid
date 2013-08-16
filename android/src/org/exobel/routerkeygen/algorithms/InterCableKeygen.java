@@ -28,8 +28,8 @@ import android.os.Parcelable;
 
 public class InterCableKeygen extends Keygen {
 
-	public InterCableKeygen(String ssid, String mac, int level, String enc) {
-		super(ssid, mac, level, enc);
+	public InterCableKeygen(String ssid, String mac) {
+		super(ssid, mac);
 	}
 
 	@Override

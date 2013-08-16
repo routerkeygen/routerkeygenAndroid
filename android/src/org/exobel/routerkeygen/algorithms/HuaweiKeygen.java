@@ -36,8 +36,8 @@ public class HuaweiKeygen extends Keygen {
 
 	final private String ssidIdentifier;
 
-	public HuaweiKeygen(String ssid, String mac, int level, String enc) {
-		super(ssid, mac, level, enc);
+	public HuaweiKeygen(String ssid, String mac) {
+		super(ssid, mac);
 		if (getSsidName().matches("INFINITUM[0-9a-zA-Z]{4}"))
 			ssidIdentifier = ssid.substring(ssid.length() - 4);
 		else

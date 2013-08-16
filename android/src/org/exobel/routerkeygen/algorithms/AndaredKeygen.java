@@ -29,8 +29,8 @@ import android.os.Parcelable;
  */
 public class AndaredKeygen extends Keygen {
 
-	public AndaredKeygen(String ssid, String mac, int level, String enc ) {
-		super(ssid, mac, level, enc);
+	public AndaredKeygen(String ssid, String mac ) {
+		super(ssid, mac);
 	}
 	
 	@Override

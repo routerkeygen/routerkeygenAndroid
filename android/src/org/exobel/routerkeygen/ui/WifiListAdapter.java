@@ -22,6 +22,7 @@ import java.util.ArrayList;
 
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.algorithms.Keygen;
+import org.exobel.routerkeygen.algorithms.WiFiNetwork;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -169,16 +170,16 @@ public class WifiListAdapter extends BaseAdapter implements
 
 		if (wifi.type == Item.ITEM) {
 			final ViewHolder holder = (ViewHolder) convertView.getTag();
-			holder.ssid.setText(wifi.keygen.getSsidName());
+			holder.ssid.setText(wifi.wifiNetwork.getSsidName());
 			holder.ssid.setTypeface(typeface);
 			holder.ssid.setSelected(true);
 			holder.ssid.setEllipsize(TruncateAt.MARQUEE);
-			holder.mac.setText(wifi.keygen.getDisplayMacAddress());
+			holder.mac.setText(wifi.wifiNetwork.getMacAddress());
 			holder.mac.setTypeface(typeface);
 			holder.mac.setSelected(true);
 			holder.mac.setEllipsize(TruncateAt.MARQUEE);
-			final int strenght = wifi.keygen.getLevel();
-			if (wifi.keygen.isLocked()) {
+			final int strenght = wifi.wifiNetwork.getLevel();
+			if (wifi.wifiNetwork.isLocked()) {
 				holder.networkStrenght
 						.setImageDrawable(wifiSignalLocked[strenght]);
 			} else {
@@ -219,24 +220,24 @@ public class WifiListAdapter extends BaseAdapter implements
 
 		public final int type;
 		public final int text;
-		public final Keygen keygen;
+		public final WiFiNetwork wifiNetwork;
 		public final int color;
 
-		public Item(int type, int text, Keygen keygen, int color) {
+		public Item(int type, int text, WiFiNetwork wifiNetwork, int color) {
 			this.type = type;
 			this.text = text;
-			this.keygen = keygen;
+			this.wifiNetwork = wifiNetwork;
 			this.color = color;
 		}
 	}
 
-	public void updateNetworks(Keygen[] list) {
+	public void updateNetworks(WiFiNetwork[] list) {
 		if (list != null) {
 			listNetworks.clear();
 			int currentSupportState = -1;
-			for (Keygen k : list) {
-				if (k.getSupportState() != currentSupportState) {
-					currentSupportState = k.getSupportState();
+			for (WiFiNetwork wifi : list) {
+				if (wifi.getSupportState() != currentSupportState) {
+					currentSupportState = wifi.getSupportState();
 					switch (currentSupportState) {
 					case Keygen.SUPPORTED:
 						listNetworks.add(new Item(Item.SECTION,
@@ -255,7 +256,7 @@ public class WifiListAdapter extends BaseAdapter implements
 						break;
 					}
 				}
-				listNetworks.add(new Item(Item.ITEM, 0, k, 0));
+				listNetworks.add(new Item(Item.ITEM, 0, wifi, 0));
 			}
 			notifyDataSetChanged();
 		}

@@ -35,8 +35,8 @@ public class ComtrendKeygen extends Keygen {
 	final private String ssidIdentifier;
 	private MessageDigest md;
 
-	public ComtrendKeygen(String ssid, String mac, int level, String enc) {
-		super(ssid, mac, level, enc);
+	public ComtrendKeygen(String ssid, String mac) {
+		super(ssid, mac);
 		ssidIdentifier = ssid.substring(ssid.length() - 4);
 	}
 

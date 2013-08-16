@@ -10,8 +10,8 @@ import android.os.Parcelable;
 
 public class EasyBoxKeygen extends Keygen {
 
-	public EasyBoxKeygen(String ssid, String mac, int level, String enc) {
-		super(ssid, mac, level, enc);
+	public EasyBoxKeygen(String ssid, String mac) {
+		super(ssid, mac);
 	}
 
 	@Override

@@ -35,8 +35,8 @@ public class ZyxelKeygen extends Keygen {
 	final private String ssidIdentifier;
 	private MessageDigest md;
 
-	public ZyxelKeygen(String ssid, String mac, int level, String enc) {
-		super(ssid, mac, level, enc);
+	public ZyxelKeygen(String ssid, String mac) {
+		super(ssid, mac);
 		ssidIdentifier = ssid.substring(ssid.length() - 4);
 	}
 

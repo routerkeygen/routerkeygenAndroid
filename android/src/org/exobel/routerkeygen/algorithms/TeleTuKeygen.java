@@ -37,9 +37,9 @@ public class TeleTuKeygen extends Keygen {
 
 	final private TeleTuMagicInfo magicInfo;
 
-	public TeleTuKeygen(String ssid, String mac, int level, String enc,
+	public TeleTuKeygen(String ssid, String mac,
 			TeleTuMagicInfo magicInfo) {
-		super(ssid, mac, level, enc);
+		super(ssid, mac);
 		this.magicInfo = magicInfo;
 	}
 

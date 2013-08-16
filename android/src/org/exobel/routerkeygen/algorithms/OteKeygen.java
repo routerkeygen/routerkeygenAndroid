@@ -31,8 +31,8 @@ import android.os.Parcelable;
  */
 public class OteKeygen extends Keygen {
 
-	public OteKeygen(String ssid, String mac, int level, String enc) {
-		super(ssid, mac, level, enc);
+	public OteKeygen(String ssid, String mac) {
+		super(ssid, mac);
 	}
 
 	@Override

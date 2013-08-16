@@ -32,8 +32,8 @@ import android.os.Parcelable;
  */
 public class MaxcomKeygen extends Keygen {
 
-	public MaxcomKeygen(String ssid, String mac, int level, String enc ) {
-		super(ssid, mac, level, enc);
+	public MaxcomKeygen(String ssid, String mac) {
+		super(ssid, mac);
 	}
 	
 	@Override

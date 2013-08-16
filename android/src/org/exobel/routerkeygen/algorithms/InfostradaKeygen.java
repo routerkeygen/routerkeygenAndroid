@@ -33,8 +33,8 @@ import android.os.Parcelable;
  */
 public class InfostradaKeygen extends Keygen {
 
-	public InfostradaKeygen(String ssid, String mac, int level, String enc ) {
-		super(ssid, mac, level, enc);
+	public InfostradaKeygen(String ssid, String mac ) {
+		super(ssid, mac);
 	}
 	
 	@Override

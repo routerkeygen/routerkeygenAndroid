@@ -35,8 +35,8 @@ import android.os.Parcelable;
  */
 public class WifimediaRKeygen extends Keygen {
 
-	public WifimediaRKeygen(String ssid, String mac, int level, String enc) {
-		super(ssid, mac, level, enc);
+	public WifimediaRKeygen(String ssid, String mac) {
+		super(ssid, mac);
 	}
 
 	@Override

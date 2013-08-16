@@ -24,7 +24,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.zip.ZipInputStream;
 
-import org.exobel.routerkeygen.algorithms.Keygen;
+import org.exobel.routerkeygen.algorithms.WiFiNetwork;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -42,7 +42,7 @@ public class WifiScanReceiver extends BroadcastReceiver {
 
 	public interface OnScanListener {
 
-		public void onScanFinished(Keygen[] networks);
+		public void onScanFinished(WiFiNetwork[] networks);
 	}
 
 	public WifiScanReceiver(WifiManager wifi, OnScanListener... scanListener) {
@@ -77,7 +77,7 @@ public class WifiScanReceiver extends BroadcastReceiver {
 		}
 	}
 
-	private class KeygenMatcherTask extends AsyncTask<Void, Void, Keygen[]> {
+	private class KeygenMatcherTask extends AsyncTask<Void, Void, WiFiNetwork[]> {
 		private final List<ScanResult> results;
 		private final Context context;
 		private boolean misbuiltAPK = false;
@@ -88,7 +88,7 @@ public class WifiScanReceiver extends BroadcastReceiver {
 		}
 
 		@Override
-		protected void onPostExecute(Keygen[] networks) {
+		protected void onPostExecute(WiFiNetwork[] networks) {
 			if (misbuiltAPK)
 				Toast.makeText(context, R.string.err_misbuilt_apk,
 						Toast.LENGTH_SHORT).show();
@@ -97,16 +97,16 @@ public class WifiScanReceiver extends BroadcastReceiver {
 		}
 
 		@Override
-		protected Keygen[] doInBackground(Void... params) {
+		protected WiFiNetwork[] doInBackground(Void... params) {
 
-			final Set<Keygen> set = new TreeSet<Keygen>();
+			final Set<WiFiNetwork> set = new TreeSet<WiFiNetwork>();
 			for (int i = 0; i < results.size() - 1; ++i)
 				for (int j = i + 1; j < results.size(); ++j)
 					if (results.get(i).SSID.equals(results.get(j).SSID))
 						results.remove(j--);
 			for (ScanResult result : results) {
 				try {
-					set.add(WirelessMatcher.getKeygen(result,
+					set.add(new WiFiNetwork(result,
 							new ZipInputStream(context.getResources()
 									.openRawResource(R.raw.magic_info))));
 				} catch (LinkageError e) {
@@ -114,8 +114,8 @@ public class WifiScanReceiver extends BroadcastReceiver {
 				}
 			}
 
-			final Keygen[] networks = new Keygen[set.size()];
-			final Iterator<Keygen> it = set.iterator();
+			final WiFiNetwork[] networks = new WiFiNetwork[set.size()];
+			final Iterator<WiFiNetwork> it = set.iterator();
 			int i = 0;
 			while (it.hasNext())
 				networks[i++] = it.next();

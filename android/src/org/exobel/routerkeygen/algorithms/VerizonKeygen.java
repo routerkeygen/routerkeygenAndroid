@@ -29,8 +29,8 @@ import android.os.Parcelable;
 public class VerizonKeygen extends Keygen {
 
 
-	public VerizonKeygen(String ssid, String mac, int level, String enc ) {
-		super(ssid, mac, level, enc);
+	public VerizonKeygen(String ssid, String mac ) {
+		super(ssid, mac);
 	}
 
 	@Override
