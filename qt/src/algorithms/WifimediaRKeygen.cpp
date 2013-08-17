@@ -7,9 +7,8 @@
 
 #include "WifimediaRKeygen.h"
 
-WifimediaRKeygen::WifimediaRKeygen(QString & ssid, QString & mac, int level,
-		QString enc) :
-		Keygen(ssid, mac, level, enc) {
+WifimediaRKeygen::WifimediaRKeygen(QString & ssid, QString & mac) :
+		Keygen(ssid, mac) {
 }
 
 QVector<QString> & WifimediaRKeygen::getKeys() {

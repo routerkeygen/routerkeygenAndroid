@@ -19,9 +19,8 @@
 #include "TecomKeygen.h"
 #include <QCryptographicHash>
 
-TecomKeygen::TecomKeygen(QString & ssid, QString & mac, int level,
-		QString enc) :
-		Keygen(ssid, mac, level, enc) {}
+TecomKeygen::TecomKeygen(QString & ssid, QString & mac) :
+		Keygen(ssid, mac) {}
 
 QVector<QString> & TecomKeygen::getKeys() {
     QString result;

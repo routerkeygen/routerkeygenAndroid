@@ -7,7 +7,7 @@
 class TelseyKeygen: public Keygen {
 
 public:
-	TelseyKeygen(QString & ssid, QString & mac, int level, QString enc);
+	TelseyKeygen(QString & ssid, QString & mac);
 private:
 	QVector<QString> & getKeys();
 	unsigned int * scrambler(QString mac);

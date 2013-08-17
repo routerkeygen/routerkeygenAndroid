@@ -7,9 +7,8 @@
 
 #include "PtvKeygen.h"
 
-PtvKeygen::PtvKeygen(QString & ssid, QString & mac, int level,
-		QString enc) :
-		Keygen(ssid, mac, level, enc) {
+PtvKeygen::PtvKeygen(QString & ssid, QString & mac) :
+		Keygen(ssid, mac) {
 }
 
 

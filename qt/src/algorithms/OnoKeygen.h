@@ -5,7 +5,7 @@
 class OnoKeygen : public Keygen
 {
     public:
-        OnoKeygen(QString & ssid, QString & mac, int level, QString enc);
+        OnoKeygen(QString & ssid, QString & mac);
     private:
     	QVector<QString> & getKeys();
         QString padto64( QString val );

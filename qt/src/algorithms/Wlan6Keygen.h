@@ -23,7 +23,7 @@
 class Wlan6Keygen : public Keygen
 {
     public:
-        Wlan6Keygen(QString & ssid, QString & mac, int level, QString enc);
+        Wlan6Keygen(QString & ssid, QString & mac);
     private:
     	QVector<QString> & getKeys() ;
 };

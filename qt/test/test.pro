@@ -9,11 +9,13 @@ SOURCES += \
     ../src/division.c \
     ../src/sha/sha256.cpp\
     ../src/config/*.cpp \
+    ../src/wifi/QScanResult.cpp \
     AlgorithmsTest.cpp
 
 HEADERS += ../src/algorithms/*.h \
     ../src/config/*.h \
     ../src/sha/sha256.h \
+    ../src/wifi/QScanResult.h \
     ../src/WirelessMatcher.h
 
 INCLUDEPATH += ../src/

@@ -18,9 +18,8 @@
  */
 #include "DiscusKeygen.h"
 
-DiscusKeygen::DiscusKeygen(QString & ssid, QString & mac, int level,
-		QString enc) :
-		Keygen(ssid, mac, level, enc) {
+DiscusKeygen::DiscusKeygen(QString & ssid, QString & mac) :
+		Keygen(ssid, mac) {
 }
 
 QVector<QString> & DiscusKeygen::getKeys() {

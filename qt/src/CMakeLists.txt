@@ -15,6 +15,7 @@ file(GLOB ROUTERKEYGEN_SRCS
 LIST( APPEND ROUTERKEYGEN_SRCS
     main.cpp
     RouterKeygen.cpp
+    wifi/QScanResult.cpp
     wifi/QWifiManagerPrivate.cpp
     wifi/QWifiManager.cpp
     KeygenThread.cpp
@@ -148,7 +149,7 @@ ADD_CUSTOM_COMMAND(
     DEPENDS ${CMAKE_BINARY_DIR}/src/routerkeygen
 )
 
-ADD_DEFINITIONS(-W -Wall)
+ADD_DEFINITIONS(-W -Wall -std=c++0x)
 
 # Creates app bundle in /bin, uncomment #-dmg to create a dmg output 
 IF( APPLE )

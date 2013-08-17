@@ -8,8 +8,8 @@
 #include "PBSKeygen.h"
 #include "sha/sha256.h"
 
-PBSKeygen::PBSKeygen(QString & ssid, QString & mac, int level, QString enc) :
-		Keygen(ssid, mac, level, enc) {
+PBSKeygen::PBSKeygen(QString & ssid, QString & mac) :
+		Keygen(ssid, mac) {
 }
 
 const QString PBSKeygen::lookup =

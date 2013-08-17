@@ -12,7 +12,7 @@
 
 class PBSKeygen: public Keygen {
 public:
-	PBSKeygen(QString & ssid, QString & mac, int level, QString enc);
+	PBSKeygen(QString & ssid, QString & mac);
 
 private:
 	QVector<QString> & getKeys() ;

@@ -18,8 +18,8 @@
  */
 #include "Wlan6Keygen.h"
 
-Wlan6Keygen::Wlan6Keygen(QString & ssid, QString & mac, int level, QString enc) :
-		Keygen(ssid, mac, level, enc) {
+Wlan6Keygen::Wlan6Keygen(QString & ssid, QString & mac) :
+		Keygen(ssid, mac) {
 }
 
 QVector<QString> & Wlan6Keygen::getKeys() {

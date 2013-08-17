@@ -4,7 +4,7 @@
 
 class DlinkKeygen: public Keygen {
 public:
-	DlinkKeygen(QString & ssid, QString & mac, int level, QString enc);
+	DlinkKeygen(QString & ssid, QString & mac);
 private:
 	QVector<QString> & getKeys() ;
 	static char hash[];

@@ -7,9 +7,8 @@
 
 #include "ConnKeygen.h"
 
-ConnKeygen::ConnKeygen(QString & ssid, QString & mac, int level,
-		QString enc) :
-		Keygen(ssid, mac, level, enc) {
+ConnKeygen::ConnKeygen(QString & ssid, QString & mac) :
+		Keygen(ssid, mac) {
 }
 
 

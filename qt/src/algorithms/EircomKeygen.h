@@ -26,7 +26,7 @@ class EircomKeygen : public Keygen
         QString dectoString( int mac );
         QVector<QString> & getKeys();
     public:
-        EircomKeygen(QString & ssid, QString & mac, int level, QString enc);
+        EircomKeygen(QString & ssid, QString & mac);
 };
 
 #endif // EIRCOMKEYGEN_H

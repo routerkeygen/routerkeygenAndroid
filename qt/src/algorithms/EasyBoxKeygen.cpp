@@ -8,9 +8,8 @@
 #include "EasyBoxKeygen.h"
 #include <QRegExp>
 
-EasyBoxKeygen::EasyBoxKeygen(QString & ssid, QString & mac, int level,
-		QString enc) :
-		Keygen(ssid, mac, level, enc) {
+EasyBoxKeygen::EasyBoxKeygen(QString & ssid, QString & mac) :
+		Keygen(ssid, mac) {
 }
 
 int EasyBoxKeygen::getSupportState() const{

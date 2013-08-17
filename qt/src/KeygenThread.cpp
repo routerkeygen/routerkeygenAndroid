@@ -19,17 +19,22 @@
 #include "KeygenThread.h"
 #include "algorithms/Keygen.h"
 
-KeygenThread::KeygenThread( Keygen * router): router(router) , error(false){}
+KeygenThread::KeygenThread( QVector<Keygen *>  * routers): routers(routers) , error(false){}
 
 KeygenThread::~KeygenThread() {
 }
 
 void KeygenThread::run(){
-	try{
-	results = router->getResults();
-	} catch (int e){
-		error = true;
-	}
+    for ( int i = 0; i < routers->size(); ++i ){
+        try{
+            QVector<QString> r = routers->at(i)->getResults();
+            foreach (QString s, r) {
+                results.append(s);
+            }
+        } catch (int e){
+            error = true;
+        }
+    }
 }
 
 QVector<QString> KeygenThread::getResults() const {

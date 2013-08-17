@@ -19,9 +19,8 @@
 #include "HuaweiKeygen.h"
 #include <QRegExp>
 
-HuaweiKeygen::HuaweiKeygen(QString & ssid, QString & mac, int level,
-		QString enc) :
-		Keygen(ssid, mac, level, enc){}
+HuaweiKeygen::HuaweiKeygen(QString & ssid, QString & mac) :
+		Keygen(ssid, mac){}
 
 
 int HuaweiKeygen::getSupportState() const{
