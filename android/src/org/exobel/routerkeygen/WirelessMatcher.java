@@ -258,6 +258,7 @@ public class WirelessMatcher {
 				}
 			}
 		}
+		
 		if (ssid.matches("FASTWEB-(1|2)-(002196|00036F)[0-9A-Fa-f]{6}")) {
 			if (mac.length() == 0) {
 				final String end = ssid.substring(ssid.length() - 12);
@@ -268,16 +269,9 @@ public class WirelessMatcher {
 			keygens.add(new TelseyKeygen(ssid, mac));
 		}
 
-		if (ssid.matches("(WLAN|JAZZTEL)_[0-9a-fA-F]{4}")) {
-			if (mac.startsWith("00:1F:A4") || mac.startsWith("F4:3E:61")
-					|| mac.startsWith("40:4A:03"))
-				keygens.add(new ZyxelKeygen(ssid, mac));
-
-			if (mac.startsWith("00:1B:20") || mac.startsWith("64:68:0C")
-					|| mac.startsWith("00:1D:20") || mac.startsWith("00:23:F8")
-					|| mac.startsWith("38:72:C0") || mac.startsWith("30:39:F2"))
-				keygens.add(new ComtrendKeygen(ssid, mac));
-		}
+		if (ssid.matches("(Thomson|Blink|SpeedTouch|O2Wireless|Orange-|INFINITUM|"
+				+ "BigPond|Otenet|Bbox-|DMAX|privat|TN_private_|CYTA|Vodafone-|Optimus|OptimusFibra|MEO-)[0-9a-fA-F]{6}"))
+			keygens.add(new ThomsonKeygen(ssid, mac));
 
 		if (ssid.length() == 5
 				&& (mac.startsWith("00:1F:90") || mac.startsWith("A8:39:44")
@@ -290,10 +284,7 @@ public class WirelessMatcher {
 						|| mac.startsWith("00:26:62") || mac
 							.startsWith("00:26:B8")))
 			keygens.add(new VerizonKeygen(ssid, mac));
-		if (ssid.matches("(Thomson|Blink|SpeedTouch|O2Wireless|Orange-|INFINITUM|"
-				+ "BigPond|Otenet|Bbox-|DMAX|privat|TN_private_|CYTA|Vodafone-|Optimus|OptimusFibra|MEO-)[0-9a-fA-F]{6}"))
-			keygens.add(new ThomsonKeygen(ssid, mac));
-
+		
 		if (ssid.matches("wifimedia_R-[0-9a-zA-Z]{4}")
 				&& mac.replace(":", "").length() == 12)
 			keygens.add(new WifimediaRKeygen(ssid, mac));
@@ -308,6 +299,17 @@ public class WirelessMatcher {
 		if (ssid.matches("(WLAN|WiFi|YaCom)[0-9a-zA-Z]{6}"))
 			keygens.add(new Wlan6Keygen(ssid, mac));
 
+		if (ssid.matches("(WLAN|JAZZTEL)_[0-9a-fA-F]{4}")) {
+			if (mac.startsWith("00:1F:A4") || mac.startsWith("F4:3E:61")
+					|| mac.startsWith("40:4A:03"))
+				keygens.add(new ZyxelKeygen(ssid, mac));
+
+			if (mac.startsWith("00:1B:20") || mac.startsWith("64:68:0C")
+					|| mac.startsWith("00:1D:20") || mac.startsWith("00:23:F8")
+					|| mac.startsWith("38:72:C0") || mac.startsWith("30:39:F2"))
+				keygens.add(new ComtrendKeygen(ssid, mac));
+		}
+		
 		return keygens;
 	}
 
