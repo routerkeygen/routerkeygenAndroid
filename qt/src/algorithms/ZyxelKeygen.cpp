@@ -18,9 +18,8 @@
  */
 #include "ZyxelKeygen.h"
 
-ZyxelKeygen::ZyxelKeygen(QString & ssid, QString & mac, int level,
-		QString enc) :
-		Keygen(ssid, mac, level, enc) {
+ZyxelKeygen::ZyxelKeygen(QString & ssid, QString & mac) :
+		Keygen(ssid, mac) {
 	this->hash = new QCryptographicHash(QCryptographicHash::Md5);
 }
 ZyxelKeygen::~ZyxelKeygen(){

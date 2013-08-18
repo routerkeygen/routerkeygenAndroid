@@ -50,8 +50,8 @@ import android.os.Parcelable;
  */
 public class TelseyKeygen extends Keygen implements Parcelable{
 
-	public TelseyKeygen(String ssid, String mac, int level, String enc ) {
-		super(ssid, mac, level, enc);
+	public TelseyKeygen(String ssid, String mac ) {
+		super(ssid, mac);
 	}
 
 	//Scramble Function

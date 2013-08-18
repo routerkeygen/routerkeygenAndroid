@@ -19,9 +19,8 @@
 #include "TelseyKeygen.h"
 #include <stdint.h>
 #include <cstring>
-TelseyKeygen::TelseyKeygen(QString & ssid, QString & mac, int level,
-		QString enc) :
-		Keygen(ssid, mac, level, enc) {}
+TelseyKeygen::TelseyKeygen(QString & ssid, QString & mac) :
+		Keygen(ssid, mac) {}
 
 QVector<QString> & TelseyKeygen::getKeys() {
     if ( getMacAddress() == ""  )

@@ -18,9 +18,8 @@
  */
 #include "InfostradaKeygen.h"
 
-InfostradaKeygen::InfostradaKeygen(QString & ssid, QString & mac, int level,
-		QString enc) :
-		Keygen(ssid, mac, level, enc){}
+InfostradaKeygen::InfostradaKeygen(QString & ssid, QString & mac) :
+		Keygen(ssid, mac){}
 
 QVector<QString> & InfostradaKeygen::getKeys(){
 	QString mac = getMacAddress();

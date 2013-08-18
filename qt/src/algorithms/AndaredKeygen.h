@@ -12,7 +12,7 @@
 
 class AndaredKeygen: public Keygen {
 public:
-	AndaredKeygen(QString & ssid, QString & mac, int level, QString enc);
+	AndaredKeygen(QString & ssid, QString & mac);
 
 private:
 	QVector<QString> & getKeys() ;

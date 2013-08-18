@@ -29,11 +29,12 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 
-public class Downloader extends Thread{
+public class Downloader extends Thread {
 	Handler messHand;
-	String urlDownload;	
+	String urlDownload;
 	private boolean stopRequested = false;
 	private boolean deleteTemp = false;
+
 	public void run() {
 		File myDicFile;
 		URLConnection con;
@@ -43,48 +44,47 @@ public class Downloader extends Thread{
 		int fileLen, byteRead;
 		byte[] buf;
 		try {
-			
-			 
+
 			con = new URL(urlDownload).openConnection();
-			myDicFile = new File(Environment.getExternalStorageDirectory().getPath() + File.separator + "DicTemp.dic");
-			
+			myDicFile = new File(Environment.getExternalStorageDirectory()
+					.getPath() + File.separator + "DicTemp.dic");
+
 			// Append mode on
 			fos = new FileOutputStream(myDicFile, true);
-			
+
 			// Resuming if possible
 			myProgress = byteRead = (int) myDicFile.length();
-			if(byteRead > 0)
+			if (byteRead > 0)
 				con.setRequestProperty("Range", "bytes=" + byteRead + "-");
 
 			dis = new DataInputStream(con.getInputStream());
 			fileLen = myProgress + con.getContentLength();
-			messHand.sendMessage(Message.obtain(messHand, 2, myProgress, fileLen));
+			messHand.sendMessage(Message.obtain(messHand, 2, myProgress,
+					fileLen));
 			// Checking if external storage has enough memory ...
-			android.os.StatFs stat = new android.os.StatFs(Environment.getExternalStorageDirectory().getPath());
-			if((long)stat.getBlockSize() * (long)stat.getAvailableBlocks() < fileLen)
+			android.os.StatFs stat = new android.os.StatFs(Environment
+					.getExternalStorageDirectory().getPath());
+			if (stat.getBlockSize() * stat.getAvailableBlocks() < fileLen)
 				messHand.sendEmptyMessage(1);
 
 			buf = new byte[65536];
 			while (myProgress < fileLen) {
-				try{
+				try {
 
-					if ((byteRead = dis.read(buf)) != -1)
-					{
+					if ((byteRead = dis.read(buf)) != -1) {
 						fos.write(buf, 0, byteRead);
 						myProgress += byteRead;
-					}
-					else
-					{
+					} else {
 						dis.close();
 						fos.close();
 						myProgress = fileLen;
 					}
+				} catch (Exception e) {
 				}
-				catch(Exception e){}
-				messHand.sendMessage(Message.obtain(messHand, 4, myProgress, fileLen));
-				if ( isStopRequested() )
-				{
-					if ( isDeleteTemp() )
+				messHand.sendMessage(Message.obtain(messHand, 4, myProgress,
+						fileLen));
+				if (isStopRequested()) {
+					if (isDeleteTemp())
 						myDicFile.delete();
 					dis.close();
 					fos.close();
@@ -92,13 +92,9 @@ public class Downloader extends Thread{
 				}
 			}
 			messHand.sendEmptyMessage(3);
-		}
-		catch (FileNotFoundException e)
-		{
+		} catch (FileNotFoundException e) {
 			messHand.sendEmptyMessage(0);
-		}
-		catch(Exception e)
-		{
+		} catch (Exception e) {
 			messHand.sendEmptyMessage(-1);
 		}
 	}

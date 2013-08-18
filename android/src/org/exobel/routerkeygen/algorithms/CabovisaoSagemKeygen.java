@@ -33,8 +33,8 @@ import android.os.Parcelable;
 public class CabovisaoSagemKeygen extends Keygen {
 	private final static String KEY_BASE = "2ce412e";
 	final private String ssidIdentifier;
-	public CabovisaoSagemKeygen(String ssid, String mac, int level, String enc ) {
-		super(ssid, mac, level, enc);
+	public CabovisaoSagemKeygen(String ssid, String mac ) {
+		super(ssid, mac);
 		this.ssidIdentifier = ssid.substring(ssid.length()-4).toLowerCase(Locale.getDefault());
 	}
 	

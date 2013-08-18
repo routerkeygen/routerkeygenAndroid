@@ -35,8 +35,8 @@ public class PirelliKeygen extends Keygen{
 	private MessageDigest md;
 	final private String ssidIdentifier;
 
-	public PirelliKeygen(String ssid, String mac, int level, String enc ) {
-		super(ssid, mac, level, enc);
+	public PirelliKeygen(String ssid, String mac ) {
+		super(ssid, mac);
 		ssidIdentifier = ssid.substring(ssid.length()-12);
 	}
 

@@ -29,8 +29,8 @@ import android.os.Parcelable;
  */
 public class ConnKeygen extends Keygen {
 
-	public ConnKeygen(String ssid, String mac, int level, String enc ) {
-		super(ssid, mac, level, enc);
+	public ConnKeygen(String ssid, String mac ) {
+		super(ssid, mac);
 	}
 	
 	@Override

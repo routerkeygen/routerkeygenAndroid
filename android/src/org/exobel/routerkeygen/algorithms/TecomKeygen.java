@@ -39,8 +39,8 @@ public class TecomKeygen extends Keygen {
 
 	private MessageDigest md;
 	
-	public TecomKeygen(String ssid, String mac, int level, String enc ) {
-		super(ssid, mac, level, enc);
+	public TecomKeygen(String ssid, String mac ) {
+		super(ssid, mac);
 	}
 
 	@Override

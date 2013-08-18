@@ -18,9 +18,9 @@
  */
 #include "Keygen.h"
 
-Keygen::Keygen(QString & ssid, QString & mac, int level, QString enc) :
-		stopRequested(false), ssidName(ssid), macAddress(mac), level(level), encryption(
-				enc) {
+Keygen::Keygen(QString & ssid, QString & mac) :
+        stopRequested(false), ssidName(ssid) {
+    macAddress = mac.replace(":", "").replace("-", "").toUpper();
 }
 
 QVector<QString> & Keygen::getResults() {
@@ -35,21 +35,13 @@ bool Keygen::isStopped() const {
 	return this->stopRequested;
 }
 
-QString Keygen::getEncryption() const {
-	return encryption;
-}
-
 QString Keygen::getError() const {
 	return error;
 }
 
-int Keygen::getLevel() const {
-	return level;
-}
 
 QString Keygen::getMacAddress() const {
-	QString mac = this->macAddress;
-        return mac.replace(":", "").replace("-", "");
+    return macAddress;
 }
 
 QString Keygen::getSsidName() const {
@@ -64,28 +56,6 @@ void Keygen::setError(const QString & error) {
 	this->error = error;
 }
 
-bool Keygen::isLocked() {
-	return OPEN != getScanResultSecurity(this);
-}
-
 int Keygen::getSupportState() const{
     return SUPPORTED;
 }
-/**
- * @return The security of a given {@link ScanResult}.
- */
-QString Keygen::getScanResultSecurity(Keygen * scanResult) {
-	QString cap = scanResult->encryption;
-	QString securityModes[] = {WEP, PSK, EAP};
-	for (int i = sizeof(securityModes)/sizeof(QString); i >= 0; i--) {
-		if (cap.contains(securityModes[i])) {
-			return securityModes[i];
-		}
-	}
-	return OPEN;
-}
-
-const QString Keygen::PSK = "PSK";
-const QString Keygen::WEP = "WEP";
-const QString Keygen::EAP = "EAP";
-const QString Keygen::OPEN = "Open";

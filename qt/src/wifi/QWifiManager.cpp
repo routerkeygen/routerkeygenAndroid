@@ -78,7 +78,7 @@ void QWifiManager::setForceScan(bool refresh) {
 	forceRefresh = refresh;
 }
 
-QVector<QScanResult*> & QWifiManager::getScanResults() {
+QVector<std::shared_ptr<QScanResult>> & QWifiManager::getScanResults() {
 	return impl->getScanResults();
 }
 

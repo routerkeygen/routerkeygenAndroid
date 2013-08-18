@@ -4,9 +4,8 @@ import java.util.Locale;
 import java.util.zip.ZipInputStream;
 
 import org.exobel.routerkeygen.R;
-import org.exobel.routerkeygen.WirelessMatcher;
 import org.exobel.routerkeygen.algorithms.Keygen;
-import org.exobel.routerkeygen.algorithms.UnsupportedKeygen;
+import org.exobel.routerkeygen.algorithms.WiFiNetwork;
 import org.exobel.routerkeygen.ui.NetworksListFragment.OnItemSelectionListener;
 
 import android.app.Activity;
@@ -181,7 +180,7 @@ public class ManualInputFragment extends SherlockFragment {
 	}
 
 	private static OnItemSelectionListener sDummyCallbacks = new OnItemSelectionListener() {
-		public void onItemSelected(Keygen id) {
+		public void onItemSelected(WiFiNetwork id) {
 		}
 
 		public void onItemSelected(String mac) {
@@ -207,7 +206,7 @@ public class ManualInputFragment extends SherlockFragment {
 		mCallbacks = sDummyCallbacks;
 	}
 
-	private class KeygenMatcherTask extends AsyncTask<Void, Void, Keygen> {
+	private class KeygenMatcherTask extends AsyncTask<Void, Void, WiFiNetwork> {
 		private final String ssid;
 		private final String mac;
 
@@ -223,22 +222,22 @@ public class ManualInputFragment extends SherlockFragment {
 		}
 
 		@Override
-		protected void onPostExecute(Keygen keygen) {
+		protected void onPostExecute(WiFiNetwork wifiNetwork) {
 			loading.setVisibility(View.GONE);
 			mainView.setVisibility(View.VISIBLE);
-			if (keygen instanceof UnsupportedKeygen) {
+			if (wifiNetwork.getSupportState() == Keygen.UNSUPPORTED) {
 				Toast.makeText(getActivity(), R.string.msg_unspported_network,
 						Toast.LENGTH_SHORT).show();
 				return;
 			}
-			mCallbacks.onItemSelected(keygen);
+			mCallbacks.onItemSelected(wifiNetwork);
 		}
 
 		@Override
-		protected Keygen doInBackground(Void... params) {
-			return WirelessMatcher.getKeygen(ssid, mac, 0, "",
-					new ZipInputStream(getActivity().getResources()
-							.openRawResource(R.raw.magic_info)));
+		protected WiFiNetwork doInBackground(Void... params) {
+			return new WiFiNetwork(ssid, mac, 0, "", new ZipInputStream(
+					getActivity().getResources().openRawResource(
+							R.raw.magic_info)));
 		}
 
 	}

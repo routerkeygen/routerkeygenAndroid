@@ -53,6 +53,7 @@ public class DictionaryDownloadService extends IntentService {
 		stopRequested = true;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		File myDicFile;
@@ -90,7 +91,7 @@ public class DictionaryDownloadService extends IntentService {
 			// Checking if external storage has enough memory ...
 			android.os.StatFs stat = new android.os.StatFs(Environment
 					.getExternalStorageDirectory().getPath());
-			if ((long) stat.getBlockSize() * (long) stat.getAvailableBlocks() < fileLen) {
+			if (stat.getBlockSize() * stat.getAvailableBlocks() < fileLen) {
 				mNotificationManager.notify(
 						UNIQUE_ID,
 						getSimple(getString(R.string.msg_error),

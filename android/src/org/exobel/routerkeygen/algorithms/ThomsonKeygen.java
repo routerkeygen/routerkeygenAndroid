@@ -86,8 +86,8 @@ public class ThomsonKeygen extends Keygen {
 	}
 
 
-	public ThomsonKeygen(String ssid, String mac, int level, String enc) {
-		super(ssid, mac, level, enc);
+	public ThomsonKeygen(String ssid, String mac) {
+		super(ssid, mac);
 		this.errorDict = false;
 		this.ssidIdentifier = ssid.substring(ssid.length() - 6);
 	}

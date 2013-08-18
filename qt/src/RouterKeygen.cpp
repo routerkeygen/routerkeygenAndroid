@@ -41,7 +41,7 @@
 #include "version.h"
 
 RouterKeygen::RouterKeygen(QWidget *parent) :
-        QMainWindow(parent), ui(new Ui::RouterKeygen), router(NULL),calculator(NULL),
+        QMainWindow(parent), ui(new Ui::RouterKeygen), manualWifi(NULL),calculator(NULL),
         loading(NULL), loadingText(NULL), aboutDialog(NULL), welcomeDialog(NULL) {
     ui->setupUi(this);
 #if !defined(Q_OS_WIN) && !defined(Q_OS_MAC)
@@ -207,13 +207,13 @@ RouterKeygen::~RouterKeygen() {
     delete loadingAnim;
     delete wifiManager;
     if (calculator != NULL) {
-        if (calculator->isRunning()) {
-            router->stop();
+        if (calculator->isRunning()) {//TODO:stop router
             calculator->wait();
         }
         delete calculator;
     }
-    delete router;
+    if ( manualWifi != NULL )
+        delete manualWifi;
     delete settings;
     trayMenu->clear();
     delete trayMenu;
@@ -222,40 +222,46 @@ RouterKeygen::~RouterKeygen() {
     delete welcomeDialog;
 }
 void RouterKeygen::manualCalculation() {
-    if (ui->ssidInput->text().trimmed() == "")
-        return;
-    calc(ui->ssidInput->text().trimmed(), ui->macInput->text());
-}
-
-void RouterKeygen::calc(QString ssid, QString mac) {
-    if (calculator != NULL) {
-        return; //ignore while a calculator is still running
-    }
-    delete router;
-    if (ssid == "")
-        return;
-    if ( mac.length()>0 && mac.count(QRegExp("^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$")) == 0 ) {
+    QString mac = ui->macInput->text();
+    if ( mac.length()>0 && mac.count(QRegExp("^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$")) == 0 ) {
         mac = "";
         ui->statusBar->showMessage(tr("Invalid MAC. It will not be used."));
     }
+    if (ui->ssidInput->text().trimmed() == "" && mac == "")
+        return;
+    if ( manualWifi != NULL )
+        delete manualWifi;
+    manualWifi = new QScanResult(ui->ssidInput->text().trimmed(), mac.toUpper());
+    manualWifi->checkSupport(matcher);
+    calc(manualWifi);
+}
 
-    router = matcher.getKeygen(ssid, mac, 0, "");
-    if (!router) {
+void RouterKeygen::calc(QScanResult * wifi) {
+    if (calculator != NULL) {
+        return; //ignore while a calculator is still running
+    }
+    if (wifi->getSupportState() == Keygen::UNSUPPORTED) {
         ui->statusBar->showMessage(
                 tr("Unsupported network. Check the MAC address and the SSID."));
         return;
     }
     ui->passwordsList->clear();
     setLoadingAnimation(tr("Calculating keys. This can take a while."));
-    this->calculator = new KeygenThread(router);
+    this->calculator = new KeygenThread(wifi->getKeygens());
     connect(this->calculator, SIGNAL( finished() ), this, SLOT( getResults() ));
     enableUI(false);
     this->calculator->start();
 }
 
 void RouterKeygen::tableRowSelected(int row, int) {
-    calc(ui->networkslist->item(row, 0)->text().trimmed(),
-         ui->networkslist->item(row, 1)->text().toUpper());
+    QString selectedSSID = ui->networkslist->item(row, 0)->text();
+    QString selectedMac = ui->networkslist->item(row, 1)->text();
+    for ( int i  = 0; i < wifiNetworks.size(); ++i ){
+        if ( wifiNetworks.at(i)->getSsidName() == selectedSSID &&  wifiNetworks.at(i)->getMacAddress() == selectedMac){
+            calc(wifiNetworks.at(i).get());
+            return;
+        }
+    }
 }
 
 void RouterKeygen::refreshNetworks() {
@@ -270,34 +276,37 @@ void RouterKeygen::scanFinished(int code) {
     switch (code) {
     case QWifiManager::SCAN_OK: {
             ui->networkslist->clear();
-            QVector<QScanResult*> networks = wifiManager->getScanResults();
-            ui->networkslist->setRowCount(networks.size());
+            foreach ( std::shared_ptr<QScanResult> scanResult, wifiNetworks )
+                scanResult.reset();
+            wifiNetworks = wifiManager->getScanResults();
+            ui->networkslist->setRowCount(wifiNetworks.size());
             trayMenu->clear();
             connect(trayMenu->addAction(tr("Vulnerable networks")),
                     SIGNAL(triggered()), this, SLOT(show()));
             bool foundVulnerable = false;
-            for (int i = 0; i < networks.size(); ++i) {
+            for (int i = 0; i < wifiNetworks.size(); ++i) {
                 ui->networkslist->setItem(i, 0,
-                                          new QTableWidgetItem(networks.at(i)->ssid));
+                                          new QTableWidgetItem(wifiNetworks.at(i)->getSsidName()));
                 ui->networkslist->setItem(i, 1,
-                                          new QTableWidgetItem(networks.at(i)->bssid));
+                                          new QTableWidgetItem(wifiNetworks.at(i)->getMacAddress()));
                 QString level;
-                level.setNum(networks.at(i)->level, 10);
+                level.setNum(wifiNetworks.at(i)->getLevel(), 10);
                 ui->networkslist->setItem(i, 2, new QTableWidgetItem(level));
-                Keygen * supported = matcher.getKeygen(networks.at(i)->ssid,
-                                                       networks.at(i)->bssid, networks.at(i)->level, networks.at(i)->capabilities);
-                if (supported != NULL) {
-                    if ( supported->getSupportState() == Keygen::SUPPORTED )
-                        ui->networkslist->setItem(i, 3,
-                                                  new QTableWidgetItem(tr("Yes")));
-                    else //if ( supportsed->getSupportState() == Keygen::MAYBE )
-                        ui->networkslist->setItem(i, 3,
-                                                  new QTableWidgetItem(tr("Maybe")));
-                    addNetworkToTray(networks.at(i)->ssid, networks.at(i)->level, supported->isLocked());
-                    foundVulnerable = true;
-                    delete supported;
-                } else
+                wifiNetworks.at(i)->checkSupport(matcher);
+                if ( wifiNetworks.at(i)->getSupportState() == Keygen::UNSUPPORTED ){
                     ui->networkslist->setItem(i, 3, new QTableWidgetItem(tr("No")));
+                }
+                else{
+                    if ( wifiNetworks.at(i)->getSupportState() == Keygen::SUPPORTED )
+                    ui->networkslist->setItem(i, 3,
+                                              new QTableWidgetItem(tr("Yes")));
+                    else //if ( networks.at(i)->getSupportState() == Keygen::MAYBE )
+                    ui->networkslist->setItem(i, 3,
+                                              new QTableWidgetItem(tr("Maybe")));
+                    addNetworkToTray(wifiNetworks.at(i)->getSsidName(), wifiNetworks.at(i)->getLevel(), wifiNetworks.at(i)->isLocked());
+                    foundVulnerable = true;
+                }
+
             }
             if (!foundVulnerable) {
                 trayMenu->addAction(tr("None were detected"))->setEnabled(false);
@@ -315,7 +324,6 @@ void RouterKeygen::scanFinished(int code) {
             ui->networkslist->horizontalHeader()->setStretchLastSection(true);
             ui->networkslist->sortByColumn(2); //Order by Strength
             ui->networkslist->sortByColumn(3); // and then by support
-            //ui->statusBar->clearMessage();
             break;
 	}
     case QWifiManager::ERROR_NO_NM:
@@ -366,7 +374,7 @@ void RouterKeygen::getResults() {
     for (int i = 0; i < listKeys.size(); ++i)
         ui->passwordsList->insertItem(0, listKeys.at(i));
     ui->statusBar->showMessage(tr("Calculation finished"));
-    ui->passwordsLabel->setText(tr("Calculated Passwords for %1").arg(router->getSsidName()));
+    //ui->passwordsLabel->setText(tr("Calculated Passwords for %1").arg(router->getSsidName()));
     delete calculator;
     calculator = NULL;
 }

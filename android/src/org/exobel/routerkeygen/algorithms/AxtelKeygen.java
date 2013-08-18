@@ -28,8 +28,8 @@ import android.os.Parcelable;
 
 public class AxtelKeygen extends Keygen {
 
-	public AxtelKeygen(String ssid, String mac, int level, String enc) {
-		super(ssid, mac, level, enc);
+	public AxtelKeygen(String ssid, String mac) {
+		super(ssid, mac);
 	}
 
 	@Override

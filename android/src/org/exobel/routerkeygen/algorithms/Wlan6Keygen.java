@@ -29,8 +29,8 @@ import android.os.Parcelable;
 public class Wlan6Keygen extends Keygen {
 	
 	final private String ssidIdentifier;
-	public Wlan6Keygen(String ssid, String mac, int level, String enc ) {
-		super(ssid, mac, level, enc);
+	public Wlan6Keygen(String ssid, String mac ) {
+		super(ssid, mac);
 		ssidIdentifier = ssid.substring(ssid.length()-6);
 	}
 

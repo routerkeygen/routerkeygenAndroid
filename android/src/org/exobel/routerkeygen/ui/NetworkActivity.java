@@ -21,7 +21,7 @@ package org.exobel.routerkeygen.ui;
 
 import org.exobel.routerkeygen.AdsUtils;
 import org.exobel.routerkeygen.R;
-import org.exobel.routerkeygen.algorithms.Keygen;
+import org.exobel.routerkeygen.algorithms.WiFiNetwork;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -44,10 +44,10 @@ public class NetworkActivity extends SherlockFragmentActivity {
 		AdsUtils.loadAdIfNeeded(this);
 		if (savedInstanceState == null) {
 			Bundle arguments = new Bundle();
-			final Keygen keygen = (Keygen) getIntent().getParcelableExtra(
+			final WiFiNetwork wiFiNetwork = (WiFiNetwork) getIntent().getParcelableExtra(
 					NetworkFragment.NETWORK_ID);
-			arguments.putParcelable(NetworkFragment.NETWORK_ID, keygen);
-			setTitle(keygen.getSsidName());
+			arguments.putParcelable(NetworkFragment.NETWORK_ID, wiFiNetwork);
+			setTitle(wiFiNetwork.getSsidName());
 			NetworkFragment fragment = new NetworkFragment();
 			fragment.setArguments(arguments);
 			getSupportFragmentManager().beginTransaction()

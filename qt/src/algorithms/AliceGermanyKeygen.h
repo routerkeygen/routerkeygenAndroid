@@ -6,7 +6,7 @@
 class AliceGermanyKeygen : public Keygen
 {
 public:
-    AliceGermanyKeygen(QString & ssid, QString & mac, int level, QString enc);
+    AliceGermanyKeygen(QString & ssid, QString & mac);
     ~AliceGermanyKeygen();
     int getSupportState() const;
 private:

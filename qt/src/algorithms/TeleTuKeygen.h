@@ -22,7 +22,7 @@
 class TeleTuMagicInfo;
 class TeleTuKeygen: public Keygen {
 public:
-    TeleTuKeygen(QString & ssid, QString & mac, int level, QString enc, TeleTuMagicInfo * magicInfo);
+    TeleTuKeygen(QString & ssid, QString & mac, TeleTuMagicInfo * magicInfo);
 private:
     TeleTuMagicInfo * magicInfo;
 	QVector<QString> & getKeys();

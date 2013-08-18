@@ -21,7 +21,7 @@ package org.exobel.routerkeygen.ui;
 
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.WifiScanReceiver.OnScanListener;
-import org.exobel.routerkeygen.algorithms.Keygen;
+import org.exobel.routerkeygen.algorithms.WiFiNetwork;
 
 import android.app.Activity;
 import android.content.Context;
@@ -58,17 +58,17 @@ public class NetworksListFragment extends SherlockFragment implements
 	private WifiListAdapter wifiListAdapter;
 	private View noNetworksMessage;
 
-	private Keygen[] networksFound;
+	private WiFiNetwork[] networksFound;
 
 	public interface OnItemSelectionListener {
 
-		public void onItemSelected(Keygen id);
+		public void onItemSelected(WiFiNetwork id);
 
 		public void onItemSelected(String mac);
 	}
 
 	private static OnItemSelectionListener sDummyCallbacks = new OnItemSelectionListener() {
-		public void onItemSelected(Keygen id) {
+		public void onItemSelected(WiFiNetwork id) {
 		}
 
 		public void onItemSelected(String mac) {
@@ -92,9 +92,9 @@ public class NetworksListFragment extends SherlockFragment implements
 			if (savedInstanceState.containsKey(NETWORKS_FOUND)) {
 				Parcelable[] storedNetworksFound = savedInstanceState
 						.getParcelableArray(NETWORKS_FOUND);
-				networksFound = new Keygen[storedNetworksFound.length];
+				networksFound = new WiFiNetwork[storedNetworksFound.length];
 				for (int i = 0; i < storedNetworksFound.length; ++i)
-					networksFound[i] = (Keygen) storedNetworksFound[i];
+					networksFound[i] = (WiFiNetwork) storedNetworksFound[i];
 				onScanFinished(networksFound);
 			}
 			if (savedInstanceState.containsKey(STATE_ACTIVATED_POSITION)) {
@@ -158,8 +158,8 @@ public class NetworksListFragment extends SherlockFragment implements
 		final AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
 		if (networksFound == null || wifiListAdapter.getCount() <= info.position)
 			return;
-		final Keygen keygen = wifiListAdapter.getItem(info.position).keygen;
-		if (keygen == null) // the list is unstable and it can happen
+		final WiFiNetwork wiFiNetwork = wifiListAdapter.getItem(info.position).wifiNetwork;
+		if (wiFiNetwork == null) // the list is unstable and it can happen
 			return;
 
 		MenuInflater inflater = getActivity().getMenuInflater();
@@ -167,11 +167,11 @@ public class NetworksListFragment extends SherlockFragment implements
 		// We are copying the values right away as the networks list is
 		// unstable.
 		((MenuItem) menu.findItem(R.id.copy_ssid)).setIntent(new Intent()
-				.putExtra(MENU_VALUE, keygen.getSsidName()));
+				.putExtra(MENU_VALUE, wiFiNetwork.getSsidName()));
 		((MenuItem) menu.findItem(R.id.copy_mac)).setIntent(new Intent()
-				.putExtra(MENU_VALUE, keygen.getDisplayMacAddress()));
+				.putExtra(MENU_VALUE, wiFiNetwork.getMacAddress()));
 		((MenuItem) menu.findItem(R.id.use_mac)).setIntent(new Intent()
-				.putExtra(MENU_VALUE, keygen.getMacAddress()));
+				.putExtra(MENU_VALUE, wiFiNetwork.getMacAddress()));
 	}
 
 	@Override
@@ -214,7 +214,7 @@ public class NetworksListFragment extends SherlockFragment implements
 		noNetworksMessage.setVisibility(View.VISIBLE);
 	}
 
-	public void onScanFinished(Keygen[] networks) {
+	public void onScanFinished(WiFiNetwork[] networks) {
 		networksFound = networks;
 		if (getActivity() == null)
 			return;
@@ -238,9 +238,9 @@ public class NetworksListFragment extends SherlockFragment implements
 	public void onItemClick(AdapterView<?> list, View view, int position,
 			long id) {
 		if (networksFound != null && wifiListAdapter.getCount() > position) {
-			final Keygen keygen = wifiListAdapter.getItem(position).keygen;
-			if (keygen != null) // the list is unstable and it can happen
-				mCallbacks.onItemSelected(keygen);
+			final WiFiNetwork wifiNetwork = wifiListAdapter.getItem(position).wifiNetwork;
+			if (wifiNetwork != null) // the list is unstable and it can happen
+				mCallbacks.onItemSelected(wifiNetwork);
 		}
 	}
 

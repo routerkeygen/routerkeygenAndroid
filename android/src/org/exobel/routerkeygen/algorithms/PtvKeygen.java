@@ -31,8 +31,8 @@ import android.os.Parcelable;
  */
 public class PtvKeygen extends Keygen {
 
-	public PtvKeygen(String ssid, String mac, int level, String enc ) {
-		super(ssid, mac, level, enc);
+	public PtvKeygen(String ssid, String mac ) {
+		super(ssid, mac);
 	}
 	
 	@Override

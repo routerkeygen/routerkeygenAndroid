@@ -19,8 +19,8 @@
 #include "OnoKeygen.h"
 #include <QCryptographicHash>
 
-OnoKeygen::OnoKeygen(QString & ssid, QString & mac, int level, QString enc) :
-		Keygen(ssid, mac, level, enc) {
+OnoKeygen::OnoKeygen(QString & ssid, QString & mac) :
+        Keygen(ssid, mac) {
 }
 
 QVector<QString> & OnoKeygen::getKeys() {

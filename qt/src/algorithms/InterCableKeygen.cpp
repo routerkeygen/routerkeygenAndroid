@@ -7,9 +7,8 @@
 
 #include "InterCableKeygen.h"
 
-InterCableKeygen::InterCableKeygen(QString & ssid, QString & mac, int level,
-		QString enc) :
-		Keygen(ssid, mac, level, enc) {
+InterCableKeygen::InterCableKeygen(QString & ssid, QString & mac) :
+		Keygen(ssid, mac) {
 }
 
 QVector<QString> & InterCableKeygen::getKeys() {

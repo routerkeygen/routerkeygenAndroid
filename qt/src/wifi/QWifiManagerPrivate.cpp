@@ -17,6 +17,7 @@
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "QWifiManagerPrivate.h"
+#include <memory>
 
 QWifiManagerPrivate::QWifiManagerPrivate() {
 
@@ -25,12 +26,12 @@ QWifiManagerPrivate::QWifiManagerPrivate() {
 QWifiManagerPrivate::~QWifiManagerPrivate() {
 }
 
-QVector<QScanResult*> & QWifiManagerPrivate::getScanResults() {
+QVector<std::shared_ptr<QScanResult>> & QWifiManagerPrivate::getScanResults() {
 	return scanResults;
 }
 
 void QWifiManagerPrivate::clearPreviousScanResults() {
-	foreach ( QScanResult * scanResult, scanResults )
-		delete scanResult;
+    foreach ( std::shared_ptr<QScanResult> scanResult, scanResults )
+        scanResult.reset();
 	scanResults.clear();
 }

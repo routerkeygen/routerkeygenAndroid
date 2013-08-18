@@ -33,8 +33,8 @@ import android.os.Parcelable;
  */
 public class DlinkKeygen extends Keygen {
 
-	public DlinkKeygen(String ssid, String mac, int level, String enc) {
-		super(ssid, mac, level, enc);
+	public DlinkKeygen(String ssid, String mac) {
+		super(ssid, mac);
 	}
 
 	final static char hash[] =  { 'X', 'r', 'q', 'a', 'H', 'N',

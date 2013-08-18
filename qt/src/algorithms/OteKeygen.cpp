@@ -7,9 +7,8 @@
 
 #include "OteKeygen.h"
 
-OteKeygen::OteKeygen(QString & ssid, QString & mac, int level,
-		QString enc) :
-		Keygen(ssid, mac, level, enc) {
+OteKeygen::OteKeygen(QString & ssid, QString & mac) :
+		Keygen(ssid, mac) {
 }
 
 

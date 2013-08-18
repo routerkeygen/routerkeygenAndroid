@@ -7,9 +7,8 @@
 
 #include "AxtelKeygen.h"
 
-AxtelKeygen::AxtelKeygen(QString & ssid, QString & mac, int level,
-		QString enc) :
-		Keygen(ssid, mac, level, enc) {
+AxtelKeygen::AxtelKeygen(QString & ssid, QString & mac) :
+		Keygen(ssid, mac) {
 }
 
 

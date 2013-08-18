@@ -40,8 +40,8 @@ import android.os.Parcelable;
 public class SkyV1Keygen extends Keygen{
 
 	private MessageDigest md;
-	public SkyV1Keygen(String ssid, String mac, int level, String enc ) {
-		super(ssid, mac, level, enc);
+	public SkyV1Keygen(String ssid, String mac ) {
+		super(ssid, mac);
 	}
 
 	final static String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";

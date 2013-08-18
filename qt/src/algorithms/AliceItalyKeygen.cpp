@@ -19,9 +19,9 @@
 #include "AliceItalyKeygen.h"
 #include "config/AliceMagicInfo.h"
 #include "sha/sha256.h"
-AliceItalyKeygen::AliceItalyKeygen(QString & ssid, QString & mac, int level, QString enc,
+AliceItalyKeygen::AliceItalyKeygen(QString & ssid, QString & mac,
 		QVector<AliceMagicInfo *> * supported) :
-		Keygen(ssid, mac, level, enc), supportedAlice(supported) {
+		Keygen(ssid, mac), supportedAlice(supported) {
 
 }
 
@@ -91,6 +91,9 @@ QVector<QString> & AliceItalyKeygen::getKeys() {
             }
 		}
 
+        if (macEth == macS.left(6)) {
+            continue;
+        }
 		for (int i = 0; i < 12; i += 2)
 			mac[i / 2] = (macEth.mid(i, 1).toInt(&status, 16) << 4)
 					+ macEth.mid(i + 1, 1).toInt(&status, 16);

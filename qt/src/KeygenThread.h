@@ -14,14 +14,14 @@
 class Keygen;
 class KeygenThread: public QThread {
 public:
-	KeygenThread(Keygen *);
+    KeygenThread(QVector<Keygen *> *);
 	virtual ~KeygenThread();
 	QVector<QString> getResults() const;
 	bool hadError() const;
 protected:
 	void run();
 private:
-	Keygen * router;
+    QVector<Keygen *> * routers;
 	QVector<QString> results;
 	bool error;
 };

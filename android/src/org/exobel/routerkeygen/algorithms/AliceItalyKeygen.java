@@ -36,9 +36,9 @@ public class AliceItalyKeygen extends Keygen {
 	final private String ssidIdentifier;
 	final private List<AliceMagicInfo> supportedAlice;
 
-	public AliceItalyKeygen(String ssid, String mac, int level, String enc,
+	public AliceItalyKeygen(String ssid, String mac,
 			List<AliceMagicInfo> supportedAlice) {
-		super(ssid, mac, level, enc);
+		super(ssid, mac);
 		this.ssidIdentifier = ssid.substring(ssid.length() - 8);
 		this.supportedAlice = supportedAlice;
 	}

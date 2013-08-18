@@ -34,18 +34,19 @@ import android.os.Parcelable;
 /**
  * The algortihm is described on the link below
  * Link:http://www.wardriving-forum.de/wiki/Standardpassw%C3%B6rter#ALICE
+ * 
  * @author Rui Araújo
- *
+ * 
  */
 public class AliceGermanyKeygen extends Keygen {
 
-	public AliceGermanyKeygen(String ssid, String mac, int level, String enc) {
-		super(ssid, mac, level, enc);
+	public AliceGermanyKeygen(String ssid, String mac) {
+		super(ssid, mac);
 	}
 
 	@Override
 	public int getSupportState() {
-		if ( getSsidName().matches("ALICE-WLAN[0-9a-fA-F]{2}") )
+		if (getSsidName().matches("ALICE-WLAN[0-9a-fA-F]{2}"))
 			return SUPPORTED;
 		return UNLIKELY_SUPPORTED;
 	}

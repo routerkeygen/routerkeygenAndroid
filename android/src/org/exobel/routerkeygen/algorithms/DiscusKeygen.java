@@ -33,8 +33,8 @@ import android.os.Parcelable;
 public class DiscusKeygen extends Keygen {
 
 
-	public DiscusKeygen(String ssid, String mac, int level, String enc) {
-		super(ssid, mac, level, enc);
+	public DiscusKeygen(String ssid, String mac) {
+		super(ssid, mac);
 	}
 
 	static final int essidConst = 0xD0EC31;

@@ -23,7 +23,7 @@
 class Wlan2Keygen : public Keygen
 {
     public:
-        Wlan2Keygen(QString & ssid, QString & mac, int level, QString enc);
+        Wlan2Keygen(QString & ssid, QString & mac);
     private:
     	QVector<QString> & getKeys() ;
 

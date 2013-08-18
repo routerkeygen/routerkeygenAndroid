@@ -26,29 +26,20 @@ public:
 	const static int ERROR = 0;
     const static int SUPPORTED = 0;
     const static int UNLIKELY = 1;
-	Keygen(QString & ssid, QString & mac, int level, QString enc);
+    const static int UNSUPPORTED = 2;
+    Keygen(QString & ssid, QString & mac);
 	QVector<QString> & getResults();
 	void stop();
     bool isStopped() const;
-	QString getEncryption() const;
-	QString getError() const;
-	int getLevel() const;
+    QString getError() const;
 	QString getMacAddress() const;
 	QString getSsidName() const;
 	bool isStopRequested() const;
 	virtual ~Keygen() {
-	}
-	bool isLocked();
+    }
 
     int getSupportState() const;
 
-	static QString getScanResultSecurity(Keygen * scanResult);
-
-	// Constants used for different security types
-	const static QString PSK;
-	const static QString WEP;
-	const static QString EAP;
-	const static QString OPEN;
 protected:
 	QVector<QString> results;
 	bool stopRequested;
@@ -57,9 +48,7 @@ private:
 	virtual QVector<QString> & getKeys() = 0;
 
 	QString ssidName;
-	QString macAddress;
-	int level;
-	QString encryption;
+    QString macAddress;
 	QString error;
 
 };

@@ -1,6 +1,5 @@
 package org.exobel.routerkeygen;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +38,6 @@ import org.exobel.routerkeygen.algorithms.TecomKeygen;
 import org.exobel.routerkeygen.algorithms.TeleTuKeygen;
 import org.exobel.routerkeygen.algorithms.TelseyKeygen;
 import org.exobel.routerkeygen.algorithms.ThomsonKeygen;
-import org.exobel.routerkeygen.algorithms.UnsupportedKeygen;
 import org.exobel.routerkeygen.algorithms.VerizonKeygen;
 import org.exobel.routerkeygen.algorithms.WifimediaRKeygen;
 import org.exobel.routerkeygen.algorithms.Wlan2Keygen;
@@ -51,81 +49,16 @@ import org.exobel.routerkeygen.config.OTEHuaweiConfigParser;
 import org.exobel.routerkeygen.config.TeleTuConfigParser;
 import org.exobel.routerkeygen.config.TeleTuMagicInfo;
 
-import android.net.wifi.ScanResult;
-import android.net.wifi.WifiManager;
-
 public class WirelessMatcher {
 
 	private static Map<String, ArrayList<AliceMagicInfo>> supportedAlices = null;
 	private static Map<String, ArrayList<TeleTuMagicInfo>> supportedTeletu = null;
 	private static String[] supportedOTE = null;
 
-	public static Keygen getKeygen(ScanResult result, ZipInputStream magicInfo) {
-		final Keygen keygen = getKeygen(result.SSID,
-				result.BSSID.toUpperCase(Locale.getDefault()),
-				WifiManager.calculateSignalLevel(result.level, 4),
-				result.capabilities, magicInfo);
-		try {
-			magicInfo.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		keygen.setScanResult(result);
-		return keygen;
-	}
+	public synchronized static ArrayList<Keygen> getKeygen(String ssid,
+			String mac, ZipInputStream magicInfo) {
+		final ArrayList<Keygen> keygens = new ArrayList<Keygen>();
 
-	public synchronized static Keygen getKeygen(String ssid, String mac,
-			int level, String enc, ZipInputStream magicInfo) {
-		mac = mac.toUpperCase(Locale.getDefault());
-		if (enc.equals(""))
-			enc = Keygen.OPEN;
-		if (ssid.matches("(AXTEL|AXTEL-XTREMO)-[0-9a-fA-F]{4}")) {
-			final String ssidSubpart = ssid.substring(ssid.length() - 4);
-			final String macShort = mac.replace(":", "");
-			if (macShort.length() < 12
-					|| ssidSubpart.equalsIgnoreCase(macShort.substring(8)))
-				return new AxtelKeygen(ssid, mac, level, enc);
-		}
-		if (ssid.startsWith("InterCable") && mac.startsWith("00:15"))
-			return new InterCableKeygen(ssid, mac, level, enc);
-		if (ssid.matches("Discus--?[0-9a-fA-F]{6}"))
-			return new DiscusKeygen(ssid, mac, level, enc);
-
-		if (ssid.matches("[eE]ircom[0-7]{4} ?[0-7]{4}")) {
-			if (mac.length() == 0) {
-				final String filteredSsid = ssid.replace(" ", "");
-				final String end = Integer
-						.toHexString(Integer.parseInt(filteredSsid
-								.substring(filteredSsid.length() - 8), 8) ^ 0x000fcc);
-				mac = "00:0F:CC" + ":" + end.substring(0, 2) + ":"
-						+ end.substring(2, 4) + ":" + end.substring(4, 6);
-			}
-			return new EircomKeygen(ssid, mac, level, enc);
-		}
-
-		if (ssid.matches("DLink-[0-9a-fA-F]{6}"))
-			return new DlinkKeygen(ssid, mac, level, enc);
-
-		if (ssid.matches("FASTWEB-1-(000827|0013C8|0017C2|00193E|001CA2|001D8B|"
-				+ "002233|00238E|002553|00A02F|080018|3039F2|38229D|6487D7)[0-9A-Fa-f]{6}")) {
-			if (mac.length() == 0) {
-				final String end = ssid.substring(ssid.length() - 12);
-				mac = end.substring(0, 2) + ":" + end.substring(2, 4) + ":"
-						+ end.substring(4, 6) + ":" + end.substring(6, 8) + ":"
-						+ end.substring(8, 10) + ":" + end.substring(10, 12);
-			}
-			return new PirelliKeygen(ssid, mac, level, enc);
-		}
-
-		if (ssid.matches("FASTWEB-(1|2)-(002196|00036F)[0-9A-Fa-f]{6}")) {
-			if (mac.length() == 0) {
-				final String end = ssid.substring(ssid.length() - 12);
-				mac = end.substring(0, 2) + ":" + end.substring(2, 4) + ":"
-						+ end.substring(4, 6) + ":" + end.substring(6, 8) + ":"
-						+ end.substring(8, 10) + ":" + end.substring(10, 12);
-			}
-			return new TelseyKeygen(ssid, mac, level, enc);
-		}
 		if (ssid.matches("[aA]lice-[0-9]{8}")) {
 			if (supportedAlices == null) {
 				supportedAlices = AliceConfigParser.parse(getEntry("alice.txt",
@@ -136,158 +69,55 @@ public class WirelessMatcher {
 			if (supported != null && supported.size() > 0) {
 				if (mac.length() < 6)
 					mac = supported.get(0).getMac();
-				return new AliceItalyKeygen(ssid, mac, level, enc, supported);
+				keygens.add(new AliceItalyKeygen(ssid, mac, supported));
 			}
 		}
+		if (mac.startsWith("00:1E:40") || mac.startsWith("00:25:5E"))
+			keygens.add(new AliceGermanyKeygen(ssid, mac));
 
-		if (ssid.toLowerCase(Locale.getDefault()).startsWith("teletu")) {
-			if (supportedTeletu == null) {
-				supportedTeletu = TeleTuConfigParser.parse(getEntry(
-						"tele2.txt", magicInfo));
-			}
-			String filteredMac = mac.replace(":", "");
-			if (filteredMac.length() != 12
-					&& ssid.matches("TeleTu_[0-9a-fA-F]{12}"))
-				mac = filteredMac = ssid.substring(7);
-			if (filteredMac.length() == 12) {
-				final List<TeleTuMagicInfo> supported = supportedTeletu
-						.get(filteredMac.substring(0, 6));
-				if (supported != null && supported.size() > 0) {
-					final int macIntValue = Integer.parseInt(
-							filteredMac.substring(6), 16);
-					for (TeleTuMagicInfo magic : supported) {
-						if (macIntValue >= magic.getRange()[0]
-								&& macIntValue <= magic.getRange()[1]) {
-							return new TeleTuKeygen(ssid, mac, level, enc,
-									magic);
-						}
-					}
-				}
-			}
+		if (ssid.equals("Andared"))
+			keygens.add(new AndaredKeygen(ssid, mac));
+
+		if (ssid.matches("(AXTEL|AXTEL-XTREMO)-[0-9a-fA-F]{4}")) {
+			final String ssidSubpart = ssid.substring(ssid.length() - 4);
+			final String macShort = mac.replace(":", "");
+			if (macShort.length() < 12
+					|| ssidSubpart.equalsIgnoreCase(macShort.substring(8)))
+				keygens.add(new AxtelKeygen(ssid, mac));
 		}
-		/* ssid must be of the form P1XXXXXX0000X or p1XXXXXX0000X */
-		if (ssid.matches("[Pp]1[0-9]{6}0{4}[0-9]"))
-			return new OnoKeygen(ssid, mac, level, enc);
-
-		if (ssid.matches("(WLAN|JAZZTEL)_[0-9a-fA-F]{4}")) {
-			if (mac.startsWith("00:1F:A4") || mac.startsWith("F4:3E:61")
-					|| mac.startsWith("40:4A:03"))
-				return new ZyxelKeygen(ssid, mac, level, enc);
-
-			if (mac.startsWith("00:1B:20") || mac.startsWith("64:68:0C")
-					|| mac.startsWith("00:1D:20") || mac.startsWith("00:23:F8")
-					|| mac.startsWith("38:72:C0") || mac.startsWith("30:39:F2"))
-				return new ComtrendKeygen(ssid, mac, level, enc);
-		}
-		if (ssid.matches("SKY[0-9]{5}")
-				&& (mac.startsWith("C4:3D:C7") || mac.startsWith("E0:46:9A")
-						|| mac.startsWith("E0:91:F5")
-						|| mac.startsWith("00:09:5B")
-						|| mac.startsWith("00:0F:B5")
-						|| mac.startsWith("00:14:6C")
-						|| mac.startsWith("00:18:4D")
-						|| mac.startsWith("00:26:F2")
-						|| mac.startsWith("C0:3F:0E")
-						|| mac.startsWith("30:46:9A")
-						|| mac.startsWith("00:1B:2F")
-						|| mac.startsWith("A0:21:B7")
-						|| mac.startsWith("00:1E:2A")
-						|| mac.startsWith("00:1F:33")
-						|| mac.startsWith("00:22:3F") || mac
-							.startsWith("00:24:B2")))
-			return new SkyV1Keygen(ssid, mac, level, enc);
-
-		if (ssid.matches("TECOM-AH4(021|222)-[0-9a-zA-Z]{6}"))
-			return new TecomKeygen(ssid, mac, level, enc);
-
-		if (ssid.matches("InfostradaWiFi-[0-9a-zA-Z]{6}"))
-			return new InfostradaKeygen(ssid, mac, level, enc);
-
-		if (ssid.matches("WLAN_[0-9a-fA-F]{2}")
-				&& (mac.startsWith("00:01:38") || mac.startsWith("00:16:38")
-						|| mac.startsWith("00:01:13")
-						|| mac.startsWith("00:01:1B") || mac
-							.startsWith("00:19:5B")))
-			return new Wlan2Keygen(ssid, mac, level, enc);
-
-		if (ssid.matches("WLAN-[0-9a-fA-F]{6}")
-				&& (mac.startsWith("00:12:BF") || mac.startsWith("00:1A:2A") || mac
-						.startsWith("00:1D:19")))
-			return new Speedport500Keygen(ssid, mac, level, enc);
-
-		if (ssid.matches("(WLAN|WiFi|YaCom)[0-9a-zA-Z]{6}"))
-			return new Wlan6Keygen(ssid, mac, level, enc);
-
-		if (ssid.matches("OTE[0-9a-fA-F]{4}") && (mac.startsWith("00:13:33")))
-			return new OteBAUDKeygen(ssid, mac, level, enc);
-
-		if (ssid.matches("OTE[0-9a-fA-F]{6}"))
-			/*
-			 * && ((mac.startsWith("C8:7B:5B")) || (mac.startsWith("FC:C8:97"))
-			 * || (mac.startsWith("68:1A:B2")) || (mac.startsWith("B0:75:D5"))
-			 * || (mac .startsWith("38:46:08"))))
-			 */
-			return new OteKeygen(ssid, mac, level, enc);
-
-		if (ssid.toUpperCase(Locale.getDefault()).startsWith("OTE")
-				&& (mac.startsWith("E8:39:DF:F5")
-						|| mac.startsWith("E8:39:DF:F6") || mac
-							.startsWith("E8:39:DF:FD"))) {
-			if (supportedOTE == null) {
-				supportedOTE = OTEHuaweiConfigParser.parse(getEntry(
-						"ote_huawei.txt", magicInfo));
-			}
-			final String filteredMac = mac.replace(":", "");
-			final int target = Integer.parseInt(filteredMac.substring(8), 16);
-			if (filteredMac.length() == 12
-					&& target > (OteHuaweiKeygen.MAGIC_NUMBER - supportedOTE.length))
-				return new OteHuaweiKeygen(ssid, mac, level, enc,
-						supportedOTE[OteHuaweiKeygen.MAGIC_NUMBER - target]);
-		}
-
-		if (ssid.matches("MAXCOM[0-9a-zA-Z]{4}"))
-			return new MaxcomKeygen(ssid, mac, level, enc);
-
-		if (ssid.matches("PBS-[0-9a-fA-F]{6}"))
-			return new PBSKeygen(ssid, mac, level, enc);
-
-		if (ssid.matches("(PTV-|ptv|ptv-)[0-9a-zA-Z]{6}"))
-			return new PtvKeygen(ssid, mac, level, enc);
 
 		if (ssid.matches("Cabovisao-[0-9a-fA-F]{4}")) {
 			if (mac.length() == 0 || mac.startsWith("C0:AC:54"))
-				return new CabovisaoSagemKeygen(ssid, mac, level, enc);
+				keygens.add(new CabovisaoSagemKeygen(ssid, mac));
 		}
 
 		if (ssid.equals("CONN-X"))
-			return new ConnKeygen(ssid, mac, level, enc);
+			keygens.add(new ConnKeygen(ssid, mac));
 
-		if (ssid.equals("Andared"))
-			return new AndaredKeygen(ssid, mac, level, enc);
+		if (ssid.matches("Discus--?[0-9a-fA-F]{6}"))
+			keygens.add(new DiscusKeygen(ssid, mac));
 
-		if (ssid.matches("Megared[0-9a-fA-F]{4}")) {
-			// the final 4 characters of the SSID should match the final
-			if (mac.length() == 0
-					|| ssid.substring(ssid.length() - 4).equals(
-							mac.replace(":", "").substring(8)))
-				return new MegaredKeygen(ssid, mac, level, enc);
+		if (ssid.matches("DLink-[0-9a-fA-F]{6}"))
+			keygens.add(new DlinkKeygen(ssid, mac));
+
+		if (mac.startsWith("00:12:BF") || mac.startsWith("00:1A:2A")
+				|| mac.startsWith("00:1D:19") || mac.startsWith("00:23:08")
+				|| mac.startsWith("00:26:4D") || mac.startsWith("50:7E:5D")
+				|| mac.startsWith("1C:C6:3C") || mac.startsWith("74:31:70")
+				|| mac.startsWith("7C:4F:B5") || mac.startsWith("88:25:2C"))
+			keygens.add(new EasyBoxKeygen(ssid, mac));
+
+		if (ssid.matches("[eE]ircom[0-7]{4} ?[0-7]{4}")) {
+			if (mac.length() == 0) {
+				final String filteredSsid = ssid.replace(" ", "");
+				final String end = Integer
+						.toHexString(Integer.parseInt(filteredSsid
+								.substring(filteredSsid.length() - 8), 8) ^ 0x000fcc);
+				mac = "00:0F:CC" + ":" + end.substring(0, 2) + ":"
+						+ end.substring(2, 4) + ":" + end.substring(4, 6);
+			}
+			keygens.add(new EircomKeygen(ssid, mac));
 		}
-
-		if (ssid.matches("wifimedia_R-[0-9a-zA-Z]{4}")
-				&& mac.replace(":", "").length() == 12)
-			return new WifimediaRKeygen(ssid, mac, level, enc);
-
-		if (ssid.length() == 5
-				&& (mac.startsWith("00:1F:90") || mac.startsWith("A8:39:44")
-						|| mac.startsWith("00:18:01")
-						|| mac.startsWith("00:20:E0")
-						|| mac.startsWith("00:0F:B3")
-						|| mac.startsWith("00:1E:A7")
-						|| mac.startsWith("00:15:05")
-						|| mac.startsWith("00:24:7B")
-						|| mac.startsWith("00:26:62") || mac
-							.startsWith("00:26:B8")))
-			return new VerizonKeygen(ssid, mac, level, enc);
 
 		if (ssid.matches("INFINITUM[0-9a-zA-Z]{4}")
 				|| (mac.startsWith("00:25:9E") || mac.startsWith("00:25:68")
@@ -311,29 +141,176 @@ public class WirelessMatcher {
 						|| mac.startsWith("1C:1D:67")
 						|| mac.startsWith("CC:96:A0") || mac
 							.startsWith("20:2B:C1")))
-			return new HuaweiKeygen(ssid, mac, level, enc);
+			keygens.add(new HuaweiKeygen(ssid, mac));
 
-		/*
-		 * These detectors have very relaxed rules so these should be tested in
-		 * the end
-		 */
+		if (ssid.matches("InfostradaWiFi-[0-9a-zA-Z]{6}"))
+			keygens.add(new InfostradaKeygen(ssid, mac));
 
-		if (mac.startsWith("00:12:BF") || mac.startsWith("00:1A:2A")
-				|| mac.startsWith("00:1D:19") || mac.startsWith("00:23:08")
-				|| mac.startsWith("00:26:4D") || mac.startsWith("50:7E:5D")
-				|| mac.startsWith("1C:C6:3C") || mac.startsWith("74:31:70")
-				|| mac.startsWith("7C:4F:B5") || mac.startsWith("88:25:2C"))
-			return new EasyBoxKeygen(ssid, mac, level, enc);
+		if (ssid.startsWith("InterCable") && mac.startsWith("00:15"))
+			keygens.add(new InterCableKeygen(ssid, mac));
 
-		if (mac.startsWith("00:1E:40") || mac.startsWith("00:25:5E"))
-			return new AliceGermanyKeygen(ssid, mac, level, enc);
+		if (ssid.matches("MAXCOM[0-9a-zA-Z]{4}"))
+			keygens.add(new MaxcomKeygen(ssid, mac));
+
+		if (ssid.matches("Megared[0-9a-fA-F]{4}")) {
+			// the final 4 characters of the SSID should match the final
+			if (mac.length() == 0
+					|| ssid.substring(ssid.length() - 4).equals(
+							mac.replace(":", "").substring(8)))
+				keygens.add(new MegaredKeygen(ssid, mac));
+		}
+
+		/* ssid must be of the form P1XXXXXX0000X or p1XXXXXX0000X */
+		if (ssid.matches("[Pp]1[0-9]{6}0{4}[0-9]"))
+			keygens.add(new OnoKeygen(ssid, mac));
+
+		if (ssid.matches("OTE[0-9a-fA-F]{4}") && (mac.startsWith("00:13:33")))
+			keygens.add(new OteBAUDKeygen(ssid, mac));
+
+		if (ssid.matches("OTE[0-9a-fA-F]{6}"))
+			/*
+			 * && ((mac.startsWith("C8:7B:5B")) || (mac.startsWith("FC:C8:97"))
+			 * || (mac.startsWith("68:1A:B2")) || (mac.startsWith("B0:75:D5"))
+			 * || (mac .startsWith("38:46:08"))))
+			 */
+			keygens.add(new OteKeygen(ssid, mac));
+
+		if (ssid.toUpperCase(Locale.getDefault()).startsWith("OTE")
+				&& (mac.startsWith("E8:39:DF:F5")
+						|| mac.startsWith("E8:39:DF:F6") || mac
+							.startsWith("E8:39:DF:FD"))) {
+			if (supportedOTE == null) {
+				supportedOTE = OTEHuaweiConfigParser.parse(getEntry(
+						"ote_huawei.txt", magicInfo));
+			}
+			final String filteredMac = mac.replace(":", "");
+			final int target = Integer.parseInt(filteredMac.substring(8), 16);
+			if (filteredMac.length() == 12
+					&& target > (OteHuaweiKeygen.MAGIC_NUMBER - supportedOTE.length))
+				keygens.add(new OteHuaweiKeygen(ssid, mac,
+						supportedOTE[OteHuaweiKeygen.MAGIC_NUMBER - target]));
+		}
+
+		if (ssid.matches("PBS-[0-9a-fA-F]{6}"))
+			keygens.add(new PBSKeygen(ssid, mac));
+
+		if (ssid.matches("FASTWEB-1-(000827|0013C8|0017C2|00193E|001CA2|001D8B|"
+				+ "002233|00238E|002553|00A02F|080018|3039F2|38229D|6487D7)[0-9A-Fa-f]{6}")) {
+			if (mac.length() == 0) {
+				final String end = ssid.substring(ssid.length() - 12);
+				mac = end.substring(0, 2) + ":" + end.substring(2, 4) + ":"
+						+ end.substring(4, 6) + ":" + end.substring(6, 8) + ":"
+						+ end.substring(8, 10) + ":" + end.substring(10, 12);
+			}
+			keygens.add(new PirelliKeygen(ssid, mac));
+		}
+
+		if (ssid.matches("(PTV-|ptv|ptv-)[0-9a-zA-Z]{6}"))
+			keygens.add(new PtvKeygen(ssid, mac));
+
+		if (ssid.matches("SKY[0-9]{5}")
+				&& (mac.startsWith("C4:3D:C7") || mac.startsWith("E0:46:9A")
+						|| mac.startsWith("E0:91:F5")
+						|| mac.startsWith("00:09:5B")
+						|| mac.startsWith("00:0F:B5")
+						|| mac.startsWith("00:14:6C")
+						|| mac.startsWith("00:18:4D")
+						|| mac.startsWith("00:26:F2")
+						|| mac.startsWith("C0:3F:0E")
+						|| mac.startsWith("30:46:9A")
+						|| mac.startsWith("00:1B:2F")
+						|| mac.startsWith("A0:21:B7")
+						|| mac.startsWith("00:1E:2A")
+						|| mac.startsWith("00:1F:33")
+						|| mac.startsWith("00:22:3F") || mac
+							.startsWith("00:24:B2")))
+			keygens.add(new SkyV1Keygen(ssid, mac));
+
+		if (ssid.matches("WLAN-[0-9a-fA-F]{6}")
+				&& (mac.startsWith("00:12:BF") || mac.startsWith("00:1A:2A") || mac
+						.startsWith("00:1D:19")))
+			keygens.add(new Speedport500Keygen(ssid, mac));
+
+		if (ssid.matches("TECOM-AH4(021|222)-[0-9a-zA-Z]{6}"))
+			keygens.add(new TecomKeygen(ssid, mac));
+
+		if (ssid.toLowerCase(Locale.getDefault()).startsWith("teletu")) {
+			if (supportedTeletu == null) {
+				supportedTeletu = TeleTuConfigParser.parse(getEntry(
+						"tele2.txt", magicInfo));
+			}
+			String filteredMac = mac.replace(":", "");
+			if (filteredMac.length() != 12
+					&& ssid.matches("TeleTu_[0-9a-fA-F]{12}"))
+				mac = filteredMac = ssid.substring(7);
+			if (filteredMac.length() == 12) {
+				final List<TeleTuMagicInfo> supported = supportedTeletu
+						.get(filteredMac.substring(0, 6));
+				if (supported != null && supported.size() > 0) {
+					final int macIntValue = Integer.parseInt(
+							filteredMac.substring(6), 16);
+					for (TeleTuMagicInfo magic : supported) {
+						if (macIntValue >= magic.getRange()[0]
+								&& macIntValue <= magic.getRange()[1]) {
+							keygens.add(new TeleTuKeygen(ssid, mac, magic));
+						}
+					}
+				}
+			}
+		}
 		
-		//TODO: support several algorithm at a time.
+		if (ssid.matches("FASTWEB-(1|2)-(002196|00036F)[0-9A-Fa-f]{6}")) {
+			if (mac.length() == 0) {
+				final String end = ssid.substring(ssid.length() - 12);
+				mac = end.substring(0, 2) + ":" + end.substring(2, 4) + ":"
+						+ end.substring(4, 6) + ":" + end.substring(6, 8) + ":"
+						+ end.substring(8, 10) + ":" + end.substring(10, 12);
+			}
+			keygens.add(new TelseyKeygen(ssid, mac));
+		}
+
 		if (ssid.matches("(Thomson|Blink|SpeedTouch|O2Wireless|Orange-|INFINITUM|"
 				+ "BigPond|Otenet|Bbox-|DMAX|privat|TN_private_|CYTA|Vodafone-|Optimus|OptimusFibra|MEO-)[0-9a-fA-F]{6}"))
-			return new ThomsonKeygen(ssid, mac, level, enc);
+			keygens.add(new ThomsonKeygen(ssid, mac));
 
-		return new UnsupportedKeygen(ssid, mac, level, enc);
+		if (ssid.length() == 5
+				&& (mac.startsWith("00:1F:90") || mac.startsWith("A8:39:44")
+						|| mac.startsWith("00:18:01")
+						|| mac.startsWith("00:20:E0")
+						|| mac.startsWith("00:0F:B3")
+						|| mac.startsWith("00:1E:A7")
+						|| mac.startsWith("00:15:05")
+						|| mac.startsWith("00:24:7B")
+						|| mac.startsWith("00:26:62") || mac
+							.startsWith("00:26:B8")))
+			keygens.add(new VerizonKeygen(ssid, mac));
+		
+		if (ssid.matches("wifimedia_R-[0-9a-zA-Z]{4}")
+				&& mac.replace(":", "").length() == 12)
+			keygens.add(new WifimediaRKeygen(ssid, mac));
+
+		if (ssid.matches("WLAN_[0-9a-fA-F]{2}")
+				&& (mac.startsWith("00:01:38") || mac.startsWith("00:16:38")
+						|| mac.startsWith("00:01:13")
+						|| mac.startsWith("00:01:1B") || mac
+							.startsWith("00:19:5B")))
+			keygens.add(new Wlan2Keygen(ssid, mac));
+
+		if (ssid.matches("(WLAN|WiFi|YaCom)[0-9a-zA-Z]{6}"))
+			keygens.add(new Wlan6Keygen(ssid, mac));
+
+		if (ssid.matches("(WLAN|JAZZTEL)_[0-9a-fA-F]{4}")) {
+			if (mac.startsWith("00:1F:A4") || mac.startsWith("F4:3E:61")
+					|| mac.startsWith("40:4A:03"))
+				keygens.add(new ZyxelKeygen(ssid, mac));
+
+			if (mac.startsWith("00:1B:20") || mac.startsWith("64:68:0C")
+					|| mac.startsWith("00:1D:20") || mac.startsWith("00:23:F8")
+					|| mac.startsWith("38:72:C0") || mac.startsWith("30:39:F2"))
+				keygens.add(new ComtrendKeygen(ssid, mac));
+		}
+		
+		return keygens;
 	}
 
 	private static InputStream getEntry(String filename,

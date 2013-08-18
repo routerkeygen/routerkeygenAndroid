@@ -18,9 +18,8 @@
  */
 #include "ComtrendKeygen.h"
 
-ComtrendKeygen::ComtrendKeygen(QString & ssid, QString & mac, int level,
-		QString enc) :
-		Keygen(ssid, mac, level, enc) {
+ComtrendKeygen::ComtrendKeygen(QString & ssid, QString & mac) :
+		Keygen(ssid, mac) {
 	this->hash = new QCryptographicHash(QCryptographicHash::Md5);
 }
 ComtrendKeygen::~ComtrendKeygen(){

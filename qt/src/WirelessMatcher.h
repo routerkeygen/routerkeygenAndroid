@@ -18,9 +18,9 @@ class AliceMagicInfo;
 class TeleTuMagicInfo;
 class WirelessMatcher {
 public:
-    WirelessMatcher();virtual
-    ~WirelessMatcher();
-    Keygen * getKeygen(QString ssid, QString mac, int level = 0, QString enc = "");
+    WirelessMatcher();
+    virtual  ~WirelessMatcher();
+    QVector<Keygen *> * getKeygens(QString ssid, QString mac);
 private:
     QMap<QString ,QVector<AliceMagicInfo *> *> * supportedAlice;
     QMap<QString ,QVector<TeleTuMagicInfo *> *> * supportedTeletu;

@@ -1,9 +1,8 @@
 #include "AliceGermanyKeygen.h"
 #include <QRegExp>
 
-AliceGermanyKeygen::AliceGermanyKeygen(QString & ssid, QString & mac, int level,
-        QString enc) :
-        Keygen(ssid, mac, level, enc) {
+AliceGermanyKeygen::AliceGermanyKeygen(QString & ssid, QString & mac) :
+        Keygen(ssid, mac) {
     this->hash = new QCryptographicHash(QCryptographicHash::Md5);
 }
 AliceGermanyKeygen::~AliceGermanyKeygen(){

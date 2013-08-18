@@ -45,8 +45,8 @@ public class OnoKeygen extends Keygen {
 
 	private MessageDigest md;
 
-	public OnoKeygen(String ssid, String mac, int level, String enc ) {
-		super(ssid, mac, level, enc);
+	public OnoKeygen(String ssid, String mac ) {
+		super(ssid, mac);
 	}
 
 	@Override

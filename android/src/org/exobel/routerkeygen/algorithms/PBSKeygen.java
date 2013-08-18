@@ -37,8 +37,8 @@ public class PBSKeygen extends Keygen{
 	
 	transient private MessageDigest md;
 
-	public PBSKeygen(String ssid, String mac, int level, String enc ) {
-		super(ssid, mac, level, enc);
+	public PBSKeygen(String ssid, String mac ) {
+		super(ssid, mac);
 	}
 
 	final static byte[] saltSHA256 = 

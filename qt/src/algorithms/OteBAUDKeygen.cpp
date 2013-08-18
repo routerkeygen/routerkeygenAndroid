@@ -18,9 +18,8 @@
  */
 #include "OteBAUDKeygen.h"
 
-OteBAUDKeygen::OteBAUDKeygen(QString & ssid, QString & mac, int level,
-		QString enc) :
-		Keygen(ssid, mac, level, enc) {
+OteBAUDKeygen::OteBAUDKeygen(QString & ssid, QString & mac) :
+		Keygen(ssid, mac) {
 }
 
 

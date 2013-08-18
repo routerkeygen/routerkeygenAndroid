@@ -20,9 +20,8 @@
 #include "config/TeleTuMagicInfo.h"
 #include <QCryptographicHash>
 
-TeleTuKeygen::TeleTuKeygen(QString & ssid, QString & mac, int level,
-        QString enc, TeleTuMagicInfo * m) :
-    Keygen(ssid, mac, level, enc) , magicInfo(m){}
+TeleTuKeygen::TeleTuKeygen(QString & ssid, QString & mac, TeleTuMagicInfo * m) :
+    Keygen(ssid, mac) , magicInfo(m){}
 
 QVector<QString> & TeleTuKeygen::getKeys() {
     QString mac = getMacAddress();

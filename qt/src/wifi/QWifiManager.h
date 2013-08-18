@@ -11,6 +11,7 @@
 #include <QVector>
 #include "QScanResult.h"
 #include <QProcess>
+#include <memory>
 
 class QWifiManagerPrivate;
 class QWifiManager: public QObject {
@@ -19,7 +20,7 @@ public:
 	QWifiManager() ;
 	virtual ~QWifiManager();
 	void startScan();
-	QVector<QScanResult*> & getScanResults();
+    QVector<std::shared_ptr<QScanResult>> & getScanResults();
 	enum SCAN_RESULT_STATE{
 		SCAN_OK = 0,
 		ERROR_NO_NM,

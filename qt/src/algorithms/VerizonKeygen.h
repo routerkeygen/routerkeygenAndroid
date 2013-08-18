@@ -23,7 +23,7 @@
 class VerizonKeygen : public Keygen
 {
     public:
-        VerizonKeygen(QString & ssid, QString & mac, int level, QString enc);
+        VerizonKeygen(QString & ssid, QString & mac);
     private:
     	QVector<QString> & getKeys() ;
 };

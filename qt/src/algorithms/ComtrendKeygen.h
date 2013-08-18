@@ -27,7 +27,7 @@ private:
 	QVector<QString> & getKeys() ;
 	QCryptographicHash * hash;
 public:
-	ComtrendKeygen(QString & ssid, QString & mac, int level, QString enc);
+	ComtrendKeygen(QString & ssid, QString & mac);
 	~ComtrendKeygen();
 };
 

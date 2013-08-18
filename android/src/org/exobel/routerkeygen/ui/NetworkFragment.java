@@ -33,6 +33,7 @@ import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.algorithms.Keygen;
 import org.exobel.routerkeygen.algorithms.NativeThomson;
 import org.exobel.routerkeygen.algorithms.ThomsonKeygen;
+import org.exobel.routerkeygen.algorithms.WiFiNetwork;
 
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
@@ -69,7 +70,7 @@ public class NetworkFragment extends SherlockFragment {
 
 	public static final String NETWORK_ID = "vulnerable_network";
 	public static final String TAG = "NetworkFragment";
-	private Keygen keygen;
+	private WiFiNetwork wifiNetwork;
 	private KeygenThread thread;
 	private ViewSwitcher root;
 	private TextView messages;
@@ -82,8 +83,9 @@ public class NetworkFragment extends SherlockFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (getArguments().containsKey(NETWORK_ID)) {
-			keygen = (Keygen) getArguments().getParcelable(NETWORK_ID);
-			thread = new KeygenThread(keygen);
+			wifiNetwork = (WiFiNetwork) getArguments()
+					.getParcelable(NETWORK_ID);
+			thread = new KeygenThread(wifiNetwork);
 		}
 		if (savedInstanceState != null) {
 			String[] passwords = savedInstanceState
@@ -105,10 +107,10 @@ public class NetworkFragment extends SherlockFragment {
 		messages = (TextView) root.findViewById(R.id.loading_text);
 		final View autoConnect = root.findViewById(R.id.auto_connect);
 		// Auto connect service unavailable for manual calculations
-		if (keygen.getScanResult() == null)
+		if (wifiNetwork.getScanResult() == null)
 			autoConnect.setVisibility(View.GONE);
 		else {
-			final int level = keygen.getLevel();
+			final int level = wifiNetwork.getLevel();
 			autoConnect.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
 					if (passwordList == null)
@@ -128,7 +130,7 @@ public class NetworkFragment extends SherlockFragment {
 					i.putStringArrayListExtra(AutoConnectService.KEY_LIST,
 							(ArrayList<String>) passwordList);
 					i.putExtra(AutoConnectService.SCAN_RESULT,
-							keygen.getScanResult());
+							wifiNetwork.getScanResult());
 					getActivity().startService(i);
 				}
 			});
@@ -168,7 +170,7 @@ public class NetworkFragment extends SherlockFragment {
 		if (passwordList == null) {
 			if (thread.getStatus() == Status.FINISHED
 					|| thread.getStatus() == Status.RUNNING)
-				thread = new KeygenThread(keygen);
+				thread = new KeygenThread(wifiNetwork);
 			thread.execute();
 		}
 	}
@@ -181,7 +183,7 @@ public class NetworkFragment extends SherlockFragment {
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		if (keygen.getSupportState() != Keygen.UNSUPPORTED)
+		if (wifiNetwork.getSupportState() != Keygen.UNSUPPORTED)
 			inflater.inflate(R.menu.share_keys, menu);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
@@ -195,10 +197,10 @@ public class NetworkFragment extends SherlockFragment {
 					return true;
 				Intent i = new Intent(Intent.ACTION_SEND);
 				i.setType("text/plain");
-				i.putExtra(Intent.EXTRA_SUBJECT, keygen.getSsidName()
+				i.putExtra(Intent.EXTRA_SUBJECT, wifiNetwork.getSsidName()
 						+ getString(R.string.share_msg_begin));
 				final StringBuilder message = new StringBuilder(
-						keygen.getSsidName());
+						wifiNetwork.getSsidName());
 				message.append("\n");
 				message.append(getString(R.string.share_msg_begin));
 				message.append(":\n");
@@ -224,7 +226,7 @@ public class NetworkFragment extends SherlockFragment {
 			if (passwordList == null)
 				return true;
 			final StringBuilder message = new StringBuilder(
-					keygen.getSsidName());
+					wifiNetwork.getSsidName());
 			message.append(" KEYS\n");
 			for (String password : passwordList) {
 				message.append(password);
@@ -237,7 +239,7 @@ public class NetworkFragment extends SherlockFragment {
 						(path != null ? path
 								: Environment.getExternalStorageDirectory())
 								+ File.separator
-								+ keygen.getSsidName()
+								+ wifiNetwork.getSsidName()
 								+ ".txt"));
 				out.write(message.toString());
 				out.close();
@@ -249,7 +251,7 @@ public class NetworkFragment extends SherlockFragment {
 			}
 			Toast.makeText(
 					getActivity(),
-					keygen.getSsidName() + ".txt "
+					wifiNetwork.getSsidName() + ".txt "
 							+ getString(R.string.msg_saved_key_file),
 					Toast.LENGTH_SHORT).show();
 			return true;
@@ -283,11 +285,11 @@ public class NetworkFragment extends SherlockFragment {
 		}
 	}
 
-	private class KeygenThread extends AsyncTask<Keygen, Integer, List<String>> {
-		private Keygen keygen;
+	private class KeygenThread extends AsyncTask<Void, Integer, List<String>> {
+		private WiFiNetwork wifiNetwork;
 
-		private KeygenThread(Keygen keygen) {
-			this.keygen = keygen;
+		private KeygenThread(WiFiNetwork wifiNetwork) {
+			this.wifiNetwork = wifiNetwork;
 		}
 
 		@Override
@@ -302,7 +304,7 @@ public class NetworkFragment extends SherlockFragment {
 
 		@Override
 		protected void onPreExecute() {
-			if (keygen.getSupportState() == Keygen.UNSUPPORTED) {
+			if (wifiNetwork.getSupportState() == Keygen.UNSUPPORTED) {
 				root.findViewById(R.id.loading_spinner)
 						.setVisibility(View.GONE);
 				messages.setText(R.string.msg_unspported);
@@ -338,7 +340,8 @@ public class NetworkFragment extends SherlockFragment {
 		}
 
 		public void cancel() {
-			keygen.setStopRequested(true);
+			for (Keygen keygen : wifiNetwork.getKeygens())
+				keygen.setStopRequested(true);
 			cancel(true);
 		}
 
@@ -347,54 +350,62 @@ public class NetworkFragment extends SherlockFragment {
 		private final static int SHOW_MESSAGE_NO_SPINNER = 2;
 
 		@Override
-		protected List<String> doInBackground(Keygen... params) {
-			if (keygen instanceof ThomsonKeygen) {
-				getPrefs();
-				((ThomsonKeygen) keygen).setDictionary(dicFile);
-				((ThomsonKeygen) keygen).setInternetAlgorithm(thomson3g);
-				((ThomsonKeygen) keygen).setWebdic(getActivity().getResources()
-						.openRawResource(R.raw.webdic));
-			}
-			List<String> result = null;
-			try {
-				result = calcKeys();
-			} catch (Exception e) {
-				ACRA.getErrorReporter().putCustomData("ssid",
-						keygen.getSsidName());
-				ACRA.getErrorReporter().putCustomData("mac",
-						keygen.getDisplayMacAddress());
-				ACRA.getErrorReporter().handleException(e);
+		protected List<String> doInBackground(Void... params) {
+			final List<String> result = new ArrayList<String>();
+			for (Keygen keygen : wifiNetwork.getKeygens()) {
 				if (keygen instanceof ThomsonKeygen) {
-					((ThomsonKeygen) keygen).setErrorDict(true);// native should
-																// never crash
+					getPrefs();
+					((ThomsonKeygen) keygen).setDictionary(dicFile);
+					((ThomsonKeygen) keygen).setInternetAlgorithm(thomson3g);
+					((ThomsonKeygen) keygen).setWebdic(getActivity()
+							.getResources().openRawResource(R.raw.webdic));
 				}
-			}
-			if (nativeCalc && (keygen instanceof ThomsonKeygen)) {
-				if (((ThomsonKeygen) keygen).isErrorDict()) {
-					publishProgress(SHOW_MESSAGE_WITH_SPINNER,
-							R.string.msg_startingnativecalc);
-					try {
-						keygen = new NativeThomson(keygen);
-						if (isCancelled())
+				try {
+					final List<String> keygenResult = calcKeys(keygen);
+					if (keygenResult != null)
+						result.addAll(keygenResult);
+				} catch (Exception e) {
+					ACRA.getErrorReporter().putCustomData("ssid",
+							wifiNetwork.getSsidName());
+					ACRA.getErrorReporter().putCustomData("mac",
+							wifiNetwork.getMacAddress());
+					ACRA.getErrorReporter().handleException(e);
+					if (keygen instanceof ThomsonKeygen) {
+						((ThomsonKeygen) keygen).setErrorDict(true);// native
+																	// should
+						// never crash
+					}
+				}
+				if (nativeCalc && (keygen instanceof ThomsonKeygen)) {
+					if (((ThomsonKeygen) keygen).isErrorDict()) {
+						publishProgress(SHOW_MESSAGE_WITH_SPINNER,
+								R.string.msg_startingnativecalc);
+						try {
+							final Keygen nativeKeygen = new NativeThomson(
+									keygen);
+							if (isCancelled())
+								return null;
+							final List<String> keygenResult = calcKeys(nativeKeygen);
+							if (keygenResult != null)
+								result.addAll(keygenResult);
+						} catch (LinkageError e) {
+							publishProgress(SHOW_MESSAGE_NO_SPINNER,
+									R.string.err_misbuilt_apk);
 							return null;
-						result = calcKeys();
-					} catch (LinkageError e) {
-						publishProgress(SHOW_MESSAGE_NO_SPINNER,
-								R.string.err_misbuilt_apk);
-						return null;
-					} catch (Exception e) {
-						ACRA.getErrorReporter().putCustomData("ssid",
-								keygen.getSsidName());
-						ACRA.getErrorReporter().putCustomData("mac",
-								keygen.getDisplayMacAddress());
-						ACRA.getErrorReporter().handleException(e);
+						} catch (Exception e) {
+							ACRA.getErrorReporter().putCustomData("ssid",
+									wifiNetwork.getSsidName());
+							ACRA.getErrorReporter().putCustomData("mac",
+									wifiNetwork.getMacAddress());
+							ACRA.getErrorReporter().handleException(e);
+						}
 					}
 				}
 			}
 			return result;
 		}
 
-		private List<String> calcKeys() {
+		private List<String> calcKeys(Keygen keygen) {
 			long begin = System.currentTimeMillis();
 			final List<String> result = keygen.getKeys();
 			long end = System.currentTimeMillis() - begin;

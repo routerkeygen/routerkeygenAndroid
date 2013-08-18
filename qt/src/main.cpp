@@ -19,6 +19,7 @@
 #include <QtGui/QApplication>
 #include <QTranslator>
 #include <QLocale>
+#include <QVector>
 #include <iostream>
 #include "RouterKeygen.h"
 #include "WirelessMatcher.h"
@@ -54,27 +55,40 @@ int main(int argc, char *
             mac = "";
             std::cout << QObject::tr("Invalid MAC. It will not be used.").toUtf8().data() << std::endl;
         }
-        Keygen * keygen = m.getKeygen(options.value("s", "").toString(),mac );
-        if ( keygen == NULL ){
+        QString ssid = options.value("s", "").toString();
+        QScanResult wifi(ssid,mac);
+        wifi.checkSupport(m);
+        QVector<Keygen *> * keygens = wifi.getKeygens();
+        if (keygens == NULL ){
+            std::cout << QObject::tr("Out of memory.").toUtf8().data() << std::endl;
+            return -100;
+        }
+        if ( keygens->size() == 0){
             std::cout << QObject::tr("Unsupported network. Check the MAC address and the SSID.").toUtf8().data() << std::endl;
+            delete keygens;
             return -2;
         }
         std::cout << QObject::tr("Calculating keys. This can take a while.").toUtf8().data() << std::endl;
-        try{
-            QVector<QString> results = keygen->getResults();
-            if (results.isEmpty()) {
-                std::cout << QObject::tr("No keys were calculated.").toUtf8().data() << std::endl;
-                return -1;
-            }else{
-                std::cout << QObject::tr("Calculated Passwords for %1").arg(keygen->getSsidName()).toUtf8().data() << std::endl;
-                for (int i = 0; i < results.size(); ++i)
-                    std::cout <<  results.at(i).toLatin1().data() << std::endl;
-                return 0;
+        QVector<QString> results;
+        for ( int i = 0; i < keygens->size(); ++i ){
+            try{
+                QVector<QString> r = keygens->at(i)->getResults();
+                foreach (QString s, r) {
+                    results.append(s);
+                }
+            }catch (int e){
+                std::cout << QObject::tr("Errors while calculating.").toUtf8().data() << std::endl;
+                return -3;
             }
-        }catch (int e){
-            std::cout << QObject::tr("Error while calculating.").toUtf8().data() << std::endl;
-            delete keygen;
-            return -3;
+        }
+        if (results.isEmpty()) {
+            std::cout << QObject::tr("No keys were calculated.").toUtf8().data() << std::endl;
+            return -1;
+        }else{
+            std::cout << QObject::tr("Calculated Passwords for %1").arg(wifi.getSsidName()).toUtf8().data() << std::endl;
+            for (int i = 0; i < results.size(); ++i)
+                std::cout <<  results.at(i).toLatin1().data() << std::endl;
+            return 0;
         }
     }
     RouterKeygen w;

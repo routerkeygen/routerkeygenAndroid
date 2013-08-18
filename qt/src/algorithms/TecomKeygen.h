@@ -22,7 +22,7 @@
 
 class TecomKeygen: public Keygen {
 public:
-	TecomKeygen(QString & ssid, QString & mac, int level, QString enc);
+	TecomKeygen(QString & ssid, QString & mac);
 private:
 	QVector<QString> & getKeys();
 };

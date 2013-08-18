@@ -18,9 +18,8 @@
  */
 #include "CabovisaoSagemKeygen.h"
 
-CabovisaoSagemKeygen::CabovisaoSagemKeygen(QString & ssid, QString & mac, int level,
-		QString enc) :
-		Keygen(ssid, mac, level, enc) {
+CabovisaoSagemKeygen::CabovisaoSagemKeygen(QString & ssid, QString & mac) :
+		Keygen(ssid, mac) {
     ssidIdentifier = ssid.right(4).toLower();
 }
 

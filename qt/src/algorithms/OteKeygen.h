@@ -12,7 +12,7 @@
 
 class OteKeygen: public Keygen {
 public:
-	OteKeygen(QString & ssid, QString & mac, int level, QString enc);
+	OteKeygen(QString & ssid, QString & mac);
 
 private:
 	QVector<QString> & getKeys() ;

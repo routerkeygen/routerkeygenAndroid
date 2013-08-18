@@ -4,11 +4,11 @@
     package="org.exobel.routerkeygen"
     android:installLocation="auto"
     android:versionCode="30"
-    android:versionName="3.6.2" >
+    android:versionName="3.7.0" >
 
     <uses-sdk
         android:minSdkVersion="7"
-        android:targetSdkVersion="17" />
+        android:targetSdkVersion="18" />
 
     <supports-screens
         android:anyDensity="true"
@@ -21,6 +21,7 @@
         android:name="android.hardware.touchscreen"
         android:required="false" />
 
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />

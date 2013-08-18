@@ -33,8 +33,7 @@ public class NativeThomson extends Keygen {
 	private final static int MAGIC_NUMBER = 46657;
 
 	public NativeThomson(Keygen keygen) {
-		super(keygen.getSsidName(), keygen.getMacAddress(), keygen.getLevel(),
-				keygen.getEncryption());
+		super(keygen.getSsidName(), keygen.getMacAddress());
 		ssidIdentifier = keygen.getSsidName().substring(
 				keygen.getSsidName().length() - 6);
 		tasks = new ArrayList<ThomsonTask>();

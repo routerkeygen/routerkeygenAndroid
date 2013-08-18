@@ -35,8 +35,8 @@ import android.os.Parcelable;
  */
 public class Speedport500Keygen extends Keygen {
 
-	public Speedport500Keygen(String ssid, String mac, int level, String enc) {
-		super(ssid, mac, level, enc);
+	public Speedport500Keygen(String ssid, String mac) {
+		super(ssid, mac);
 	}
 
 	@Override

@@ -11,9 +11,9 @@ public class OteHuaweiKeygen extends Keygen {
 	public final static int MAGIC_NUMBER = 65535;
 	private final String magicValues;
 
-	public OteHuaweiKeygen(String ssid, String mac, int level, String enc,
+	public OteHuaweiKeygen(String ssid, String mac,
 			String magicValues) {
-		super(ssid, mac, level, enc);
+		super(ssid, mac);
 		this.magicValues = magicValues;
 	}
 

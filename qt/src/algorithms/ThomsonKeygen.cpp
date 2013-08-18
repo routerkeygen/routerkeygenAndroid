@@ -103,9 +103,8 @@ private:
     bool * stopRequested;
 };
 
-ThomsonKeygen::ThomsonKeygen(QString & ssid, QString & mac, int level,
-		QString enc) :
-		Keygen(ssid, mac, level, enc) {
+ThomsonKeygen::ThomsonKeygen(QString & ssid, QString & mac) :
+		Keygen(ssid, mac) {
 }
 
 

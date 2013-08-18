@@ -19,6 +19,8 @@ namespace Ui {
     class RouterKeygen;
 }
 
+class QScanResult;
+
 class RouterKeygen : public QMainWindow
 {
     Q_OBJECT
@@ -53,12 +55,13 @@ private:
     void addNetworkToTray(const QString & ssid, int level, bool locked );
     void setLoadingAnimation(const QString& text);
     void cleanLoadingAnimation();
-    void calc(QString ssid, QString mac );
+    void calc(QScanResult * wifi );
     void enableUI(bool enable);
     Ui::RouterKeygen *ui;
     QVector<QString> listKeys;
+    QVector<std::shared_ptr<QScanResult>> wifiNetworks;
+    QScanResult * manualWifi;
     WirelessMatcher matcher;
-    Keygen * router;
     KeygenThread * calculator;
     QWifiManager * wifiManager;
     QMovie * loadingAnim;

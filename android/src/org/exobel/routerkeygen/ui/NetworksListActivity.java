@@ -26,6 +26,7 @@ import org.exobel.routerkeygen.WifiScanReceiver;
 import org.exobel.routerkeygen.WifiScanReceiver.OnScanListener;
 import org.exobel.routerkeygen.WifiStateReceiver;
 import org.exobel.routerkeygen.algorithms.Keygen;
+import org.exobel.routerkeygen.algorithms.WiFiNetwork;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
@@ -157,7 +158,8 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 		}
 	}
 
-	public void onItemSelected(Keygen keygen) {
+	@Override
+	public void onItemSelected(WiFiNetwork keygen) {
 		if (mTwoPane) {
 			final Bundle arguments = new Bundle();
 			arguments.putParcelable(NetworkFragment.NETWORK_ID, keygen);
@@ -311,6 +313,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 	}
 
 	private Runnable mAutoScanTask = new Runnable() {
+		@Override
 		public void run() {
 			scan();
 			mHandler.postDelayed(mAutoScanTask, autoScanInterval * 1000L);
@@ -336,7 +339,8 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 				getResources().getBoolean(R.bool.analyticsDefault));
 	}
 
-	public void onScanFinished(Keygen[] networks) {
+	@Override
+	public void onScanFinished(WiFiNetwork[] networks) {
 		setRefreshActionItemState(false);
 		if (!welcomeScreenShown) {
 			Toast.makeText(this, R.string.msg_welcome_tip, Toast.LENGTH_LONG)
@@ -345,6 +349,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 		}
 	}
 
+	@Override
 	public void onItemSelected(String mac) {
 		if (mTwoPane) {
 			getSupportFragmentManager()
