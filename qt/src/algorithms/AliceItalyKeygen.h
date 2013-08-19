@@ -19,7 +19,7 @@
 #ifndef ALICEKEYGEN_H
 #define ALICEKEYGEN_H
 #include "Keygen.h"
-class AliceMagicInfo;
+struct AliceMagicInfo;
 class AliceItalyKeygen : public Keygen
 {
     public:

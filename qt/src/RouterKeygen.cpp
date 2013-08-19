@@ -39,10 +39,18 @@
 #include <QTextStream>
 #include <stdlib.h>
 #include "version.h"
+#include "algorithms/Keygen.h"
+#include "WirelessMatcher.h"
+#include "KeygenThread.h"
+#include "dialog/AboutDialog.h"
+#include "dialog/WelcomeDialog.h"
+#include "dialog/UpdateDialog.h"
+#include "wifi/QWifiManager.h"
+#include "wifi/QScanResult.h"
 
 RouterKeygen::RouterKeygen(QWidget *parent) :
-        QMainWindow(parent), ui(new Ui::RouterKeygen), manualWifi(NULL),calculator(NULL),
-        loading(NULL), loadingText(NULL), aboutDialog(NULL), welcomeDialog(NULL) {
+    QMainWindow(parent), ui(new Ui::RouterKeygen), manualWifi(NULL),matcher(new WirelessMatcher()),
+        calculator(NULL), loading(NULL), loadingText(NULL), aboutDialog(NULL), welcomeDialog(NULL) {
     ui->setupUi(this);
 #if !defined(Q_OS_WIN) && !defined(Q_OS_MAC)
     setWindowIcon(QIcon(":/tray_icon.png"));
@@ -106,7 +114,7 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
     bool forceRefresh = settings->value(FORCE_REFRESH, false).toBool();
     wifiManager->setForceScan(forceRefresh);
     ui->forceRefresh->setChecked(forceRefresh);
-    runInBackground = settings->value(RUN_IN_BACKGROUND, true).toBool();
+    runInBackground = settings->value(RUN_IN_BACKGROUND, false).toBool();
     runOnStartUp = settings->value(RUN_ON_START_UP, false).toBool();
     qApp->setQuitOnLastWindowClosed(!runInBackground);
 
@@ -218,6 +226,7 @@ RouterKeygen::~RouterKeygen() {
     trayMenu->clear();
     delete trayMenu;
     delete trayIcon;
+    delete matcher;
     delete aboutDialog;
     delete welcomeDialog;
 }
@@ -258,7 +267,7 @@ void RouterKeygen::tableRowSelected(int row, int) {
     QString selectedMac = ui->networkslist->item(row, 1)->text();
     for ( int i  = 0; i < wifiNetworks.size(); ++i ){
         if ( wifiNetworks.at(i)->getSsidName() == selectedSSID &&  wifiNetworks.at(i)->getMacAddress() == selectedMac){
-            calc(wifiNetworks.at(i).get());
+            calc(wifiNetworks.at(i).data());
             return;
         }
     }
@@ -276,8 +285,8 @@ void RouterKeygen::scanFinished(int code) {
     switch (code) {
     case QWifiManager::SCAN_OK: {
             ui->networkslist->clear();
-            foreach ( std::shared_ptr<QScanResult> scanResult, wifiNetworks )
-                scanResult.reset();
+            foreach ( QSharedPointer<QScanResult> scanResult, wifiNetworks )
+                scanResult.clear();
             wifiNetworks = wifiManager->getScanResults();
             ui->networkslist->setRowCount(wifiNetworks.size());
             trayMenu->clear();
@@ -371,6 +380,7 @@ void RouterKeygen::getResults() {
         calculator = NULL;
         return;
     }
+    ui->passwordsList->clear();
     for (int i = 0; i < listKeys.size(); ++i)
         ui->passwordsList->insertItem(0, listKeys.at(i));
     ui->statusBar->showMessage(tr("Calculation finished"));
@@ -435,14 +445,12 @@ void RouterKeygen::startUpRunToggle(bool state) {
     MacLoginItemsManager loginManager;
     if ( runOnStartUp ){
         if ( !loginManager.containsRunningApplication() ){
-            if (!loginManager.appendRunningApplication())
-                qDebug() << "Error setting startup state";
+           loginManager.appendRunningApplication();
         }
     }
     else{
         if ( loginManager.containsRunningApplication() ){
-            if (!loginManager.removeRunningApplication() )
-                qDebug() << "Error setting startup state";
+            loginManager.removeRunningApplication();
         }
     }
 #else

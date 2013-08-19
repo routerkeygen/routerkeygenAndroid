@@ -20,7 +20,7 @@
 #include "unknown.h"
 #include <stdio.h>
 
-#ifdef Q_OS_LINUX
+#if defined ( Q_OS_LINUX) || defined(Q_OS_MAC)
 #include <openssl/sha.h>
 #else
 #include "sha.h"

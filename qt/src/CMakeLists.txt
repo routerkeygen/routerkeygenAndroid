@@ -113,7 +113,7 @@ IF(APPLE)
 		         mac/macloginitemsmanager.mm)
 	LIST( APPEND ROUTERKEYGEN_HDRS
 		         wifi/QWifiManagerPrivateMac.h
-       			 include/macloginitemsmanager.h )
+       			 mac/macloginitemsmanager.h )
     SET(GUI_TYPE MACOSX_BUNDLE)
     SET(ROUTERKEYGEN_SRCS ${ROUTERKEYGEN_SRCS} ../share/routerkeygen.icns)
     SET_SOURCE_FILES_PROPERTIES(../share/routerkeygen.icns PROPERTIES
@@ -149,16 +149,6 @@ ADD_CUSTOM_COMMAND(
     DEPENDS ${CMAKE_BINARY_DIR}/src/routerkeygen
 )
 
-ADD_DEFINITIONS(-W -Wall -std=c++0x)
+ADD_DEFINITIONS(-W -Wall)
 
-# Creates app bundle in /bin, uncomment #-dmg to create a dmg output 
-IF( APPLE )
-    ADD_CUSTOM_COMMAND(
-        TARGET routerkeygen
-        POST_BUILD
-        COMMAND macdeployqt ${CMAKE_CURRENT_BINARY_DIR}/../bin/routerkeygen.app -no-plugins #-dmg
-        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-        COMMENT "Deploying the Qt Framework onto the bundle"
-    )
-ENDIF( APPLE )
 

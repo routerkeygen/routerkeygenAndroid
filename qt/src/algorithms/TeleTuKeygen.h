@@ -19,7 +19,7 @@
 #ifndef TELETUKEYGEN_H
 #define TELETUKEYGEN_H
 #include "Keygen.h"
-class TeleTuMagicInfo;
+struct TeleTuMagicInfo;
 class TeleTuKeygen: public Keygen {
 public:
     TeleTuKeygen(QString & ssid, QString & mac, TeleTuMagicInfo * magicInfo);

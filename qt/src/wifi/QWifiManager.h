@@ -9,18 +9,18 @@
 #define QWIFIMANAGER_H_
 #include <QObject>
 #include <QVector>
-#include "QScanResult.h"
 #include <QProcess>
-#include <memory>
+#include <QSharedPointer>
 
 class QWifiManagerPrivate;
+class QScanResult;
 class QWifiManager: public QObject {
 Q_OBJECT
 public:
 	QWifiManager() ;
 	virtual ~QWifiManager();
 	void startScan();
-    QVector<std::shared_ptr<QScanResult>> & getScanResults();
+    QVector<QSharedPointer<QScanResult> > & getScanResults();
 	enum SCAN_RESULT_STATE{
 		SCAN_OK = 0,
 		ERROR_NO_NM,

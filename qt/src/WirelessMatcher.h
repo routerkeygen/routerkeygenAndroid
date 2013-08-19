@@ -14,8 +14,8 @@
 
 
 class Keygen;
-class AliceMagicInfo;
-class TeleTuMagicInfo;
+struct AliceMagicInfo;
+struct TeleTuMagicInfo;
 class WirelessMatcher {
 public:
     WirelessMatcher();

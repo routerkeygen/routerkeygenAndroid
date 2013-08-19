@@ -139,7 +139,7 @@ void QWifiManagerPrivateUnix::startScan() {
                 //         << frequency.toString() << "Mhz Strength:"
                 //        << strengh.toUInt();
                 scanResults.append(
-                            std::shared_ptr<QScanResult>( new QScanResult(ssid.toString(), mac.toString(), enc,
+                            QSharedPointer<QScanResult> ( new QScanResult(ssid.toString(), mac.toString(), enc,
                                         frequency.toInt(), strengh.toInt())));
             }
             emit scanFinished(QWifiManager::SCAN_OK);
@@ -220,7 +220,7 @@ void QWifiManagerPrivateUnix::updateAccessPoints() {
        // qDebug() << ssid.toString() << "  " << mac.toString() << " "
        //         << frequency.toString() << "Mhz Strength:" << strengh.toUInt();
         scanResults.append(
-            std::shared_ptr<QScanResult>(new QScanResult(ssid.toString(), mac.toString(), enc,
+            QSharedPointer<QScanResult> (new QScanResult(ssid.toString(), mac.toString(), enc,
                                 frequency.toInt(), strengh.toInt())));
     }
     emit scanFinished(QWifiManager::SCAN_OK);

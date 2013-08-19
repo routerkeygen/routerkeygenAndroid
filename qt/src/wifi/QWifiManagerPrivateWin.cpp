@@ -61,7 +61,7 @@ void QWifiManagerPrivateWin::parseResults() {
 			int pos = lines.at(i).indexOf(":") + 2;
 			level = lines.at(i).mid(pos, lines.at(i).indexOf("%") - pos).toInt(
 					NULL, 10);
-			scanResults.append(new QScanResult(ssid, bssid, enc, 0, level));
+			scanResults.append(QSharedPointer<QScanResult> ( new QScanResult(ssid, bssid, enc, 0, level));
 		} else if (lines.at(i).contains("SSID")) {
 			ssid = lines.at(i).mid(lines.at(i).indexOf(":") + 2).remove("\n");
 			i += 2;

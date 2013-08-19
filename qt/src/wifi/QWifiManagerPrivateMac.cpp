@@ -19,6 +19,7 @@
 #include "QWifiManagerPrivateMac.h"
 #include <QDebug>
 #include "QWifiManager.h"
+#include <QSharedPointer>
 
 QWifiManagerPrivateMac::QWifiManagerPrivateMac() : scan(NULL), timerId(-1){
 }
@@ -68,7 +69,7 @@ void QWifiManagerPrivateMac::parseResults() {
         if ( ssid.length() == 0)
             continue;
         bssid = lines.at(i).mid(ssidLimit,17).toUpper();
-        level = lines.at(i).mid(ssidLimit+18,4).trimmed().toInt();
+        level = lines.at(i).mid(ssidLimit+18,4).trimmed().toInt() + 100;
         if ( lines.at(i).contains("PSK") )
             enc = "PSK";
         else if ( lines.at(i).contains("EAP") )
@@ -77,7 +78,7 @@ void QWifiManagerPrivateMac::parseResults() {
             enc = "WEP";
         else
             enc = "Open";
-        scanResults.append(new QScanResult(ssid, bssid, enc, 0, level));
+        scanResults.append(QSharedPointer<QScanResult>(new QScanResult(ssid, bssid, enc, 0, level)));
     }
     emit scanFinished(QWifiManager::SCAN_OK);
 

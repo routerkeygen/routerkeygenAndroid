@@ -9,7 +9,7 @@
 #define QWIFIMANAGERPRIVATE_H_
 #include <QObject>
 #include <QVector>
-#include <memory>
+#include <QSharedPointer>
 #include "QScanResult.h"
 
 class QWifiManagerPrivate: public QObject {
@@ -18,13 +18,13 @@ public:
 	QWifiManagerPrivate();
 	virtual ~QWifiManagerPrivate();
 	virtual void startScan() = 0;
-    QVector<std::shared_ptr<QScanResult>> & getScanResults();
+    QVector<QSharedPointer<QScanResult> > & getScanResults();
 
 signals:
 	void scanFinished(int);
 
 protected:
-    QVector<std::shared_ptr<QScanResult>> scanResults;
+    QVector<QSharedPointer<QScanResult> > scanResults;
 	void clearPreviousScanResults();
 };
 

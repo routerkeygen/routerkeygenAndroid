@@ -28,7 +28,7 @@ public:
     QVector<Keygen *> * getKeygens() const;
 
 
-    void checkSupport(WirelessMatcher & matcher);
+    void checkSupport(WirelessMatcher * matcher);
 private:
     static QString getScanResultSecurity(const QScanResult * scanResult);
 

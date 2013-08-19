@@ -1,26 +1,26 @@
 #ifndef ROUTERKEYGEN_H
 #define ROUTERKEYGEN_H
-#include "algorithms/Keygen.h"
-#include "WirelessMatcher.h"
 #include <QMainWindow>
 #include <QLabel>
 #include <QSystemTrayIcon>
 #include <QMenu>
-#include "KeygenThread.h"
-#include "dialog/AboutDialog.h"
-#include "dialog/WelcomeDialog.h"
-#include "dialog/UpdateDialog.h"
-#include "wifi/QWifiManager.h"
 #include <QSettings>
 #include <QCompleter>
 #include <QNetworkReply>
+#include <QSharedPointer>
 
 namespace Ui {
     class RouterKeygen;
 }
 
 class QScanResult;
-
+class QWifiManager;
+class AboutDialog;
+class WelcomeDialog;
+class UpdateDialog;
+class Keygen;
+class KeygenThread;
+class WirelessMatcher;
 class RouterKeygen : public QMainWindow
 {
     Q_OBJECT
@@ -59,9 +59,9 @@ private:
     void enableUI(bool enable);
     Ui::RouterKeygen *ui;
     QVector<QString> listKeys;
-    QVector<std::shared_ptr<QScanResult>> wifiNetworks;
+    QVector<QSharedPointer<QScanResult> > wifiNetworks;
     QScanResult * manualWifi;
-    WirelessMatcher matcher;
+    WirelessMatcher * matcher;
     KeygenThread * calculator;
     QWifiManager * wifiManager;
     QMovie * loadingAnim;

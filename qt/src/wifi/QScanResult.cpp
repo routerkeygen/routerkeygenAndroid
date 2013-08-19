@@ -40,8 +40,8 @@ QVector<Keygen *> * QScanResult::getKeygens() const {
     return keygens;
 }
 
-void QScanResult::checkSupport(WirelessMatcher & matcher){
-    keygens = matcher.getKeygens(ssid, bssid);
+void QScanResult::checkSupport(WirelessMatcher * matcher){
+    keygens = matcher->getKeygens(ssid, bssid);
 }
 
 int QScanResult::getSupportState() const{
