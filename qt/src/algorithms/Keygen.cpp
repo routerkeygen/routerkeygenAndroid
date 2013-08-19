@@ -24,6 +24,7 @@ Keygen::Keygen(QString & ssid, QString & mac) :
 }
 
 QVector<QString> & Keygen::getResults() {
+    results.clear();
 	return getKeys();
 }
 

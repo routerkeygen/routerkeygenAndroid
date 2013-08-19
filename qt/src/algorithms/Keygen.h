@@ -38,7 +38,7 @@ public:
 	virtual ~Keygen() {
     }
 
-    int getSupportState() const;
+    virtual int getSupportState() const;
 
 protected:
 	QVector<QString> results;

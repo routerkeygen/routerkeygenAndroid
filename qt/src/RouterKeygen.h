@@ -42,7 +42,9 @@ private slots:
     void refreshNetworks();
     void manualCalculation();
     void scanFinished(int);
-    void tableRowSelected(int, int);
+    void supportedNetworkRowSelected(int, int);
+    void unlikelyNetworkRowSelected(int, int);
+    void unsupportedNetworkRowSelected(int, int);
     void getResults();
     void donatePaypal();
     void feedback();

@@ -59,8 +59,12 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
             SLOT( manualCalculation() ));
     connect(ui->refreshScan, SIGNAL( clicked() ), this,
             SLOT( refreshNetworks() ));
-    connect(ui->networkslist, SIGNAL( cellClicked(int,int) ), this,
-            SLOT( tableRowSelected(int,int) ));
+    connect(ui->supportedNetworkslist, SIGNAL( cellClicked(int,int) ), this,
+            SLOT( supportedNetworkRowSelected(int,int) ));
+    connect(ui->unlikelyNetworkslist, SIGNAL( cellClicked(int,int) ), this,
+            SLOT( unlikelyNetworkRowSelected(int,int) ));
+    connect(ui->unsupportedNetworkslist, SIGNAL( cellClicked(int,int) ), this,
+            SLOT( unsupportedNetworkRowSelected(int,int) ));
 
     connect(ui->actionDonate,SIGNAL(triggered()), this, SLOT(donatePaypal()));
     connect(ui->actionDonate_Google_Play, SIGNAL(triggered()),this, SLOT(donateGooglePlay()) );
@@ -94,8 +98,12 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
     completer->setCaseSensitivity(Qt::CaseInsensitive);
     completer->setCompletionMode(QCompleter::PopupCompletion);
     ui->ssidInput->setCompleter(completer);
-    ui->networkslist->setSelectionBehavior(QAbstractItemView::SelectRows);
-    ui->networkslist->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->supportedNetworkslist->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->supportedNetworkslist->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->unsupportedNetworkslist->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->unsupportedNetworkslist->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->unlikelyNetworkslist->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->unlikelyNetworkslist->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->passwordsList->installEventFilter(this);
 
     // build menu
@@ -107,8 +115,8 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
     trayIcon->show();
     
     //Set widget ration
-    ui->splitter->setStretchFactor(0, 2);
-    ui->splitter->setStretchFactor(1, 1);
+    ui->splitter->setStretchFactor(0, 3);
+    ui->splitter->setStretchFactor(1, 2);
     
     settings = new QSettings("Exobel", "RouterKeygen");
     bool forceRefresh = settings->value(FORCE_REFRESH, false).toBool();
@@ -262,15 +270,33 @@ void RouterKeygen::calc(QScanResult * wifi) {
     this->calculator->start();
 }
 
-void RouterKeygen::tableRowSelected(int row, int) {
-    QString selectedSSID = ui->networkslist->item(row, 0)->text();
-    QString selectedMac = ui->networkslist->item(row, 1)->text();
+void RouterKeygen::supportedNetworkRowSelected(int row, int) {
+    QString selectedSSID = ui->supportedNetworkslist->item(row, 0)->text();
+    QString selectedMac = ui->supportedNetworkslist->item(row, 1)->text();
     for ( int i  = 0; i < wifiNetworks.size(); ++i ){
         if ( wifiNetworks.at(i)->getSsidName() == selectedSSID &&  wifiNetworks.at(i)->getMacAddress() == selectedMac){
             calc(wifiNetworks.at(i).data());
             return;
         }
     }
+}
+
+
+void RouterKeygen::unlikelyNetworkRowSelected(int row, int) {
+    QString selectedSSID = ui->unlikelyNetworkslist->item(row, 0)->text();
+    QString selectedMac = ui->unlikelyNetworkslist->item(row, 1)->text();
+    for ( int i  = 0; i < wifiNetworks.size(); ++i ){
+        if ( wifiNetworks.at(i)->getSsidName() == selectedSSID &&  wifiNetworks.at(i)->getMacAddress() == selectedMac){
+            calc(wifiNetworks.at(i).data());
+            return;
+        }
+    }
+}
+
+void RouterKeygen::unsupportedNetworkRowSelected(int, int) {
+    ui->passwordsList->clear();
+    ui->statusBar->showMessage(
+            tr("Unsupported network."));
 }
 
 void RouterKeygen::refreshNetworks() {
@@ -284,42 +310,74 @@ void RouterKeygen::scanFinished(int code) {
     enableUI(true);
     switch (code) {
     case QWifiManager::SCAN_OK: {
-            ui->networkslist->clear();
             foreach ( QSharedPointer<QScanResult> scanResult, wifiNetworks )
                 scanResult.clear();
+            bool setTabPosition = false;
+            if ( wifiNetworks.size() == 0 )
+                setTabPosition = true;
             wifiNetworks = wifiManager->getScanResults();
-            ui->networkslist->setRowCount(wifiNetworks.size());
+            //Stting the row count to the maximum possible value
+            ui->unsupportedNetworkslist->setRowCount(wifiNetworks.size());
+            ui->supportedNetworkslist->setRowCount(wifiNetworks.size());
+            ui->unlikelyNetworkslist->setRowCount(wifiNetworks.size());
             trayMenu->clear();
             connect(trayMenu->addAction(tr("Vulnerable networks")),
                     SIGNAL(triggered()), this, SLOT(show()));
             bool foundVulnerable = false;
+            int unsupportedPos = 0, supportedPos = 0, unlikelyPos= 0;
             for (int i = 0; i < wifiNetworks.size(); ++i) {
-                ui->networkslist->setItem(i, 0,
-                                          new QTableWidgetItem(wifiNetworks.at(i)->getSsidName()));
-                ui->networkslist->setItem(i, 1,
-                                          new QTableWidgetItem(wifiNetworks.at(i)->getMacAddress()));
-                QString level;
-                level.setNum(wifiNetworks.at(i)->getLevel(), 10);
-                ui->networkslist->setItem(i, 2, new QTableWidgetItem(level));
                 wifiNetworks.at(i)->checkSupport(matcher);
                 if ( wifiNetworks.at(i)->getSupportState() == Keygen::UNSUPPORTED ){
-                    ui->networkslist->setItem(i, 3, new QTableWidgetItem(tr("No")));
+                    ui->unsupportedNetworkslist->setItem(unsupportedPos, 0,
+                                              new QTableWidgetItem(wifiNetworks.at(i)->getSsidName()));
+                    ui->unsupportedNetworkslist->setItem(unsupportedPos, 1,
+                                              new QTableWidgetItem(wifiNetworks.at(i)->getMacAddress()));
+                    QString level;
+                    level.setNum(wifiNetworks.at(i)->getLevel(), 10);
+                    ui->unsupportedNetworkslist->setItem(unsupportedPos, 2, new QTableWidgetItem(level));
+                    ++unsupportedPos;
                 }
                 else{
-                    if ( wifiNetworks.at(i)->getSupportState() == Keygen::SUPPORTED )
-                    ui->networkslist->setItem(i, 3,
-                                              new QTableWidgetItem(tr("Yes")));
-                    else //if ( networks.at(i)->getSupportState() == Keygen::MAYBE )
-                    ui->networkslist->setItem(i, 3,
-                                              new QTableWidgetItem(tr("Maybe")));
+                    if ( wifiNetworks.at(i)->getSupportState() == Keygen::SUPPORTED ){
+                        ui->supportedNetworkslist->setItem(supportedPos, 0,
+                                                   new QTableWidgetItem(wifiNetworks.at(i)->getSsidName()));
+                         ui->supportedNetworkslist->setItem(supportedPos, 1,
+                                                   new QTableWidgetItem(wifiNetworks.at(i)->getMacAddress()));
+                         QString level;
+                         level.setNum(wifiNetworks.at(i)->getLevel(), 10);
+                         ui->supportedNetworkslist->setItem(supportedPos, 2, new QTableWidgetItem(level));
+                         ++supportedPos;
+                    }
+                    else {//if ( networks.at(i)->getSupportState() == Keygen::MAYBE )
+                         ui->unlikelyNetworkslist->setItem(unlikelyPos, 0,
+                                                   new QTableWidgetItem(wifiNetworks.at(i)->getSsidName()));
+                         ui->unlikelyNetworkslist->setItem(unlikelyPos, 1,
+                                                   new QTableWidgetItem(wifiNetworks.at(i)->getMacAddress()));
+                         QString level;
+                         level.setNum(wifiNetworks.at(i)->getLevel(), 10);
+                         ui->unlikelyNetworkslist->setItem(unlikelyPos, 2, new QTableWidgetItem(level));
+                         ++unlikelyPos;
+                    }
                     addNetworkToTray(wifiNetworks.at(i)->getSsidName(), wifiNetworks.at(i)->getLevel(), wifiNetworks.at(i)->isLocked());
                     foundVulnerable = true;
                 }
-
+            }
+            //Stting the row count to the correct value
+            ui->unsupportedNetworkslist->setRowCount(unsupportedPos);
+            ui->supportedNetworkslist->setRowCount(supportedPos);
+            ui->unlikelyNetworkslist->setRowCount(unlikelyPos);
+            if ( setTabPosition ){
+                if ( supportedPos > 0 )
+                    ui->networkSplitter->setCurrentIndex(0);
+                else if ( unlikelyPos > 0 )
+                    ui->networkSplitter->setCurrentIndex(1);
+                else
+                    ui->networkSplitter->setCurrentIndex(2);
             }
             if (!foundVulnerable) {
                 trayMenu->addAction(tr("None were detected"))->setEnabled(false);
             }
+
             trayMenu->addSeparator();
             trayMenu->addAction(startUpAction);
             trayMenu->addAction(runInBackgroundAction);
@@ -327,12 +385,19 @@ void RouterKeygen::scanFinished(int code) {
             QAction * exitAction = trayMenu->addAction(tr("Exit"));
             connect(exitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
             QStringList headers;
-            headers << "SSID" << "BSSID" << tr("Strength") << tr("Supported");
-            ui->networkslist->setHorizontalHeaderLabels(headers);
-            ui->networkslist->resizeColumnsToContents();
-            ui->networkslist->horizontalHeader()->setStretchLastSection(true);
-            ui->networkslist->sortByColumn(2); //Order by Strength
-            ui->networkslist->sortByColumn(3); // and then by support
+            headers << tr("Name") << tr("MAC") << tr("Strength");
+            ui->supportedNetworkslist->setHorizontalHeaderLabels(headers);
+            ui->supportedNetworkslist->resizeColumnsToContents();
+            ui->supportedNetworkslist->horizontalHeader()->setStretchLastSection(true);
+            ui->supportedNetworkslist->sortByColumn(2); //Order by Strength
+            ui->unsupportedNetworkslist->setHorizontalHeaderLabels(headers);
+            ui->unsupportedNetworkslist->resizeColumnsToContents();
+            ui->unsupportedNetworkslist->horizontalHeader()->setStretchLastSection(true);
+            ui->unsupportedNetworkslist->sortByColumn(2); //Order by Strength
+            ui->unlikelyNetworkslist->setHorizontalHeaderLabels(headers);
+            ui->unlikelyNetworkslist->resizeColumnsToContents();
+            ui->unlikelyNetworkslist->horizontalHeader()->setStretchLastSection(true);
+            ui->unlikelyNetworkslist->sortByColumn(2); //Order by Strength
             break;
 	}
     case QWifiManager::ERROR_NO_NM:
@@ -513,7 +578,9 @@ void RouterKeygen::enableUI(bool enable){
     ui->actionCheck_for_Updates->setEnabled(enable);
     ui->refreshScan->setEnabled(enable);
     ui->calculateButton->setEnabled(enable);
-    ui->networkslist->setEnabled(enable);
+    ui->supportedNetworkslist->setEnabled(enable);
+    ui->unlikelyNetworkslist->setEnabled(enable);
+    ui->unsupportedNetworkslist->setEnabled(enable);
 }
 
 const QString RouterKeygen::RUN_ON_START_UP = "RUN_ON_START_UP";

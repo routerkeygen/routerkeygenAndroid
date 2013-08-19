@@ -132,12 +132,11 @@ QVector<Keygen *> * WirelessMatcher::getKeygens(QString ssid, QString mac) {
         keygens->append(new DlinkKeygen(ssid, mac));
 
 
-    if (ssid.count(QRegExp("^(Arcor|EasyBox|Vodafone)(-| )[0-9a-fA-F]{6}$")) == 1
-        && (mac.startsWith("00:12:BF") || mac.startsWith("00:1A:2A")
-            || mac.startsWith("00:1D:19") || mac.startsWith("00:23:08")
-            || mac.startsWith("00:26:4D") || mac.startsWith("50:7E:5D")
-            || mac.startsWith("1C:C6:3C") || mac.startsWith("74:31:70")
-            || mac.startsWith("7C:4F:B5") || mac.startsWith("88:25:2C")))
+    if (mac.startsWith("00:12:BF") || mac.startsWith("00:1A:2A")
+        || mac.startsWith("00:1D:19") || mac.startsWith("00:23:08")
+        || mac.startsWith("00:26:4D") || mac.startsWith("50:7E:5D")
+        || mac.startsWith("1C:C6:3C") || mac.startsWith("74:31:70")
+        || mac.startsWith("7C:4F:B5") || mac.startsWith("88:25:2C"))
         keygens->append(new EasyBoxKeygen(ssid, mac));
 
     if (ssid.count(QRegExp("^[eE]ircom[0-7]{4} ?[0-7]{4}$")) == 1) {
