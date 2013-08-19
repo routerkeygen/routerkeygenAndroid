@@ -33,4 +33,9 @@ chmod +x tools/moc.exe
 
 cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/toolchain-win32.cmake -DQT_MOC_EXECUTABLE=tools/moc.exe -DCMAKE_BUILD_TYPE=Release  -DQT_QMAKE_EXECUTABLE=/usr/bin/qmake-qt4  ..
 make
-make installer
+if [ "$?" = "0" ]; then
+	make installer
+else
+	echo "Error while building" 1>&2
+	exit 1
+fi

@@ -23,7 +23,7 @@
 #if defined ( Q_OS_LINUX) || defined(Q_OS_MAC)
 #include <openssl/sha.h>
 #else
-#include "sha.h"
+#include "sha/sha.h"
 #endif
 #include <cstdlib>
 #include <stdint.h>

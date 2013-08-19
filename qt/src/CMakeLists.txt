@@ -96,14 +96,14 @@ IF(WIN32)
     ENABLE_LANGUAGE(ASM)
 	LIST( APPEND ROUTERKEYGEN_SRCS
 		         wifi/QWifiManagerPrivateWin.cpp 
-		         sha1/sha1dgst.c 
-		         sha1/sha1-586.win32.S )
+		         sha/sha1dgst.c 
+		         sha/sha1-586.win32.S )
 	LIST( APPEND ROUTERKEYGEN_HDRS
 		         wifi/QWifiManagerPrivateWin.h
-                         include/sha_locl.h
-                         include/sha.h
-                         include/opensslconf.h
-                         include/md32_common.h )
+                         sha/sha_locl.h
+                         sha/sha.h
+                         sha/opensslconf.h
+                         sha/md32_common.h )
     SET(GUI_TYPE WIN32)
 ENDIF(WIN32)
 

@@ -1,6 +1,8 @@
 CMakeLists.txt.user
 linux
 win32
+win64
+mac
 lang/*.qrc
 lang/*.qm
 build-test-*
