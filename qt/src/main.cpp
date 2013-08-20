@@ -21,6 +21,7 @@
 #include <QLocale>
 #include <QVector>
 #include <iostream>
+#include <QWindowsXPStyle>
 #include "RouterKeygen.h"
 #include "wifi/QScanResult.h"
 #include "WirelessMatcher.h"
@@ -35,6 +36,9 @@ int main(int argc, char *
     QTranslator translator;
     QApplication::setApplicationName(PROJECT_NAME);
     QApplication::setApplicationVersion(PROJECT_VERSION);
+#ifdef Q_OS_WIN
+    QApplication::setStyle(new QWindowsXPStyle);
+#endif
     QString qmFile = app.applicationName().toLower() + "_" + QLocale::system().name();
     if ( translator.load(qmFile,":/lang") )
         app.installTranslator(&translator);

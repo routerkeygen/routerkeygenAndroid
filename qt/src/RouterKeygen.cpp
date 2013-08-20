@@ -37,6 +37,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QTextStream>
+#include <QHeaderView>
 #include <stdlib.h>
 #include "version.h"
 #include "algorithms/Keygen.h"
@@ -72,12 +73,11 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
     connect(ui->actionAbout, SIGNAL(triggered()), this,SLOT(showAboutDialog()) );
     connect(ui->actionCheck_for_Updates, SIGNAL(triggered()), this,SLOT(checkUpdates()));
 
-    
 #if !defined(Q_OS_WIN) && !defined(Q_OS_MAC)
     connect(ui->forceRefresh, SIGNAL( stateChanged(int) ), this,
             SLOT( forceRefreshToggle(int) ));
 #else
-    ui->forceRefresh->setVisible(false); // it is not needed in Windows
+    ui->forceRefresh->setVisible(false); // it is not needed in Windows or Mac
 #endif
 
     wifiManager = new QWifiManager();
@@ -98,12 +98,6 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
     completer->setCaseSensitivity(Qt::CaseInsensitive);
     completer->setCompletionMode(QCompleter::PopupCompletion);
     ui->ssidInput->setCompleter(completer);
-    ui->supportedNetworkslist->setSelectionBehavior(QAbstractItemView::SelectRows);
-    ui->supportedNetworkslist->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    ui->unsupportedNetworkslist->setSelectionBehavior(QAbstractItemView::SelectRows);
-    ui->unsupportedNetworkslist->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    ui->unlikelyNetworkslist->setSelectionBehavior(QAbstractItemView::SelectRows);
-    ui->unlikelyNetworkslist->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->passwordsList->installEventFilter(this);
 
     // build menu
@@ -325,7 +319,7 @@ void RouterKeygen::scanFinished(int code) {
                     SIGNAL(triggered()), this, SLOT(show()));
             bool foundVulnerable = false;
             int unsupportedPos = 0, supportedPos = 0, unlikelyPos= 0;
-            for (int i = 0; i < wifiNetworks.size(); ++i) {
+           for (int i = 0; i < wifiNetworks.size(); ++i) {
                 wifiNetworks.at(i)->checkSupport(matcher);
                 if ( wifiNetworks.at(i)->getSupportState() == Keygen::UNSUPPORTED ){
                     ui->unsupportedNetworkslist->setItem(unsupportedPos, 0,
@@ -382,21 +376,27 @@ void RouterKeygen::scanFinished(int code) {
             trayMenu->addAction(startUpAction);
             trayMenu->addAction(runInBackgroundAction);
             trayMenu->addSeparator();
-            QAction * exitAction = trayMenu->addAction(tr("Exit"));
+            QAction * exitAction = trayMenu->addAction(tr("Quit"));
             connect(exitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
             QStringList headers;
             headers << tr("Name") << tr("MAC") << tr("Strength");
             ui->supportedNetworkslist->setHorizontalHeaderLabels(headers);
             ui->supportedNetworkslist->resizeColumnsToContents();
-            ui->supportedNetworkslist->horizontalHeader()->setStretchLastSection(true);
+            ui->supportedNetworkslist->horizontalHeader()->setResizeMode(0, QHeaderView::Stretch);
+            ui->supportedNetworkslist->horizontalHeader()->setResizeMode(1, QHeaderView::Stretch);
+            ui->supportedNetworkslist->horizontalHeader()->setResizeMode(2, QHeaderView::ResizeToContents);
             ui->supportedNetworkslist->sortByColumn(2); //Order by Strength
             ui->unsupportedNetworkslist->setHorizontalHeaderLabels(headers);
             ui->unsupportedNetworkslist->resizeColumnsToContents();
-            ui->unsupportedNetworkslist->horizontalHeader()->setStretchLastSection(true);
+            ui->unsupportedNetworkslist->horizontalHeader()->setResizeMode(0, QHeaderView::Stretch);
+            ui->unsupportedNetworkslist->horizontalHeader()->setResizeMode(1, QHeaderView::Stretch);
+            ui->unsupportedNetworkslist->horizontalHeader()->setResizeMode(2, QHeaderView::ResizeToContents);
             ui->unsupportedNetworkslist->sortByColumn(2); //Order by Strength
             ui->unlikelyNetworkslist->setHorizontalHeaderLabels(headers);
             ui->unlikelyNetworkslist->resizeColumnsToContents();
-            ui->unlikelyNetworkslist->horizontalHeader()->setStretchLastSection(true);
+            ui->unlikelyNetworkslist->horizontalHeader()->setResizeMode(0, QHeaderView::Stretch);
+            ui->unlikelyNetworkslist->horizontalHeader()->setResizeMode(1, QHeaderView::Stretch);
+            ui->unlikelyNetworkslist->horizontalHeader()->setResizeMode(2, QHeaderView::ResizeToContents);
             ui->unlikelyNetworkslist->sortByColumn(2); //Order by Strength
             break;
 	}
