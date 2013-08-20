@@ -73,6 +73,10 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
     connect(ui->actionAbout, SIGNAL(triggered()), this,SLOT(showAboutDialog()) );
     connect(ui->actionCheck_for_Updates, SIGNAL(triggered()), this,SLOT(checkUpdates()));
 
+#if defined(Q_OS_MAC)
+
+
+#endif
 #if !defined(Q_OS_WIN) && !defined(Q_OS_MAC)
     connect(ui->forceRefresh, SIGNAL( stateChanged(int) ), this,
             SLOT( forceRefreshToggle(int) ));
