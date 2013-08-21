@@ -86,7 +86,7 @@ ENDIF(UNIX AND NOT APPLE )
 IF( MINGW )
     # resource compilation for MinGW
     ADD_CUSTOM_COMMAND( OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/icon.o
-        COMMAND ${CMAKE_WINDRES} -I${CMAKE_SOURCE_DIR} -i${CMAKE_SOURCE_DIR}/cmake/icon.rc
+        COMMAND ${CMAKE_RC_COMPILER} -I${CMAKE_SOURCE_DIR} -i${CMAKE_SOURCE_DIR}/cmake/icon.rc
         -o ${CMAKE_CURRENT_BINARY_DIR}/icon.o )
     SET(ROUTERKEYGEN_SRCS ${ROUTERKEYGEN_SRCS} ${CMAKE_CURRENT_BINARY_DIR}/icon.o)
     SET(LINK_FLAGS -Wl,-subsystem,windows)
@@ -95,15 +95,9 @@ ENDIF( MINGW )
 IF(WIN32)
     ENABLE_LANGUAGE(ASM)
 	LIST( APPEND ROUTERKEYGEN_SRCS
-		         wifi/QWifiManagerPrivateWin.cpp 
-		         sha/sha1dgst.c 
-		         sha/sha1-586.win32.S )
+		         wifi/QWifiManagerPrivateWin.cpp )
 	LIST( APPEND ROUTERKEYGEN_HDRS
-		         wifi/QWifiManagerPrivateWin.h
-                         sha/sha_locl.h
-                         sha/sha.h
-                         sha/opensslconf.h
-                         sha/md32_common.h )
+		         wifi/QWifiManagerPrivateWin.h )
     SET(GUI_TYPE WIN32)
 ENDIF(WIN32)
 

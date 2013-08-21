@@ -56,9 +56,9 @@ SET(CMAKE_VERBOSE_MAKEFILE OFF)
 SET(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 
 # Path to contribs
-SET(CONTRIBS_PATH ${CMAKE_CURRENT_SOURCE_DIR}/win32)
+SET(MXE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/mxe)
 
-# On Mac OS build a universal 'release' binary
+
 IF(APPLE)
     SET(CMAKE_BUILD_TYPE "Release")
     SET(CMAKE_OSX_ARCHITECTURES x86_64 )
@@ -71,34 +71,15 @@ ENDIF(UNIX)
 
 # Search and include Qt4 parameters
 # Set Qt min required version and add modules here
+FIND_PACKAGE(Qt4 4.6.0 COMPONENTS QtCore QtGui QtNetwork REQUIRED )
 
+#FindQt4.cmake is so brain-dead when Xcompiling
+SET(ROUTERKEYGEN_LIBS  ${QT_QTNETWORK_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY}) # Add here any other QT module or other library
+INCLUDE(${QT_USE_FILE})
+ADD_DEFINITIONS(${QT_DEFINITIONS})
 IF(WIN32)
-    # FindQt4.cmake is so brain-dead when Xcompiling
-    SET(QT_LIBRARY_DIR ${CONTRIBS_PATH}/lib)
-    SET(QT_INCLUDE_DIR ${CONTRIBS_PATH}/include/qt4)
-    ADD_DEFINITIONS( -I${CONTRIBS_PATH}/include/qt4/QtCore)
-    ADD_DEFINITIONS( -I${CONTRIBS_PATH}/include/qt4/QtGui)
-    ADD_DEFINITIONS( -I${CONTRIBS_PATH}/include/qt4/QtNetwork)
-    ADD_DEFINITIONS( -I${CONTRIBS_PATH}/include/qt4/)
-    FIND_PACKAGE(Qt4 4.6.0 COMPONENTS QtCore QtGui QtNetwork REQUIRED )
-ELSE(WIN32)
-    FIND_PACKAGE(Qt4 4.6.0 COMPONENTS QtCore QtGui QtNetwork REQUIRED )
+    SET (ROUTERKEYGEN_LIBS ${ROUTERKEYGEN_LIBS} ssl crypto crypt32 jpeg png tiff mng lzma lcms2 z imm32  winmm  ws2_32 )
 ENDIF(WIN32)
-
-IF (NOT WIN32)
-    #FindQt4.cmake is so brain-dead when Xcompiling
-    SET(ROUTERKEYGEN_LIBS ${QT_QTCORE_LIBRARY}
-                     ${QT_QTGUI_LIBRARY}
-                     ${QT_QTNETWORK_LIBRARY}) # Add here any other QT module or other library
-    INCLUDE(${QT_USE_FILE})
-    ADD_DEFINITIONS(${QT_DEFINITIONS})
-ELSE (NOT WIN32)
-    SET (ROUTERKEYGEN_LIBS -L${CONTRIBS_PATH}/lib # Manually specify paths
-            ${CONTRIBS_PATH}/lib/libQtNetwork.a
-            ${CONTRIBS_PATH}/lib/libQtGui.a
-            ${CONTRIBS_PATH}/lib/libQtCore.a
-            ws2_32 winmm imm32 libeay32 ssleay32 crypt32 gdi32)
-ENDIF(NOT WIN32)
 
 # Layout of CMakeQt installation
 SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
