@@ -56,6 +56,7 @@ SET(ROUTERKEYGEN_RCC
 
 #include paths for routerkeygen
 INCLUDE_DIRECTORIES(
+  ${OPENSSL_INCLUDE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}
   .
 )

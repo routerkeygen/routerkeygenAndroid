@@ -113,8 +113,8 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
     trayIcon->show();
     
     //Set widget ration
-    ui->splitter->setStretchFactor(0, 3);
-    ui->splitter->setStretchFactor(1, 2);
+    ui->splitterVertical->setStretchFactor(0, 3);
+    ui->splitterVertical->setStretchFactor(1, 2);
     
     settings = new QSettings("Exobel", "RouterKeygen");
     bool forceRefresh = settings->value(FORCE_REFRESH, false).toBool();
@@ -203,11 +203,11 @@ void RouterKeygen::onNetworkReply(QNetworkReply* reply){
 }
 
 void RouterKeygen::donateGooglePlay(){
-    QDesktopServices::openUrl(QUrl("https://play.google.com/store/apps/details?id=org.exobel.routerkeygendownloader"));
+    QDesktopServices::openUrl(QUrl("https://play.google.com/store/apps/details?id=org.doublecheck.wifiscanner"));
 }
 
 void  RouterKeygen::donatePaypal(){
-    QDesktopServices::openUrl(QUrl("https://www.paypal.com/pt/cgi-bin/webscr?cmd=_flow&SESSION=i5165NLrZfxUoHKUVuudmu6le5tVb6c0CX_9CP45rrU1Az-XgWgJbZ5bfJW&dispatch=5885d80a13c0db1f8e263663d3faee8d5348ead9d61c709ee8c979deef3ea735"));
+    QDesktopServices::openUrl(QUrl("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=V3FFBTRTTV5DN"));
 }
 
 
@@ -388,19 +388,16 @@ void RouterKeygen::scanFinished(int code) {
             ui->supportedNetworkslist->resizeColumnsToContents();
             ui->supportedNetworkslist->horizontalHeader()->setResizeMode(0, QHeaderView::Stretch);
             ui->supportedNetworkslist->horizontalHeader()->setResizeMode(1, QHeaderView::Stretch);
-            ui->supportedNetworkslist->horizontalHeader()->setResizeMode(2, QHeaderView::ResizeToContents);
             ui->supportedNetworkslist->sortByColumn(2); //Order by Strength
             ui->unsupportedNetworkslist->setHorizontalHeaderLabels(headers);
             ui->unsupportedNetworkslist->resizeColumnsToContents();
             ui->unsupportedNetworkslist->horizontalHeader()->setResizeMode(0, QHeaderView::Stretch);
             ui->unsupportedNetworkslist->horizontalHeader()->setResizeMode(1, QHeaderView::Stretch);
-            ui->unsupportedNetworkslist->horizontalHeader()->setResizeMode(2, QHeaderView::ResizeToContents);
             ui->unsupportedNetworkslist->sortByColumn(2); //Order by Strength
             ui->unlikelyNetworkslist->setHorizontalHeaderLabels(headers);
             ui->unlikelyNetworkslist->resizeColumnsToContents();
             ui->unlikelyNetworkslist->horizontalHeader()->setResizeMode(0, QHeaderView::Stretch);
             ui->unlikelyNetworkslist->horizontalHeader()->setResizeMode(1, QHeaderView::Stretch);
-            ui->unlikelyNetworkslist->horizontalHeader()->setResizeMode(2, QHeaderView::ResizeToContents);
             ui->unlikelyNetworkslist->sortByColumn(2); //Order by Strength
             break;
 	}

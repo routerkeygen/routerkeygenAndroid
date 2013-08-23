@@ -55,12 +55,7 @@ SET(CMAKE_VERBOSE_MAKEFILE OFF)
 # Set path to additional CMake modules
 SET(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 
-# Path to contribs
-SET(MXE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/mxe)
-
-
 IF(APPLE)
-    SET(CMAKE_BUILD_TYPE "Release")
     SET(CMAKE_OSX_ARCHITECTURES x86_64 )
 ENDIF(APPLE)
 
@@ -72,14 +67,15 @@ ENDIF(UNIX)
 # Search and include Qt4 parameters
 # Set Qt min required version and add modules here
 FIND_PACKAGE(Qt4 4.6.0 COMPONENTS QtCore QtGui QtNetwork REQUIRED )
+FIND_PACKAGE(OpenSSL REQUIRED )
 
 #FindQt4.cmake is so brain-dead when Xcompiling
-SET(ROUTERKEYGEN_LIBS  ${QT_QTNETWORK_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY}) # Add here any other QT module or other library
+SET(ROUTERKEYGEN_LIBS  ${QT_QTNETWORK_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY} ${OPENSSL_LIBRARIES} ) # Add here any other QT module or other library
 INCLUDE(${QT_USE_FILE})
 ADD_DEFINITIONS(${QT_DEFINITIONS})
-IF(WIN32)
-    SET (ROUTERKEYGEN_LIBS ${ROUTERKEYGEN_LIBS} ssl crypto crypt32 jpeg png tiff mng lzma lcms2 z imm32  winmm  ws2_32 )
-ENDIF(WIN32)
+IF(WIN32 AND STATIC)
+    SET (ROUTERKEYGEN_LIBS ${ROUTERKEYGEN_LIBS} crypt32 jpeg png tiff mng lzma lcms2 z imm32  winmm  ws2_32 )
+ENDIF(WIN32 AND STATIC)
 
 # Layout of CMakeQt installation
 SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
@@ -195,3 +191,9 @@ ENDIF(DPKG_FOUND AND NOT WIN32)
 
 SET(CPACK_PACKAGE_EXECUTABLES "routerkeygen" "ROUTERKEYGEN")
 INCLUDE(CPack)
+
+#For debug purposes, print all variables
+#get_cmake_property(_variableNames VARIABLES)
+#foreach (_variableName ${_variableNames})
+#    message(STATUS "${_variableName}=${${_variableName}}")
+#endforeach()

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>780</width>
-    <height>595</height>
+    <width>1017</width>
+    <height>594</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -35,11 +35,11 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout_6">
     <item row="0" column="0">
-     <widget class="QSplitter" name="splitter_2">
+     <widget class="QSplitter" name="splitterVertical">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
-      <widget class="QSplitter" name="splitter">
+      <widget class="QSplitter" name="splitterHorizontal">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
        </property>
@@ -55,7 +55,7 @@
           <widget class="QTabWidget" name="networkSplitter">
            <property name="font">
             <font>
-             <pointsize>11</pointsize>
+             <pointsize>10</pointsize>
             </font>
            </property>
            <property name="tabPosition">
@@ -75,16 +75,7 @@
              <string>Supported</string>
             </attribute>
             <layout class="QGridLayout" name="gridLayout_7">
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>0</number>
-             </property>
-             <property name="bottomMargin">
+             <property name="margin">
               <number>0</number>
              </property>
              <item row="0" column="0">
@@ -164,16 +155,7 @@
              <string>Unlikely Supported</string>
             </attribute>
             <layout class="QGridLayout" name="gridLayout_4">
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>0</number>
-             </property>
-             <property name="bottomMargin">
+             <property name="margin">
               <number>0</number>
              </property>
              <item row="0" column="0">
@@ -253,16 +235,7 @@
              <string>Unsupported</string>
             </attribute>
             <layout class="QGridLayout" name="gridLayout_3">
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>0</number>
-             </property>
-             <property name="bottomMargin">
+             <property name="margin">
               <number>0</number>
              </property>
              <item row="0" column="0">
@@ -473,7 +446,7 @@
          <item row="5" column="0">
           <widget class="QLineEdit" name="macInput">
            <property name="inputMask">
-            <string>HH:HH:HH:HH:HH:HH</string>
+            <string>HH:HH:HH:HH:HH:HH; </string>
            </property>
           </widget>
          </item>
@@ -547,8 +520,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>780</width>
-     <height>25</height>
+     <width>1017</width>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuAbout">

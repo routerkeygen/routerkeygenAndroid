@@ -6,7 +6,7 @@
 #include <QCoreApplication>
 #include "qcmdlineargument.h"
 
-class Q_CORE_EXPORT QCmdLineParser
+class QCmdLineParser
 {
     Q_DECLARE_TR_FUNCTIONS(QCmdLineParser);
 public:
