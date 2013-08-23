@@ -7,7 +7,7 @@ BUILD_FOLDER=$ROOT_FOLDER/win
 mkdir -p $BUILD_FOLDER
 cd $BUILD_FOLDER
 
-cmake -DCMAKE_TOOLCHAIN_FILE=$MXE_ROOT/usr/i686-pc-mingw32/share/cmake/mxe-conf.cmake  -DQT_LUPDATE_EXECUTABLE=lupdate -DQT_LRELEASE_EXECUTABLE=lrelease $SRC_FOLDER
+cmake -DCMAKE_TOOLCHAIN_FILE=$MXE_ROOT/usr/i686-pc-mingw32/share/cmake/mxe-conf.cmake  -DQT_LUPDATE_EXECUTABLE=lupdate -DQT_LRELEASE_EXECUTABLE=lrelease  -DOPENSSL_ROOT_DIR=$MXE_ROOT/usr/i686-pc-mingw32 -DCMAKE_CROSS_COMPILING=TRUE $SRC_FOLDER
 if [ "$?" = "0" ]; then	
 	make
 else

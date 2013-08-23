@@ -10,34 +10,29 @@ file(GLOB ROUTERKEYGEN_SRCS
     "config/*.cpp"
     "qcmdlineparser/*.cpp"
     "dialog/*.cpp"
+    "sha/*.cpp"
+    "*.cpp"
 )
 
 LIST( APPEND ROUTERKEYGEN_SRCS
-    main.cpp
-    RouterKeygen.cpp
     wifi/QScanResult.cpp
     wifi/QWifiManagerPrivate.cpp
     wifi/QWifiManager.cpp
-    KeygenThread.cpp
-    WirelessMatcher.cpp
-    sha/sha256.cpp
 )
-
 
 file(GLOB ROUTERKEYGEN_HDRS
     "algorithms/*.h"
     "config/*.h"
     "dialog/*.h"
     "qcmdlineparser/*.h"
+    "sha/*.h"
+    "*.h"
 )
+
 LIST( APPEND ROUTERKEYGEN_HDRS
-    RouterKeygen.h
     wifi/QWifiManagerPrivate.h
     wifi/QWifiManager.h
     wifi/QScanResult.h
-    sha/sha256.h
-    KeygenThread.h
-    WirelessMatcher.h
 )
 
 set(HEADERS_HAVING_Q_OBJECT)
@@ -72,14 +67,12 @@ SET(ROUTERKEYGEN_UIS
     forms/UpdateDialog.ui
 )
 
-
-
 IF (UNIX AND NOT APPLE )
 	LIST( APPEND ROUTERKEYGEN_SRCS
 		         wifi/QWifiManagerPrivateUnix.cpp )
 	LIST( APPEND ROUTERKEYGEN_HDRS
 		         wifi/QWifiManagerPrivateUnix.h )
-    SET(ROUTERKEYGEN_LIBS ${ROUTERKEYGEN_LIBS} ${QT_QTDBUS_LIBRARY} -lcrypto)
+    SET(ROUTERKEYGEN_LIBS ${ROUTERKEYGEN_LIBS} ${QT_QTDBUS_LIBRARY})
     INCLUDE_DIRECTORIES(/usr/include/NetworkManager)
 ENDIF(UNIX AND NOT APPLE )
 
@@ -116,13 +109,12 @@ IF(APPLE)
     SET(MACOSX_BUNDLE_ICON_FILE routerkeygen.icns)
     FIND_LIBRARY(COCOA_LIBRARY Cocoa)
     FIND_PATH(COCOA_INCLUDE_DIR Cocoa/Cocoa.h)
-    SET(ROUTERKEYGEN_LIBS ${ROUTERKEYGEN_LIBS} ${COCOA_LIBRARY} -lcrypto)
+    SET(ROUTERKEYGEN_LIBS ${ROUTERKEYGEN_LIBS} ${COCOA_LIBRARY})
 ENDIF(APPLE)
 
 QT4_WRAP_UI(ROUTERKEYGEN_UIS_H ${ROUTERKEYGEN_UIS})
 QT4_ADD_RESOURCES(ROUTERKEYGEN_RCC_SRCS ${ROUTERKEYGEN_RCC})
 QT4_WRAP_CPP(ROUTERKEYGEN_MOC_SRCS ${ROUTERKEYGEN_HDRS})
-
 
 ADD_EXECUTABLE(routerkeygen ${GUI_TYPE} ${ROUTERKEYGEN_SRCS} ${ROUTERKEYGEN_HDRS} ${ROUTERKEYGEN_MOC_SRCS} ${ROUTERKEYGEN_UIS_H} ${ROUTERKEYGEN_RCC_SRCS} )
 
@@ -133,7 +125,6 @@ ADD_DEPENDENCIES(routerkeygen translations)
 TARGET_LINK_LIBRARIES(routerkeygen ${ROUTERKEYGEN_LIBS})
 
 # Now we are done.
-
 INSTALL(TARGETS routerkeygen
         BUNDLE  DESTINATION ${ROUTERKEYGEN_BIN_DIR}
         RUNTIME DESTINATION ${ROUTERKEYGEN_BIN_DIR})
@@ -145,5 +136,4 @@ ADD_CUSTOM_COMMAND(
 )
 
 ADD_DEFINITIONS(-W -Wall)
-
 
