@@ -114,7 +114,7 @@
     <string name="pref_hintoff_analytics">El uso y las fallas no son rastreadas.</string>
 
     <!-- ERROR MESSAGE STRINGS -->
-    <string name="msg_unspported">This network is not supported!</string>  <!-- UNTRANSLATED -->
+    <string name="msg_unspported">Esta red no esta soportada!</string>
     <string name="msg_nowifidetected">¡No se detectan redes WiFi!</string>
     <string name="msg_nowifi">¡WiFi no activado! Activa WiFi, por favor.</string>
     <string name="msg_scanfailed">¡El escaneo Falló!</string>
