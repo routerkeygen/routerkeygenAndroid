@@ -29,27 +29,42 @@ import android.os.Parcelable;
 
 /**
  * The link for this algorithm is:
- * http://sviehb.wordpress.com/2011/12/04/prg-eav4202n-default-wpa-key-algorithm/
+ * http://sviehb.wordpress.com/2011/12/04/prg-eav4202n
+ * -default-wpa-key-algorithm/
+ * 
  * @author Rui Araújo
- *
+ * 
  */
-public class PBSKeygen extends Keygen{
-	
+public class PBSKeygen extends Keygen {
+
 	transient private MessageDigest md;
 
-	public PBSKeygen(String ssid, String mac ) {
+	public PBSKeygen(String ssid, String mac) {
 		super(ssid, mac);
 	}
 
-	final static byte[] saltSHA256 = 
-		{ 0x54, 0x45, 0x4F, 0x74, 0x65, 0x6C, (byte) 0xB6,
-		(byte) 0xD9, (byte) 0x86, (byte) 0x96, (byte) 0x8D,
-		0x34, 0x45, (byte) 0xD2, 0x3B, 0x15 ,
-        (byte) 0xCA, (byte) 0xAF, 0x12, (byte) 0x84, 0x02,
-        (byte) 0xAC, 0x56, 0x00, 0x05, (byte) 0xCE, 0x20, 0x75,
-        (byte) 0x94, 0x3F, (byte) 0xDC, (byte) 0xE8 };
-	
+	@Override
+	public int getSupportState() {
+		final String mac = getMacAddress();
+		final String ssid = getSsidName();
+		if (mac.length() != 12)
+			return UNSUPPORTED;
+		final String ssidEnd = Integer.toHexString(Integer.parseInt(mac
+				.substring(6),16) - 5);
+		if (ssid.substring(4).equalsIgnoreCase(ssidEnd))
+			return SUPPORTED;
+		return UNLIKELY_SUPPORTED;
+	}
+
+	final static byte[] saltSHA256 = { 0x54, 0x45, 0x4F, 0x74, 0x65, 0x6C,
+			(byte) 0xB6, (byte) 0xD9, (byte) 0x86, (byte) 0x96, (byte) 0x8D,
+			0x34, 0x45, (byte) 0xD2, 0x3B, 0x15, (byte) 0xCA, (byte) 0xAF,
+			0x12, (byte) 0x84, 0x02, (byte) 0xAC, 0x56, 0x00, 0x05,
+			(byte) 0xCE, 0x20, 0x75, (byte) 0x94, 0x3F, (byte) 0xDC,
+			(byte) 0xE8 };
+
 	final static String lookup = "0123456789ABCDEFGHIKJLMNOPQRSTUVWXYZabcdefghikjlmnopqrstuvwxyz";
+
 	@Override
 	public List<String> getKeys() {
 		try {
@@ -58,43 +73,43 @@ public class PBSKeygen extends Keygen{
 			setErrorCode(R.string.msg_nosha256);
 			return null;
 		}
-		final String mac =  getMacAddress();
-		if ( mac.length() != 12 ) 
-		{
+		final String mac = getMacAddress();
+		if (mac.length() != 12) {
 			setErrorCode(R.string.msg_errpirelli);
 			return null;
 		}
-		
-		byte [] macHex = new byte[6];
+
+		byte[] macHex = new byte[6];
 		for (int i = 0; i < 12; i += 2)
-			macHex[i / 2] = (byte) ((Character.digit(mac.charAt(i), 16) << 4)
-					+ Character.digit(mac.charAt(i + 1), 16));
+			macHex[i / 2] = (byte) ((Character.digit(mac.charAt(i), 16) << 4) + Character
+					.digit(mac.charAt(i + 1), 16));
+		macHex[5] -= 5;
 
 		md.reset();
 		md.update(saltSHA256);
 		md.update(macHex);
-		byte [] hash = md.digest();
+		byte[] hash = md.digest();
 		StringBuilder key = new StringBuilder();
-		for ( int i = 0 ; i < 13 ; ++i ){
-			key.append(lookup.charAt((hash[i]>=0?hash[i]:256+hash[i])%lookup.length()));
+		for (int i = 0; i < 13; ++i) {
+			key.append(lookup.charAt((hash[i] >= 0 ? hash[i] : 256 + hash[i])
+					% lookup.length()));
 		}
 		addPassword(key.toString());
-		return  getResults();
+		return getResults();
 	}
-	
 
 	private PBSKeygen(Parcel in) {
 		super(in);
 	}
-	
-    public static final Parcelable.Creator<PBSKeygen> CREATOR = new Parcelable.Creator<PBSKeygen>() {
-        public PBSKeygen createFromParcel(Parcel in) {
-            return new PBSKeygen(in);
-        }
 
-        public PBSKeygen[] newArray(int size) {
-            return new PBSKeygen[size];
-        }
-    };
+	public static final Parcelable.Creator<PBSKeygen> CREATOR = new Parcelable.Creator<PBSKeygen>() {
+		public PBSKeygen createFromParcel(Parcel in) {
+			return new PBSKeygen(in);
+		}
+
+		public PBSKeygen[] newArray(int size) {
+			return new PBSKeygen[size];
+		}
+	};
 
 }

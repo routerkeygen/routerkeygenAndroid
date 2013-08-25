@@ -221,12 +221,13 @@ public class KeygenTest {
 	@Test
 	public void testPBS() throws FileNotFoundException {
 		final WiFiNetwork wifi = new WiFiNetwork("PBS-11222E",
-				"38:22:9D:11:22:2E", 0, "", new ZipInputStream(
+				"38:22:9D:11:22:33", 0, "", new ZipInputStream(
 						new FileInputStream("../res/raw/magic_info.zip")));
 		assertEquals("There should be only 1 keygen", 1, wifi.getKeygens()
 				.size());
 		final Keygen keygen = wifi.getKeygens().get(0);
 		assertTrue("Keygen should be PBS", keygen instanceof PBSKeygen);
+		assertEquals("Keygen should be supported", Keygen.SUPPORTED, keygen.getSupportState());
 		List<String> results = keygen.getKeys();
 		assertEquals("Errors should not happen", 0, keygen.getErrorCode());
 		assertEquals("There should be only one result", 1, results.size());
