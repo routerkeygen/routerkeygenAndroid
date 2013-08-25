@@ -43,7 +43,9 @@ ENDMACRO(QT4_ADD_TRANSLATIONS)
 OPTION(LANGUAGES "Using translations")
 SET(ALL_LANGUAGES
         en
-        pt # add here more lang tokens like jp, ro etc. as per ts files
+        pt
+	nl
+	es # add here more lang tokens like jp, ro etc. as per ts files
    )
 
 ## Check if user has provided specific LANGS option
