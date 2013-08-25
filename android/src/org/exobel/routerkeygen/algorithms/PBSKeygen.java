@@ -46,13 +46,14 @@ public class PBSKeygen extends Keygen {
 	@Override
 	public int getSupportState() {
 		final String mac = getMacAddress();
-		final String ssid = getSsidName();
 		if (mac.length() != 12)
 			return UNSUPPORTED;
-		final String ssidEnd = Integer.toHexString(Integer.parseInt(mac
+		//Support seems to be very rare if it exist at all.
+		/*final String ssidEnd = Integer.toHexString(Integer.parseInt(mac
 				.substring(6),16) - 5);
+		final String ssid = getSsidName();
 		if (ssid.substring(4).equalsIgnoreCase(ssidEnd))
-			return SUPPORTED;
+			return SUPPORTED;*/
 		return UNLIKELY_SUPPORTED;
 	}
 
