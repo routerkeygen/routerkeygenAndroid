@@ -247,7 +247,7 @@ void RouterKeygen::manualCalculation() {
     if ( manualWifi != NULL )
         delete manualWifi;
     manualWifi = new QScanResult(ui->ssidInput->text().trimmed(), mac.toUpper());
-    manualWifi->checkSupport(matcher);
+    manualWifi->checkSupport(*matcher);
     calc(manualWifi);
 }
 
@@ -324,7 +324,7 @@ void RouterKeygen::scanFinished(int code) {
             bool foundVulnerable = false;
             int unsupportedPos = 0, supportedPos = 0, unlikelyPos= 0;
            for (int i = 0; i < wifiNetworks.size(); ++i) {
-                wifiNetworks.at(i)->checkSupport(matcher);
+                wifiNetworks.at(i)->checkSupport(*matcher);
                 if ( wifiNetworks.at(i)->getSupportState() == Keygen::UNSUPPORTED ){
                     ui->unsupportedNetworkslist->setItem(unsupportedPos, 0,
                                               new QTableWidgetItem(wifiNetworks.at(i)->getSsidName()));

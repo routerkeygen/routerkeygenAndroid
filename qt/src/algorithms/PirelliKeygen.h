@@ -23,7 +23,7 @@
 
 class PirelliKeygen: public Keygen {
 public:
-	PirelliKeygen(QString & ssid, QString & mac);
+	PirelliKeygen(QString ssid, QString mac);
 	~PirelliKeygen();
 private:
 	QVector<QString> & getKeys();

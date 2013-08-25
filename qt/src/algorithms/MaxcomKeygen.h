@@ -10,7 +10,7 @@
 #include "Keygen.h"
 class MaxcomKeygen : public Keygen{
 public:
-    MaxcomKeygen(QString & ssid, QString & mac);
+    MaxcomKeygen(QString ssid, QString mac);
 
 private:
 	QVector<QString> & getKeys() ;

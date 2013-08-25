@@ -7,7 +7,7 @@
 
 #include "InterCableKeygen.h"
 
-InterCableKeygen::InterCableKeygen(QString & ssid, QString & mac) :
+InterCableKeygen::InterCableKeygen(QString ssid, QString mac) :
 		Keygen(ssid, mac) {
 }
 

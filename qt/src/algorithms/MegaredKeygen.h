@@ -10,7 +10,7 @@
 #include "Keygen.h"
 class MegaredKeygen : public Keygen{
 public:
-	MegaredKeygen(QString & ssid, QString & mac);
+	MegaredKeygen(QString ssid, QString mac);
 
 private:
 	QVector<QString> & getKeys() ;

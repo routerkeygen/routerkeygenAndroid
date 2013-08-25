@@ -12,7 +12,7 @@
 
 class OteBAUDKeygen: public Keygen {
 public:
-    OteBAUDKeygen(QString & ssid, QString & mac);
+    OteBAUDKeygen(QString ssid, QString mac);
 
 private:
 	QVector<QString> & getKeys() ;

@@ -18,7 +18,7 @@
  */
 #include "DiscusKeygen.h"
 
-DiscusKeygen::DiscusKeygen(QString & ssid, QString & mac) :
+DiscusKeygen::DiscusKeygen(QString ssid, QString mac) :
 		Keygen(ssid, mac) {
 }
 

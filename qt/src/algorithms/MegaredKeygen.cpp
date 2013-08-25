@@ -7,7 +7,7 @@
 
 #include "MegaredKeygen.h"
 
-MegaredKeygen::MegaredKeygen(QString & ssid, QString & mac) :
+MegaredKeygen::MegaredKeygen(QString ssid, QString mac) :
 		Keygen(ssid, mac) {
 }
 

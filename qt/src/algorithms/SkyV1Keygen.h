@@ -23,7 +23,7 @@
 class SkyV1Keygen : public Keygen
 {
     public:
-        SkyV1Keygen(QString & ssid, QString & mac);
+        SkyV1Keygen(QString ssid, QString mac);
     private:
         QVector<QString> & getKeys();
         const static QString ALPHABET;

@@ -7,7 +7,7 @@
 
 #include "WifimediaRKeygen.h"
 
-WifimediaRKeygen::WifimediaRKeygen(QString & ssid, QString & mac) :
+WifimediaRKeygen::WifimediaRKeygen(QString ssid, QString mac) :
 		Keygen(ssid, mac) {
 }
 

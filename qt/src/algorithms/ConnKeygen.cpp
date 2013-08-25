@@ -7,7 +7,7 @@
 
 #include "ConnKeygen.h"
 
-ConnKeygen::ConnKeygen(QString & ssid, QString & mac) :
+ConnKeygen::ConnKeygen(QString ssid, QString mac) :
 		Keygen(ssid, mac) {
 }
 

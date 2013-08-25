@@ -23,7 +23,7 @@ struct AliceMagicInfo;
 class AliceItalyKeygen : public Keygen
 {
     public:
-        AliceItalyKeygen(QString & ssid, QString & mac,  QVector<AliceMagicInfo *> * supported);
+        AliceItalyKeygen(QString ssid, QString mac,  QVector<AliceMagicInfo *> * supported);
     private:
     	QVector<QString> & getKeys();
         QVector<AliceMagicInfo *> * supportedAlice;

@@ -23,7 +23,7 @@
 
 class CabovisaoSagemKeygen: public Keygen {
 public:
-	CabovisaoSagemKeygen(QString & ssid, QString & mac);
+	CabovisaoSagemKeygen(QString ssid, QString mac);
 	~CabovisaoSagemKeygen();
 private:
 	QVector<QString> & getKeys();

@@ -6,7 +6,6 @@ TEMPLATE = app
 SOURCES += \
     ../src/algorithms/*.cpp \
     ../src/WirelessMatcher.cpp \
-    ../src/division.c \
     ../src/sha/sha256.cpp\
     ../src/config/*.cpp \
     ../src/wifi/QScanResult.cpp \

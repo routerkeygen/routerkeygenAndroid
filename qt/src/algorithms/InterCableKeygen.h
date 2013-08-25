@@ -12,7 +12,7 @@
 
 class InterCableKeygen: public Keygen {
 public:
-    InterCableKeygen(QString & ssid, QString & mac);
+    InterCableKeygen(QString ssid, QString mac);
 
 private:
 	QVector<QString> & getKeys() ;

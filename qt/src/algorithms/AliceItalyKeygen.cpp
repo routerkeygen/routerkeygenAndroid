@@ -19,7 +19,7 @@
 #include "AliceItalyKeygen.h"
 #include "config/AliceMagicInfo.h"
 #include "sha/sha256.h"
-AliceItalyKeygen::AliceItalyKeygen(QString & ssid, QString & mac,
+AliceItalyKeygen::AliceItalyKeygen(QString ssid, QString mac,
 		QVector<AliceMagicInfo *> * supported) :
 		Keygen(ssid, mac), supportedAlice(supported) {
 

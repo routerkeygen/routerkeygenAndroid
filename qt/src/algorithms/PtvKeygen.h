@@ -10,7 +10,7 @@
 #include "Keygen.h"
 class PtvKeygen : public Keygen{
 public:
-    PtvKeygen(QString & ssid, QString & mac);
+    PtvKeygen(QString ssid, QString mac);
 
 private:
 	QVector<QString> & getKeys() ;

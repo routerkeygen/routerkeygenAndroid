@@ -19,7 +19,7 @@
 #include "OnoKeygen.h"
 #include <QCryptographicHash>
 
-OnoKeygen::OnoKeygen(QString & ssid, QString & mac) :
+OnoKeygen::OnoKeygen(QString ssid, QString mac) :
         Keygen(ssid, mac) {
 }
 

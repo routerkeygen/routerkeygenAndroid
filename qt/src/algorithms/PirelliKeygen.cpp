@@ -18,7 +18,7 @@
  */
 #include "PirelliKeygen.h"
 
-PirelliKeygen::PirelliKeygen(QString & ssid, QString & mac) :
+PirelliKeygen::PirelliKeygen(QString ssid, QString mac) :
 		Keygen(ssid, mac) {
 	this->hash = new QCryptographicHash(QCryptographicHash::Md5);
 	ssidIdentifier = ssid.right(12);

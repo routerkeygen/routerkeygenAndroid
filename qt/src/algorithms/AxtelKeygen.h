@@ -12,7 +12,7 @@
 
 class AxtelKeygen: public Keygen {
 public:
-    AxtelKeygen(QString & ssid, QString & mac);
+    AxtelKeygen(QString ssid, QString mac);
 
 private:
 	QVector<QString> & getKeys() ;

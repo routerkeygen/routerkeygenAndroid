@@ -18,7 +18,7 @@
  */
 #include "DlinkKeygen.h"
 
-DlinkKeygen::DlinkKeygen(QString & ssid, QString & mac) :
+DlinkKeygen::DlinkKeygen(QString ssid, QString mac) :
 		Keygen(ssid, mac) {}
 
 char DlinkKeygen::hash[] = { 'X', 'r', 'q', 'a', 'H', 'N', 'p', 'd', 'S', 'Y',

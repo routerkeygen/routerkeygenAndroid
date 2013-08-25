@@ -19,7 +19,7 @@
 #include "SkyV1Keygen.h"
 #include <QCryptographicHash>
 
-SkyV1Keygen::SkyV1Keygen(QString & ssid, QString & mac) :
+SkyV1Keygen::SkyV1Keygen(QString ssid, QString mac) :
 		Keygen(ssid, mac) {
 }
 const QString SkyV1Keygen::ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";

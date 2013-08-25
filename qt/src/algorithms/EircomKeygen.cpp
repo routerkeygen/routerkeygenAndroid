@@ -19,7 +19,7 @@
 #include "EircomKeygen.h"
 #include <QByteArray>
 #include <QCryptographicHash>
-EircomKeygen::EircomKeygen(QString & ssid, QString & mac) :
+EircomKeygen::EircomKeygen(QString ssid, QString mac) :
 		Keygen(ssid, mac) {
 }
 

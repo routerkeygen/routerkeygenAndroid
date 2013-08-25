@@ -19,7 +19,7 @@
 #include "HuaweiKeygen.h"
 #include <QRegExp>
 
-HuaweiKeygen::HuaweiKeygen(QString & ssid, QString & mac) :
+HuaweiKeygen::HuaweiKeygen(QString ssid, QString mac) :
 		Keygen(ssid, mac){}
 
 

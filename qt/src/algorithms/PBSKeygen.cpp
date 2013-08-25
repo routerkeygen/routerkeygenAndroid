@@ -8,7 +8,7 @@
 #include "PBSKeygen.h"
 #include "sha/sha256.h"
 
-PBSKeygen::PBSKeygen(QString & ssid, QString & mac) :
+PBSKeygen::PBSKeygen(QString ssid, QString mac) :
 		Keygen(ssid, mac) {
 }
 
@@ -34,6 +34,7 @@ QVector<QString> & PBSKeygen::getKeys() {
 				+ macS.mid(i + 1, 1).toInt(&status, 16);
 	if (!status)
 		throw ERROR;
+    mac[5] -= 5;
 	sha.reset();
 	sha.addData(saltSHA256, (unsigned long)sizeof(saltSHA256));
 	sha.addData(mac, (unsigned long)sizeof(mac));

@@ -1,6 +1,6 @@
 #include "Speedport500Keygen.h"
 
-Speedport500Keygen::Speedport500Keygen(QString & ssid, QString & mac) :
+Speedport500Keygen::Speedport500Keygen(QString ssid, QString mac) :
         Keygen(ssid, mac) {}
 
 QVector<QString> & Speedport500Keygen::getKeys() {

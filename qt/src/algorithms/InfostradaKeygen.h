@@ -23,7 +23,7 @@
 class InfostradaKeygen : public Keygen
 {
     public:
-        InfostradaKeygen(QString & ssid, QString & mac);
+        InfostradaKeygen(QString ssid, QString mac);
     private:
     	QVector<QString> & getKeys();
 };

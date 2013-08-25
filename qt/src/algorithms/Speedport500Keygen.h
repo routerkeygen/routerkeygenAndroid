@@ -6,7 +6,7 @@ class Speedport500Keygen :public Keygen
 
 {
 public:
-    Speedport500Keygen(QString & ssid, QString & mac);
+    Speedport500Keygen(QString ssid, QString mac);
 private:
     QVector<QString> & getKeys();
 };

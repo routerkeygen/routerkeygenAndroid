@@ -10,7 +10,7 @@
 #include "Keygen.h"
 class WifimediaRKeygen : public Keygen{
 public:
-    WifimediaRKeygen(QString & ssid, QString & mac);
+    WifimediaRKeygen(QString ssid, QString mac);
 
 private:
 	QVector<QString> & getKeys() ;

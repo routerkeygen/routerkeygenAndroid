@@ -19,7 +19,7 @@
 #include "OteHuaweiKeygen.h"
 #include <QStringList>
 
-OteHuaweiKeygen::OteHuaweiKeygen(QString & ssid, QString & mac,
+OteHuaweiKeygen::OteHuaweiKeygen(QString ssid, QString mac,
         QString supported) :
         Keygen(ssid, mac), magicValues(supported) {
 

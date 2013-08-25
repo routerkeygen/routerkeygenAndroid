@@ -7,7 +7,7 @@
 
 #include "AndaredKeygen.h"
 
-AndaredKeygen::AndaredKeygen(QString & ssid, QString & mac) :
+AndaredKeygen::AndaredKeygen(QString ssid, QString mac) :
 		Keygen(ssid, mac) {
 }
 

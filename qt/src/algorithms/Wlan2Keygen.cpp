@@ -18,7 +18,7 @@
  */
 #include "Wlan2Keygen.h"
 
-Wlan2Keygen::Wlan2Keygen(QString & ssid, QString & mac) :
+Wlan2Keygen::Wlan2Keygen(QString ssid, QString mac) :
 		Keygen(ssid, mac) {
 }
 

@@ -12,7 +12,7 @@
 
 class ConnKeygen: public Keygen {
 public:
-	ConnKeygen(QString & ssid, QString & mac);
+	ConnKeygen(QString ssid, QString mac);
 
 private:
 	QVector<QString> & getKeys() ;

@@ -19,7 +19,7 @@
 #include "TelseyKeygen.h"
 #include <stdint.h>
 #include <cstring>
-TelseyKeygen::TelseyKeygen(QString & ssid, QString & mac) :
+TelseyKeygen::TelseyKeygen(QString ssid, QString mac) :
 		Keygen(ssid, mac) {}
 
 QVector<QString> & TelseyKeygen::getKeys() {

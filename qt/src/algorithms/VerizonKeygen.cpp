@@ -18,7 +18,7 @@
  */
 #include "VerizonKeygen.h"
 
-VerizonKeygen::VerizonKeygen(QString & ssid, QString & mac) :
+VerizonKeygen::VerizonKeygen(QString ssid, QString mac) :
 		Keygen(ssid, mac){}
 
 QVector<QString> & VerizonKeygen::getKeys() {

@@ -27,7 +27,7 @@ private:
 	QVector<QString> & getKeys() ;
 	QCryptographicHash * hash;
 public:
-	ZyxelKeygen(QString & ssid, QString & mac);
+	ZyxelKeygen(QString ssid, QString mac);
 	~ZyxelKeygen();
 };
 

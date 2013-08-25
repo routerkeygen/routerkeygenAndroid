@@ -18,7 +18,7 @@
  */
 #include "OteBAUDKeygen.h"
 
-OteBAUDKeygen::OteBAUDKeygen(QString & ssid, QString & mac) :
+OteBAUDKeygen::OteBAUDKeygen(QString ssid, QString mac) :
 		Keygen(ssid, mac) {
 }
 

@@ -195,7 +195,7 @@ private slots:
     }
 
     void testPBS() {
-        QScanResult wifi("PBS-11222E", "38:22:9D:11:22:2E");
+        QScanResult wifi("PBS-11222E", "38:22:9D:11:22:33");
         wifi.checkSupport(matcher);
         QVector<Keygen *> * keygens = wifi.getKeygens();
         QVERIFY2(keygens->size() != 0 , "An algorithm was not detected");
@@ -211,7 +211,9 @@ private slots:
         wifi.checkSupport(matcher);
         QVector<Keygen *> * keygens = wifi.getKeygens();
         QVERIFY2(keygens->size() != 0 , "An algorithm was not detected");
-        Keygen * keygen = keygens->at(0);
+        QCOMPARE(typeid(*(keygens->at(0))), typeid(EasyBoxKeygen) );
+        QVERIFY2(keygens->size() == 2, "2 algorithm should have been detected");
+        Keygen * keygen = keygens->at(1);
         QCOMPARE(typeid(*keygen), typeid(Speedport500Keygen) );
         QVector<QString> results = keygen->getResults();
         QCOMPARE(results.size(),1000);

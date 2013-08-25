@@ -7,7 +7,7 @@
 
 #include "MaxcomKeygen.h"
 
-MaxcomKeygen::MaxcomKeygen(QString & ssid, QString & mac) :
+MaxcomKeygen::MaxcomKeygen(QString ssid, QString mac) :
 		Keygen(ssid, mac) {
 }
 

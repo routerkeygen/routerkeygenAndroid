@@ -5,7 +5,7 @@
 class DiscusKeygen : public Keygen
 {
     public:
-        DiscusKeygen(QString & ssid, QString & mac);
+        DiscusKeygen(QString ssid, QString mac);
 
     private:
     	QVector<QString> & getKeys() ;

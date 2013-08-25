@@ -56,7 +56,7 @@ int main(int argc, char * argv[]) {
         }
         QString ssid = options.value("s", "").toString();
         QScanResult wifi(ssid,mac);
-        wifi.checkSupport(&m);
+        wifi.checkSupport(m);
         QVector<Keygen *> * keygens = wifi.getKeygens();
         if (keygens == NULL ){
             std::cout << QObject::tr("Out of memory.").toUtf8().data() << std::endl;

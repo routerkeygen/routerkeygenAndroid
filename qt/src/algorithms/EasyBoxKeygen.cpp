@@ -8,7 +8,7 @@
 #include "EasyBoxKeygen.h"
 #include <QRegExp>
 
-EasyBoxKeygen::EasyBoxKeygen(QString & ssid, QString & mac) :
+EasyBoxKeygen::EasyBoxKeygen(QString ssid, QString mac) :
 		Keygen(ssid, mac) {
 }
 
