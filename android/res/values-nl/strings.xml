@@ -110,7 +110,7 @@
     <string name="pref_hinton_analytics">Gebruik en crashes worden anoniem bijgehouden</string>
     <string name="pref_hintoff_analytics">Gebruik en crashes word niet bijgehouden</string>
     <!-- ERROR MESSAGE STRINGS -->
-    <string name="msg_unspported">Deze ESSID wordt niet ondersteund</string>
+    <string name="msg_unspported">This network is not supported!</string>  <!-- UNTRANSLATED -->
     <string name="msg_nowifidetected">Geen Wi-Fi-toegangspunten gevonden</string>
     <string name="msg_nowifi">Wi-Fi is niet ingeschakeld</string>
     <string name="msg_scanfailed">Zoeken mislukt</string>

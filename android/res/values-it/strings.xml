@@ -116,7 +116,7 @@
     
 
     <!-- ERROR MESSAGE STRINGS -->
-    <string name="msg_unspported">Questo ESSID non è supportato!</string>
+    <string name="msg_unspported">This network is not supported!</string>  <!-- UNTRANSLATED -->
     <string name="msg_nowifidetected">Nessuna rete wifi trovata!</string>
     <string name="msg_nowifi">Il Wifi non è attivo! Per favore attiva il Wifi!</string>
     <string name="msg_scanfailed">La scansione non è riuscita!</string>

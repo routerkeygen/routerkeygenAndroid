@@ -15,7 +15,9 @@
    GNU General Public License for more details.
    
    You should have received a copy of the GNU General Public License
-   along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
+   along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
+
+
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
 
@@ -23,7 +25,7 @@
     <!-- MISC STRINGS -->
     <string name="app_name">Router Keygen</string>
     <string name="msg_welcome_title">Router Keygen</string>
-    <string name="msg_welcome_text">Gracias por probar Router Keygen. Si te gustó esta aplicación, por favor considera comprar la versión de donación. El link está en el menú de preferencias. Tu donación motivará a los autores a seguir trabajando en ésta gran herramienta de código abierto.</string>
+    <string name="msg_welcome_text">Gracias por probar Router Keygen. Si te gustó esta aplicación, por favor considera hacer una donación. El link está en el menú de preferencias. Tu donación motivará a los autores a seguir trabajando en ésta gran herramienta de código abierto.</string>
     <string name="msg_welcome_tip">Selecciona cualquier red soportada para generar una posible clave.</string>
     <string name="menu_scan">Escanear</string>
     <string name="menu_manual">Introducción manual</string>
@@ -89,7 +91,8 @@
     <string name="pref_donate_google_play">Donar (Google Play)</string>
     <string name="pref_donate_why">Cómprame un café si te gustó ésta aplicación.</string>
     <string name="pref_about">Acerca de Router Keygen</string>
-    <string name="pref_about_desc">Router Keygen calcula los passwords por defecto para varios routers.\n\n<a href="http://code.google.com/p/android-thomson-key-solver/">Sitio del Proyecto</a>\n\nVersión: </string>
+    <string name="pref_about_desc">Router Keygen calcula los passwords por defecto para varios routers.\n\n
+<a href="http://code.google.com/p/android-thomson-key-solver/">Sitio del Proyecto</a>\n\nVersión: </string>
     <string name="pref_native">Cálculo Nativo</string>
     <string name="pref_hinton_native">Calculando sobre el objetivo si no encuentra el diccionario</string>
     <string name="pref_hintoff_native">Sólo avisa si no encuentra el diccionario.</string>
@@ -111,7 +114,7 @@
     <string name="pref_hintoff_analytics">El uso y las fallas no son rastreadas.</string>
 
     <!-- ERROR MESSAGE STRINGS -->
-    <string name="msg_unspported">¡Este ESSID no esta soportado!</string>
+    <string name="msg_unspported">This network is not supported!</string>  <!-- UNTRANSLATED -->
     <string name="msg_nowifidetected">¡No se detectan redes WiFi!</string>
     <string name="msg_nowifi">¡WiFi no activado! Activa WiFi, por favor.</string>
     <string name="msg_scanfailed">¡El escaneo Falló!</string>
