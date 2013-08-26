@@ -1,9 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>loading.gif</file>
-        <file>tele2.txt</file>
-        <file>alice.txt</file>
-        <file>ote_huawei.txt</file>
-        <file>tray_icon.png</file>
-    </qresource>
-</RCC>
