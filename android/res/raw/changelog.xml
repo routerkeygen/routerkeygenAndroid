@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<changelog bulletedList="true">
+
+    <changelogversion versionName="3.7.0" changeDate="Aug 18,2013">
+        <changelogtext>[b]New![/b] Some support for Alice in Germany and Speedport500</changelogtext>
+        <changelogtext>[b]New![/b] Multiple key generators can be used now if there are more than one matches.</changelogtext>
+    </changelogversion>
+    
+    <changelogversion versionName="3.6.2" changeDate="Jul 16,2013">
+        <changelogtext>Bug fixes</changelogtext>
+    </changelogversion>
+    
+    <changelogversion versionName="3.6.1" changeDate="Jul 15,2013">
+        <changelogtext>Bug fixes</changelogtext>
+    </changelogversion>
+
+    <changelogversion versionName="3.6.0" changeDate="Jul 13,2013">
+        <changelogtext>[b]New![/b] HOLO UI</changelogtext>
+        <changelogtext>[b]New![/b] Automatic update checker.</changelogtext>
+        <changelogtext>Bug fixes ( including a nasty battery destroyer bug when auto scanning was enabled )</changelogtext>
+    </changelogversion>
+
+    <changelogversion versionName="3.5.1" changeDate="Apr 14,2013">
+        <changelogtext>Added more possible Huawei routers (better support in Mexico)</changelogtext>
+        <changelogtext>Bug fixes</changelogtext>
+    </changelogversion>
+
+    <changelogversion versionName="3.5.0" changeDate="Mar 25,2013">
+        <changelogtext>[b]New![/b] Added OTE variations for Huawei routers and others</changelogtext>
+        <changelogtext>[b]New![/b] Added color (yellow) that means unlikely support</changelogtext>
+        <changelogtext>Improve start up times and memory consumption</changelogtext>
+    </changelogversion>
+
+</changelog>

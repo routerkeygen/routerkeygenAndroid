@@ -15,7 +15,7 @@
    GNU General Public License for more details.
    
    You should have received a copy of the GNU General Public License
-   along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
+   along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
 
@@ -109,6 +109,7 @@
     <string name="pref_analytics">Google Analytics</string>
     <string name="pref_hinton_analytics">Usage and crashes are being tracked anonymously</string>
     <string name="pref_hintoff_analytics">Usage and crashes are not being tracked</string>
+    <string name="pref_changelog">Changelog</string>
     <!-- ERROR MESSAGE STRINGS -->
     <string name="msg_unspported">This network is not supported!</string>
     <string name="msg_nowifidetected">No WIFI networks detected!</string>
@@ -160,6 +161,20 @@
     <string name="storage_removed">Storage was removed or unmounted.</string>
     <string name="choose_file">Select a file</string>
     <string name="error_selecting_file">Error selecting File</string>
+    <!-- CHANGELOG LIB -->
+    <string name="changelog_internal_error_parsing">Error while parsing file</string>
+    <!--
+ String for Version Header.
+         You can customize it in your strings.xml.
+         Use string with quotes if you want a space
+    -->
+    <string name="changelog_header_version">"Version "</string>
+    <!--
+ BulletPoint
+        You can customize it in your strings.xml
+        If you don't want a bulletpoint you can specify it in your changelog.xml
+    -->
+    <string name="changelog_row_bulletpoint">\u2022"</string>
     <!-- AUTOCOMPLETE SUPPORT -->
     <string-array name="supported_routers">
         <item>Alice-</item>

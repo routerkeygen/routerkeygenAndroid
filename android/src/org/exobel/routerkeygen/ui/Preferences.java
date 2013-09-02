@@ -19,6 +19,8 @@
 
 package org.exobel.routerkeygen.ui;
 
+import it.gmariotti.changelibs.library.view.ChangeLogListView;
+
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -163,8 +165,8 @@ public class Preferences extends SherlockPreferenceActivity {
 												+ GOOGLE_PLAY_DOWNLOADER)));
 							}
 							Toast.makeText(getApplicationContext(),
-									R.string.msg_donation,
-									Toast.LENGTH_LONG).show();
+									R.string.msg_donation, Toast.LENGTH_LONG)
+									.show();
 							return true;
 						}
 					});
@@ -244,6 +246,13 @@ public class Preferences extends SherlockPreferenceActivity {
 
 							}
 						}.execute();
+						return true;
+					}
+				});
+		findPreference("changelog").setOnPreferenceClickListener(
+				new OnPreferenceClickListener() {
+					public boolean onPreferenceClick(Preference preference) {
+						showDialog(DIALOG_CHANGELOG);
 						return true;
 					}
 				});
@@ -347,6 +356,7 @@ public class Preferences extends SherlockPreferenceActivity {
 	private static final int DIALOG_ERROR_TOO_ADVANCED = 1004;
 	private static final int DIALOG_ERROR = 1005;
 	private static final int DIALOG_UPDATE_NEEDED = 1006;
+	private static final int DIALOG_CHANGELOG = 1007;
 
 	protected Dialog onCreateDialog(int id) {
 		AlertDialog.Builder builder = new Builder(this);
@@ -447,6 +457,21 @@ public class Preferences extends SherlockPreferenceActivity {
 		case DIALOG_ERROR: {
 			builder.setTitle(R.string.msg_error).setMessage(
 					R.string.msg_err_unkown);
+			break;
+		}
+		case DIALOG_CHANGELOG: {
+			LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			ChangeLogListView chgList = (ChangeLogListView) layoutInflater
+					.inflate(R.layout.dialog_changelog, null);
+			builder.setTitle(R.string.pref_changelog)
+					.setView(chgList)
+					.setPositiveButton(android.R.string.ok,
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int whichButton) {
+									dialog.dismiss();
+								}
+							});
 			break;
 		}
 		}
