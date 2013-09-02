@@ -94,6 +94,12 @@ public class WirelessMatcher {
 		if (ssid.equals("CONN-X"))
 			keygens.add(new ConnKeygen(ssid, mac));
 
+		if (ssid.matches("conn-x[0-9a-fA-F]{6}")) {
+			if (mac.length() == 12) {
+				keygens.add(new ConnKeygen(ssid, mac));
+			}
+		}
+
 		if (ssid.matches("Discus--?[0-9a-fA-F]{6}"))
 			keygens.add(new DiscusKeygen(ssid, mac));
 
@@ -258,7 +264,7 @@ public class WirelessMatcher {
 				}
 			}
 		}
-		
+
 		if (ssid.matches("FASTWEB-(1|2)-(002196|00036F)[0-9A-Fa-f]{6}")) {
 			if (mac.length() == 0) {
 				final String end = ssid.substring(ssid.length() - 12);
@@ -284,7 +290,7 @@ public class WirelessMatcher {
 						|| mac.startsWith("00:26:62") || mac
 							.startsWith("00:26:B8")))
 			keygens.add(new VerizonKeygen(ssid, mac));
-		
+
 		if (ssid.matches("wifimedia_R-[0-9a-zA-Z]{4}")
 				&& mac.replace(":", "").length() == 12)
 			keygens.add(new WifimediaRKeygen(ssid, mac));
@@ -309,7 +315,7 @@ public class WirelessMatcher {
 					|| mac.startsWith("38:72:C0") || mac.startsWith("30:39:F2"))
 				keygens.add(new ComtrendKeygen(ssid, mac));
 		}
-		
+
 		return keygens;
 	}
 
