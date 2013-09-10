@@ -35,16 +35,19 @@ public class InterCableKeygen extends Keygen {
 	@Override
 	public List<String> getKeys() {
 		if (getMacAddress().length() != 12) {
-			setErrorCode(R.string.msg_errpirelli);
+			setErrorCode(R.string.msg_nomac);
 			return null;
 		}
-		String wep = "m" + getMacAddress().substring(0, 10);
+		String wep = "m" + getMacAddress().substring(0, 10).toLowerCase(Locale.getDefault());
 		String hex = getMacAddress().substring(10, 12);
 		int intValue = Integer.parseInt(hex, 16);
 		intValue += 1; // we add 1 and then convert again to hex
-		hex = Integer.toHexString(intValue);
-		wep += hex;
-		addPassword(wep.toLowerCase(Locale.getDefault()));
+		hex = Integer.toHexString(intValue).toLowerCase(Locale.getDefault());
+		addPassword(wep+hex);
+		//There's a version where 2 is added so we repeat again
+		intValue += 1; // we add 1 and then convert again to hex
+		hex = Integer.toHexString(intValue).toLowerCase(Locale.getDefault());
+		addPassword(wep+hex);
 		return getResults();
 	}
 

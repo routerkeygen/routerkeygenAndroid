@@ -152,7 +152,8 @@ public class WirelessMatcher {
 		if (ssid.matches("InfostradaWiFi-[0-9a-zA-Z]{6}"))
 			keygens.add(new InfostradaKeygen(ssid, mac));
 
-		if (ssid.startsWith("InterCable") && mac.startsWith("00:15"))
+		if (ssid.startsWith("InterCable")
+				&& (mac.startsWith("00:15") || mac.startsWith("00:1D")))
 			keygens.add(new InterCableKeygen(ssid, mac));
 
 		if (ssid.matches("MAXCOM[0-9a-zA-Z]{4}"))
