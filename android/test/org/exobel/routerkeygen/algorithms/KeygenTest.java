@@ -69,6 +69,24 @@ public class KeygenTest {
 	}
 
 	@Test
+	public void testComtrend() throws FileNotFoundException {
+		final WiFiNetwork wifi = new WiFiNetwork("JAZZTEL_1234",
+				"00:1A:2B:11:22:33", 0, "", new ZipInputStream(
+						new FileInputStream("../res/raw/magic_info.zip")));
+		assertEquals("There should be only 1 keygen", 1, wifi.getKeygens()
+				.size());
+		final Keygen keygen = wifi.getKeygens().get(0);
+		assertTrue("Keygen should be Conn", keygen instanceof ComtrendKeygen);
+		List<String> results = keygen.getKeys();
+		assertEquals("Errors should not happen", 0, keygen.getErrorCode());
+		assertEquals("There should be only 512 result", 512, results.size());
+		assertEquals("The password should be 9e701814299bf841e288", "9e701814299bf841e288",
+				results.get(0));
+		assertEquals("The password should be cb20cce51c5bc7457e08", "cb20cce51c5bc7457e08",
+				results.get(511));
+	}
+
+	@Test
 	public void testDiscus() throws FileNotFoundException {
 		final WiFiNetwork wifi = new WiFiNetwork("Discus--DA1CC5",
 				"00:1C:A2:DA:1C:C5", 0, "", new ZipInputStream(
@@ -227,7 +245,8 @@ public class KeygenTest {
 				.size());
 		final Keygen keygen = wifi.getKeygens().get(0);
 		assertTrue("Keygen should be PBS", keygen instanceof PBSKeygen);
-		assertEquals("Keygen should be supported", Keygen.SUPPORTED, keygen.getSupportState());
+		assertEquals("Keygen should be supported", Keygen.UNLIKELY_SUPPORTED,
+				keygen.getSupportState());
 		List<String> results = keygen.getKeys();
 		assertEquals("Errors should not happen", 0, keygen.getErrorCode());
 		assertEquals("There should be only one result", 1, results.size());

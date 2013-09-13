@@ -276,7 +276,7 @@ public class WirelessMatcher {
 			keygens.add(new TelseyKeygen(ssid, mac));
 		}
 
-		if (ssid.matches("(Thomson|Blink|SpeedTouch|O2Wireless|Orange-|INFINITUM|"
+		if (ssid.matches("(Thomson|Blink|SpeedTouch|O2Wireless|O2wireless|Orange-|ORANGE-|INFINITUM|"
 				+ "BigPond|Otenet|Bbox-|DMAX|privat|TN_private_|CYTA|Vodafone-|Optimus|OptimusFibra|MEO-)[0-9a-fA-F]{6}"))
 			keygens.add(new ThomsonKeygen(ssid, mac));
 
@@ -313,7 +313,10 @@ public class WirelessMatcher {
 
 			if (mac.startsWith("00:1B:20") || mac.startsWith("64:68:0C")
 					|| mac.startsWith("00:1D:20") || mac.startsWith("00:23:F8")
-					|| mac.startsWith("38:72:C0") || mac.startsWith("30:39:F2"))
+					|| mac.startsWith("38:72:C0") || mac.startsWith("30:39:F2")
+					|| mac.startsWith("8C:0C:A3") || mac.startsWith("5C:33:8E")
+					|| mac.startsWith("C8:6C:87") || mac.startsWith("D0:AE:EC")
+					|| mac.startsWith("00:19:15") || mac.startsWith("00:1A:2B"))
 				keygens.add(new ComtrendKeygen(ssid, mac));
 		}
 

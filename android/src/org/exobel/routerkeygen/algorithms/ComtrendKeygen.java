@@ -32,18 +32,21 @@ import android.os.Parcelable;
 
 public class ComtrendKeygen extends Keygen {
 
-	final private String ssidIdentifier;
 	private MessageDigest md;
 
 	public ComtrendKeygen(String ssid, String mac) {
 		super(ssid, mac);
-		ssidIdentifier = ssid.substring(ssid.length() - 4);
 	}
 
 	static final String magic = "bcgbghgg";
+	static final String lowermagic = "64680C";
+	static final String highermagic = "3872C0";
+	static final String mac001a2b = "001A2B";
 
 	@Override
 	public List<String> getKeys() {
+		final String ssidIdentifier = getSsidName().substring(
+				getSsidName().length() - 4);
 		try {
 			md = MessageDigest.getInstance("MD5");
 		} catch (NoSuchAlgorithmException e1) {
@@ -56,13 +59,38 @@ public class ComtrendKeygen extends Keygen {
 			return null;
 		}
 		try {
-			final String macMod = mac.substring(0, 8) + ssidIdentifier;
-			md.reset();
-			md.update(magic.getBytes("ASCII"));
-			md.update(macMod.toUpperCase(Locale.getDefault()).getBytes("ASCII"));
-			md.update(mac.toUpperCase(Locale.getDefault()).getBytes("ASCII"));
-			byte[] hash = md.digest();
-			addPassword(StringUtils.getHexString(hash).substring(0, 20));
+			if (mac.substring(0, 6).equalsIgnoreCase(mac001a2b)) {
+				for (int i = 0; i < 512; i++) {
+					md.reset();
+					md.update(magic.getBytes("ASCII"));
+					String xx;
+					if (i < 256) {
+						md.update(lowermagic.getBytes("ASCII"));
+						xx = Integer.toHexString(i).toUpperCase(Locale.US);
+					} else {
+						md.update(highermagic.getBytes("ASCII"));
+						xx = Integer.toHexString(i - 256).toUpperCase(Locale.US);
+					}
+					while (xx.length() < 2)
+						xx = "0" + xx;
+					md.update(xx.getBytes("ASCII"));
+					md.update(ssidIdentifier.getBytes("ASCII"));
+					md.update(mac.getBytes("ASCII"));
+					byte[] hash = md.digest();
+					addPassword(StringUtils.getHexString(hash).substring(0, 20));
+				}
+			} else {
+				final String macMod = mac.substring(0, 8) + ssidIdentifier;
+				md.reset();
+				md.update(magic.getBytes("ASCII"));
+				md.update(macMod.toUpperCase(Locale.getDefault()).getBytes(
+						"ASCII"));
+				md.update(mac.toUpperCase(Locale.getDefault())
+						.getBytes("ASCII"));
+				byte[] hash = md.digest();
+				addPassword(StringUtils.getHexString(hash).substring(0, 20));
+
+			}
 			return getResults();
 		} catch (UnsupportedEncodingException e) {
 		}
@@ -71,12 +99,6 @@ public class ComtrendKeygen extends Keygen {
 
 	private ComtrendKeygen(Parcel in) {
 		super(in);
-		ssidIdentifier = in.readString();
-	}
-
-	public void writeToParcel(Parcel dest, int flags) {
-		super.writeToParcel(dest, flags);
-		dest.writeString(ssidIdentifier);
 	}
 
 	public static final Parcelable.Creator<ComtrendKeygen> CREATOR = new Parcelable.Creator<ComtrendKeygen>() {
