@@ -21,6 +21,7 @@ package org.exobel.routerkeygen.ui;
 
 import org.exobel.routerkeygen.AdsUtils;
 import org.exobel.routerkeygen.R;
+import org.exobel.routerkeygen.RefreshHandler;
 import org.exobel.routerkeygen.algorithms.WiFiNetwork;
 
 import android.content.Intent;
@@ -31,8 +32,11 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.millennialmedia.android.MMAdView;
 
 public class NetworkActivity extends SherlockFragmentActivity {
+
+	private RefreshHandler adRefreshHandler;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,11 +45,14 @@ public class NetworkActivity extends SherlockFragmentActivity {
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		AdsUtils.loadAdIfNeeded(this);
+		MMAdView ad = AdsUtils.loadAdIfNeeded(this);
+		if (ad != null) {
+			adRefreshHandler = new RefreshHandler(ad);
+		}
 		if (savedInstanceState == null) {
 			Bundle arguments = new Bundle();
-			final WiFiNetwork wiFiNetwork = (WiFiNetwork) getIntent().getParcelableExtra(
-					NetworkFragment.NETWORK_ID);
+			final WiFiNetwork wiFiNetwork = (WiFiNetwork) getIntent()
+					.getParcelableExtra(NetworkFragment.NETWORK_ID);
 			arguments.putParcelable(NetworkFragment.NETWORK_ID, wiFiNetwork);
 			setTitle(wiFiNetwork.getSsidName());
 			NetworkFragment fragment = new NetworkFragment();
@@ -59,6 +66,20 @@ public class NetworkActivity extends SherlockFragmentActivity {
 	public void onStart() {
 		super.onStart();
 		EasyTracker.getInstance().activityStart(this); // Add this method.
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if (adRefreshHandler != null)
+			adRefreshHandler.onResume();
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		if (adRefreshHandler != null)
+			adRefreshHandler.onPause();
 	}
 
 	@Override

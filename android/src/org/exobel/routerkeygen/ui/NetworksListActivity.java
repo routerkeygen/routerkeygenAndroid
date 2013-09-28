@@ -21,6 +21,7 @@ package org.exobel.routerkeygen.ui;
 
 import org.exobel.routerkeygen.AdsUtils;
 import org.exobel.routerkeygen.R;
+import org.exobel.routerkeygen.RefreshHandler;
 import org.exobel.routerkeygen.UpdateCheckerService;
 import org.exobel.routerkeygen.WifiScanReceiver;
 import org.exobel.routerkeygen.WifiScanReceiver.OnScanListener;
@@ -52,6 +53,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.GoogleAnalytics;
+import com.millennialmedia.android.MMAdView;
 
 public class NetworksListActivity extends SherlockFragmentActivity implements
 		NetworksListFragment.OnItemSelectionListener, OnScanListener {
@@ -62,6 +64,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 	private BroadcastReceiver scanFinished;
 	private BroadcastReceiver stateChanged;
 	private boolean welcomeScreenShown;
+	private RefreshHandler adRefreshHandler;
 
 	private Handler mHandler = new Handler();
 
@@ -85,7 +88,10 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 		scanFinished = new WifiScanReceiver(wifi, networkListFragment, this);
 		stateChanged = new WifiStateReceiver(wifi, networkListFragment);
 
-		AdsUtils.loadAdIfNeeded(this);
+		MMAdView ad = AdsUtils.loadAdIfNeeded(this);
+		if (ad != null) {
+			adRefreshHandler = new RefreshHandler(ad);
+		}
 		final SharedPreferences mPrefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
 		welcomeScreenShown = mPrefs.getBoolean(Preferences.VERSION, false);
@@ -243,6 +249,8 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 		} else
 			mHandler.removeCallbacks(mAutoScanTask);
 		scan();
+		if (adRefreshHandler != null)
+			adRefreshHandler.onResume();
 	}
 
 	@Override
@@ -252,6 +260,8 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 			mHandler.removeCallbacks(mAutoScanTask);
 		} catch (Exception e) {
 		}
+		if (adRefreshHandler != null)
+			adRefreshHandler.onPause();
 	}
 
 	@Override

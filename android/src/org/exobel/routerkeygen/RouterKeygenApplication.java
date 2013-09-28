@@ -5,6 +5,8 @@ import org.acra.ReportField;
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
 
+import com.millennialmedia.android.MMSDK;
+
 import android.app.Application;
 
 @ReportsCrashes(formKey = "", mailTo = "exobel@gmail.com", customReportContent = {
@@ -14,11 +16,16 @@ import android.app.Application;
 public class RouterKeygenApplication extends Application {
 	@Override
 	public void onCreate() {
+		super.onCreate();
 		try {
 			ACRA.init(this);
 		} catch (Exception e) {
 
 		}
-		super.onCreate();
+		try {
+			MMSDK.initialize(this);
+		} catch (Exception e) {
+
+		}
 	}
 }
