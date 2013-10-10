@@ -9,15 +9,13 @@
         android:name="org.exobel.routerkeygen.ui.NetworksListFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/adView"
+        android:layout_above="@+id/adBannerRelativeLayout"
         tools:layout="@layout/fragment_networks_list" />
 
-    <include
-        android:id="@+id/adView"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/adBannerRelativeLayout"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        layout="@layout/adview" />
+        android:layout_alignParentBottom="true" />
 
 </RelativeLayout>

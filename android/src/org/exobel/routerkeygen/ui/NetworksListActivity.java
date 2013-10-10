@@ -88,7 +88,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 		scanFinished = new WifiScanReceiver(wifi, networkListFragment, this);
 		stateChanged = new WifiStateReceiver(wifi, networkListFragment);
 
-		MMAdView ad = AdsUtils.loadAdIfNeeded(this);
+		final MMAdView ad = AdsUtils.loadAdIfNeeded(this);
 		if (ad != null) {
 			adRefreshHandler = new RefreshHandler(ad);
 		}

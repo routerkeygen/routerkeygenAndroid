@@ -7,7 +7,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/adView"
+        android:layout_above="@+id/adBannerRelativeLayout"
         android:layout_marginRight="10dp"
         android:baselineAligned="false"
         android:divider="?android:attr/dividerHorizontal"
@@ -29,12 +29,11 @@
             android:layout_weight="50" />
     </LinearLayout>
 
-    <include
-        android:id="@+id/adView"
-        android:layout_width="match_parent"
+    
+    <RelativeLayout
+        android:id="@+id/adBannerRelativeLayout"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        layout="@layout/adview" />
+        android:layout_alignParentBottom="true" />
 
 </RelativeLayout>
