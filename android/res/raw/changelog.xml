@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
 
+    <changelogversion versionName="3.8.0" changeDate="Aug 18,2013">
+        <changelogtext>Added new Comtrend, Intercable and CONN variations.</changelogtext>
+        <changelogtext>Fixed bugs in the PBS support and odwngrade it because it is very rare.</changelogtext>
+    </changelogversion>
+    
     <changelogversion versionName="3.7.0" changeDate="Aug 18,2013">
         <changelogtext>[b]New![/b] Some support for Alice in Germany and Speedport500</changelogtext>
         <changelogtext>[b]New![/b] Multiple key generators can be used now if there are more than one matches.</changelogtext>

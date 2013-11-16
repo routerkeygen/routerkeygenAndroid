@@ -35,6 +35,7 @@ public class Downloader extends Thread {
 	private boolean stopRequested = false;
 	private boolean deleteTemp = false;
 
+	@SuppressWarnings("deprecation")
 	public void run() {
 		File myDicFile;
 		URLConnection con;
