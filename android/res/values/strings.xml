@@ -110,6 +110,7 @@
     <string name="pref_hinton_analytics">Usage and crashes are being tracked anonymously</string>
     <string name="pref_hintoff_analytics">Usage and crashes are not being tracked</string>
     <string name="pref_changelog">Changelog</string>
+    
     <!-- ERROR MESSAGE STRINGS -->
     <string name="msg_unspported">This network is not supported!</string>
     <string name="msg_nowifidetected">No WIFI networks detected!</string>
@@ -174,9 +175,9 @@
         You can customize it in your strings.xml
         If you don't want a bulletpoint you can specify it in your changelog.xml
     -->
-    <string name="changelog_row_bulletpoint">\u2022"</string>
+    <string name="changelog_row_bulletpoint" translatable="false">\u2022"</string>
     <!-- AUTOCOMPLETE SUPPORT -->
-    <string-array name="supported_routers">
+    <string-array name="supported_routers" translatable="false" >
         <item>Alice-</item>
         <item>Arcor-</item>
         <item>AXTEL-</item>

@@ -114,7 +114,7 @@
     <string name="pref_analytics">Google Analytics</string>  <!-- UNTRANSLATED -->
     <string name="pref_hinton_analytics">Usage and crashes are being tracked anonymously</string>  <!-- UNTRANSLATED -->
     <string name="pref_hintoff_analytics">Usage and crashes are not being tracked</string>  <!-- UNTRANSLATED -->
-
+	<string name="pref_changelog">Historique</string>
 
     <!-- ERROR MESSAGE STRINGS -->
     <string name="msg_unspported">This network is not supported!</string>  <!-- UNTRANSLATED -->
@@ -168,55 +168,13 @@
     <string name="storage_removed">Stockage retiré ou démonté.</string>
     <string name="choose_file">Sélectionner un fichier</string>
     <string name="error_selecting_file">Erreur lors de la sélection du fichier</string>
-
-
-    <!-- AUTOCOMPLETE SUPPORT -->
-    <string-array name="supported_routers">
-        <item>Alice-</item>
-        <item>Arcor-</item>
-        <item>AXTEL-</item>
-        <item>AXTEL-XTREMO-</item>
-        <item>Bbox-</item>
-        <item>BigPond</item>
-        <item>Blink</item>
-        <item>Cabovisao-</item>
-        <item>CONN</item>
-        <item>CYTA</item>
-        <item tools:ignore="TypographyDashes">Discus--</item>
-        <item>DLink-</item>
-        <item>DMAX</item>
-        <item>EasyBox-</item>
-        <item>eircom</item>
-        <item>FASTWEB-1-</item>
-        <item>INFINITUM</item>
-        <item>InfostradaWiFi-</item>
-        <item>InterCable</item>
-        <item>JAZZTEL_</item>
-        <item>MAXCOM</item>
-        <item>Megared</item>
-        <item>MEO-</item>
-        <item>O2Wireless</item>
-        <item>Optimus</item>
-        <item>OptimusFibra</item>
-        <item>Orange-</item>
-        <item>OTE</item>
-        <item>Otenet</item>
-        <item>PBS</item>
-        <item>privat</item>
-        <item>ptv</item>
-        <item>SKY</item>
-        <item>SpeedTouch</item>
-        <item>TECOM-AH4222-</item>
-        <item>TECOM-AH4021-</item>
-        <item>TeleTu</item>
-        <item>Thomson</item>
-        <item>TN_private_</item>
-        <item>Vodafone-</item>
-        <item>WiFi</item>
-        <item>wifimedia_R-</item>
-        <item>WLAN_</item>
-        <item>WLAN</item>
-        <item>YaCom</item>
-    </string-array>
-
+    <!-- CHANGELOG LIB -->
+    <string name="changelog_internal_error_parsing">Error while parsing file</string> <!--UNTRANSLATED-->
+    <!--
+ String for Version Header.
+         You can customize it in your strings.xml.
+         Use string with quotes if you want a space
+    -->
+    <string name="changelog_header_version">"Version "</string> <!--UNTRANSLATED-->
+    
 </resources>
