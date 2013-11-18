@@ -71,7 +71,7 @@ JNIEXPORT jobjectArray JNICALL Java_org_exobel_routerkeygen_algorithms_NativeTho
 				SHA1_Update(&sha1, (const void *) input, 12);
 				SHA1_Final(message_digest, &sha1);
 				if ((memcmp(&message_digest[17], &ssid[0], 3) == 0)) {
-					sprintf(result[keys++], "%02X%02X%02X%02X%02X\0",
+					sprintf(result[keys++], "%02X%02X%02X%02X%02X",
 							message_digest[0], message_digest[1],
 							message_digest[2], message_digest[3],
 							message_digest[4]);
