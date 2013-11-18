@@ -101,6 +101,7 @@ public class Preferences extends SherlockPreferenceActivity {
 
 	private String version;
 
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.layout.preferences);
@@ -188,7 +189,7 @@ public class Preferences extends SherlockPreferenceActivity {
 		findPreference("update").setOnPreferenceClickListener(
 				new OnPreferenceClickListener() {
 					public boolean onPreferenceClick(Preference preference) {
-						new AsyncTask<Void, Void, Integer>() {
+						AsyncTask<Void, Void, Integer> task = new AsyncTask<Void, Void, Integer>() {
 							protected void onPreExecute() {
 								showDialog(DIALOG_CHECK_DOWNLOAD_SERVER);
 							}
@@ -245,7 +246,12 @@ public class Preferences extends SherlockPreferenceActivity {
 								}
 
 							}
-						}.execute();
+						};
+						if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
+							task.execute();
+						} else {
+							task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+						}
 						return true;
 					}
 				});
@@ -478,6 +484,7 @@ public class Preferences extends SherlockPreferenceActivity {
 		return builder.create();
 	}
 
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void checkCurrentDictionary() throws FileNotFoundException {
 		final String myDicFile = PreferenceManager.getDefaultSharedPreferences(
 				getBaseContext()).getString(dicLocalPref, null);
@@ -487,7 +494,7 @@ public class Preferences extends SherlockPreferenceActivity {
 					DictionaryDownloadService.class).putExtra(
 					DictionaryDownloadService.URL_DOWNLOAD, PUB_DOWNLOAD));
 		} else {
-			new AsyncTask<Void, Void, Integer>() {
+			AsyncTask<Void, Void, Integer> task = new AsyncTask<Void, Void, Integer>() {
 				protected void onPreExecute() {
 					removeDialog(DIALOG_ASK_DOWNLOAD);
 					showDialog(DIALOG_CHECK_DOWNLOAD_SERVER);
@@ -586,7 +593,12 @@ public class Preferences extends SherlockPreferenceActivity {
 					}
 
 				}
-			}.execute();
+			};
+			if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
+				task.execute();
+			} else {
+				task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+			}
 		}
 	}
 

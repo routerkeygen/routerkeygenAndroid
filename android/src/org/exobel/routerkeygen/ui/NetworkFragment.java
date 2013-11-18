@@ -42,6 +42,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.AsyncTask.Status;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -171,7 +172,11 @@ public class NetworkFragment extends SherlockFragment {
 			if (thread.getStatus() == Status.FINISHED
 					|| thread.getStatus() == Status.RUNNING)
 				thread = new KeygenThread(wifiNetwork);
-			thread.execute();
+			if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
+				thread.execute();
+			} else {
+				thread.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+			}
 		}
 	}
 

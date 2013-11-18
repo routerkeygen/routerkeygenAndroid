@@ -8,8 +8,10 @@ import org.exobel.routerkeygen.algorithms.Keygen;
 import org.exobel.routerkeygen.algorithms.WiFiNetwork;
 import org.exobel.routerkeygen.ui.NetworksListFragment.OnItemSelectionListener;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -144,6 +146,7 @@ public class ManualInputFragment extends SherlockFragment {
 		Button calc = (Button) root.findViewById(R.id.bt_calc);
 		calc.setOnClickListener(new View.OnClickListener() {
 
+			@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 			public void onClick(View v) {
 				String ssid = edit.getText().toString().trim();
 				StringBuilder mac = new StringBuilder();
@@ -166,8 +169,14 @@ public class ManualInputFragment extends SherlockFragment {
 
 				if (ssid.equals(""))
 					return;
-				new KeygenMatcherTask(ssid, mac.toString().toUpperCase(
-						Locale.getDefault())).execute();
+				KeygenMatcherTask matcher = new KeygenMatcherTask(ssid, mac.toString().toUpperCase(
+						Locale.getDefault()));
+				if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
+					matcher.execute();
+				} else {
+					matcher.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+				}
+				
 			}
 		});
 		Button cancel = (Button) root.findViewById(R.id.bt_cancel);

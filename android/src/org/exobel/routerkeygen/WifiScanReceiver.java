@@ -26,6 +26,7 @@ import java.util.zip.ZipInputStream;
 
 import org.exobel.routerkeygen.algorithms.WiFiNetwork;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -33,8 +34,10 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.AsyncTask.Status;
+import android.os.Build;
 import android.widget.Toast;
 
+@SuppressLint("InlinedApi")
 public class WifiScanReceiver extends BroadcastReceiver {
 	final private OnScanListener[] scanListeners;
 	final private WifiManager wifi;
@@ -73,11 +76,16 @@ public class WifiScanReceiver extends BroadcastReceiver {
 		}
 		if (task == null || task.getStatus() == Status.FINISHED) {
 			task = new KeygenMatcherTask(results, context);
-			task.execute();
+			if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
+				task.execute();
+			} else {
+				task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+			}
 		}
 	}
 
-	private class KeygenMatcherTask extends AsyncTask<Void, Void, WiFiNetwork[]> {
+	private class KeygenMatcherTask extends
+			AsyncTask<Void, Void, WiFiNetwork[]> {
 		private final List<ScanResult> results;
 		private final Context context;
 		private boolean misbuiltAPK = false;
@@ -106,9 +114,8 @@ public class WifiScanReceiver extends BroadcastReceiver {
 						results.remove(j--);
 			for (ScanResult result : results) {
 				try {
-					set.add(new WiFiNetwork(result,
-							new ZipInputStream(context.getResources()
-									.openRawResource(R.raw.magic_info))));
+					set.add(new WiFiNetwork(result, new ZipInputStream(context
+							.getResources().openRawResource(R.raw.magic_info))));
 				} catch (LinkageError e) {
 					misbuiltAPK = true;
 				}
