@@ -37,7 +37,6 @@ import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.ui.Preferences;
 import org.exobel.routerkeygen.utils.StringUtils;
 
-import android.os.Environment;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -72,6 +71,7 @@ public class ThomsonKeygen extends Keygen {
 		}
 		return true;
 	}
+
 	private static boolean readFromInput(byte[] buf, int length,
 			RandomAccessFile input) throws IOException {
 		int check = 0, ret = 0;
@@ -85,11 +85,14 @@ public class ThomsonKeygen extends Keygen {
 		return true;
 	}
 
-
 	public ThomsonKeygen(String ssid, String mac) {
 		super(ssid, mac);
 		this.errorDict = false;
 		this.ssidIdentifier = ssid.substring(ssid.length() - 6);
+		for (int i = 0; i < 6; i += 2)
+			routerESSID[i / 2] = (byte) ((Character.digit(
+					ssidIdentifier.charAt(i), 16) << 4) + Character.digit(
+					ssidIdentifier.charAt(i + 1), 16));
 	}
 
 	@Override
@@ -104,11 +107,6 @@ public class ThomsonKeygen extends Keygen {
 			setErrorCode(R.string.msg_shortessid6);
 			return null;
 		}
-
-		for (int i = 0; i < 6; i += 2)
-			routerESSID[i / 2] = (byte) ((Character.digit(
-					ssidIdentifier.charAt(i), 16) << 4) + Character.digit(
-					ssidIdentifier.charAt(i + 1), 16));
 
 		if (!internetAlgorithm) {
 			if (!localCalc())
@@ -201,11 +199,12 @@ public class ThomsonKeygen extends Keygen {
 			}
 			url = new URL(Preferences.PUB_DOWNLOAD);
 			URLConnection con = url.openConnection();
-			con.setRequestProperty("Range", "bytes=" + totalOffset + "-");
+			con.setRequestProperty("Range", "bytes=" + totalOffset + "-"
+					+ (totalOffset + lenght));
 			onlineFile = new DataInputStream(con.getInputStream());
 			len = lenght;
 			this.entry = new byte[len];
-			if (!readFromInput(table, len, onlineFile)) {
+			if (!readFromInput(entry, len, onlineFile)) {
 				setErrorCode(R.string.msg_err_webdic_table);
 				onlineFile.close();
 				errorDict = true;
@@ -223,15 +222,6 @@ public class ThomsonKeygen extends Keygen {
 	}
 
 	private boolean localCalc() {
-
-		if (!Environment.getExternalStorageState().equals(
-				Environment.MEDIA_MOUNTED)
-				&& !Environment.getExternalStorageState().equals(
-						Environment.MEDIA_MOUNTED_READ_ONLY)) {
-			setErrorCode(R.string.msg_nosdcard);
-			errorDict = true;
-			return false;
-		}
 		RandomAccessFile fis;
 		try {
 			File dictionay = new File(dictionaryPath);
@@ -340,17 +330,12 @@ public class ThomsonKeygen extends Keygen {
 		return true;
 	}
 
-	static {
-		System.loadLibrary("thomson");
-	}
-
-	private native String[] thirdDicNative(byte[] essid, byte[] entry, int size);
-
 	// This has been implemented natively for instant resolution!
 	private boolean thirdDic() {
 		String[] results;
 		try {
-			results = this.thirdDicNative(routerESSID, entry, entry.length);
+			final ThomsonNative nat = new ThomsonNative();
+			results = nat.thirdDicNative(routerESSID, entry, entry.length);
 		} catch (Exception e) {
 			setErrorCode(R.string.msg_err_native);
 			return false;
@@ -555,6 +540,17 @@ public class ThomsonKeygen extends Keygen {
 		if (getMacAddress().substring(6).equalsIgnoreCase(ssidIdentifier))
 			return UNLIKELY_SUPPORTED;
 		return SUPPORTED;
+	}
+
+	private static class ThomsonNative {
+
+		static {
+			System.loadLibrary("thomson");
+		}
+
+		private native String[] thirdDicNative(byte[] essid, byte[] entry,
+				int size);
+
 	}
 
 }

@@ -4,8 +4,15 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.List;
 import java.util.zip.ZipInputStream;
 
@@ -80,10 +87,10 @@ public class KeygenTest {
 		List<String> results = keygen.getKeys();
 		assertEquals("Errors should not happen", 0, keygen.getErrorCode());
 		assertEquals("There should be only 512 result", 512, results.size());
-		assertEquals("The password should be 9e701814299bf841e288", "9e701814299bf841e288",
-				results.get(0));
-		assertEquals("The password should be cb20cce51c5bc7457e08", "cb20cce51c5bc7457e08",
-				results.get(511));
+		assertEquals("The password should be 9e701814299bf841e288",
+				"9e701814299bf841e288", results.get(0));
+		assertEquals("The password should be cb20cce51c5bc7457e08",
+				"cb20cce51c5bc7457e08", results.get(511));
 	}
 
 	@Test
@@ -296,6 +303,85 @@ public class KeygenTest {
 		assertEquals(
 				"The password should be 15301Y0013305, not " + results.get(0),
 				"15301Y0013305", results.get(0));
+	}
+
+	private static void downloadFromUrl(URL url, String localFilename)
+			throws IOException {
+		InputStream is = null;
+		FileOutputStream fos = null;
+
+		try {
+			URLConnection urlConn = url.openConnection();// connect
+
+			is = urlConn.getInputStream(); // get connection inputstream
+			fos = new FileOutputStream(localFilename); // open outputstream to
+														// local file
+
+			byte[] buffer = new byte[4096]; // declare 4KB buffer
+			int len;
+
+			// while we have availble data, continue downloading and storing to
+			// local file
+			while ((len = is.read(buffer)) > 0) {
+				fos.write(buffer, 0, len);
+			}
+		} finally {
+			try {
+				if (is != null) {
+					is.close();
+				}
+			} finally {
+				if (fos != null) {
+					fos.close();
+				}
+			}
+		}
+	}
+
+	private final static String[] DICTIONARY_FILES = { "RouterKeygen_v3.dic",
+			/*"RKDictionary.dic", */"RouterKeygen.dic" };
+	private final static String[] DICTIONARY_URL = {
+			"https://android-thomson-key-solver.googlecode.com/files/RouterKeygen_v3.dic",
+			/*"https://android-thomson-key-solver.googlecode.com/files/RKDictionary.dic",*/ //this version uses native code
+			"https://android-thomson-key-solver.googlecode.com/files/RouterKeygen.dic" };
+
+	@Test
+	public void testThomson() throws MalformedURLException, IOException {
+		final WiFiNetwork wifi = new WiFiNetwork("Thomson41518c", "", 0, "",
+				new ZipInputStream(new FileInputStream(
+						"../res/raw/magic_info.zip")));
+		assertEquals("There should be only 1 keygen", 1, wifi.getKeygens()
+				.size());
+		final Keygen keygen = wifi.getKeygens().get(0);
+		assertTrue("Keygen should be Conn", keygen instanceof ThomsonKeygen);
+		((ThomsonKeygen) keygen).setInternetAlgorithm(false);
+		((ThomsonKeygen) keygen).setWebdic(new FileInputStream(
+				"../res/raw/webdic.zip"));
+		// Testing the internet version
+		((ThomsonKeygen) keygen).setInternetAlgorithm(true);
+		testThomsonResults(keygen);
+		((ThomsonKeygen) keygen).setInternetAlgorithm(false);
+		for (int i = 0; i < DICTIONARY_FILES.length; ++i) {
+			if (!new File(DICTIONARY_FILES[i]).exists()) {
+				System.out.println("Downloading " + DICTIONARY_FILES[i]);
+				downloadFromUrl(new URL(DICTIONARY_URL[i]), DICTIONARY_FILES[i]);
+			}
+			((ThomsonKeygen) keygen).setDictionary(DICTIONARY_FILES[i]);
+			testThomsonResults(keygen);
+		}
+	}
+
+	private void testThomsonResults(Keygen keygen) {
+		List<String> results = keygen.getKeys();
+		assertEquals("Errors should not happen", 0, keygen.getErrorCode());
+		assertEquals("There should be only three result", 3, results.size());
+		assertEquals("The password should be 69237B667A", "69237B667A",
+				results.get(0));
+		assertEquals("The password should be 1C2D56E083", "1C2D56E083",
+				results.get(1));
+		assertEquals("The password should be 8F524DED99", "8F524DED99",
+				results.get(2));
+
 	}
 
 	@Test

@@ -262,7 +262,7 @@ public class NetworkFragment extends SherlockFragment {
 	private void displayResults() {
 		if (passwordList.isEmpty()) {
 			root.findViewById(R.id.loading_spinner).setVisibility(View.GONE);
-			messages.setText(R.string.msg_no_correct_keys);
+			messages.setText(R.string.msg_errnomatches);
 		} else {
 			final ListView list = (ListView) root.findViewById(R.id.list_keys);
 			list.setOnItemClickListener(new OnItemClickListener() {
