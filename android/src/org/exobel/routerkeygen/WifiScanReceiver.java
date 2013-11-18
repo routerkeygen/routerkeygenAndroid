@@ -18,6 +18,7 @@
  */
 package org.exobel.routerkeygen;
 
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -30,6 +31,7 @@ import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources.NotFoundException;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
@@ -114,10 +116,17 @@ public class WifiScanReceiver extends BroadcastReceiver {
 						results.remove(j--);
 			for (ScanResult result : results) {
 				try {
-					set.add(new WiFiNetwork(result, new ZipInputStream(context
-							.getResources().openRawResource(R.raw.magic_info))));
+					ZipInputStream magicInfo = new ZipInputStream(context
+							.getResources().openRawResource(R.raw.magic_info));
+					set.add(new WiFiNetwork(result, magicInfo));
+					magicInfo.close();
 				} catch (LinkageError e) {
 					misbuiltAPK = true;
+				} catch (NotFoundException e1) {
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
 			}
 
@@ -128,6 +137,5 @@ public class WifiScanReceiver extends BroadcastReceiver {
 				networks[i++] = it.next();
 			return networks;
 		}
-
 	}
 }
