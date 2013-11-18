@@ -1,6 +1,5 @@
 package org.exobel.routerkeygen;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -29,7 +28,6 @@ public class CancelOperationActivity extends Activity {
 	/*
 	 * {@inheritDoc}
 	 */
-	@TargetApi(11)
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		final AlertDialog.Builder builder = new AlertDialog.Builder(this);

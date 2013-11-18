@@ -42,6 +42,15 @@ public class DictionaryDownloadService extends IntentService {
 		super("DictionaryDownloadService");
 	}
 
+	private NotificationManager mNotificationManager;
+
+	@Override
+	public void onCreate() {
+		// TODO Auto-generated method stub
+		super.onCreate();
+		mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+	}
+
 	// Unique Identification Number for the Notification.
 	// We use it on Notification start, and to cancel it.
 	private final int UNIQUE_ID = R.string.app_name
@@ -51,6 +60,7 @@ public class DictionaryDownloadService extends IntentService {
 
 	public void onDestroy() {
 		stopRequested = true;
+		mNotificationManager.cancel(UNIQUE_ID);
 	}
 
 	@SuppressWarnings("deprecation")
@@ -63,7 +73,6 @@ public class DictionaryDownloadService extends IntentService {
 		int myProgress = 0;
 		int byteRead;
 		byte[] buf;
-		NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
 		if (!Environment.getExternalStorageState().equals(
 				Environment.MEDIA_MOUNTED)) {

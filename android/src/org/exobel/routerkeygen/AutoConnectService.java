@@ -93,7 +93,7 @@ public class AutoConnectService extends Service implements onConnectionListener 
 			mNumOpenNetworksKept = Settings.Secure.getInt(getContentResolver(),
 					Settings.Secure.WIFI_NUM_OPEN_NETWORKS_KEPT, 10);
 		else
-			mNumOpenNetworksKept = Settings.Secure.getInt(getContentResolver(),
+			mNumOpenNetworksKept = Settings.Global.getInt(getContentResolver(),
 					Settings.Global.WIFI_NUM_OPEN_NETWORKS_KEPT, 10);
 
 	}
@@ -104,7 +104,6 @@ public class AutoConnectService extends Service implements onConnectionListener 
 			stopSelf();
 			return START_NOT_STICKY;
 		}
-		cancelNotification = true;
 		attempts = 0;
 		currentNetworkId = -1;
 		network = intent.getParcelableExtra(SCAN_RESULT);
@@ -129,6 +128,7 @@ public class AutoConnectService extends Service implements onConnectionListener 
 						tryingConnection();
 					}
 				}, DISCONNECT_WAITING_TIME);
+				cancelNotification = true;
 			} else {
 				mNotificationManager.notify(
 						UNIQUE_ID,
@@ -162,6 +162,7 @@ public class AutoConnectService extends Service implements onConnectionListener 
 							getString(R.string.app_name),
 							getString(R.string.not_auto_connect_key_testing,
 									keys.get(attempts - 1)), attempts));
+			cancelNotification = true;
 		} else {
 			mNotificationManager.notify(
 					UNIQUE_ID,
@@ -174,10 +175,10 @@ public class AutoConnectService extends Service implements onConnectionListener 
 
 	public void onDestroy() {
 		try {
-			reenableAllHotspots();
-			unregisterReceiver(mReceiver);
 			if (cancelNotification)
 				mNotificationManager.cancel(UNIQUE_ID);
+			reenableAllHotspots();
+			unregisterReceiver(mReceiver);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -243,11 +244,12 @@ public class AutoConnectService extends Service implements onConnectionListener 
 		final PendingIntent i = PendingIntent.getActivity(
 				getApplicationContext(),
 				0,
-				new Intent(this, CancelOperationActivity.class).putExtra(
-						CancelOperationActivity.SERVICE_TO_TERMINATE,
-						AutoConnectService.class.getName()).putExtra(
-						CancelOperationActivity.MESSAGE,
-						getString(R.string.cancel_auto_test)),
+				new Intent(this, CancelOperationActivity.class)
+						.putExtra(CancelOperationActivity.SERVICE_TO_TERMINATE,
+								AutoConnectService.class.getName())
+						.putExtra(CancelOperationActivity.MESSAGE,
+								getString(R.string.cancel_auto_test))
+						.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
 				PendingIntent.FLAG_UPDATE_CURRENT);
 		builder.setContentIntent(i);
 		builder.setOngoing(true);

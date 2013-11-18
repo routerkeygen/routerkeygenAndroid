@@ -35,6 +35,7 @@ import org.exobel.routerkeygen.algorithms.NativeThomson;
 import org.exobel.routerkeygen.algorithms.ThomsonKeygen;
 import org.exobel.routerkeygen.algorithms.WiFiNetwork;
 
+import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.content.Context;
@@ -166,6 +167,7 @@ public class NetworkFragment extends SherlockFragment {
 					passwordList.toArray(new String[0]));
 	}
 
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		if (passwordList == null) {

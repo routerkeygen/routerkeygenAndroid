@@ -77,7 +77,7 @@
         <activity
             android:name=".CancelOperationActivity"
             android:excludeFromRecents="true"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:theme="@style/Theme.Sherlock.NoActionBar" />
         <activity
             android:name="com.ipaulpro.afilechooser.FileChooserActivity"
             android:icon="@drawable/ic_chooser"
