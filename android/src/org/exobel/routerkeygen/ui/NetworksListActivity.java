@@ -72,7 +72,6 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		EasyTracker.getInstance().setContext(getApplicationContext());
 		setContentView(R.layout.activity_networks_list);
 
 		networkListFragment = ((NetworksListFragment) getSupportFragmentManager()
@@ -220,7 +219,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 	@Override
 	public void onStart() {
 		super.onStart();
-		EasyTracker.getInstance().activityStart(this); // Add this method.
+		EasyTracker.getInstance(this).activityStart(this); // Add this method.
 		getPrefs();
 		if (wifiOn) {
 			try {
@@ -268,7 +267,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 	public void onStop() {
 		super.onStop();
 		try {
-			EasyTracker.getInstance().activityStop(this); // Add this method.
+			EasyTracker.getInstance(this).activityStop(this); // Add this method.
 			unregisterReceiver(scanFinished);
 			unregisterReceiver(stateChanged);
 		} catch (Exception e) {

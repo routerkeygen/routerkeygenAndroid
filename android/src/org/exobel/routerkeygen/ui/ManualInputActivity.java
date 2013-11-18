@@ -60,13 +60,13 @@ public class ManualInputActivity extends SherlockFragmentActivity implements
 	@Override
 	public void onStart() {
 		super.onStart();
-		EasyTracker.getInstance().activityStart(this); // Add this method.
+		EasyTracker.getInstance(this).activityStart(this); // Add this method.
 	}
 
 	@Override
 	public void onStop() {
 		super.onStop();
-		EasyTracker.getInstance().activityStop(this); // Add this method.
+		EasyTracker.getInstance(this).activityStop(this); // Add this method.
 	}
 
 	@Override
