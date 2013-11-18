@@ -242,7 +242,7 @@ public class DictionaryDownloadService extends IntentService {
 	private NotificationCompat.Builder getSimple(CharSequence title,
 			CharSequence context) {
 		return new NotificationCompat.Builder(this)
-				.setSmallIcon(R.drawable.icon).setTicker(title)
+				.setSmallIcon(R.drawable.ic_notification).setTicker(title)
 				.setContentTitle(title).setContentText(context)
 				.setContentIntent(getPendingIntent());
 	}

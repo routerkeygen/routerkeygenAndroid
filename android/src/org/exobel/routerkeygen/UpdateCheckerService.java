@@ -41,7 +41,7 @@ public class UpdateCheckerService extends IntentService {
 			if (!Preferences.VERSION.equals(version.getString("version"))) {
 				final NotificationCompat.Builder builder = new NotificationCompat.Builder(
 						this)
-						.setSmallIcon(R.drawable.icon)
+						.setSmallIcon(R.drawable.ic_notification)
 						.setTicker(getString(R.string.update_title))
 						.setContentTitle(getString(R.string.update_title))
 						.setContentText(

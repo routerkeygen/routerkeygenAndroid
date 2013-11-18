@@ -34,7 +34,7 @@
         android:name=".RouterKeygenApplication"
         android:allowBackup="true"
         android:allowClearUserData="true"
-        android:icon="@drawable/icon"
+        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.Sherlock" >
