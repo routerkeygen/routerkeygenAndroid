@@ -42,6 +42,7 @@ public class DictionaryDownloadService extends IntentService {
 
 	private NotificationManager mNotificationManager;
 	private Notification update;
+	private boolean cancelNotification = true;
 
 	@Override
 	public void onCreate() {
@@ -59,7 +60,8 @@ public class DictionaryDownloadService extends IntentService {
 	public void onDestroy() {
 		super.onDestroy();
 		stopRequested = true;
-		mNotificationManager.cancel(UNIQUE_ID);
+		if (cancelNotification)
+			mNotificationManager.cancel(UNIQUE_ID);
 	}
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -80,18 +82,19 @@ public class DictionaryDownloadService extends IntentService {
 					NotificationUtils.getSimple(this,
 							getString(R.string.msg_error),
 							getString(R.string.msg_nosdcard)).build());
+			cancelNotification = false;
 			return;
 		}
 		final String dicTemp = Environment.getExternalStorageDirectory()
-				.getPath() + File.separator + "DicTemp.dic";
+				.getPath()
+				+ File.separator
+				+ "DicTemp"
+				+ System.currentTimeMillis();
 		try {
 
 			final String urlDownload = intent.getStringExtra(URL_DOWNLOAD);
 
 			con = (HttpURLConnection) new URL(urlDownload).openConnection();
-			myDicFile = new File(dicTemp);
-
-			fos = new FileOutputStream(myDicFile, false);
 
 			myProgress = byteRead = 0;
 
@@ -104,9 +107,9 @@ public class DictionaryDownloadService extends IntentService {
 								getString(R.string.msg_error),
 								getString(R.string.msg_nomemoryonsdcard))
 								.build());
-				fos.close();
 				dis.close();
 				con.disconnect();
+				cancelNotification = false;
 				return;
 			}
 			String dicFile = PreferenceManager.getDefaultSharedPreferences(
@@ -121,7 +124,7 @@ public class DictionaryDownloadService extends IntentService {
 			}
 
 			// Testing if we can write to the file
-			if (!canWrite(dicFile)) {
+			if (!canWrite(dicFile) || !canWrite(dicTemp)) {
 				mNotificationManager.notify(
 						UNIQUE_ID,
 						NotificationUtils.getSimple(this,
@@ -129,10 +132,13 @@ public class DictionaryDownloadService extends IntentService {
 								getString(R.string.msg_no_write_permissions))
 								.build());
 				dis.close();
-				fos.close();
 				con.disconnect();
+				cancelNotification = false;
 				return;
 			}
+			myDicFile = new File(dicTemp);
+
+			fos = new FileOutputStream(myDicFile, false);
 
 			final Intent i = new Intent(getApplicationContext(),
 					CancelOperationActivity.class)
@@ -198,16 +204,18 @@ public class DictionaryDownloadService extends IntentService {
 						NotificationUtils.getSimple(this,
 								getString(R.string.msg_error),
 								getString(R.string.msg_err_unkown)).build());
+				cancelNotification = false;
 				return;
 			}
 			if (!renameFile(dicTemp, dicFile, true)) {
-
+				new File(dicTemp).delete();
 				mNotificationManager.notify(
 						UNIQUE_ID,
 						NotificationUtils.getSimple(this,
 								getString(R.string.msg_error),
 								getString(R.string.pref_msg_err_rename_dic))
 								.build());
+				cancelNotification = false;
 				return;
 			}
 			mNotificationManager.notify(
@@ -216,19 +224,24 @@ public class DictionaryDownloadService extends IntentService {
 							getString(R.string.app_name),
 							getString(R.string.msg_dic_updated_finished))
 							.build());
+			cancelNotification = false;
 		} catch (FileNotFoundException e) {
+			new File(dicTemp).delete();
 			mNotificationManager.notify(
 					UNIQUE_ID,
 					NotificationUtils.getSimple(this,
 							getString(R.string.msg_error),
 							getString(R.string.msg_nosdcard)).build());
+			cancelNotification = false;
 			e.printStackTrace();
 		} catch (Exception e) {
+			new File(dicTemp).delete();
 			mNotificationManager.notify(
 					UNIQUE_ID,
 					NotificationUtils.getSimple(this,
 							getString(R.string.msg_error),
 							getString(R.string.msg_err_unkown)).build());
+			cancelNotification = false;
 			e.printStackTrace();
 		} finally {
 			if (fos != null)
@@ -269,24 +282,19 @@ public class DictionaryDownloadService extends IntentService {
 		File toBeRenamed = new File(file);
 		File newFile = new File(toFile);
 
-		if (!toBeRenamed.exists() || toBeRenamed.isDirectory())
+		if (!toBeRenamed.exists() || toBeRenamed.isDirectory()
+				|| newFile.isDirectory())
 			return false;
 
-		if (newFile.exists() && !newFile.isDirectory() && saveOld) {
-			if (!renameFile(toFile, toFile + "_backup", false))
+		if (newFile.exists() && saveOld) {
+			if (!renameFile(toFile, toFile + "_backup", true))
 				Toast.makeText(getBaseContext(),
 						R.string.pref_msg_err_backup_dic, Toast.LENGTH_SHORT)
 						.show();
-			else
-				toFile += "_backup";
 		}
-		newFile = new File(toFile);
 
 		// Rename
-		if (!toBeRenamed.renameTo(newFile))
-			return false;
-
-		return true;
+		return toBeRenamed.renameTo(newFile);
 	}
 
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)

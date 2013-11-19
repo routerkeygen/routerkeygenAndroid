@@ -89,10 +89,6 @@ public class ThomsonKeygen extends Keygen {
 		super(ssid, mac);
 		this.errorDict = false;
 		this.ssidIdentifier = ssid.substring(ssid.length() - 6);
-		for (int i = 0; i < 6; i += 2)
-			routerESSID[i / 2] = (byte) ((Character.digit(
-					ssidIdentifier.charAt(i), 16) << 4) + Character.digit(
-					ssidIdentifier.charAt(i + 1), 16));
 	}
 
 	@Override
@@ -108,6 +104,10 @@ public class ThomsonKeygen extends Keygen {
 			return null;
 		}
 
+		for (int i = 0; i < 6; i += 2)
+			routerESSID[i / 2] = (byte) ((Character.digit(
+					ssidIdentifier.charAt(i), 16) << 4) + Character.digit(
+					ssidIdentifier.charAt(i + 1), 16));
 		if (!internetAlgorithm) {
 			if (!localCalc())
 				return null;

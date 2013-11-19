@@ -1,5 +1,6 @@
 package org.exobel.routerkeygen.ui;
 
+import java.io.IOException;
 import java.util.Locale;
 import java.util.zip.ZipInputStream;
 
@@ -169,14 +170,14 @@ public class ManualInputFragment extends SherlockFragment {
 
 				if (ssid.equals(""))
 					return;
-				KeygenMatcherTask matcher = new KeygenMatcherTask(ssid, mac.toString().toUpperCase(
-						Locale.getDefault()));
+				KeygenMatcherTask matcher = new KeygenMatcherTask(ssid, mac
+						.toString().toUpperCase(Locale.getDefault()));
 				if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
 					matcher.execute();
 				} else {
 					matcher.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 				}
-				
+
 			}
 		});
 		Button cancel = (Button) root.findViewById(R.id.bt_cancel);
@@ -244,10 +245,16 @@ public class ManualInputFragment extends SherlockFragment {
 
 		@Override
 		protected WiFiNetwork doInBackground(Void... params) {
-			return new WiFiNetwork(ssid, mac, 0, "", new ZipInputStream(
-					getActivity().getResources().openRawResource(
-							R.raw.magic_info)));
+			final ZipInputStream magicInfo = new ZipInputStream(getActivity()
+					.getResources().openRawResource(R.raw.magic_info));
+			final WiFiNetwork wifi = new WiFiNetwork(ssid, mac, 0, "",
+					magicInfo);
+			try {
+				magicInfo.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return wifi;
 		}
-
 	}
 }

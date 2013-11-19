@@ -4,6 +4,9 @@ import org.acra.ACRA;
 import org.acra.ReportField;
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
+import org.exobel.routerkeygen.ui.NetworkActivity;
+import org.exobel.routerkeygen.ui.NetworksListActivity;
+import org.exobel.routerkeygen.ui.Preferences;
 
 import android.annotation.TargetApi;
 import android.app.Application;
@@ -42,7 +45,12 @@ public class RouterKeygenApplication extends Application {
 							.penaltyLog()
 							.penaltyDeath()
 							.setClassInstanceLimit(
-									CancelOperationActivity.class, 2).build());
+									CancelOperationActivity.class, 2)
+							.setClassInstanceLimit(NetworksListActivity.class,
+									2)
+							.setClassInstanceLimit(NetworkActivity.class, 2)
+							.setClassInstanceLimit(Preferences.class, 2)
+							.build());
 				} else {
 					StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
 							.detectLeakedSqlLiteObjects().penaltyLog()
