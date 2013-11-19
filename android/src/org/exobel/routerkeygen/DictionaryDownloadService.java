@@ -63,13 +63,12 @@ public class DictionaryDownloadService extends IntentService {
 	}
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	@SuppressWarnings("deprecation")
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		File myDicFile;
-		HttpURLConnection con;
-		DataInputStream dis;
-		FileOutputStream fos;
+		HttpURLConnection con = null;
+		DataInputStream dis = null;
+		FileOutputStream fos = null;
 		int myProgress = 0;
 		int byteRead;
 		byte[] buf;
@@ -98,10 +97,7 @@ public class DictionaryDownloadService extends IntentService {
 
 			dis = new DataInputStream(con.getInputStream());
 			fileLen = con.getContentLength();
-			// Checking if external storage has enough memory ...
-			android.os.StatFs stat = new android.os.StatFs(Environment
-					.getExternalStorageDirectory().getPath());
-			if (stat.getBlockSize() * stat.getAvailableBlocks() < fileLen) {
+			if (noSpaceLeft(fileLen)) {
 				mNotificationManager.notify(
 						UNIQUE_ID,
 						NotificationUtils.getSimple(this,
@@ -141,11 +137,11 @@ public class DictionaryDownloadService extends IntentService {
 			final Intent i = new Intent(getApplicationContext(),
 					CancelOperationActivity.class)
 					.putExtra(CancelOperationActivity.SERVICE_TO_TERMINATE,
-							AutoConnectService.class.getName())
+							DictionaryDownloadService.class.getName())
 					.putExtra(
 							CancelOperationActivity.MESSAGE,
 							getApplicationContext().getString(
-									R.string.cancel_auto_test))
+									R.string.cancel_download))
 					.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB)
 				i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -234,6 +230,21 @@ public class DictionaryDownloadService extends IntentService {
 							getString(R.string.msg_error),
 							getString(R.string.msg_err_unkown)).build());
 			e.printStackTrace();
+		} finally {
+			if (fos != null)
+				try {
+					fos.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			if (dis != null)
+				try {
+					dis.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			if (con != null)
+				con.disconnect();
 		}
 	}
 
@@ -278,4 +289,22 @@ public class DictionaryDownloadService extends IntentService {
 		return true;
 	}
 
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
+	@SuppressWarnings("deprecation")
+	private boolean noSpaceLeft(int fileLen) {
+		// Checking if external storage has enough memory ...
+		android.os.StatFs stat = new android.os.StatFs(Environment
+				.getExternalStorageDirectory().getPath());
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+			long fileLenLong = fileLen;
+			if (stat.getBlockSizeLong() == 0)
+				return true;
+			return stat.getAvailableBlocksLong() < (fileLenLong / stat
+					.getBlockSizeLong());
+		} else {
+			if (stat.getBlockSize() == 0)
+				return true;
+			return stat.getAvailableBlocks() < (fileLen / stat.getBlockSize());
+		}
+	}
 }
