@@ -18,6 +18,7 @@ public final class NotificationUtils {
 		return new NotificationCompat.Builder(context)
 				.setSmallIcon(R.drawable.ic_notification).setTicker(title)
 				.setContentTitle(title).setContentText(text)
+				.setOnlyAlertOnce(true).setAutoCancel(true)
 				.setContentIntent(getDefaultPendingIntent(context));
 	}
 
@@ -43,6 +44,7 @@ public final class NotificationUtils {
 				content);
 		builder.setContentIntent(i);
 		builder.setOngoing(true);
+		builder.setAutoCancel(false);
 		final Notification update;
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
 			builder.setProgress(max, progress, indeterminate);
