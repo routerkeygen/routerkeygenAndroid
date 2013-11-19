@@ -43,7 +43,6 @@ public class RouterKeygenApplication extends Application {
 					StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
 							.detectAll()
 							.penaltyLog()
-							.penaltyDeath()
 							.setClassInstanceLimit(
 									CancelOperationActivity.class, 2)
 							.setClassInstanceLimit(NetworksListActivity.class,
@@ -53,8 +52,7 @@ public class RouterKeygenApplication extends Application {
 							.build());
 				} else {
 					StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-							.detectLeakedSqlLiteObjects().penaltyLog()
-							.penaltyDeath().build());
+							.detectLeakedSqlLiteObjects().penaltyLog().build());
 
 				}
 			}
