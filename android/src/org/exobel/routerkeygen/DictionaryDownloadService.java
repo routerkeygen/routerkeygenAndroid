@@ -22,8 +22,6 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.support.v4.app.NotificationCompat;
-import android.widget.RemoteViews;
 import android.widget.Toast;
 
 public class DictionaryDownloadService extends IntentService {
@@ -43,10 +41,10 @@ public class DictionaryDownloadService extends IntentService {
 	}
 
 	private NotificationManager mNotificationManager;
+	private Notification update;
 
 	@Override
 	public void onCreate() {
-		// TODO Auto-generated method stub
 		super.onCreate();
 		mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 	}
@@ -59,10 +57,12 @@ public class DictionaryDownloadService extends IntentService {
 	private boolean stopRequested = false;
 
 	public void onDestroy() {
+		super.onDestroy();
 		stopRequested = true;
 		mNotificationManager.cancel(UNIQUE_ID);
 	}
 
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onHandleIntent(Intent intent) {
@@ -78,7 +78,8 @@ public class DictionaryDownloadService extends IntentService {
 				Environment.MEDIA_MOUNTED)) {
 			mNotificationManager.notify(
 					UNIQUE_ID,
-					getSimple(getString(R.string.msg_error),
+					NotificationUtils.getSimple(this,
+							getString(R.string.msg_error),
 							getString(R.string.msg_nosdcard)).build());
 			return;
 		}
@@ -103,7 +104,8 @@ public class DictionaryDownloadService extends IntentService {
 			if (stat.getBlockSize() * stat.getAvailableBlocks() < fileLen) {
 				mNotificationManager.notify(
 						UNIQUE_ID,
-						getSimple(getString(R.string.msg_error),
+						NotificationUtils.getSimple(this,
+								getString(R.string.msg_error),
 								getString(R.string.msg_nomemoryonsdcard))
 								.build());
 				fos.close();
@@ -126,7 +128,8 @@ public class DictionaryDownloadService extends IntentService {
 			if (!canWrite(dicFile)) {
 				mNotificationManager.notify(
 						UNIQUE_ID,
-						getSimple(getString(R.string.msg_error),
+						NotificationUtils.getSimple(this,
+								getString(R.string.msg_error),
 								getString(R.string.msg_no_write_permissions))
 								.build());
 				dis.close();
@@ -135,10 +138,23 @@ public class DictionaryDownloadService extends IntentService {
 				return;
 			}
 
-			mNotificationManager.notify(
-					UNIQUE_ID,
-					createProgressBar(getString(R.string.msg_dl_dlingdic), "",
-							myProgress, false));
+			final Intent i = new Intent(getApplicationContext(),
+					CancelOperationActivity.class)
+					.putExtra(CancelOperationActivity.SERVICE_TO_TERMINATE,
+							AutoConnectService.class.getName())
+					.putExtra(
+							CancelOperationActivity.MESSAGE,
+							getApplicationContext().getString(
+									R.string.cancel_auto_test))
+					.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB)
+				i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+			update = NotificationUtils.createProgressBar(this,
+					getString(R.string.msg_dl_dlingdic), "", fileLen,
+					myProgress, false, PendingIntent.getActivity(
+							getApplicationContext(), 0, i,
+							PendingIntent.FLAG_UPDATE_CURRENT));
+			mNotificationManager.notify(UNIQUE_ID, update);
 			long lastNotificationTime = System.currentTimeMillis();
 			buf = new byte[1024 * 512];
 			while (myProgress < fileLen) {
@@ -160,21 +176,31 @@ public class DictionaryDownloadService extends IntentService {
 					myProgress = fileLen;
 				}
 				if ((System.currentTimeMillis() - lastNotificationTime) > MIN_TIME_BETWWEN_UPDATES) {
-					mNotificationManager.notify(UNIQUE_ID,
-							updateProgressBar(myProgress, false));
+					mNotificationManager.notify(UNIQUE_ID, NotificationUtils
+							.updateProgressBar(update, fileLen, myProgress,
+									false));
 					lastNotificationTime = System.currentTimeMillis();
 				}
 			}
 
-			mNotificationManager.notify(
-					UNIQUE_ID,
-					createProgressBar(getString(R.string.msg_dl_dlingdic),
-							getString(R.string.msg_wait), myProgress, true));
+			mNotificationManager
+					.notify(UNIQUE_ID,
+							NotificationUtils
+									.createProgressBar(
+											this,
+											getString(R.string.msg_dl_dlingdic),
+											getString(R.string.msg_wait),
+											0,
+											0,
+											true,
+											NotificationUtils
+													.getDefaultPendingIntent(getApplicationContext())));
 			if (!HashUtils.checkDicMD5(dicTemp, DICTIONARY_HASH)) {
 				new File(dicTemp).delete();
 				mNotificationManager.notify(
 						UNIQUE_ID,
-						getSimple(getString(R.string.msg_error),
+						NotificationUtils.getSimple(this,
+								getString(R.string.msg_error),
 								getString(R.string.msg_err_unkown)).build());
 				return;
 			}
@@ -182,26 +208,30 @@ public class DictionaryDownloadService extends IntentService {
 
 				mNotificationManager.notify(
 						UNIQUE_ID,
-						getSimple(getString(R.string.msg_error),
+						NotificationUtils.getSimple(this,
+								getString(R.string.msg_error),
 								getString(R.string.pref_msg_err_rename_dic))
 								.build());
 				return;
 			}
 			mNotificationManager.notify(
 					UNIQUE_ID,
-					getSimple(getString(R.string.app_name),
+					NotificationUtils.getSimple(this,
+							getString(R.string.app_name),
 							getString(R.string.msg_dic_updated_finished))
 							.build());
 		} catch (FileNotFoundException e) {
 			mNotificationManager.notify(
 					UNIQUE_ID,
-					getSimple(getString(R.string.msg_error),
+					NotificationUtils.getSimple(this,
+							getString(R.string.msg_error),
 							getString(R.string.msg_nosdcard)).build());
 			e.printStackTrace();
 		} catch (Exception e) {
 			mNotificationManager.notify(
 					UNIQUE_ID,
-					getSimple(getString(R.string.msg_error),
+					NotificationUtils.getSimple(this,
+							getString(R.string.msg_error),
 							getString(R.string.msg_err_unkown)).build());
 			e.printStackTrace();
 		}
@@ -246,73 +276,6 @@ public class DictionaryDownloadService extends IntentService {
 			return false;
 
 		return true;
-	}
-
-	private NotificationCompat.Builder getSimple(CharSequence title,
-			CharSequence context) {
-		return new NotificationCompat.Builder(this)
-				.setSmallIcon(R.drawable.ic_notification).setTicker(title)
-				.setContentTitle(title).setContentText(context)
-				.setContentIntent(getPendingIntent());
-	}
-
-	private Notification update;
-
-	@TargetApi(16)
-	private Notification updateProgressBar(int progress, boolean indeterminate) {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-			update.contentView.setProgressBar(android.R.id.progress, fileLen,
-					progress, indeterminate);
-		else
-			update.contentView.setProgressBar(R.id.progress, fileLen, progress,
-					indeterminate);
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-			update.bigContentView.setProgressBar(android.R.id.progress,
-					fileLen, progress, indeterminate);
-		return update;
-	}
-
-	private Notification createProgressBar(CharSequence title,
-			CharSequence content, int progress, boolean indeterminate) {
-		final NotificationCompat.Builder builder = getSimple(title, content);
-		final PendingIntent i = PendingIntent.getActivity(
-				getApplicationContext(),
-				0,
-				new Intent(this, CancelOperationActivity.class).putExtra(
-						CancelOperationActivity.SERVICE_TO_TERMINATE,
-						DictionaryDownloadService.class.getName()).putExtra(
-						CancelOperationActivity.MESSAGE,
-						getString(R.string.cancel_download)),
-				PendingIntent.FLAG_UPDATE_CURRENT);
-		builder.setContentIntent(i);
-		builder.setOngoing(true);
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-			builder.setProgress(fileLen, progress, indeterminate);
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN
-					&& !indeterminate) {
-				builder.addAction(
-						android.R.drawable.ic_menu_close_clear_cancel,
-						getString(android.R.string.cancel), i);
-			}
-			update = builder.build();
-		} else {
-			RemoteViews contentView = new RemoteViews(getPackageName(),
-					R.layout.notification);
-			contentView.setTextViewText(R.id.text1, content);
-			contentView.setProgressBar(R.id.progress, fileLen, progress,
-					indeterminate);
-			update = builder.build();
-			update.contentView = contentView;
-		}
-		return update;
-	}
-
-	private PendingIntent getPendingIntent() {
-		return PendingIntent.getActivity(getApplicationContext(), 0,
-				new Intent(), // add this
-				// pass null
-				// to intent
-				PendingIntent.FLAG_UPDATE_CURRENT);
 	}
 
 }

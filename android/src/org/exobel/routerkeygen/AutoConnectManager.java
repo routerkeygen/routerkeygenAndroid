@@ -39,7 +39,8 @@ public class AutoConnectManager extends BroadcastReceiver {
 		SupplicantState state = intent
 				.getParcelableExtra(WifiManager.EXTRA_NEW_STATE);
 		if (state != null) {
-			Log.d(this.getClass().getSimpleName(), state.name());
+			if (BuildConfig.DEBUG)
+				Log.d(this.getClass().getSimpleName(), state.name());
 			if (state.equals(SupplicantState.COMPLETED)) {
 				listener.onSuccessfulConection();
 				return;

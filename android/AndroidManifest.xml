@@ -20,7 +20,7 @@
     <uses-feature
         android:name="android.hardware.touchscreen"
         android:required="false" />
-    
+
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -77,6 +77,8 @@
         <activity
             android:name=".CancelOperationActivity"
             android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:taskAffinity=""
             android:theme="@style/Theme.Sherlock.Dialog" />
         <activity
             android:name="com.ipaulpro.afilechooser.FileChooserActivity"

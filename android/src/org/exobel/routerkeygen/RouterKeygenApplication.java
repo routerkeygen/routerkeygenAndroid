@@ -17,7 +17,7 @@ import com.millennialmedia.android.MMSDK;
 		ReportField.PHONE_MODEL, ReportField.CUSTOM_DATA,
 		ReportField.STACK_TRACE, ReportField.LOGCAT }, mode = ReportingInteractionMode.TOAST, resToastText = R.string.crash_toast_text)
 public class RouterKeygenApplication extends Application {
-	@TargetApi(Build.VERSION_CODES.GINGERBREAD)
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -36,8 +36,19 @@ public class RouterKeygenApplication extends Application {
 				StrictMode
 						.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
 								.detectAll().penaltyLog().build());
-				StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-						.detectAll().penaltyLog().penaltyDeath().build());
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+					StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+							.detectAll()
+							.penaltyLog()
+							.penaltyDeath()
+							.setClassInstanceLimit(
+									CancelOperationActivity.class, 2).build());
+				} else {
+					StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+							.detectLeakedSqlLiteObjects().penaltyLog()
+							.penaltyDeath().build());
+
+				}
 			}
 		}
 	}

@@ -3,6 +3,7 @@
 
     <style name="Theme.Sherlock.Dialog" parent="Theme.Sherlock.NoActionBar">
         <item name="android:windowIsFloating">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
 </resources>

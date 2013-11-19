@@ -18,9 +18,9 @@
    sodipodi:docname="icon_notification.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    version="1.0"
-   inkscape:export-filename="/home/ruka/Projectos/routerkeygenAndroid/android/res/drawable-hdpi/ic_notification_holo.png"
-   inkscape:export-xdpi="12.03"
-   inkscape:export-ydpi="12.03">
+   inkscape:export-filename="/home/ruka/Projectos/routerkeygenAndroid/android/res/drawable-xxhdpi-v11/ic_notification.png"
+   inkscape:export-xdpi="16.045071"
+   inkscape:export-ydpi="16.045071">
   <defs
      id="defs4">
     <linearGradient
@@ -171,13 +171,13 @@
      inkscape:object-nodes="true"
      inkscape:grid-points="true"
      inkscape:guide-points="true"
-     inkscape:window-width="1855"
-     inkscape:window-height="1056"
-     inkscape:window-x="65"
+     inkscape:window-width="927"
+     inkscape:window-height="1028"
+     inkscape:window-x="66"
      inkscape:window-y="24"
      width="524.40945px"
      height="744.09449px"
-     inkscape:window-maximized="1"
+     inkscape:window-maximized="0"
      fit-margin-top="0"
      fit-margin-left="0"
      fit-margin-right="0"

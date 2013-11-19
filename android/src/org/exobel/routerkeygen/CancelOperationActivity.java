@@ -34,7 +34,6 @@ public class CancelOperationActivity extends Activity {
 		String message = getIntent().getStringExtra(MESSAGE);
 		if (message == null)
 			message = getString(android.R.string.cancel) + "?";
-
 		builder.setTitle(R.string.app_name)
 				.setNegativeButton(android.R.string.no,
 						new DialogInterface.OnClickListener() {

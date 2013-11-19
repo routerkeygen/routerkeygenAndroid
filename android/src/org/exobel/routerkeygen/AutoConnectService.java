@@ -19,9 +19,10 @@
 package org.exobel.routerkeygen;
 
 import java.util.List;
+
 import org.exobel.routerkeygen.AutoConnectManager.onConnectionListener;
+
 import android.annotation.TargetApi;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -38,9 +39,8 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.provider.Settings;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.RemoteViews;
+
 import com.farproc.wifi.connecter.Wifi;
 
 public class AutoConnectService extends Service implements onConnectionListener {
@@ -55,6 +55,7 @@ public class AutoConnectService extends Service implements onConnectionListener 
 			+ AutoConnectService.class.getName().hashCode();
 
 	private NotificationManager mNotificationManager;
+	private Handler handler;
 
 	final private Binder mBinder = new LocalBinder();
 	private ScanResult network;
@@ -65,6 +66,12 @@ public class AutoConnectService extends Service implements onConnectionListener 
 	private int mNumOpenNetworksKept;
 	private int currentNetworkId = -1;
 	private boolean cancelNotification = true;
+
+	private Runnable tryAfterDisconnecting = new Runnable() {
+		public void run() {
+			tryingConnection();
+		}
+	};
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -84,6 +91,7 @@ public class AutoConnectService extends Service implements onConnectionListener 
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
 	@SuppressWarnings("deprecation")
 	public void onCreate() {
+		handler = new Handler();
 		wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 		mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -118,21 +126,23 @@ public class AutoConnectService extends Service implements onConnectionListener 
 						network.capabilities);
 				mNotificationManager
 						.notify(UNIQUE_ID,
-								createProgressBar(
-										getString(R.string.app_name),
-										getString(R.string.not_auto_connect_waiting),
-										0));
-				final Handler handler = new Handler();
-				handler.postDelayed(new Runnable() {
-					public void run() {
-						tryingConnection();
-					}
-				}, DISCONNECT_WAITING_TIME);
+								NotificationUtils
+										.createProgressBar(
+												this,
+												getString(R.string.app_name),
+												getString(R.string.not_auto_connect_waiting),
+												keys.size(),
+												0,
+												false,
+												getDefaultPendingIntent(getApplicationContext())));
+				handler.postDelayed(tryAfterDisconnecting,
+						DISCONNECT_WAITING_TIME);
 				cancelNotification = true;
 			} else {
 				mNotificationManager.notify(
 						UNIQUE_ID,
-						getSimple(getString(R.string.msg_error),
+						NotificationUtils.getSimple(this,
+								getString(R.string.msg_error),
 								getString(R.string.msg_error_key_testing))
 								.build());
 				cancelNotification = false;
@@ -154,19 +164,23 @@ public class AutoConnectService extends Service implements onConnectionListener 
 
 		if (currentNetworkId != -1) {
 			lastTimeDisconnected = System.currentTimeMillis();
-			registerReceiver(mReceiver, new IntentFilter(
-					WifiManager.SUPPLICANT_STATE_CHANGED_ACTION));
-			mNotificationManager.notify(
-					UNIQUE_ID,
-					createProgressBar(
+			if (attempts == 1)// first try, we register the listener
+				registerReceiver(mReceiver, new IntentFilter(
+						WifiManager.SUPPLICANT_STATE_CHANGED_ACTION));
+			mNotificationManager.notify(UNIQUE_ID, NotificationUtils
+					.createProgressBar(
+							this,
 							getString(R.string.app_name),
 							getString(R.string.not_auto_connect_key_testing,
-									keys.get(attempts - 1)), attempts));
+									keys.get(attempts - 1)), keys.size(),
+							attempts, false,
+							getDefaultPendingIntent(getApplicationContext())));
 			cancelNotification = true;
 		} else {
 			mNotificationManager.notify(
 					UNIQUE_ID,
-					getSimple(getString(R.string.msg_error),
+					NotificationUtils.getSimple(this,
+							getString(R.string.msg_error),
 							getString(R.string.msg_error_key_testing)).build());
 			cancelNotification = false;
 			stopSelf();
@@ -174,10 +188,12 @@ public class AutoConnectService extends Service implements onConnectionListener 
 	}
 
 	public void onDestroy() {
+		super.onDestroy();
+		handler.removeCallbacks(tryAfterDisconnecting);
+		if (cancelNotification)
+			mNotificationManager.cancel(UNIQUE_ID);
+		reenableAllHotspots();
 		try {
-			if (cancelNotification)
-				mNotificationManager.cancel(UNIQUE_ID);
-			reenableAllHotspots();
 			unregisterReceiver(mReceiver);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -198,7 +214,8 @@ public class AutoConnectService extends Service implements onConnectionListener 
 			reenableAllHotspots();
 			mNotificationManager.notify(
 					UNIQUE_ID,
-					getSimple(getString(R.string.msg_error),
+					NotificationUtils.getSimple(this,
+							getString(R.string.msg_error),
 							getString(R.string.msg_no_correct_keys)).build());
 			cancelNotification = false;
 			stopSelf();
@@ -211,7 +228,8 @@ public class AutoConnectService extends Service implements onConnectionListener 
 		reenableAllHotspots();
 		mNotificationManager.notify(
 				UNIQUE_ID,
-				getSimple(
+				NotificationUtils.getSimple(
+						this,
 						getString(R.string.app_name),
 						getString(R.string.not_correct_key_testing,
 								keys.get(attempts - 1))).build());
@@ -230,55 +248,17 @@ public class AutoConnectService extends Service implements onConnectionListener 
 		}
 	}
 
-	private NotificationCompat.Builder getSimple(CharSequence title,
-			CharSequence context) {
-		return new NotificationCompat.Builder(this)
-				.setSmallIcon(R.drawable.ic_notification).setTicker(title)
-				.setContentTitle(title).setContentText(context)
-				.setContentIntent(getPendingIntent());
-	}
-
-	private Notification createProgressBar(CharSequence title,
-			CharSequence content, int progress) {
-		final NotificationCompat.Builder builder = getSimple(title, content);
-		final PendingIntent i = PendingIntent.getActivity(
-				getApplicationContext(),
-				0,
-				new Intent(this, CancelOperationActivity.class)
-						.putExtra(CancelOperationActivity.SERVICE_TO_TERMINATE,
-								AutoConnectService.class.getName())
-						.putExtra(CancelOperationActivity.MESSAGE,
-								getString(R.string.cancel_auto_test))
-						.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
-				PendingIntent.FLAG_UPDATE_CURRENT);
-		builder.setContentIntent(i);
-		builder.setOngoing(true);
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-			builder.setProgress(keys.size(), progress, false);
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-				builder.addAction(
-						android.R.drawable.ic_menu_close_clear_cancel,
-						getString(android.R.string.cancel), i);
-			}
-		} else {
-			final RemoteViews contentView = new RemoteViews(getPackageName(),
-					R.layout.notification);
-			contentView.setTextViewText(R.id.text1, content);
-			contentView.setProgressBar(R.id.progress, keys.size(), progress,
-					false);
-			final Notification not = builder.build();
-			not.contentView = contentView;
-			return not;
-		}
-		return builder.build();
-	}
-
-	private PendingIntent getPendingIntent() {
-		return PendingIntent.getActivity(getApplicationContext(), 0,
-				new Intent(), // add this
-								// pass null
-								// to intent
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	private static PendingIntent getDefaultPendingIntent(Context context) {
+		final Intent i = new Intent(context, CancelOperationActivity.class)
+				.putExtra(CancelOperationActivity.SERVICE_TO_TERMINATE,
+						AutoConnectService.class.getName())
+				.putExtra(CancelOperationActivity.MESSAGE,
+						context.getString(R.string.cancel_auto_test))
+				.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB)
+			i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		return PendingIntent.getActivity(context, 0, i,
 				PendingIntent.FLAG_UPDATE_CURRENT);
 	}
-
 }

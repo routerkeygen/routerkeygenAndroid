@@ -27,7 +27,7 @@ import java.util.zip.ZipInputStream;
 
 import org.exobel.routerkeygen.algorithms.WiFiNetwork;
 
-import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -39,7 +39,6 @@ import android.os.AsyncTask.Status;
 import android.os.Build;
 import android.widget.Toast;
 
-@SuppressLint("InlinedApi")
 public class WifiScanReceiver extends BroadcastReceiver {
 	final private OnScanListener[] scanListeners;
 	final private WifiManager wifi;
@@ -55,6 +54,7 @@ public class WifiScanReceiver extends BroadcastReceiver {
 		this.wifi = wifi;
 	}
 
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public void onReceive(Context context, Intent intent) {
 		if (intent == null
 				|| !intent.getAction().equals(
