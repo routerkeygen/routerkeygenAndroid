@@ -303,7 +303,7 @@ public class Preferences extends SherlockPreferenceActivity {
 				// The URI of the selected file
 				final Uri uri = data.getData();
 				// Create a File from this Uri
-				File file = FileUtils.getFile(uri);
+				File file = FileUtils.getFile(this, uri);
 				final SharedPreferences customSharedPreference = PreferenceManager
 						.getDefaultSharedPreferences(getApplicationContext());
 				final SharedPreferences.Editor editor = customSharedPreference
