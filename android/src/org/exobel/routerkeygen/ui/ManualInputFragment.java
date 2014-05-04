@@ -44,7 +44,7 @@ public class ManualInputFragment extends SherlockFragment {
 	public static ManualInputFragment newInstance(String mac) {
 		Bundle args = new Bundle();
 		if (mac != null)
-			args.putString(MAC_ADDRESS_ARG, mac);
+			args.putString(MAC_ADDRESS_ARG, mac.replace(":", ""));
 		ManualInputFragment frag = new ManualInputFragment();
 		frag.setArguments(args);
 		return frag;
