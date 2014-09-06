@@ -1,3 +1,5 @@
+#RouterKeygen for Android
+
 Router Keygen generate default WPA/WEP keys for the following router:
 
 Thomson based routers ( this includes Thomson, SpeedTouch, Orange, Infinitum, BBox, DMax, BigPond, O2Wireless, Otenet, Cyta , TN_private, Blink )
@@ -18,4 +20,10 @@ InfostradaWifi
 To calculate the Thomson keys, a dictionary file is required.
 
 
-Router Keygen is open-source licensed under GPL.
+Router Keygen is open-source licensed under [GPL](http://www.gnu.org/copyleft/gpl.html).
+
+
+#Releases
+
+Get them from here:
+https://github.com/routerkeygen/routerkeygenAndroid/releases
