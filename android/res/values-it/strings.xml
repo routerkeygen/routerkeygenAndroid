@@ -26,7 +26,7 @@
     <string name="app_name">Router Keygen</string>
     <string name="msg_welcome_title">Router Keygen</string>
     <string name="msg_welcome_text">Grazie per aver provato Router Keygen. Se ti piace questa applicazione, per favore considera il fatto di comprare la versione Dona. Il link è nel menù delle preferenze. La tua donazione motiverà gli autori a migliorare questo fantastico programma open-source.</string>
-    <string name="msg_welcome_tip">Select any supported network to generate possible keys.</string> <!-- UNTRANSLATED -->
+    <string name="msg_welcome_tip">Seleziona una rete per generare la sua possibile chiave</string>
     <string name="menu_scan">Scansiona</string>
     <string name="menu_manual">Immetti manualmente</string>
     <string name="menu_preferences">Preferenze</string>
@@ -54,7 +54,7 @@
     <string name="bt_website">Vai al sito web</string>
     <string name="bt_paypal">PayPal</string>
     <string name="bt_google_play">Google Play</string>
-    <string name="bt_dont_donate">Don\'t donate :-(</string> <!-- UNTRANSLATED -->
+    <string name="bt_dont_donate">Non donare :(</string>
 
     <!-- DIALOG STRINGS -->
     <string name="lb_manual">Inserisci qui il tuo ESSID:</string>
@@ -66,7 +66,8 @@
     <string name="msg_wait">Per favore attendi&#8230;</string>
     <string name="lb_manual_bssid">Indirizzo MAC (opzionale):</string>
     <string name="dialog_about_credits">Crediti</string>
-    <string name="dialog_about_credits_desc">Router Keygen è il risultato dell\'inestimabile contributo da parte delle seguenti persone/organizzazioni:\n\n        Rui Araújo, Luís Fonseca, Ângela Igreja, Simone Guidi, Matthijs de Rijk, Van Hove Sven, Jon Uriarte, <a href="http://www.gnucitizen.org/">GNUCITIZEN</a>, <a href="http://wifiresearchers.wordpress.com/">White Hats Crew</a>, Fred Williams, Muris Kurgaš, <a href="http://websec.ca/">Pedro Joaquim</a>, chaeo, Nicolas DeRouet, Eduardo Laborin, Florian Frank, Axel Martinez, Victor Mignot, Martijn Gerkes, Alejandro Marquez, <a href="http://www.openssl.org/">OpenSSl</a>.</string>
+    <string name="dialog_about_credits_desc">Router Keygen è il risultato dell\'inestimabile contributo da parte delle seguenti persone/organizzazioni:\n\n
+        Rui Araújo, Luís Fonseca, Ângela Igreja, Simone Guidi, Matthijs de Rijk, Van Hove Sven, Jon Uriarte, <a href="http://www.gnucitizen.org/">GNUCITIZEN</a>, <a href="http://wifiresearchers.wordpress.com/">White Hats Crew</a>, Fred Williams, Muris Kurgaš, <a href="http://websec.ca/">Pedro Joaquim</a>, chaeo, Nicolas DeRouet, Eduardo Laborin, Florian Frank, Axel Martinez, Victor Mignot, Martijn Gerkes, Alejandro Marquez, <a href="http://www.openssl.org/">OpenSSl</a>.</string>
     <string name="dialog_about_license">Licenza</string>
     <string name="dialog_about_license_desc">This application is under the GPLv3.\n\nYou can read its terms <a href="http://www.gnu.org/licenses/gpl-3.0.html">here</a>.\n\n
         RouterKeygen is built using open source software:\n<a href="https://github.com/JakeWharton/ActionBarSherlock">ActionBarSherlock</a>\n<a href="https://github.com/iPaulPro/aFileChooser">aFileChooser</a>\n<a href="https://github.com/beworker/pinned-section-listview">PinnedSectionListView</a>\n<a href="https://code.google.com/p/android-wifi-connecter/">android-wifi-connecter</a>.\n\n  The license terms for this projects can be read by following the link.</string> <!-- UNTRANSLATED -->
@@ -74,26 +75,27 @@
     <string name="update_title">Aggiornamento disponibile</string>
     <string name="update_notification">La versione <xliff:g id="version">%1$s</xliff:g> è disponibile.</string>
     <string name="update_message">La versione <xliff:g id="version">%1$s</xliff:g> è disponibile. Vai al sito web per scaricare la nuova versione.</string>
-    <string name="cancel_download">Do you want to cancel the dictionary download?</string>  <!-- UNTRANSLATED -->
-    <string name="cancel_auto_test">Do you want to cancel the keys testing?</string>  <!-- UNTRANSLATED -->
-    <string name="networklist_supported">Supported</string> <!-- UNTRANSLATED -->
-    <string name="networklist_unlikely_supported">Unlikely Supported</string> <!-- UNTRANSLATED -->
-    <string name="networklist_unsupported">Unsupported</string> <!-- UNTRANSLATED -->
-    <string name="msg_donation">Install the following app to remove the ads and to donate. Thank you! :-)</string> <!-- UNTRANSLATED -->
+    <string name="cancel_download">Vuoi cancellare il dizionario che hai scaricato?</string>  
+    <string name="cancel_auto_test">Vuoi cancellare le chiavi testate?</string>  
+    <string name="networklist_supported">Ci sono reti supportate</string> 
+    <string name="networklist_unlikely_supported">Unlikely Supported</string> 
+    <string name="networklist_unsupported">Nessuna rete supportata</string> 
+    <string name="msg_donation">Per rimuovere la pubblicità installa l\us'applicazione seguente. Grazie</string>
 
     <!-- PREFERENCES STRINGS -->
     <string name="pref_hinton_wifion">Attivare il wifi automaticamente</string>
     <string name="pref_hintoff_wifion">Non attivare il wifi automaticamente</string>
     <string name="pref_wifion">Auto Wifi On</string>
-    <string name="pref_dict_select">Select Dictionary</string>  <!-- UNTRANSLATED -->
-    <string name="pref_dict_select_des">Select the dictionary file</string>  <!-- UNTRANSLATED -->
+    <string name="pref_dict_select">Seleziona dizionario</string> 
+    <string name="pref_dict_select_des">Seleziona il file del dizionario</string>  
     <string name="pref_1section">Opzioni Generali</string>
     <string name="pref_2section">Riguardo</string>
     <string name="pref_donate_paypal">Dona (Paypal)</string>
     <string name="pref_donate_google_play">Dona (Google Play)</string>
     <string name="pref_donate_why">Comprami un caffè se ti è piaciuta quest\'applicazione</string>
     <string name="pref_about">Riguardo a Router Keygen</string>
-    <string name="pref_about_desc">Router Keygen calcola le password di default per molti router di uso comune.\n\n<a href="http://code.google.com/p/android-thomson-key-solver/">Sito del Progetto</a>\n\nVersione: </string>
+    <string name="pref_about_desc">Router Keygen calcola le password di default per molti router di uso comune.\n\n
+<a href="http://code.google.com/p/android-thomson-key-solver/">Sito del Progetto</a>\n\nVersione: </string>
     <string name="pref_native">Calcolo nativo</string>
     <string name="pref_hinton_native">Calcola in altro modo se fallisce nel trovare il dizionario</string>
     <string name="pref_hintoff_native">Avverti solo se fallisce nel trovare il dizionario</string>
@@ -111,12 +113,12 @@
     <string name="pref_autoscan_interval">Intervallo di Scansione Automatica</string>
     <string name="pref_hint_autoscan_interval">Lunghezza della scansione automatica.</string>
     <string name="pref_analytics">Google Analytics</string>  <!-- UNTRANSLATED -->
-    <string name="pref_hinton_analytics">Usage and crashes are being tracked anonymously</string>  <!-- UNTRANSLATED -->
-    <string name="pref_hintoff_analytics">Usage and crashes are not being tracked</string>  <!-- UNTRANSLATED -->
+    <string name="pref_hinton_analytics">Consenti invii anonimi per i crash e l\'uso dell\'app</string> 
+    <string name="pref_hintoff_analytics">Non consentire invio di eventuali crash</string> 
     <string name="pref_changelog">Changelog</string>
 
     <!-- ERROR MESSAGE STRINGS -->
-    <string name="msg_unspported">This network is not supported!</string>  <!-- UNTRANSLATED -->
+    <string name="msg_unspported">Questa rete non è supportata!</string>  
     <string name="msg_nowifidetected">Nessuna rete wifi trovata!</string>
     <string name="msg_nowifi">Il Wifi non è attivo! Per favore attiva il Wifi!</string>
     <string name="msg_scanfailed">La scansione non è riuscita!</string>
@@ -153,27 +155,26 @@
     <string name="msg_err_saving_key_file">Errore nel salvataggio del file con le chiavi.</string>
     <string name="msg_saved_key_file">salvato nella scheda SD.</string>
     <string name="pref_msg_no_network">Nessun accesso alla rete.</string>
-    <string name="msg_err_webdic_table">Error while processing online keys.</string>
+    <string name="msg_err_webdic_table">Errore durante il processo online</string>
     <string name="msg_unspported_network">Non è stata rilevata una rete valida. Per favore controlla il parametro SSID e l\'indirizzo MAC.</string>
     <string name="msg_invalid_mac">Non è stato inserito un indirizzo MAC valido e pertanto sarà ignorato.</string>
     <string name="msg_error_key_testing">Errore nella verifica della chiave.</string>
     <string name="msg_no_correct_keys">Nessuna chiave corretta.</string>
     <string name="msg_auto_connect_running">La procedura di connessione automatica è già avviata.</string>
-    <string name="msg_auto_connect_warning">This feature doesn\'t work well with weak networks.</string> <!-- UNTRANSLATED -->
-    <string name="crash_toast_text">Routerkeygen has crashed. Please send an email.</string> <!-- UNTRANSLATED -->
-
+    <string name="msg_auto_connect_warning">Questa opzione non può funzionare con questa rete</string> 
+    <string name="crash_toast_text">Routerkeygen ha generato un errore. Contattaci via mail</string> 
     <!-- FILE CHOOSER -->
-    <string name="empty_directory">Empty Directory</string><!-- UNTRANSLATED -->
-    <string name="storage_removed">Storage was removed or unmounted.</string><!-- UNTRANSLATED -->
-    <string name="choose_file">Select a file</string><!-- UNTRANSLATED -->
-    <string name="error_selecting_file">Error selecting File</string><!-- UNTRANSLATED -->
+    <string name="empty_directory">Dizionario Vuoto</string>
+    <string name="storage_removed">Storage rimossa o non presente</string>
+    <string name="choose_file">Seleziona file</string>
+    <string name="error_selecting_file">Errore del file selezionato</string>
     <!-- CHANGELOG LIB -->
-    <string name="changelog_internal_error_parsing">Error while parsing file</string> <!--UNTRANSLATED-->
+    <string name="changelog_internal_error_parsing">Errore di lettura file</string>
     <!--
  String for Version Header.
          You can customize it in your strings.xml.
          Use string with quotes if you want a space
     -->
-    <string name="changelog_header_version">"Version "</string> <!--UNTRANSLATED-->
+    <string name="changelog_header_version">"Versione "</string> 
 
 </resources>
