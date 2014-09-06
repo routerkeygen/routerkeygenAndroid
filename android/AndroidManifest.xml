@@ -3,11 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="org.exobel.routerkeygen"
     android:installLocation="auto"
-    android:versionCode="31"
-    android:versionName="3.8.0" >
+    android:versionCode="32"
+    android:versionName="3.9.0" >
 
     <uses-sdk
-        android:minSdkVersion="7"
+        android:minSdkVersion="10"
         android:targetSdkVersion="19" />
 
     <supports-screens
@@ -91,6 +91,10 @@
             android:name="com.millennialmedia.android.MMActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
     </application>
 
 </manifest>

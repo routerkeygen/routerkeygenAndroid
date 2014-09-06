@@ -28,12 +28,12 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.net.UnknownHostException;
 
 import org.exobel.routerkeygen.AdsUtils;
 import org.exobel.routerkeygen.DictionaryDownloadService;
 import org.exobel.routerkeygen.R;
+import org.exobel.routerkeygen.UpdateCheckerService;
 import org.exobel.routerkeygen.utils.HashUtils;
 
 import android.annotation.TargetApi;
@@ -92,12 +92,11 @@ public class Preferences extends SherlockPreferenceActivity {
 
 	public final static String GOOGLE_PLAY_DOWNLOADER = "org.doublecheck.wifiscanner";
 
-	public static final String PUB_DOWNLOAD = "http://android-thomson-key-solver.googlecode.com/files/RouterKeygen_v3.dic";
-	private static final String PUB_DIC_CFV = "http://android-thomson-key-solver.googlecode.com/svn/trunk/RKDictionary.cfv";
-	private static final String PUB_VERSION = "http://android-thomson-key-solver.googlecode.com/svn/trunk/RouterKeygenVersion.txt";
+	public static final String PUB_DOWNLOAD = "https://github.com/routerkeygen/thomsonDicGenerator/releases/download/v3/RouterKeygen_v3.dic";
+	private static final String PUB_DIC_CFV = "https://github.com/routerkeygen/thomsonDicGenerator/releases/download/v3/RKDictionary.cfv";
 
-	public static final String VERSION = "3.8.0";
-	private static final String LAUNCH_DATE = "19/11/2013";
+	public static final String VERSION = "3.9.0";
+	private static final String LAUNCH_DATE = "06/09/2014";
 
 	private String version;
 
@@ -129,8 +128,7 @@ public class Preferences extends SherlockPreferenceActivity {
 						}
 
 						// Don't complain about dictionary size if user is on a
-						// wifi
-						// connection
+						// wifi connection
 						if ((((WifiManager) getBaseContext().getSystemService(
 								Context.WIFI_SERVICE))).getConnectionInfo()
 								.getSSID() != null) {
@@ -149,8 +147,7 @@ public class Preferences extends SherlockPreferenceActivity {
 		final PreferenceCategory mCategory = (PreferenceCategory) findPreference("2section");
 		if (!app_installed) {
 			mCategory.removePreference(findPreference("analytics_enabled"));
-			// If you haven't the donate app installed remove the paypal donate
-			// link.
+			// If you haven't the donate app installed remove the paypal donate link.
 			mCategory.removePreference(findPreference("donate_paypal"));
 			findPreference("donate_playstore").setOnPreferenceClickListener(
 					new OnPreferenceClickListener() {
@@ -189,69 +186,11 @@ public class Preferences extends SherlockPreferenceActivity {
 		findPreference("update").setOnPreferenceClickListener(
 				new OnPreferenceClickListener() {
 					public boolean onPreferenceClick(Preference preference) {
-						AsyncTask<Void, Void, Integer> task = new AsyncTask<Void, Void, Integer>() {
-							protected void onPreExecute() {
-								showDialog(DIALOG_CHECK_DOWNLOAD_SERVER);
-							}
-
-							protected Integer doInBackground(Void... params) {
-
-								// Comparing this version with the online
-								// version
-								try {
-									URLConnection con = new URL(PUB_VERSION)
-											.openConnection();
-									DataInputStream dis = new DataInputStream(
-											con.getInputStream());
-									final byte[] versionData = new byte[6];
-									dis.read(versionData);
-									version = new String(versionData).trim();
-
-									// Check our version
-									if (VERSION.equals(version)) {
-										// All is well
-										return 1;
-									}
-									return 0;
-
-								} catch (UnknownHostException e) {
-									return -1;
-								} catch (Exception e) {
-									return null;
-								}
-							}
-
-							protected void onPostExecute(Integer result) {
-								removeDialog(DIALOG_CHECK_DOWNLOAD_SERVER);
-								if (isFinishing())
-									return;
-								if (result == null) {
-									showDialog(DIALOG_ERROR);
-									return;
-								}
-								switch (result) {
-								case -1:
-									Toast.makeText(Preferences.this,
-											R.string.msg_errthomson3g,
-											Toast.LENGTH_SHORT).show();
-									break;
-								case 0:
-									showDialog(DIALOG_UPDATE_NEEDED);
-									break;
-								case 1:
-									Toast.makeText(Preferences.this,
-											R.string.msg_app_updated,
-											Toast.LENGTH_SHORT).show();
-									break;
-								}
-
-							}
-						};
-						if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
-							task.execute();
-						} else {
-							task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-						}
+						// Checking for updates every week
+						startService(new Intent(getApplicationContext(),
+								UpdateCheckerService.class));
+						Toast.makeText(Preferences.this, R.string.msg_wait,
+								Toast.LENGTH_SHORT).show();
 						return true;
 					}
 				});
@@ -358,7 +297,7 @@ public class Preferences extends SherlockPreferenceActivity {
 
 	private static final int DIALOG_ABOUT = 1001;
 	private static final int DIALOG_ASK_DOWNLOAD = 1002;
-	private static final int DIALOG_CHECK_DOWNLOAD_SERVER = 1003;
+	private static final int DIALOG_WAIT = 1003;
 	private static final int DIALOG_ERROR_TOO_ADVANCED = 1004;
 	private static final int DIALOG_ERROR = 1005;
 	private static final int DIALOG_UPDATE_NEEDED = 1006;
@@ -449,7 +388,7 @@ public class Preferences extends SherlockPreferenceActivity {
 							});
 			break;
 		}
-		case DIALOG_CHECK_DOWNLOAD_SERVER: {
+		case DIALOG_WAIT: {
 			ProgressDialog pbarDialog = new ProgressDialog(Preferences.this);
 			pbarDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 			pbarDialog.setMessage(getString(R.string.msg_wait));
@@ -497,7 +436,7 @@ public class Preferences extends SherlockPreferenceActivity {
 			AsyncTask<Void, Void, Integer> task = new AsyncTask<Void, Void, Integer>() {
 				protected void onPreExecute() {
 					removeDialog(DIALOG_ASK_DOWNLOAD);
-					showDialog(DIALOG_CHECK_DOWNLOAD_SERVER);
+					showDialog(DIALOG_WAIT);
 				}
 
 				private final static int TOO_ADVANCED = 1;
@@ -558,7 +497,7 @@ public class Preferences extends SherlockPreferenceActivity {
 				}
 
 				protected void onPostExecute(Integer result) {
-					removeDialog(DIALOG_CHECK_DOWNLOAD_SERVER);
+					removeDialog(DIALOG_WAIT);
 					if (isFinishing())
 						return;
 					if (result == null) {
