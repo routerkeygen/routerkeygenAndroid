@@ -89,7 +89,7 @@
     <string name="pref_donate_google_play">Doneren (Google Play)</string>
     <string name="pref_donate_why">Trakteer mij op koffie als u deze app leuk vindt</string>
     <string name="pref_about">Over</string>
-    <string name="pref_about_desc">Router Keygen berekent wachtwoorden voor verschillende soorten routers\n\n<a href="http://code.google.com/p/android-thomson-key-solver/">Projectwebsite</a>\n\nVersie: </string>
+    <string name="pref_about_desc">Router Keygen berekent wachtwoorden voor verschillende soorten routers\n\n<a href="http://routerkeygen.github.io/">Projectwebsite</a>\n\nVersie: </string>
     <string name="pref_native">Oorspronkelijke berekening</string>
     <string name="pref_hinton_native">Sleutels berekenen op de oude manier als het woordenboek niet is gevonden</string>
     <string name="pref_hintoff_native">Alleen waarschuwen als het woordenboek niet kan worden gevonden</string>

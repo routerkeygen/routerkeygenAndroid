@@ -25,6 +25,11 @@ public class UpdateCheckerService extends IntentService {
 		super("UpdateCheckerService");
 	}
 
+	public static class LastVersion {
+		public String version;
+		public String url;
+	}
+
 	// Unique Identification Number for the Notification.
 	// We use it on Notification start, and to cancel it.
 	private final int UNIQUE_ID = R.string.app_name
@@ -33,39 +38,50 @@ public class UpdateCheckerService extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-		try {
-			final JSONObject version = getRemoteObjectAsJson(new URL(
-					URL_DOWNLOAD));
-			if (version == null)
-				return;
-			if (!Preferences.VERSION.equals(version.getString("version"))) {
-				final NotificationCompat.Builder builder = new NotificationCompat.Builder(
-						this)
-						.setSmallIcon(R.drawable.ic_notification)
-						.setTicker(getString(R.string.update_title))
-						.setContentTitle(getString(R.string.update_title))
-						.setContentText(
-								getString(R.string.update_notification,
-										version.getString("version")))
-						.setOnlyAlertOnce(true)
-						.setAutoCancel(true)
-						.setContentIntent(
-								PendingIntent.getActivity(
-										getApplicationContext(), 0,
-										new Intent(Intent.ACTION_VIEW)
-												.setData(Uri.parse(version
-														.getString("url"))),
-										PendingIntent.FLAG_ONE_SHOT));
-				mNotificationManager.notify(UNIQUE_ID, builder.build());
-			}
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (JSONException e) {
-			e.printStackTrace();
+		final LastVersion lastVersion = getLatestVersion();
+		if (lastVersion == null)
+			return;
+		if (!Preferences.VERSION.equals(lastVersion.version)) {
+			final NotificationCompat.Builder builder = new NotificationCompat.Builder(
+					this)
+					.setSmallIcon(R.drawable.ic_notification)
+					.setTicker(getString(R.string.update_title))
+					.setContentTitle(getString(R.string.update_title))
+					.setContentText(
+							getString(R.string.update_notification,
+									lastVersion.version))
+					.setOnlyAlertOnce(true)
+					.setAutoCancel(true)
+					.setContentIntent(
+							PendingIntent.getActivity(getApplicationContext(),
+									0,
+									new Intent(Intent.ACTION_VIEW).setData(Uri
+											.parse(lastVersion.url)),
+									PendingIntent.FLAG_ONE_SHOT));
+			mNotificationManager.notify(UNIQUE_ID, builder.build());
 		}
 	}
 
-	protected static JSONObject getRemoteObjectAsJson(URL url) {
+	public static LastVersion getLatestVersion() {
+		try {
+			final JSONObject version = getRemoteObjectAsJson(new URL(
+					URL_DOWNLOAD));
+			if (version == null) {
+				return null;
+			}
+			final LastVersion lV = new LastVersion();
+			lV.version = version.getString("version");
+			lV.url = version.getString("url");
+			return lV;
+		} catch (JSONException e) {
+			e.printStackTrace();
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	private static JSONObject getRemoteObjectAsJson(URL url) {
 		InputStream inputStream = null;
 		try {
 			byte[] buffer = new byte[128];

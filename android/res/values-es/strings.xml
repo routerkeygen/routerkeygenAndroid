@@ -92,7 +92,7 @@
     <string name="pref_donate_why">Cómprame un café si te gustó ésta aplicación.</string>
     <string name="pref_about">Acerca de Router Keygen</string>
     <string name="pref_about_desc">Router Keygen calcula los passwords por defecto para varios routers.\n\n
-<a href="http://code.google.com/p/android-thomson-key-solver/">Sitio del Proyecto</a>\n\nVersión: </string>
+<a href="http://routerkeygen.github.io/">Sitio del Proyecto</a>\n\nVersión: </string>
     <string name="pref_native">Cálculo Nativo</string>
     <string name="pref_hinton_native">Calculando sobre el objetivo si no encuentra el diccionario</string>
     <string name="pref_hintoff_native">Sólo avisa si no encuentra el diccionario.</string>

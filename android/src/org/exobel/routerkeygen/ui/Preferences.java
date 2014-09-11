@@ -34,6 +34,7 @@ import org.exobel.routerkeygen.AdsUtils;
 import org.exobel.routerkeygen.DictionaryDownloadService;
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.UpdateCheckerService;
+import org.exobel.routerkeygen.UpdateCheckerService.LastVersion;
 import org.exobel.routerkeygen.utils.HashUtils;
 
 import android.annotation.TargetApi;
@@ -95,10 +96,10 @@ public class Preferences extends SherlockPreferenceActivity {
 	public static final String PUB_DOWNLOAD = "https://github.com/routerkeygen/thomsonDicGenerator/releases/download/v3/RouterKeygen_v3.dic";
 	private static final String PUB_DIC_CFV = "https://github.com/routerkeygen/thomsonDicGenerator/releases/download/v3/RKDictionary.cfv";
 
-	public static final String VERSION = "3.9.0";
-	private static final String LAUNCH_DATE = "06/09/2014";
+	public static final String VERSION = "3.9.1";
+	private static final String LAUNCH_DATE = "11/09/2014";
 
-	private String version;
+	private LastVersion lastVersion;
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	protected void onCreate(Bundle savedInstanceState) {
@@ -147,7 +148,8 @@ public class Preferences extends SherlockPreferenceActivity {
 		final PreferenceCategory mCategory = (PreferenceCategory) findPreference("2section");
 		if (!app_installed) {
 			mCategory.removePreference(findPreference("analytics_enabled"));
-			// If you haven't the donate app installed remove the paypal donate link.
+			// If you haven't the donate app installed remove the paypal donate
+			// link.
 			mCategory.removePreference(findPreference("donate_paypal"));
 			findPreference("donate_playstore").setOnPreferenceClickListener(
 					new OnPreferenceClickListener() {
@@ -186,11 +188,44 @@ public class Preferences extends SherlockPreferenceActivity {
 		findPreference("update").setOnPreferenceClickListener(
 				new OnPreferenceClickListener() {
 					public boolean onPreferenceClick(Preference preference) {
+						AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+							protected void onPreExecute() {
+								showDialog(DIALOG_WAIT);
+							}
+
+							protected Void doInBackground(Void... params) {
+								lastVersion = UpdateCheckerService
+										.getLatestVersion();
+								return null;
+							}
+
+							protected void onPostExecute(Void result) {
+								removeDialog(DIALOG_WAIT);
+								if (isFinishing())
+									return;
+								if (lastVersion == null) {
+									showDialog(DIALOG_ERROR);
+									return;
+								}
+								if (!Preferences.VERSION
+										.equals(lastVersion.version)) {
+									showDialog(DIALOG_UPDATE_NEEDED);
+								} else {
+									Toast.makeText(Preferences.this,
+											R.string.msg_app_updated,
+											Toast.LENGTH_SHORT).show();
+								}
+
+							}
+						};
+						if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
+							task.execute();
+						} else {
+							task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+						}
 						// Checking for updates every week
 						startService(new Intent(getApplicationContext(),
 								UpdateCheckerService.class));
-						Toast.makeText(Preferences.this, R.string.msg_wait,
-								Toast.LENGTH_SHORT).show();
 						return true;
 					}
 				});
@@ -368,7 +403,9 @@ public class Preferences extends SherlockPreferenceActivity {
 		}
 		case DIALOG_UPDATE_NEEDED: {
 			builder.setTitle(R.string.update_title)
-					.setMessage(getString(R.string.update_message, version))
+					.setMessage(
+							getString(R.string.update_message,
+									lastVersion.version))
 					.setNegativeButton(R.string.bt_close,
 							new OnClickListener() {
 
@@ -382,8 +419,8 @@ public class Preferences extends SherlockPreferenceActivity {
 
 								public void onClick(DialogInterface dialog,
 										int which) {
-									startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri
-											.parse("http://code.google.com/p/android-thomson-key-solver/downloads/list")));
+									startActivity(new Intent(Intent.ACTION_VIEW)
+											.setData(Uri.parse(lastVersion.url)));
 								}
 							});
 			break;

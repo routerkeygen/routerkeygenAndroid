@@ -80,7 +80,7 @@
     <string name="networklist_supported">Ci sono reti supportate</string> 
     <string name="networklist_unlikely_supported">Unlikely Supported</string> 
     <string name="networklist_unsupported">Nessuna rete supportata</string> 
-    <string name="msg_donation">Per rimuovere la pubblicità installa l\us'applicazione seguente. Grazie</string>
+    <string name="msg_donation">Per rimuovere la pubblicità installa l\'applicazione seguente. Grazie</string>
 
     <!-- PREFERENCES STRINGS -->
     <string name="pref_hinton_wifion">Attivare il wifi automaticamente</string>
@@ -95,7 +95,7 @@
     <string name="pref_donate_why">Comprami un caffè se ti è piaciuta quest\'applicazione</string>
     <string name="pref_about">Riguardo a Router Keygen</string>
     <string name="pref_about_desc">Router Keygen calcola le password di default per molti router di uso comune.\n\n
-<a href="http://code.google.com/p/android-thomson-key-solver/">Sito del Progetto</a>\n\nVersione: </string>
+<a href="http://routerkeygen.github.io/">Sito del Progetto</a>\n\nVersione: </string>
     <string name="pref_native">Calcolo nativo</string>
     <string name="pref_hinton_native">Calcola in altro modo se fallisce nel trovare il dizionario</string>
     <string name="pref_hintoff_native">Avverti solo se fallisce nel trovare il dizionario</string>

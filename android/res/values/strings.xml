@@ -89,7 +89,7 @@
     <string name="pref_donate_google_play">Donate (Google Play)</string>
     <string name="pref_donate_why">Buy me a coffee if you liked this application</string>
     <string name="pref_about">About Router Keygen</string>
-    <string name="pref_about_desc">Router Keygen calculates default passwords for several common routers.\n\n<a href="http://code.google.com/p/android-thomson-key-solver/">Project\'s Website</a>\n\nVersion: </string>
+    <string name="pref_about_desc">Router Keygen calculates default passwords for several common routers.\n\n<a href="http://routerkeygen.github.io/">Project\'s Website</a>\n\nVersion: </string>
     <string name="pref_native">Native Calculation</string>
     <string name="pref_hinton_native">Calculating on target if it fails to find the dictionary</string>
     <string name="pref_hintoff_native">Only warns if it fails to find the dictionary</string>

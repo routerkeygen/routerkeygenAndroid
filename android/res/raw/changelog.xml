@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
 
+    <changelogversion versionName="3.9.1" changeDate="Sep 6,2014">
+        <changelogtext>Restored the old update dialog</changelogtext>
+        <changelogtext>Italian translation fixes</changelogtext>
+    </changelogversion>
+    
     <changelogversion versionName="3.9.0" changeDate="Sep 6,2014">
         <changelogtext>Move to the Github repository</changelogtext>
         <changelogtext>Lots of bug fixes</changelogtext>
