@@ -19,7 +19,7 @@ import android.support.v4.app.NotificationCompat;
 
 public class UpdateCheckerService extends IntentService {
 
-	private final static String URL_DOWNLOAD = "https://raw.github.com/ruiaraujo/routerkeygen/master/android/routerkeygen_version.json";
+	private final static String URL_DOWNLOAD = "https://raw.githubusercontent.com/routerkeygen/routerkeygenAndroid/master/android/routerkeygen_version.json";
 
 	public UpdateCheckerService() {
 		super("UpdateCheckerService");
