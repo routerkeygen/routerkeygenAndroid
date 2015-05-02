@@ -22,6 +22,22 @@ public class KeygenTest {
 
 	@Test
 	public void testAliceItaly() throws FileNotFoundException {
+		final WiFiNetwork wifi = new WiFiNetwork("Alice-53847953",
+				"00:25:53:35:a7:91", 0, "", new ZipInputStream(
+						new FileInputStream("../res/raw/magic_info.zip")));
+		assertEquals("There should be only 1 keygen", 1, wifi.getKeygens()
+				.size());
+		final Keygen keygen = wifi.getKeygens().get(0);
+		assertTrue("Keygen should be Alice", keygen instanceof AliceItalyKeygen);
+		List<String> results = keygen.getKeys();
+		assertEquals("Errors should not happen", 0, keygen.getErrorCode());
+		assertEquals("There should be only 1 result", 1, results.size());
+		assertEquals("The password should be 7nfyuqlahytaml3bkcjasmtf",
+				"7nfyuqlahytaml3bkcjasmtf", results.get(0));
+	}
+
+	@Test
+	public void testAliceItaly2() throws FileNotFoundException {
 		final WiFiNetwork wifi = new WiFiNetwork("Alice-37588990",
 				"00:23:8e:48:e7:d4", 0, "", new ZipInputStream(
 						new FileInputStream("../res/raw/magic_info.zip")));
@@ -40,6 +56,22 @@ public class KeygenTest {
 				"y7xysqmqs9jooa7rersi7ayi", results.get(2));
 		assertEquals("The password should be 9j4hm3ojq4brfdy6wcsuglwu",
 				"9j4hm3ojq4brfdy6wcsuglwu", results.get(3));
+	}
+
+	@Test
+	public void testAliceItaly3() throws FileNotFoundException {
+		final WiFiNetwork wifi = new WiFiNetwork("Alice-95535232",
+				"00:8c:54:07:de:08", 0, "", new ZipInputStream(
+						new FileInputStream("../res/raw/magic_info.zip")));
+		assertEquals("There should be only 1 keygen", 1, wifi.getKeygens()
+				.size());
+		final Keygen keygen = wifi.getKeygens().get(0);
+		assertTrue("Keygen should be Alice", keygen instanceof AliceItalyKeygen);
+		List<String> results = keygen.getKeys();
+		assertEquals("Errors should not happen", 0, keygen.getErrorCode());
+		assertEquals("There should be only 1 result", 1, results.size());
+		assertEquals("The password should be e3eudsvbuu2i8zz2yalosd65",
+				"e3eudsvbuu2i8zz2yalosd65", results.get(0));
 	}
 
 	@Test
@@ -338,12 +370,8 @@ public class KeygenTest {
 		}
 	}
 
-	private final static String[] DICTIONARY_FILES = { "RouterKeygen_v3.dic",
-			/*"RKDictionary.dic", */"RouterKeygen.dic" };
-	private final static String[] DICTIONARY_URL = {
-			"https://android-thomson-key-solver.googlecode.com/files/RouterKeygen_v3.dic",
-			/*"https://android-thomson-key-solver.googlecode.com/files/RKDictionary.dic",*/ //this version uses native code
-			"https://android-thomson-key-solver.googlecode.com/files/RouterKeygen.dic" };
+	private final static String[] DICTIONARY_FILES = { "RouterKeygen_v3.dic" };
+	private final static String[] DICTIONARY_URL = { "https://github.com/routerkeygen/thomsonDicGenerator/releases/download/v3/RouterKeygen_v3.dic" };
 
 	@Test
 	public void testThomson() throws MalformedURLException, IOException {

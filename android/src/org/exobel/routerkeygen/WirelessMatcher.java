@@ -67,9 +67,16 @@ public class WirelessMatcher {
 			final List<AliceMagicInfo> supported = supportedAlices.get(ssid
 					.substring(6, 9));
 			if (supported != null && supported.size() > 0) {
-				if (mac.length() < 6)
-					mac = supported.get(0).getMac();
-				keygens.add(new AliceItalyKeygen(ssid, mac, supported));
+				String macProcessed = mac.replace(":", "").toUpperCase(
+						Locale.getDefault());
+				if (macProcessed.length() < 6
+						|| !macProcessed.substring(0, 6).equals(
+								supported.get(0).getMac())) {
+					macProcessed = supported.get(0).getMac();
+				} else {
+					macProcessed = mac;
+				}
+				keygens.add(new AliceItalyKeygen(ssid, macProcessed, supported));
 			}
 		}
 		if (mac.startsWith("00:1E:40") || mac.startsWith("00:25:5E"))
