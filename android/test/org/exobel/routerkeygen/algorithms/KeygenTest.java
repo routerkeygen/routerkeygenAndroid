@@ -75,6 +75,22 @@ public class KeygenTest {
 	}
 
 	@Test
+	public void testAliceItaly4() throws FileNotFoundException {
+		final WiFiNetwork wifi = new WiFiNetwork("Alice-53023425",
+				"00:25:53:05:e3:50", 0, "", new ZipInputStream(
+						new FileInputStream("../res/raw/magic_info.zip")));
+		assertEquals("There should be only 1 keygen", 1, wifi.getKeygens()
+				.size());
+		final Keygen keygen = wifi.getKeygens().get(0);
+		assertTrue("Keygen should be Alice", keygen instanceof AliceItalyKeygen);
+		List<String> results = keygen.getKeys();
+		assertEquals("Errors should not happen", 0, keygen.getErrorCode());
+		assertEquals("There should be only 4 result", 4, results.size());
+		assertEquals("The password should be gi0wdaa3crf6wsb53sf7bv5t",
+				"gi0wdaa3crf6wsb53sf7bv5t", results.get(3));
+	}
+
+	@Test
 	public void testAliceGermany() throws FileNotFoundException {
 		final WiFiNetwork wifi = new WiFiNetwork("ALICE-WLANC3",
 				"00:1E:40:A0:84:C4", 0, "", new ZipInputStream(
@@ -254,7 +270,7 @@ public class KeygenTest {
 		List<String> results = keygen.getKeys();
 		assertEquals("Errors should not happen", 0, keygen.getErrorCode());
 		assertEquals("There should be only one result", 1, results.size());
-		assertEquals("The password should be b075d537cb4c", "000133337cb4c",
+		assertEquals("The password should be 000133337cb4c", "000133337cb4c",
 				results.get(0));
 	}
 
@@ -292,6 +308,67 @@ public class KeygenTest {
 		assertEquals("The password should be PcL2PgUcX0VhV", "PcL2PgUcX0VhV",
 				results.get(0));
 
+	}
+
+
+	@Test
+	public void testSitecom() throws FileNotFoundException {
+		final WiFiNetwork wifi = new WiFiNetwork("Sitecom",
+				"00:0C:F6:01:23:45", 0, "", new ZipInputStream(
+						new FileInputStream("../res/raw/magic_info.zip")));
+		assertEquals("There should be only 1 keygen", 1, wifi.getKeygens()
+				.size());
+		final Keygen keygen = wifi.getKeygens().get(0);
+		assertTrue("Keygen should be SitecomKeygen", keygen instanceof SitecomKeygen);
+		List<String> results = keygen.getKeys();
+		assertEquals("Errors should not happen", 0, keygen.getErrorCode());
+		assertEquals("There should be only three result", 3, results.size());
+		assertEquals("The password should be q69CB1kg", "q69CB1kg",
+				results.get(0));
+		assertEquals("The password should be 44B5Dmyc", "44B5Dmyc",
+				results.get(1));
+		assertEquals("The password should be N66zHMRc", "N66zHMRc",
+				results.get(2));
+	}
+
+	@Test
+	public void testSitecom2() throws FileNotFoundException {
+		final WiFiNetwork wifi = new WiFiNetwork("Sitecom",
+				"00:0C:F6:01:2F:F5", 0, "", new ZipInputStream(
+						new FileInputStream("../res/raw/magic_info.zip")));
+		assertEquals("There should be only 1 keygen", 1, wifi.getKeygens()
+				.size());
+		final Keygen keygen = wifi.getKeygens().get(0);
+		assertTrue("Keygen should be SitecomKeygen", keygen instanceof SitecomKeygen);
+		List<String> results = keygen.getKeys();
+		assertEquals("Errors should not happen", 0, keygen.getErrorCode());
+		assertEquals("There should be only three result", 3, results.size());
+		assertEquals("The password should be 6sWNS6D6", "6sWNS6D6",
+				results.get(0));
+		assertEquals("The password should be JEmMRJSk", "JEmMRJSk",
+				results.get(1));
+		assertEquals("The password should be qVMKQq7B", "qVMKQq7B",
+				results.get(2));
+	}
+
+	@Test
+	public void testSitecom3() throws FileNotFoundException {
+		final WiFiNetwork wifi = new WiFiNetwork("Sitecom",
+				"00:0C:F6:01:2F:FE", 0, "", new ZipInputStream(
+						new FileInputStream("../res/raw/magic_info.zip")));
+		assertEquals("There should be only 1 keygen", 1, wifi.getKeygens()
+				.size());
+		final Keygen keygen = wifi.getKeygens().get(0);
+		assertTrue("Keygen should be SitecomKeygen", keygen instanceof SitecomKeygen);
+		List<String> results = keygen.getKeys();
+		assertEquals("Errors should not happen", 0, keygen.getErrorCode());
+		assertEquals("There should be only three result", 3, results.size());
+		assertEquals("The password should be DhCvzDve", "DhCvzDve",
+				results.get(0));
+		assertEquals("The password should be S63uySh4", "S63uySh4",
+				results.get(1));
+		assertEquals("The password should be tURTXt6t", "tURTXt6t",
+				results.get(2));
 	}
 
 	@Test

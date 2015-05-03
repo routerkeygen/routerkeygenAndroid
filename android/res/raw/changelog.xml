@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
 
+    
+    <changelogversion versionName="3.12.0" changeDate="May 3,2015">
+        <changelogtext>[b]New![/b] Sitecom algorithm</changelogtext>
+        <changelogtext>Fixed Alice Italy algorithm</changelogtext>
+    </changelogversion>
+    
+    
     <changelogversion versionName="3.9.1" changeDate="Sep 6,2014">
         <changelogtext>Restored the old update dialog</changelogtext>
         <changelogtext>Italian translation fixes</changelogtext>

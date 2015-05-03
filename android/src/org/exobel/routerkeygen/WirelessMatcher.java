@@ -32,6 +32,7 @@ import org.exobel.routerkeygen.algorithms.OteKeygen;
 import org.exobel.routerkeygen.algorithms.PBSKeygen;
 import org.exobel.routerkeygen.algorithms.PirelliKeygen;
 import org.exobel.routerkeygen.algorithms.PtvKeygen;
+import org.exobel.routerkeygen.algorithms.SitecomKeygen;
 import org.exobel.routerkeygen.algorithms.SkyV1Keygen;
 import org.exobel.routerkeygen.algorithms.Speedport500Keygen;
 import org.exobel.routerkeygen.algorithms.TecomKeygen;
@@ -222,6 +223,9 @@ public class WirelessMatcher {
 		if (ssid.matches("(PTV-|ptv|ptv-)[0-9a-zA-Z]{6}"))
 			keygens.add(new PtvKeygen(ssid, mac));
 
+		if (mac.startsWith("00:0C:F6"))
+			keygens.add(new SitecomKeygen(ssid, mac));
+		
 		if (ssid.matches("SKY[0-9]{5}")
 				&& (mac.startsWith("C4:3D:C7") || mac.startsWith("E0:46:9A")
 						|| mac.startsWith("E0:91:F5")
