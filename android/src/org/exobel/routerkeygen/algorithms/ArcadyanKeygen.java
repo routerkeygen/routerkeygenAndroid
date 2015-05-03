@@ -8,16 +8,17 @@ import org.exobel.routerkeygen.R;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class EasyBoxKeygen extends Keygen {
+public class ArcadyanKeygen extends Keygen {
 
-	public EasyBoxKeygen(String ssid, String mac) {
+	public ArcadyanKeygen(String ssid, String mac) {
 		super(ssid, mac);
 	}
 
 	@Override
 	public int getSupportState() {
 		if (getSsidName().matches(
-				"(Arcor|EasyBox|Vodafone|WLAN)(-| )[0-9a-fA-F]{6}"))
+				"(Arcor|EasyBox|Vodafone|WLAN)(-| )[0-9a-fA-F]{6}")
+				|| getSsidName().matches("Vodafone[0-9a-zA-Z]{4}"))
 			return SUPPORTED;
 		return UNLIKELY_SUPPORTED;
 	}
@@ -74,20 +75,24 @@ public class EasyBoxKeygen extends Keygen {
 
 		final String wpaKey = X1 + Y1 + Z1 + X2 + Y2 + Z2 + X3 + Y3 + Z3;
 		addPassword(wpaKey.toUpperCase(Locale.getDefault()));
+		
+		if (wpaKey.indexOf('0')!=-1) {
+			addPassword(wpaKey.replace("0", "1").toUpperCase(Locale.getDefault()));
+		}
 		return getResults();
 	}
 
-	private EasyBoxKeygen(Parcel in) {
+	private ArcadyanKeygen(Parcel in) {
 		super(in);
 	}
 
-	public static final Parcelable.Creator<EasyBoxKeygen> CREATOR = new Parcelable.Creator<EasyBoxKeygen>() {
-		public EasyBoxKeygen createFromParcel(Parcel in) {
-			return new EasyBoxKeygen(in);
+	public static final Parcelable.Creator<ArcadyanKeygen> CREATOR = new Parcelable.Creator<ArcadyanKeygen>() {
+		public ArcadyanKeygen createFromParcel(Parcel in) {
+			return new ArcadyanKeygen(in);
 		}
 
-		public EasyBoxKeygen[] newArray(int size) {
-			return new EasyBoxKeygen[size];
+		public ArcadyanKeygen[] newArray(int size) {
+			return new ArcadyanKeygen[size];
 		}
 	};
 }

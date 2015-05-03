@@ -60,7 +60,7 @@ public class WiFiNetwork implements Comparable<WiFiNetwork>, Parcelable {
 			if (k.getSupportState() == Keygen.SUPPORTED)
 				return Keygen.SUPPORTED;
 		}
-		// If there is a keygen then it is already supported
+		// If there is a supported keygen then it is already supported
 		return Keygen.UNLIKELY_SUPPORTED;
 	}
 

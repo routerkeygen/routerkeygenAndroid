@@ -36,6 +36,14 @@ public class DlinkKeygen extends Keygen {
 	public DlinkKeygen(String ssid, String mac) {
 		super(ssid, mac);
 	}
+	
+
+	@Override
+	public int getSupportState() {
+		if (getSsidName().matches("(DL|dl)ink-[0-9a-fA-F]{6}"))
+			return SUPPORTED;
+		return UNLIKELY_SUPPORTED;
+	}
 
 	final static char hash[] =  { 'X', 'r', 'q', 'a', 'H', 'N',
 			 			'p', 'd', 'S', 'Y', 'w', 

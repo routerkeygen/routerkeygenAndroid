@@ -17,7 +17,7 @@ import org.exobel.routerkeygen.algorithms.ComtrendKeygen;
 import org.exobel.routerkeygen.algorithms.ConnKeygen;
 import org.exobel.routerkeygen.algorithms.DiscusKeygen;
 import org.exobel.routerkeygen.algorithms.DlinkKeygen;
-import org.exobel.routerkeygen.algorithms.EasyBoxKeygen;
+import org.exobel.routerkeygen.algorithms.ArcadyanKeygen;
 import org.exobel.routerkeygen.algorithms.EircomKeygen;
 import org.exobel.routerkeygen.algorithms.HuaweiKeygen;
 import org.exobel.routerkeygen.algorithms.InfostradaKeygen;
@@ -86,6 +86,14 @@ public class WirelessMatcher {
 		if (ssid.equals("Andared"))
 			keygens.add(new AndaredKeygen(ssid, mac));
 
+		if (mac.startsWith("00:12:BF") || mac.startsWith("00:1A:2A")
+				|| mac.startsWith("00:1D:19") || mac.startsWith("00:23:08")
+				|| mac.startsWith("00:26:4D") || mac.startsWith("50:7E:5D")
+				|| mac.startsWith("1C:C6:3C") || mac.startsWith("74:31:70")
+				|| mac.startsWith("7C:4F:B5") || mac.startsWith("88:25:2C")
+				|| mac.startsWith("7E:4F:B5"))
+			keygens.add(new ArcadyanKeygen(ssid, mac));
+
 		if (ssid.matches("(AXTEL|AXTEL-XTREMO)-[0-9a-fA-F]{4}")) {
 			final String ssidSubpart = ssid.substring(ssid.length() - 4);
 			final String macShort = mac.replace(":", "");
@@ -111,15 +119,23 @@ public class WirelessMatcher {
 		if (ssid.matches("Discus--?[0-9a-fA-F]{6}"))
 			keygens.add(new DiscusKeygen(ssid, mac));
 
-		if (ssid.matches("DLink-[0-9a-fA-F]{6}"))
+		if (ssid.matches("(DL|dl)ink-[0-9a-fA-F]{6}")
+				|| mac.startsWith("00:05:5D") || mac.startsWith("00:0D:88")
+				|| mac.startsWith("00:0F:3D") || mac.startsWith("00:11:95")
+				|| mac.startsWith("00:13:46") || mac.startsWith("00:15:E9")
+				|| mac.startsWith("00:17:9A") || mac.startsWith("00:19:5B")
+				|| mac.startsWith("00:1B:11") || mac.startsWith("00:1C:F0")
+				|| mac.startsWith("00:1E:58") || mac.startsWith("00:21:91")
+				|| mac.startsWith("00:22:B0") || mac.startsWith("00:24:01")
+				|| mac.startsWith("00:26:5A") || mac.startsWith("14:D6:4D")
+				|| mac.startsWith("1C:7E:E5") || mac.startsWith("28:10:7B")
+				|| mac.startsWith("34:08:04") || mac.startsWith("5C:D9:98")
+				|| mac.startsWith("84:C9:B2") || mac.startsWith("90:94:E4")
+				|| mac.startsWith("AC:F1:DF") || mac.startsWith("B8:A3:86")
+				|| mac.startsWith("BC:F6:85") || mac.startsWith("C8:BE:19")
+				|| mac.startsWith("CC:B2:55") || mac.startsWith("F0:7D:68")
+				|| mac.startsWith("FC:75:16"))
 			keygens.add(new DlinkKeygen(ssid, mac));
-
-		if (mac.startsWith("00:12:BF") || mac.startsWith("00:1A:2A")
-				|| mac.startsWith("00:1D:19") || mac.startsWith("00:23:08")
-				|| mac.startsWith("00:26:4D") || mac.startsWith("50:7E:5D")
-				|| mac.startsWith("1C:C6:3C") || mac.startsWith("74:31:70")
-				|| mac.startsWith("7C:4F:B5") || mac.startsWith("88:25:2C"))
-			keygens.add(new EasyBoxKeygen(ssid, mac));
 
 		if (ssid.matches("[eE]ircom[0-7]{4} ?[0-7]{4}")) {
 			if (mac.length() == 0) {
@@ -206,7 +222,14 @@ public class WirelessMatcher {
 						supportedOTE[OteHuaweiKeygen.MAGIC_NUMBER - target]));
 		}
 
-		if (ssid.matches("PBS-[0-9a-fA-F]{6}"))
+		if (ssid.matches("PBS-[0-9a-fA-F]{6}") || mac.startsWith("00:08:27")
+				|| mac.startsWith("00:13:C8") || mac.startsWith("00:17:C2")
+				|| mac.startsWith("00:19:3E") || mac.startsWith("00:1C:A2")
+				|| mac.startsWith("00:1D:8B") || mac.startsWith("00:22:33")
+				|| mac.startsWith("00:23:8E") || mac.startsWith("00:25:53")
+				|| mac.startsWith("30:39:F2") || mac.startsWith("38:22:9D")
+				|| mac.startsWith("64:87:D7") || mac.startsWith("74:88:8B")
+				|| mac.startsWith("A4:52:6F") || mac.startsWith("D4:D1:84"))
 			keygens.add(new PBSKeygen(ssid, mac));
 
 		if (ssid.matches("FASTWEB-1-(000827|0013C8|0017C2|00193E|001CA2|001D8B|"
@@ -225,7 +248,7 @@ public class WirelessMatcher {
 
 		if (mac.startsWith("00:0C:F6"))
 			keygens.add(new SitecomKeygen(ssid, mac));
-		
+
 		if (ssid.matches("SKY[0-9]{5}")
 				&& (mac.startsWith("C4:3D:C7") || mac.startsWith("E0:46:9A")
 						|| mac.startsWith("E0:91:F5")

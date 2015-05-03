@@ -17,7 +17,6 @@
 package android.net.wifi;
 
 
-import java.util.List;
 
 /**
  * This class provides the primary API for managing all aspects of Wi-Fi
