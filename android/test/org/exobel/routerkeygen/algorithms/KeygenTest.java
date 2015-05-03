@@ -380,6 +380,27 @@ public class KeygenTest {
 	}
 
 	@Test
+	public void testSitecom4() throws FileNotFoundException {
+		final WiFiNetwork wifi = new WiFiNetwork("Sitecom",
+				"00:0C:F6:F1:2F:FE", 0, "", new ZipInputStream(
+						new FileInputStream("../res/raw/magic_info.zip")));
+		assertEquals("There should be only 1 keygen", 1, wifi.getKeygens()
+				.size());
+		final Keygen keygen = wifi.getKeygens().get(0);
+		assertTrue("Keygen should be SitecomKeygen",
+				keygen instanceof SitecomKeygen);
+		List<String> results = keygen.getKeys();
+		assertEquals("Errors should not happen", 0, keygen.getErrorCode());
+		assertEquals("There should be only three result", 3, results.size());
+		assertEquals("The password should be 6sq9v6sp", "GEBAWGEA",
+				results.get(0));
+		assertEquals("The password should be GDPK6GDb", "GDPK6GDb",
+				results.get(1));
+		assertEquals("The password should be 6sq9v6sp", "6sq9v6sp",
+				results.get(2));
+	}
+
+	@Test
 	public void testSpeedport500() throws FileNotFoundException {
 		final WiFiNetwork wifi = new WiFiNetwork("WLAN-903704",
 				"00:1D:19:90:37:DD", 0, "", new ZipInputStream(
@@ -496,6 +517,24 @@ public class KeygenTest {
 				results.get(2));
 
 	}
+
+	@Test
+	public void testTpLink() throws FileNotFoundException {
+		final WiFiNetwork wifi = new WiFiNetwork("tplink",
+				"F8:D1:11:1E:28:A5", 0, "", new ZipInputStream(
+						new FileInputStream("../res/raw/magic_info.zip")));
+		assertEquals("There should be only 1 keygen", 1, wifi.getKeygens()
+				.size());
+		final Keygen keygen = wifi.getKeygens().get(0);
+		assertTrue("Keygen should be TplinkKeygen",
+				keygen instanceof TplinkKeygen);
+		List<String> results = keygen.getKeys();
+		assertEquals("Errors should not happen", 0, keygen.getErrorCode());
+		assertEquals("There should be one results", 1, results.size());
+		assertEquals("The password should be 111E28A5", "111E28A5",
+				results.get(0));
+	}
+
 
 	@Test
 	public void testWifimediaR() throws FileNotFoundException {

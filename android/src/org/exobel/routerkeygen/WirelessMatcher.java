@@ -39,6 +39,7 @@ import org.exobel.routerkeygen.algorithms.TecomKeygen;
 import org.exobel.routerkeygen.algorithms.TeleTuKeygen;
 import org.exobel.routerkeygen.algorithms.TelseyKeygen;
 import org.exobel.routerkeygen.algorithms.ThomsonKeygen;
+import org.exobel.routerkeygen.algorithms.TplinkKeygen;
 import org.exobel.routerkeygen.algorithms.VerizonKeygen;
 import org.exobel.routerkeygen.algorithms.WifimediaRKeygen;
 import org.exobel.routerkeygen.algorithms.Wlan2Keygen;
@@ -314,6 +315,11 @@ public class WirelessMatcher {
 				+ "BigPond|Otenet|Bbox-|DMAX|privat|TN_private_|CYTA|Vodafone-|Optimus|OptimusFibra|MEO-)[0-9a-fA-F]{6}"))
 			keygens.add(new ThomsonKeygen(ssid, mac));
 
+
+		if (mac.startsWith("F8:D1:11"))
+			keygens.add(new TplinkKeygen(ssid, mac));
+
+		
 		if (ssid.length() == 5
 				&& (mac.startsWith("00:1F:90") || mac.startsWith("A8:39:44")
 						|| mac.startsWith("00:18:01")
