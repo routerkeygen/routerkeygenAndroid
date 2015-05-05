@@ -99,6 +99,22 @@ public class KeygenTest {
 		assertEquals("The password should be MGIwMjhjYTYzZmM0",
 				"MGIwMjhjYTYzZmM0", results.get(0));
 	}
+	@Test
+	public void testAliceGermany2() throws FileNotFoundException {
+		final WiFiNetwork wifi = new WiFiNetwork("ALICE-WLANC3",
+				"00:25:5E:01:02:03", 0, "", new ZipInputStream(
+						new FileInputStream("../res/raw/magic_info.zip")));
+		assertEquals("There should be only 1 keygen", 1, wifi.getKeygens()
+				.size());
+		final Keygen keygen = wifi.getKeygens().get(0);
+		assertTrue("Keygen should be Alice",
+				keygen instanceof AliceGermanyKeygen);
+		List<String> results = keygen.getKeys();
+		assertEquals("Errors should not happen", 0, keygen.getErrorCode());
+		assertEquals("There should be only 1 result", 1, results.size());
+		assertEquals("The password should be OWZlODAwYzliMTM4",
+				"OWZlODAwYzliMTM4", results.get(0));
+	}
 
 	@Test
 	public void testArcadyan() throws FileNotFoundException {
