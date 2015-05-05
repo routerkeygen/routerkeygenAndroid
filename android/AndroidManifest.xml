@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="org.exobel.routerkeygen"
     android:installLocation="auto"
-    android:versionCode="33"
-    android:versionName="3.9.1" >
+    android:versionCode="34"
+    android:versionName="3.12.0" >
 
     <uses-sdk
         android:minSdkVersion="10"
