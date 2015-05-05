@@ -11,6 +11,7 @@ import java.util.zip.ZipInputStream;
 import org.exobel.routerkeygen.algorithms.AliceGermanyKeygen;
 import org.exobel.routerkeygen.algorithms.AliceItalyKeygen;
 import org.exobel.routerkeygen.algorithms.AndaredKeygen;
+import org.exobel.routerkeygen.algorithms.ArnetPirelliKeygen;
 import org.exobel.routerkeygen.algorithms.AxtelKeygen;
 import org.exobel.routerkeygen.algorithms.CabovisaoSagemKeygen;
 import org.exobel.routerkeygen.algorithms.ComtrendKeygen;
@@ -94,6 +95,16 @@ public class WirelessMatcher {
 				|| mac.startsWith("7C:4F:B5") || mac.startsWith("88:25:2C")
 				|| mac.startsWith("7E:4F:B5"))
 			keygens.add(new ArcadyanKeygen(ssid, mac));
+
+		if (mac.startsWith("00:08:27") || mac.startsWith("00:13:C8")
+				|| mac.startsWith("00:17:C2") || mac.startsWith("00:19:3E")
+				|| mac.startsWith("00:1C:A2") || mac.startsWith("00:1D:8B")
+				|| mac.startsWith("00:22:33") || mac.startsWith("00:23:8E")
+				|| mac.startsWith("00:25:53") || mac.startsWith("30:39:F2")
+				|| mac.startsWith("38:22:9D") || mac.startsWith("64:87:D7")
+				|| mac.startsWith("74:88:8B") || mac.startsWith("A4:52:6F")
+				|| mac.startsWith("D4:D1:84"))
+			keygens.add(new ArnetPirelliKeygen(ssid, mac));
 
 		if (ssid.matches("(AXTEL|AXTEL-XTREMO)-[0-9a-fA-F]{4}")) {
 			final String ssidSubpart = ssid.substring(ssid.length() - 4);
@@ -315,11 +326,9 @@ public class WirelessMatcher {
 				+ "BigPond|Otenet|Bbox-|DMAX|privat|TN_private_|CYTA|Vodafone-|Optimus|OptimusFibra|MEO-)[0-9a-fA-F]{6}"))
 			keygens.add(new ThomsonKeygen(ssid, mac));
 
-
 		if (mac.startsWith("F8:D1:11"))
 			keygens.add(new TplinkKeygen(ssid, mac));
 
-		
 		if (ssid.length() == 5
 				&& (mac.startsWith("00:1F:90") || mac.startsWith("A8:39:44")
 						|| mac.startsWith("00:18:01")

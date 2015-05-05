@@ -2,7 +2,8 @@
 <changelog bulletedList="true">
 
     
-    <changelogversion versionName="3.12.0" changeDate="May 3,2015">
+    <changelogversion versionName="3.12.0" changeDate="May 5,2015">
+        <changelogtext>[b]New![/b] Arnet Pirelli algorithm</changelogtext>
         <changelogtext>[b]New![/b] Sitecom algorithm</changelogtext>
         <changelogtext>[b]New![/b] Tplink algorithm</changelogtext>
         <changelogtext>Fixed Alice Italy algorithm</changelogtext>

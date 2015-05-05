@@ -45,7 +45,7 @@ public class AliceItalyKeygen extends Keygen {
 
 	final static private String preInitCharset = "0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvWxyz0123";
 
-	final static private byte specialSeq[/* 32 */] = { 0x64, (byte) 0xC6,
+	public final static byte ALICE_SEED[/* 32 */] = { 0x64, (byte) 0xC6,
 			(byte) 0xDD, (byte) 0xE3, (byte) 0xE5, 0x79, (byte) 0xB6,
 			(byte) 0xD9, (byte) 0x86, (byte) 0x96, (byte) 0x8D, 0x34, 0x45,
 			(byte) 0xD2, 0x3B, 0x15, (byte) 0xCA, (byte) 0xAF, 0x12,
@@ -87,7 +87,7 @@ public class AliceItalyKeygen extends Keygen {
 							getMacAddress().charAt(i + 1), 16));
 
 				md.reset();
-				md.update(specialSeq);
+				md.update(ALICE_SEED);
 				try {
 					md.update(serialStr.getBytes("ASCII"));
 				} catch (UnsupportedEncodingException e) {
@@ -120,7 +120,7 @@ public class AliceItalyKeygen extends Keygen {
 				mac[i / 2] = (byte) ((Character.digit(macEth.charAt(i), 16) << 4) + Character
 						.digit(macEth.charAt(i + 1), 16));
 			md.reset();
-			md.update(specialSeq);
+			md.update(ALICE_SEED);
 			try {
 				md.update(serialStr.getBytes("ASCII"));
 			} catch (UnsupportedEncodingException e) {
