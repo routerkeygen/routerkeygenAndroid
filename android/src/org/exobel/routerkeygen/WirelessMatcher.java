@@ -26,6 +26,7 @@ import org.exobel.routerkeygen.algorithms.InterCableKeygen;
 import org.exobel.routerkeygen.algorithms.Keygen;
 import org.exobel.routerkeygen.algorithms.MaxcomKeygen;
 import org.exobel.routerkeygen.algorithms.MegaredKeygen;
+import org.exobel.routerkeygen.algorithms.MeoPirelliKeygen;
 import org.exobel.routerkeygen.algorithms.OnoKeygen;
 import org.exobel.routerkeygen.algorithms.OteBAUDKeygen;
 import org.exobel.routerkeygen.algorithms.OteHuaweiKeygen;
@@ -100,11 +101,16 @@ public class WirelessMatcher {
 				|| mac.startsWith("00:17:C2") || mac.startsWith("00:19:3E")
 				|| mac.startsWith("00:1C:A2") || mac.startsWith("00:1D:8B")
 				|| mac.startsWith("00:22:33") || mac.startsWith("00:23:8E")
-				|| mac.startsWith("00:25:53") || mac.startsWith("30:39:F2")
-				|| mac.startsWith("38:22:9D") || mac.startsWith("64:87:D7")
-				|| mac.startsWith("74:88:8B") || mac.startsWith("A4:52:6F")
-				|| mac.startsWith("D4:D1:84"))
+				|| mac.startsWith("00:25:53") || mac.startsWith("00:8C:54")
+				|| mac.startsWith("30:39:F2") || mac.startsWith("38:22:9D")
+				|| mac.startsWith("64:87:D7") || mac.startsWith("74:88:8B")
+				|| mac.startsWith("84:26:15") || mac.startsWith("A4:52:6F")
+				|| mac.startsWith("A4:5D:A1") || mac.startsWith("D0:D4:12")
+				|| mac.startsWith("D4:D1:84") || mac.startsWith("DC:0B:1A")
+				|| mac.startsWith("F0:84:2F")) {
 			keygens.add(new ArnetPirelliKeygen(ssid, mac));
+			keygens.add(new MeoPirelliKeygen(ssid, mac));
+		}
 
 		if (ssid.matches("(AXTEL|AXTEL-XTREMO)-[0-9a-fA-F]{4}")) {
 			final String ssidSubpart = ssid.substring(ssid.length() - 4);

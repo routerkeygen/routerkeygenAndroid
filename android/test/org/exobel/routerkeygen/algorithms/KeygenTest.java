@@ -24,7 +24,7 @@ public class KeygenTest {
 		final WiFiNetwork wifi = new WiFiNetwork("Alice-53847953",
 				"00:25:53:35:a7:91", 0, "", new ZipInputStream(
 						new FileInputStream("../res/raw/magic_info.zip")));
-		assertEquals("There should be only 3 keygen", 3, wifi.getKeygens()
+		assertEquals("There should be only 4 keygen", 4, wifi.getKeygens()
 				.size());
 		final Keygen keygen = wifi.getKeygens().get(0);
 		assertTrue("Keygen should be Alice", keygen instanceof AliceItalyKeygen);
@@ -40,7 +40,7 @@ public class KeygenTest {
 		final WiFiNetwork wifi = new WiFiNetwork("Alice-37588990",
 				"00:23:8e:48:e7:d4", 0, "", new ZipInputStream(
 						new FileInputStream("../res/raw/magic_info.zip")));
-		assertEquals("There should be only 3 keygen", 3, wifi.getKeygens()
+		assertEquals("There should be only 4 keygen", 4, wifi.getKeygens()
 				.size());
 		final Keygen keygen = wifi.getKeygens().get(0);
 		assertTrue("Keygen should be Alice", keygen instanceof AliceItalyKeygen);
@@ -56,7 +56,7 @@ public class KeygenTest {
 		final WiFiNetwork wifi = new WiFiNetwork("Alice-95535232",
 				"00:8c:54:07:de:08", 0, "", new ZipInputStream(
 						new FileInputStream("../res/raw/magic_info.zip")));
-		assertEquals("There should be only 1 keygen", 1, wifi.getKeygens()
+		assertEquals("There should be only 3 keygen", 3, wifi.getKeygens()
 				.size());
 		final Keygen keygen = wifi.getKeygens().get(0);
 		assertTrue("Keygen should be Alice", keygen instanceof AliceItalyKeygen);
@@ -72,7 +72,7 @@ public class KeygenTest {
 		final WiFiNetwork wifi = new WiFiNetwork("Alice-53023425",
 				"00:25:53:05:e3:50", 0, "", new ZipInputStream(
 						new FileInputStream("../res/raw/magic_info.zip")));
-		assertEquals("There should be only 3 keygen", 3, wifi.getKeygens()
+		assertEquals("There should be only 4 keygen", 4, wifi.getKeygens()
 				.size());
 		final Keygen keygen = wifi.getKeygens().get(0);
 		assertTrue("Keygen should be Alice", keygen instanceof AliceItalyKeygen);
@@ -155,27 +155,15 @@ public class KeygenTest {
 		final WiFiNetwork wifi = new WiFiNetwork("WiFi-Arnet-0184",
 				"74:88:8B:27:2B:F4", 0, "", new ZipInputStream(
 						new FileInputStream("../res/raw/magic_info.zip")));
-		assertEquals("There should be only 2 keygen", 2, wifi.getKeygens()
+		assertEquals("There should be only 3 keygen", 3, wifi.getKeygens()
 				.size());
 		final Keygen keygen = wifi.getKeygens().get(0);
-		assertTrue("Keygen should be Easybox", keygen instanceof ArnetPirelliKeygen);
+		assertTrue("Keygen should be ArnetPirelli", keygen instanceof ArnetPirelliKeygen);
 		List<String> results = keygen.getKeys();
 		assertEquals("Errors should not happen", 0, keygen.getErrorCode());
-		assertEquals("There should be only seven result", 7, results.size());
+		assertEquals("There should be only one result", 1, results.size());
 		assertEquals("The password should be 781haylokm", "781haylokm",
 				results.get(0));
-		assertEquals("The password should be lzc0l8vmuh", "lzc0l8vmuh",
-				results.get(1));
-		assertEquals("The password should be ds9c49or5r", "ds9c49or5r",
-				results.get(2));
-		assertEquals("The password should be hcckr5ch38", "hcckr5ch38",
-				results.get(3));
-		assertEquals("The password should be spbti5ugng", "spbti5ugng",
-				results.get(4));
-		assertEquals("The password should be aq8hrtiiez", "aq8hrtiiez",
-				results.get(5));
-		assertEquals("The password should be 872n5g44gd", "872n5g44gd",
-				results.get(6));
 	}
 
 	@Test
@@ -217,9 +205,9 @@ public class KeygenTest {
 		final WiFiNetwork wifi = new WiFiNetwork("Discus--DA1CC5",
 				"00:1C:A2:DA:1C:C5", 0, "", new ZipInputStream(
 						new FileInputStream("../res/raw/magic_info.zip")));
-		assertEquals("There should be only 3 keygen", 3, wifi.getKeygens()
+		assertEquals("There should be only 4 keygen", 4, wifi.getKeygens()
 				.size());
-		final Keygen keygen = wifi.getKeygens().get(1);
+		final Keygen keygen = wifi.getKeygens().get(2);
 		assertTrue("Keygen should be Discus", keygen instanceof DiscusKeygen);
 		List<String> results = keygen.getKeys();
 		assertEquals("Errors should not happen", 0, keygen.getErrorCode());
@@ -291,6 +279,25 @@ public class KeygenTest {
 		assertEquals("The password should be 75169F60EC", "75169F60EC",
 				results.get(0));
 	}
+	
+
+	
+	@Test
+	public void testMeoPirelli() throws FileNotFoundException {
+		final WiFiNetwork wifi = new WiFiNetwork("ADSLPT-AB37495",
+				"84:26:15:AE:BC:15", 0, "", new ZipInputStream(
+						new FileInputStream("../res/raw/magic_info.zip")));
+		assertEquals("There should be only 2 keygen", 2, wifi.getKeygens()
+				.size());
+		final Keygen keygen = wifi.getKeygens().get(1);
+		assertTrue("Keygen should be MeoPirelli", keygen instanceof MeoPirelliKeygen);
+		List<String> results = keygen.getKeys();
+		assertEquals("Errors should not happen", 0, keygen.getErrorCode());
+		assertEquals("There should be only one result", 1, results.size());
+		assertEquals("The password should be 78leqnej", "78leqnej",
+				results.get(0));
+	}
+
 
 	@Test
 	public void testOTE() throws FileNotFoundException {
@@ -346,9 +353,9 @@ public class KeygenTest {
 		final WiFiNetwork wifi = new WiFiNetwork("PBS-11222E",
 				"38:22:9D:11:22:33", 0, "", new ZipInputStream(
 						new FileInputStream("../res/raw/magic_info.zip")));
-		assertEquals("There should be only 2 keygen", 2, wifi.getKeygens()
+		assertEquals("There should be only 3 keygen", 3, wifi.getKeygens()
 				.size());
-		final Keygen keygen = wifi.getKeygens().get(1);
+		final Keygen keygen = wifi.getKeygens().get(2);
 		assertTrue("Keygen should be PBS", keygen instanceof PBSKeygen);
 		assertEquals("Keygen should be supported", Keygen.UNLIKELY_SUPPORTED,
 				keygen.getSupportState());
@@ -475,9 +482,9 @@ public class KeygenTest {
 		final WiFiNetwork wifi = new WiFiNetwork("TeleTu_00238EE528C7",
 				"00:23:8E:E5:28:C7", 0, "", new ZipInputStream(
 						new FileInputStream("../res/raw/magic_info.zip")));
-		assertEquals("There should be only 3 keygen", 3, wifi.getKeygens()
+		assertEquals("There should be only 4 keygen", 4, wifi.getKeygens()
 				.size());
-		final Keygen keygen = wifi.getKeygens().get(2);
+		final Keygen keygen = wifi.getKeygens().get(wifi.getKeygens().size()-1);
 		assertTrue("Keygen should be TeleTu", keygen instanceof TeleTuKeygen);
 		List<String> results = keygen.getKeys();
 		assertEquals("Errors should not happen", 0, keygen.getErrorCode());

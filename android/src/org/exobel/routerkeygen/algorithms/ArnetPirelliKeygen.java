@@ -31,13 +31,13 @@ import android.os.Parcelable;
 
 public class ArnetPirelliKeygen extends Keygen {
 	private final static String LOOKUP = "0123456789abcdefghijklmnopqrstuvwxyz";
-	private MessageDigest md;
+	protected MessageDigest md;
 
 	public ArnetPirelliKeygen(String ssid, String mac) {
 		super(ssid, mac);
 	}
 
-	private String incrementMac(String mac, int increment) {
+	protected String incrementMac(String mac, int increment) {
 		return Long.toHexString(Long.parseLong(mac, 16) + increment)
 				.toLowerCase(Locale.getDefault());
 	}
@@ -49,7 +49,7 @@ public class ArnetPirelliKeygen extends Keygen {
 		return UNLIKELY_SUPPORTED;
 	}
 
-	private void generateKey(String mac) {
+	protected void generateKey(String mac, int length) {
 		byte[] macBytes = new byte[6];
 		for (int i = 0; i < 12; i += 2) {
 			macBytes[i / 2] = (byte) ((Character.digit(mac.charAt(i), 16) << 4) + Character
@@ -64,7 +64,7 @@ public class ArnetPirelliKeygen extends Keygen {
 		md.update(macBytes);
 		final byte[] hash = md.digest();
 		final StringBuilder key = new StringBuilder();
-		for (int i = 0; i < 10; ++i) {
+		for (int i = 0; i < length; ++i) {
 			key.append(LOOKUP.charAt((hash[i] & 0xFF) % LOOKUP.length()));
 		}
 		addPassword(key.toString());
@@ -82,17 +82,11 @@ public class ArnetPirelliKeygen extends Keygen {
 			setErrorCode(R.string.msg_nomac);
 			return null;
 		}
-		generateKey(incrementMac(getMacAddress(), 1));
-		//Computing other possibilities
-		for (int i = -2; i < 5; ++i){
-			if (i != 1){
-				generateKey(incrementMac(getMacAddress(), i));
-			}
-		}
+		generateKey(incrementMac(getMacAddress(), 1), 10);
 		return getResults();
 	}
 
-	private ArnetPirelliKeygen(Parcel in) {
+	protected ArnetPirelliKeygen(Parcel in) {
 		super(in);
 	}
 
