@@ -22,7 +22,6 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
-import java.util.Locale;
 
 import org.exobel.routerkeygen.R;
 
@@ -35,11 +34,6 @@ public class ArnetPirelliKeygen extends Keygen {
 
 	public ArnetPirelliKeygen(String ssid, String mac) {
 		super(ssid, mac);
-	}
-
-	protected String incrementMac(String mac, int increment) {
-		return Long.toHexString(Long.parseLong(mac, 16) + increment)
-				.toLowerCase(Locale.getDefault());
 	}
 
 	@Override

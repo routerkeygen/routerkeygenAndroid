@@ -13,6 +13,7 @@ import org.exobel.routerkeygen.algorithms.AliceItalyKeygen;
 import org.exobel.routerkeygen.algorithms.AndaredKeygen;
 import org.exobel.routerkeygen.algorithms.ArnetPirelliKeygen;
 import org.exobel.routerkeygen.algorithms.AxtelKeygen;
+import org.exobel.routerkeygen.algorithms.BelkinKeygen;
 import org.exobel.routerkeygen.algorithms.CabovisaoSagemKeygen;
 import org.exobel.routerkeygen.algorithms.ComtrendKeygen;
 import org.exobel.routerkeygen.algorithms.ConnKeygen;
@@ -119,6 +120,11 @@ public class WirelessMatcher {
 					|| ssidSubpart.equalsIgnoreCase(macShort.substring(8)))
 				keygens.add(new AxtelKeygen(ssid, mac));
 		}
+
+		if (ssid.matches("^(B|b)elkin(\\.|_)[0-9a-fA-F]{3,6}$")
+				|| mac.startsWith("94:44:52") || mac.startsWith("08:86:3B")
+				|| mac.startsWith("EC:1A:59"))
+			keygens.add(new BelkinKeygen(ssid, mac));
 
 		if (ssid.matches("Cabovisao-[0-9a-fA-F]{4}")) {
 			if (mac.length() == 0 || mac.startsWith("C0:AC:54"))

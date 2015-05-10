@@ -86,6 +86,11 @@ public abstract class Keygen implements Parcelable {
 		return 0;
 	}
 
+	protected static String incrementMac(String mac, int increment) {
+		return Long.toHexString(Long.parseLong(mac, 16) + increment)
+				.toLowerCase(Locale.getDefault());
+	}
+	
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(ssidName);
 		dest.writeInt(macAddress != null ? 1 : 0);
