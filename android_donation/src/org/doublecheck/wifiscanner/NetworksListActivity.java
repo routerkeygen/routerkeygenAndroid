@@ -21,12 +21,14 @@ package org.doublecheck.wifiscanner;
 
 import org.doublecheck.wifiscanner.WifiScanReceiver.OnScanListener;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -48,6 +50,19 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 	private static final String donateScreenShownPref = "donateScreenShown";
 	private boolean welcomeScreenShown;
 
+	public static boolean isRKInstalled(Activity activity) {
+		final PackageManager pm = activity.getPackageManager();
+		boolean app_installed = false;
+		try {
+			pm.getPackageInfo("org.exobel.routerkeygen",
+					PackageManager.GET_ACTIVITIES);
+			app_installed = true;
+		} catch (PackageManager.NameNotFoundException e) {
+			app_installed = false;
+		}
+		return app_installed;
+	}
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

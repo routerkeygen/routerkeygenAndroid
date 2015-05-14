@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.acra.ACRA;
+import org.exobel.routerkeygen.AdsUtils;
 import org.exobel.routerkeygen.AutoConnectService;
 import org.exobel.routerkeygen.BuildConfig;
 import org.exobel.routerkeygen.R;
@@ -134,6 +135,7 @@ public class NetworkFragment extends SherlockFragment {
 					i.putExtra(AutoConnectService.SCAN_RESULT,
 							wifiNetwork.getScanResult());
 					getActivity().startService(i);
+					AdsUtils.displayConnectInterstitial(getActivity());
 				}
 			});
 		}

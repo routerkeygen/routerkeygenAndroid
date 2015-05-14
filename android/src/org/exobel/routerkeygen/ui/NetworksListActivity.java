@@ -101,15 +101,8 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 			final SharedPreferences.Editor editor = mPrefs.edit();
 			editor.putBoolean(Preferences.VERSION, true);
 			editor.putLong(LAST_DIALOG_TIME, System.currentTimeMillis());
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-				editor.apply();
-			} else {
-				new Thread(new Runnable() {
-					public void run() {
-						editor.commit();
-					}
-				}).start();
-			}
+			editor.apply();
+
 			// Checking for updates every week
 			startService(new Intent(getApplicationContext(),
 					UpdateCheckerService.class));
@@ -161,6 +154,10 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 								}).show();
 			}
 		}
+		if (welcomeScreenShown){
+			AdsUtils.displayStartupInterstitial(this);
+		}
+
 	}
 
 	@Override
@@ -267,7 +264,8 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 	public void onStop() {
 		super.onStop();
 		try {
-			EasyTracker.getInstance(this).activityStop(this); // Add this method.
+			EasyTracker.getInstance(this).activityStop(this); // Add this
+																// method.
 			unregisterReceiver(scanFinished);
 			unregisterReceiver(stateChanged);
 		} catch (Exception e) {

@@ -10,5 +10,6 @@
     <string name="msg_scanstarted">Pesquisa iniciada</string>
     <string name="msg_wifienabling">Activando Wifi</string>
     <string name="menu_scan">Pesquisa</string>
+    <string name="rk_message">Obrigado pelo donativo para o RouterKeygen.\n\nAgora sem publicidade! :)\nMas esta aplicação tem de estar instalada.</string>
 
 </resources>

@@ -1,8 +1,27 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".NetworksListActivity" >
+
+    <LinearLayout
+        android:id="@+id/rk_message_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingBottom="5dp" >
+
+        <TextView
+            android:id="@+id/rk_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:maxLines="10"
+            android:text="@string/rk_message"
+            android:textSize="18sp" />
+    </LinearLayout>
 
     <fragment
         android:id="@+id/frag_networks_list"
@@ -10,4 +29,5 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout="@layout/fragment_networks_list" />
-</RelativeLayout>
+
+</LinearLayout>
