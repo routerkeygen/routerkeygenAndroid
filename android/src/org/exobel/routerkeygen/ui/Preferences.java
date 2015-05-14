@@ -96,8 +96,8 @@ public class Preferences extends SherlockPreferenceActivity {
 	public static final String PUB_DOWNLOAD = "https://github.com/routerkeygen/thomsonDicGenerator/releases/download/v3/RouterKeygen_v3.dic";
 	private static final String PUB_DIC_CFV = "https://github.com/routerkeygen/thomsonDicGenerator/releases/download/v3/RKDictionary.cfv";
 
-	public static final String VERSION = "3.12.0";
-	private static final String LAUNCH_DATE = "05/05/2015";
+	public static final String VERSION = "3.14.0";
+	private static final String LAUNCH_DATE = "15/05/2015";
 
 	private LastVersion lastVersion;
 
