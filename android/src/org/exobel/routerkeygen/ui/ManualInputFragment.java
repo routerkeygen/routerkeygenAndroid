@@ -236,8 +236,10 @@ public class ManualInputFragment extends SherlockFragment {
 			loading.setVisibility(View.GONE);
 			mainView.setVisibility(View.VISIBLE);
 			if (wifiNetwork.getSupportState() == Keygen.UNSUPPORTED) {
-				Toast.makeText(getActivity(), R.string.msg_unspported_network,
-						Toast.LENGTH_SHORT).show();
+				if (getActivity() != null ) {
+					Toast.makeText(getActivity(), R.string.msg_unspported_network,
+							Toast.LENGTH_SHORT).show();
+				}
 				return;
 			}
 			mCallbacks.onItemSelected(wifiNetwork);

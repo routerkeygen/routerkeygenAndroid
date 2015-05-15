@@ -57,7 +57,9 @@ public class WiFiNetwork implements Comparable<WiFiNetwork>, Parcelable {
 		if (keygens.isEmpty())
 			return Keygen.UNSUPPORTED;
 		for (Keygen k : keygens) {
-			if (k.getSupportState() == Keygen.SUPPORTED)
+			//Getting some crash reports with k==null
+			//very odd.
+			if (k != null && k.getSupportState() == Keygen.SUPPORTED)
 				return Keygen.SUPPORTED;
 		}
 		// If there is a supported keygen then it is already supported
