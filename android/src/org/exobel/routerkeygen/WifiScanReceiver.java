@@ -64,25 +64,28 @@ public class WifiScanReceiver extends BroadcastReceiver {
 			return;
 		if (wifi == null)
 			return;
-		final List<ScanResult> results = wifi.getScanResults();
-		/*
-		 * He have had reports of this returning null instead of empty
-		 */
-		if (results == null)
-			return;
-
 		try {
-			// Single scan
-			context.unregisterReceiver(this);
-		} catch (Exception e) {
-		}
-		if (task == null || task.getStatus() == Status.FINISHED) {
-			task = new KeygenMatcherTask(results, context);
-			if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
-				task.execute();
-			} else {
-				task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+			final List<ScanResult> results = wifi.getScanResults();
+			/*
+			 * We have had reports of this returning null instead of empty
+			 */
+			if (results == null)
+				return;
+			try {
+				// Single scan
+				context.unregisterReceiver(this);
+			} catch (Exception e) {
 			}
+			if (task == null || task.getStatus() == Status.FINISHED) {
+				task = new KeygenMatcherTask(results, context);
+				if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
+					task.execute();
+				} else {
+					task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+				}
+			}
+		} catch (SecurityException e) {
+			//Sometimes getScanResults triggers a SecurityException
 		}
 	}
 

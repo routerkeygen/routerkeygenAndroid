@@ -157,26 +157,36 @@ public class AutoConnectService extends Service implements onConnectionListener 
 	}
 
 	private void tryingConnection() {
-		currentNetworkId = Wifi.connectToNewNetwork(this, wifi, network,
-				keys.get(attempts++), mNumOpenNetworksKept);
-		Log.d(AutoConnectManager.class.getSimpleName(),
-				"Trying " + keys.get(attempts - 1));
-
-		if (currentNetworkId != -1) {
-			lastTimeDisconnected = System.currentTimeMillis();
-			if (attempts == 1)// first try, we register the listener
-				registerReceiver(mReceiver, new IntentFilter(
-						WifiManager.SUPPLICANT_STATE_CHANGED_ACTION));
-			mNotificationManager.notify(UNIQUE_ID, NotificationUtils
-					.createProgressBar(
-							this,
-							getString(R.string.app_name),
-							getString(R.string.not_auto_connect_key_testing,
-									keys.get(attempts - 1)), keys.size(),
-							attempts, false,
-							getDefaultPendingIntent(getApplicationContext())));
-			cancelNotification = true;
-		} else {
+		currentNetworkId = -1;
+		try {
+			currentNetworkId = Wifi.connectToNewNetwork(this, wifi, network,
+					keys.get(attempts++), mNumOpenNetworksKept);
+			Log.d(AutoConnectManager.class.getSimpleName(),
+					"Trying " + keys.get(attempts - 1));
+			if (currentNetworkId != -1) {
+				lastTimeDisconnected = System.currentTimeMillis();
+				if (attempts == 1)// first try, we register the listener
+					registerReceiver(mReceiver, new IntentFilter(
+							WifiManager.SUPPLICANT_STATE_CHANGED_ACTION));
+				mNotificationManager
+						.notify(UNIQUE_ID,
+								NotificationUtils
+										.createProgressBar(
+												this,
+												getString(R.string.app_name),
+												getString(
+														R.string.not_auto_connect_key_testing,
+														keys.get(attempts - 1)),
+												keys.size(),
+												attempts,
+												false,
+												getDefaultPendingIntent(getApplicationContext())));
+				cancelNotification = true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (currentNetworkId == -1) {
 			mNotificationManager.notify(
 					UNIQUE_ID,
 					NotificationUtils.getSimple(this,

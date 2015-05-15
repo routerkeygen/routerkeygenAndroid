@@ -48,6 +48,7 @@ public class WifiListAdapter extends BaseAdapter implements
 	private final Drawable[] wifiSignalLocked;
 	private Typeface typeface = null;
 
+	@SuppressWarnings("deprecation")
 	public WifiListAdapter(Context context) {
 		this.listNetworks = new ArrayList<WifiListAdapter.Item>();
 		try {
