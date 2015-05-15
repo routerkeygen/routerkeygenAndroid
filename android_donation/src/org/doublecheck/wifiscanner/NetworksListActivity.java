@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Rui Araújo, Luís Fonseca
+q * Copyright 2012 Rui Araújo, Luís Fonseca
  *
  * This file is part of Router Keygen.
  *
@@ -50,7 +50,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 	private static final String donateScreenShownPref = "donateScreenShown";
 	private boolean welcomeScreenShown;
 
-	public static boolean isRKInstalled(Activity activity) {
+	private static boolean isRKInstalled(Activity activity) {
 		final PackageManager pm = activity.getPackageManager();
 		boolean app_installed = false;
 		try {
@@ -62,12 +62,14 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 		}
 		return app_installed;
 	}
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_networks_list);
-
+		if (!isRKInstalled(this)) {
+			findViewById(R.id.rk_message_group).setVisibility(View.GONE);
+		}
 		networkListFragment = ((NetworksListFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.frag_networks_list));
 		wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
