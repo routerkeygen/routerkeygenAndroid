@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
 
-    <changelogversion versionName="3.14.0" changeDate="May 7,2015">
+    <changelogversion versionName="3.14.1" changeDate="May 16,2015">
+        <changelogtext>Bug fixes</changelogtext>
+    </changelogversion>
+    
+    <changelogversion versionName="3.14.0" changeDate="May 15,2015">
         <changelogtext>[b]New![/b] Meo Pirelli algorithm</changelogtext>
         <changelogtext>[b]New![/b] Belkin algorithm</changelogtext>
         <changelogtext>Extended Pirelli coverage</changelogtext>
