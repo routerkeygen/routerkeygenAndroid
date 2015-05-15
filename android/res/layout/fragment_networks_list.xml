@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            android:paddingLeft="10dp"
+            android:paddingLeft="10dip"
             android:text="@string/msg_nowifidetected"
             android:textSize="20sp"
             android:visibility="gone" />
