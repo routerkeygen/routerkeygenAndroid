@@ -30,7 +30,7 @@
             android:id="@+id/label_ssid"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dip"
+            android:layout_marginLeft="10dp"
             android:clickable="false"
             android:text="@string/lb_manual" />
 
@@ -39,9 +39,9 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/label_ssid"
-            android:layout_marginBottom="10dip"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="20dip"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:imeOptions="actionDone"
             android:inputType="textFilter"
             android:maxLines="1"
@@ -60,7 +60,7 @@
                 android:id="@+id/label_bssid"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dip"
+                android:layout_marginLeft="10dp"
                 android:clickable="false"
                 android:text="@string/lb_manual_bssid" />
 
@@ -69,7 +69,7 @@
                 android:layout_width="@dimen/mac_input_size"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/label_bssid"
-                android:layout_marginLeft="10dip"
+                android:layout_marginLeft="10dp"
                 android:imeOptions="actionNext"
                 android:inputType="textFilter"
                 android:maxLength="2"

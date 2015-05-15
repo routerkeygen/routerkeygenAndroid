@@ -18,7 +18,7 @@
 	        android:layout_height="wrap_content"
 	        android:text="@string/dialog_nativecalc_msg"
 	        android:layout_gravity="center"
-	        android:paddingLeft="10dip"
+	        android:paddingLeft="10dp"
 	        android:gravity="center"
 	        android:textSize="20sp"/>
 	</LinearLayout>

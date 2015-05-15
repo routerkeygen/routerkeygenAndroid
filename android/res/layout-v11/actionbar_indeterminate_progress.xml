@@ -12,17 +12,21 @@
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License.
-  -->
+-->
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="64dp"
     android:layout_height="wrap_content"
-    android:gravity="center">
-    <ProgressBar android:layout_width="32dp"
+    android:gravity="center" >
+
+    <ProgressBar
+        style="?android:attr/indeterminateProgressStyle"
+        android:layout_width="32dp"
         android:layout_height="32dp"
+        android:layout_gravity="center"
+        android:layout_marginEnd="12dp"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
-        android:layout_gravity="center"
-        style="?android:attr/indeterminateProgressStyle" />
-</FrameLayout>
+        android:layout_marginStart="12dp" />
 
+</FrameLayout>
