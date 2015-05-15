@@ -50,16 +50,15 @@ public class AdsUtils {
 	private static final String STARTUP_LAST_SHOWN_COUNT = "STARTUP_LAST_SHOWN_COUNT";
 
 	public static MMAdView loadAdIfNeeded(Activity activity) {
-		boolean app_installed = checkDonation(activity);
 		// Create the adView
 		MMAdView adView = new MMAdView(activity);
-		// Set your apid
-		adView.setApid(BANNER_APID);
-		if (app_installed) {
+		if (checkDonation(activity)) {
 			final View vg = activity.findViewById(R.id.adBannerRelativeLayout);
 			((ViewGroup) vg.getParent()).removeView(adView);
 			return null;
 		}
+		// Set your apid
+		adView.setApid(BANNER_APID);
 		adView.setMMRequest(getAdRequest(activity));
 		// (Highly Recommended) Set the id to preserve your ad on
 		// configuration changes. Save Battery!
@@ -129,9 +128,11 @@ public class AdsUtils {
 
 	private static final int COUNTER_LIMIT = 5;
 
-	private static void displayInterstitial(Activity activity, final String apid,
-			final String countKey, final String timeKey) {
-
+	private static void displayInterstitial(Activity activity,
+			final String apid, final String countKey, final String timeKey) {
+		if (checkDonation(activity)) {
+			return; // NO ADS!
+		}
 		final SharedPreferences mPrefs = PreferenceManager
 				.getDefaultSharedPreferences(activity);
 		final SharedPreferences.Editor editor = mPrefs.edit();
