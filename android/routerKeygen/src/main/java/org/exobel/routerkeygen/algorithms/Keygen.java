@@ -87,8 +87,15 @@ public abstract class Keygen implements Parcelable {
 	}
 
 	protected static String incrementMac(String mac, int increment) {
-		return Long.toHexString(Long.parseLong(mac, 16) + increment)
+		String incremented = Long.toHexString(Long.parseLong(mac, 16) + increment)
 				.toLowerCase(Locale.getDefault());
+		//Any leading zeros will disappear in this process.
+		//TODO: add tests for this.
+		final int leadingZerosCount = mac.length() - incremented.length();
+		for (int i = 0; i < leadingZerosCount; ++i) {
+			incremented = "0" + incremented;
+		}
+		return incremented;
 	}
 	
 	public void writeToParcel(Parcel dest, int flags) {
