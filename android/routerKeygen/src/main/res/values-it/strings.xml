@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
    Copyright 2013 Rui Araújo, Luís Fonseca
   
    This file is part of Router Keygen.
@@ -17,7 +16,7 @@
    You should have received a copy of the GNU General Public License
    along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
     <!-- Translation proudly done by Simone "lostrozzacavalli" Guidi e Mauro "Briareos" Manera -->
 
@@ -70,24 +69,25 @@
         Rui Araújo, Luís Fonseca, Ângela Igreja, Simone Guidi, Matthijs de Rijk, Van Hove Sven, Jon Uriarte, <a href="http://www.gnucitizen.org/">GNUCITIZEN</a>, <a href="http://wifiresearchers.wordpress.com/">White Hats Crew</a>, Fred Williams, Muris Kurgaš, <a href="http://websec.ca/">Pedro Joaquim</a>, chaeo, Nicolas DeRouet, Eduardo Laborin, Florian Frank, Axel Martinez, Victor Mignot, Martijn Gerkes, Alejandro Marquez, <a href="http://www.openssl.org/">OpenSSl</a>.</string>
     <string name="dialog_about_license">Licenza</string>
     <string name="dialog_about_license_desc">This application is under the GPLv3.\n\nYou can read its terms <a href="http://www.gnu.org/licenses/gpl-3.0.html">here</a>.\n\n
-        RouterKeygen is built using open source software:\n<a href="https://github.com/JakeWharton/ActionBarSherlock">ActionBarSherlock</a>\n<a href="https://github.com/iPaulPro/aFileChooser">aFileChooser</a>\n<a href="https://github.com/beworker/pinned-section-listview">PinnedSectionListView</a>\n<a href="https://code.google.com/p/android-wifi-connecter/">android-wifi-connecter</a>.\n\n  The license terms for this projects can be read by following the link.</string> <!-- UNTRANSLATED -->
+        RouterKeygen is built using open source software:\n<a href="https://github.com/JakeWharton/ActionBarSherlock">ActionBarSherlock</a>\n<a href="https://github.com/iPaulPro/aFileChooser">aFileChooser</a>\n<a href="https://github.com/beworker/pinned-section-listview">PinnedSectionListView</a>\n<a href="https://code.google.com/p/android-wifi-connecter/">android-wifi-connecter</a>.\n\n  The license terms for this projects can be read by following the link.</string>
+    <!-- UNTRANSLATED -->
     <string name="msg_app_updated">Applicazione già aggiornata all\'ultima versione.</string>
     <string name="update_title">Aggiornamento disponibile</string>
     <string name="update_notification">La versione <xliff:g id="version">%1$s</xliff:g> è disponibile.</string>
     <string name="update_message">La versione <xliff:g id="version">%1$s</xliff:g> è disponibile. Vai al sito web per scaricare la nuova versione.</string>
-    <string name="cancel_download">Vuoi cancellare il dizionario che hai scaricato?</string>  
-    <string name="cancel_auto_test">Vuoi cancellare le chiavi testate?</string>  
-    <string name="networklist_supported">Ci sono reti supportate</string> 
-    <string name="networklist_unlikely_supported">Unlikely Supported</string> 
-    <string name="networklist_unsupported">Nessuna rete supportata</string> 
+    <string name="cancel_download">Vuoi cancellare il dizionario che hai scaricato?</string>
+    <string name="cancel_auto_test">Vuoi cancellare le chiavi testate?</string>
+    <string name="networklist_supported">Ci sono reti supportate</string>
+    <string name="networklist_unlikely_supported">Unlikely Supported</string>
+    <string name="networklist_unsupported">Nessuna rete supportata</string>
     <string name="msg_donation">Per rimuovere la pubblicità installa l\'applicazione seguente. Grazie</string>
 
     <!-- PREFERENCES STRINGS -->
     <string name="pref_hinton_wifion">Attivare il wifi automaticamente</string>
     <string name="pref_hintoff_wifion">Non attivare il wifi automaticamente</string>
     <string name="pref_wifion">Auto Wifi On</string>
-    <string name="pref_dict_select">Seleziona dizionario</string> 
-    <string name="pref_dict_select_des">Seleziona il file del dizionario</string>  
+    <string name="pref_dict_select">Seleziona dizionario</string>
+    <string name="pref_dict_select_des">Seleziona il file del dizionario</string>
     <string name="pref_1section">Opzioni Generali</string>
     <string name="pref_2section">Riguardo</string>
     <string name="pref_donate_paypal">Dona (Paypal)</string>
@@ -112,13 +112,14 @@
     <string name="pref_hintoff_autoscan">Scansione sempre manuale.</string>
     <string name="pref_autoscan_interval">Intervallo di Scansione Automatica</string>
     <string name="pref_hint_autoscan_interval">Lunghezza della scansione automatica.</string>
-    <string name="pref_analytics">Google Analytics</string>  <!-- UNTRANSLATED -->
-    <string name="pref_hinton_analytics">Consenti invii anonimi per i crash e l\'uso dell\'app</string> 
-    <string name="pref_hintoff_analytics">Non consentire invio di eventuali crash</string> 
+    <string name="pref_analytics">Google Analytics</string>
+    <!-- UNTRANSLATED -->
+    <string name="pref_hinton_analytics">Consenti invii anonimi per i crash e l\'uso dell\'app</string>
+    <string name="pref_hintoff_analytics">Non consentire invio di eventuali crash</string>
     <string name="pref_changelog">Changelog</string>
 
     <!-- ERROR MESSAGE STRINGS -->
-    <string name="msg_unspported">Questa rete non è supportata!</string>  
+    <string name="msg_unspported">Questa rete non è supportata!</string>
     <string name="msg_nowifidetected">Nessuna rete wifi trovata!</string>
     <string name="msg_nowifi">Il Wifi non è attivo! Per favore attiva il Wifi!</string>
     <string name="msg_scanfailed">La scansione non è riuscita!</string>
@@ -161,8 +162,8 @@
     <string name="msg_error_key_testing">Errore nella verifica della chiave.</string>
     <string name="msg_no_correct_keys">Nessuna chiave corretta.</string>
     <string name="msg_auto_connect_running">La procedura di connessione automatica è già avviata.</string>
-    <string name="msg_auto_connect_warning">Questa opzione non può funzionare con questa rete</string> 
-    <string name="crash_toast_text">Routerkeygen ha generato un errore. Contattaci via mail</string> 
+    <string name="msg_auto_connect_warning">Questa opzione non può funzionare con questa rete</string>
+    <string name="crash_toast_text">Routerkeygen ha generato un errore. Contattaci via mail</string>
     <!-- FILE CHOOSER -->
     <string name="empty_directory">Dizionario Vuoto</string>
     <string name="storage_removed">Storage rimossa o non presente</string>
@@ -175,6 +176,6 @@
          You can customize it in your strings.xml.
          Use string with quotes if you want a space
     -->
-    <string name="changelog_header_version">"Versione "</string> 
+    <string name="changelog_header_version">"Versione "</string>
 
 </resources>

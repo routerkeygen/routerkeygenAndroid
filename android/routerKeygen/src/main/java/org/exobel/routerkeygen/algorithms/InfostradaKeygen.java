@@ -18,13 +18,13 @@
  */
 package org.exobel.routerkeygen.algorithms;
 
-import java.util.List;
-import java.util.Locale;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import org.exobel.routerkeygen.R;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import java.util.List;
+import java.util.Locale;
 
 /*
  * This is not actual an algorithm
@@ -33,25 +33,6 @@ import android.os.Parcelable;
  */
 public class InfostradaKeygen extends Keygen {
 
-	public InfostradaKeygen(String ssid, String mac ) {
-		super(ssid, mac);
-	}
-	
-	@Override
-	public List<String> getKeys() {
-		if ( getMacAddress().length() != 12 ) 
-		{
-			setErrorCode(R.string.msg_errpirelli);
-			return null;
-		}
-		addPassword("2"+getMacAddress().toUpperCase(Locale.getDefault()));
-		return getResults();
-	}
-
-	private InfostradaKeygen(Parcel in) {
-		super(in);
-	}
-	
     public static final Parcelable.Creator<InfostradaKeygen> CREATOR = new Parcelable.Creator<InfostradaKeygen>() {
         public InfostradaKeygen createFromParcel(Parcel in) {
             return new InfostradaKeygen(in);
@@ -61,5 +42,23 @@ public class InfostradaKeygen extends Keygen {
             return new InfostradaKeygen[size];
         }
     };
+
+    public InfostradaKeygen(String ssid, String mac) {
+        super(ssid, mac);
+    }
+
+    private InfostradaKeygen(Parcel in) {
+        super(in);
+    }
+
+    @Override
+    public List<String> getKeys() {
+        if (getMacAddress().length() != 12) {
+            setErrorCode(R.string.msg_errpirelli);
+            return null;
+        }
+        addPassword("2" + getMacAddress().toUpperCase(Locale.getDefault()));
+        return getResults();
+    }
 
 }

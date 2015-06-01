@@ -1,35 +1,51 @@
 package org.exobel.routerkeygen.algorithms;
 
-import java.util.ArrayList;
-import java.util.Locale;
-import java.util.zip.ZipInputStream;
-
-import org.exobel.routerkeygen.WirelessMatcher;
-
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import org.exobel.routerkeygen.WirelessMatcher;
+
+import java.util.ArrayList;
+import java.util.Locale;
+import java.util.zip.ZipInputStream;
+
 public class WiFiNetwork implements Comparable<WiFiNetwork>, Parcelable {
 
-	private ScanResult scanResult;
+	// Constants used for different security types
+	public static final String PSK = "PSK";
+	public static final String WEP = "WEP";
+	public static final String EAP = "EAP";
+	public static final String OPEN = "Open";
+	public static final Parcelable.Creator<WiFiNetwork> CREATOR = new Parcelable.Creator<WiFiNetwork>() {
+
+		public WiFiNetwork[] newArray(int size) {
+			return new WiFiNetwork[size];
+		}
+
+		@Override
+		public WiFiNetwork createFromParcel(Parcel source) {
+			return new WiFiNetwork(source);
+		}
+	};
 	final private String ssidName;
 	final private String macAddress;
 	final private int level;
 	final private String encryption;
+	private ScanResult scanResult;
 	private ArrayList<Keygen> keygens;
 
 	public WiFiNetwork(ScanResult scanResult, ZipInputStream magicInfo) {
-		this(scanResult.SSID,scanResult.BSSID,
-                WifiManager.calculateSignalLevel(scanResult.level, 4),
+		this(scanResult.SSID, scanResult.BSSID,
+				WifiManager.calculateSignalLevel(scanResult.level, 4),
                 scanResult.capabilities, magicInfo);
         this.scanResult = scanResult;
 	}
 
 	public WiFiNetwork(final String ssid, final String mac, int level,
-			String enc, ZipInputStream magicInfo) {
+					   String enc, ZipInputStream magicInfo) {
 		this.ssidName = ssid;
 		this.macAddress = mac.toUpperCase(Locale.getDefault());
 		this.level = level;
@@ -37,6 +53,40 @@ public class WiFiNetwork implements Comparable<WiFiNetwork>, Parcelable {
 		this.scanResult = null;
 		this.keygens = WirelessMatcher.getKeygen(ssidName, macAddress,
 				magicInfo);
+	}
+
+	protected WiFiNetwork(Parcel in) {
+		ssidName = in.readString();
+		if (in.readInt() == 1)
+			macAddress = in.readString();
+		else
+			macAddress = "";
+		if (in.readInt() == 1)
+			encryption = in.readString();
+		else
+			encryption = OPEN;
+		level = in.readInt();
+		keygens = new ArrayList<>();
+		in.readList(keygens, Keygen.class.getClassLoader());
+		if (in.readInt() == 1)
+			scanResult = in.readParcelable(ScanResult.class.getClassLoader());
+		else
+			scanResult = null;
+	}
+
+	/**
+	 * @return The security of a given {@link ScanResult}.
+	 */
+	public static String getScanResultSecurity(WiFiNetwork scanResult) {
+		final String cap = scanResult.encryption;
+		final String[] securityModes = {WEP, PSK, EAP};
+		for (int i = securityModes.length - 1; i >= 0; i--) {
+			if (cap.contains(securityModes[i])) {
+				return securityModes[i];
+			}
+		}
+
+		return OPEN;
 	}
 
 	public String getSsidName() {
@@ -97,71 +147,20 @@ public class WiFiNetwork implements Comparable<WiFiNetwork>, Parcelable {
 			dest.writeParcelable(scanResult, flags);
 	}
 
-	protected WiFiNetwork(Parcel in) {
-		ssidName = in.readString();
-		if (in.readInt() == 1)
-			macAddress = in.readString();
-		else
-			macAddress = "";
-		if (in.readInt() == 1)
-			encryption = in.readString();
-		else
-			encryption = OPEN;
-		level = in.readInt();
-		keygens = new ArrayList<>();
-		in.readList(keygens, Keygen.class.getClassLoader());
-		if (in.readInt() == 1)
-			scanResult = in.readParcelable(ScanResult.class.getClassLoader());
-		else
-			scanResult = null;
-	}
-
 	public boolean isLocked() {
 		return !OPEN.equals(getScanResultSecurity(this));
-	}
-
-	/**
-	 * @return The security of a given {@link ScanResult}.
-	 */
-	public static String getScanResultSecurity(WiFiNetwork scanResult) {
-		final String cap = scanResult.encryption;
-		final String[] securityModes = { WEP, PSK, EAP };
-		for (int i = securityModes.length - 1; i >= 0; i--) {
-			if (cap.contains(securityModes[i])) {
-				return securityModes[i];
-			}
-		}
-
-		return OPEN;
 	}
 
 	public ScanResult getScanResult() {
 		return scanResult;
 	}
 
-    public void setKeygens(ZipInputStream magicInfo) {
-        this.keygens = WirelessMatcher.getKeygen(ssidName, macAddress,
-                magicInfo);
-    }
     public ArrayList<Keygen> getKeygens() {
         return keygens;
     }
 
-	// Constants used for different security types
-	public static final String PSK = "PSK";
-	public static final String WEP = "WEP";
-	public static final String EAP = "EAP";
-	public static final String OPEN = "Open";
-
-	public static final Parcelable.Creator<WiFiNetwork> CREATOR = new Parcelable.Creator<WiFiNetwork>() {
-
-		public WiFiNetwork[] newArray(int size) {
-			return new WiFiNetwork[size];
-		}
-
-		@Override
-		public WiFiNetwork createFromParcel(Parcel source) {
-			return new WiFiNetwork(source);
-		}
-	};
+	public void setKeygens(ZipInputStream magicInfo) {
+		this.keygens = WirelessMatcher.getKeygen(ssidName, macAddress,
+				magicInfo);
+	}
 }

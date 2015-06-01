@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
    Copyright 2012 Rui Araújo, Luís Fonseca
   
    This file is part of Router Keygen.
@@ -17,16 +16,16 @@
    You should have received a copy of the GNU General Public License
    along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
         android:id="@+id/copy_ssid"
-        android:title="@string/context_menu_copy_ssid"/>
+        android:title="@string/context_menu_copy_ssid" />
     <item
         android:id="@+id/copy_mac"
-        android:title="@string/context_menu_copy_mac"/>
+        android:title="@string/context_menu_copy_mac" />
     <item
         android:id="@+id/use_mac"
-        android:title="@string/context_menu_use_mac"/>
+        android:title="@string/context_menu_use_mac" />
 
 </menu>

@@ -18,34 +18,16 @@
  */
 package org.exobel.routerkeygen.algorithms;
 
-import java.util.List;
-import java.util.Locale;
-
-import org.exobel.routerkeygen.R;
-
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.exobel.routerkeygen.R;
+
+import java.util.List;
+import java.util.Locale;
+
 public class TplinkKeygen extends Keygen {
 
-	public TplinkKeygen(String ssid, String mac) {
-		super(ssid, mac);
-	}
-	
-	@Override
-	public List<String> getKeys() {
-		if (getMacAddress().length() != 12) {
-			setErrorCode(R.string.msg_errpirelli);
-			return null;
-		}
-		addPassword(getMacAddress().substring(4).toUpperCase(Locale.getDefault()));
-		return getResults();
-	}
-
-	private TplinkKeygen(Parcel in) {
-		super(in);
-	}
-	
     public static final Parcelable.Creator<TplinkKeygen> CREATOR = new Parcelable.Creator<TplinkKeygen>() {
         public TplinkKeygen createFromParcel(Parcel in) {
             return new TplinkKeygen(in);
@@ -55,6 +37,24 @@ public class TplinkKeygen extends Keygen {
             return new TplinkKeygen[size];
         }
     };
-	
+
+    public TplinkKeygen(String ssid, String mac) {
+        super(ssid, mac);
+    }
+
+    private TplinkKeygen(Parcel in) {
+        super(in);
+    }
+
+    @Override
+    public List<String> getKeys() {
+        if (getMacAddress().length() != 12) {
+            setErrorCode(R.string.msg_errpirelli);
+            return null;
+        }
+        addPassword(getMacAddress().substring(4).toUpperCase(Locale.getDefault()));
+        return getResults();
+    }
+
 
 }

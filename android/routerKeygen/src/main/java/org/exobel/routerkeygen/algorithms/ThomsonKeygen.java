@@ -18,6 +18,14 @@
  */
 package org.exobel.routerkeygen.algorithms;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import org.exobel.routerkeygen.R;
+import org.exobel.routerkeygen.ui.Preferences;
+import org.exobel.routerkeygen.utils.InputStreamUtils;
+import org.exobel.routerkeygen.utils.StringUtils;
+
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -33,62 +41,50 @@ import java.util.List;
 import java.util.Locale;
 import java.util.zip.ZipInputStream;
 
-import org.exobel.routerkeygen.R;
-import org.exobel.routerkeygen.ui.Preferences;
-import org.exobel.routerkeygen.utils.StringUtils;
-
-import android.os.Parcel;
-import android.os.Parcelable;
-
 public class ThomsonKeygen extends Keygen {
+	public static final Parcelable.Creator<ThomsonKeygen> CREATOR = new Parcelable.Creator<ThomsonKeygen>() {
+		public ThomsonKeygen createFromParcel(Parcel in) {
+			return new ThomsonKeygen(in);
+		}
+
+		public ThomsonKeygen[] newArray(int size) {
+			return new ThomsonKeygen[size];
+		}
+	};
+	final private static byte[] charectbytes0 = {'3', '3', '3', '3', '3', '3',
+			'3', '3', '3', '3', '4', '4', '4', '4', '4', '4', '4', '4', '4',
+			'4', '4', '4', '4', '4', '4', '5', '5', '5', '5', '5', '5', '5',
+			'5', '5', '5', '5',};
+	final private static byte[] charectbytes1 = {'0', '1', '2', '3', '4', '5',
+			'6', '7', '8', '9', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+			'A', 'B', 'C', 'D', 'E', 'F', '0', '1', '2', '3', '4', '5', '6',
+			'7', '8', '9', 'A',};
 	final private byte[] cp = new byte[12];
-	private byte[] entry;
 	final private byte[] table = new byte[1282];
+	final private byte[] routerESSID = new byte[3];
+	final private String ssidIdentifier;
+	private byte[] entry;
 	private int a, b, c;
 	private int year;
 	private int week;
 	private int sequenceNumber;
-	final private byte[] routerESSID = new byte[3];
 	private boolean internetAlgorithm;
-
 	private boolean errorDict;
 	private int len = 0;
 	private String dictionaryPath;
-
 	private MessageDigest md;
-	final private String ssidIdentifier;
 	private InputStream webdic;
-
-	private static boolean readFromInput(byte[] buf, int length,
-			InputStream input) throws IOException {
-		int check = 0, ret = 0;
-		while (check != length) {
-			ret = input.read(buf, check, length - check);
-			if (ret == -1) {
-				return false;
-			} else
-				check += ret;
-		}
-		return true;
-	}
-
-	private static boolean readFromInput(byte[] buf, int length,
-			RandomAccessFile input) throws IOException {
-		int check = 0, ret = 0;
-		while (check != length) {
-			ret = input.read(buf, check, length - check);
-			if (ret == -1) {
-				return false;
-			} else
-				check += ret;
-		}
-		return true;
-	}
 
 	public ThomsonKeygen(String ssid, String mac) {
 		super(ssid, mac);
 		this.errorDict = false;
 		this.ssidIdentifier = ssid.substring(ssid.length() - 6);
+	}
+
+	private ThomsonKeygen(Parcel in) {
+		super(in);
+		ssidIdentifier = in.readString();
+		errorDict = in.readInt() == 1;
 	}
 
 	@Override
@@ -125,22 +121,18 @@ public class ThomsonKeygen extends Keygen {
 
 	private boolean internetCalc() {
 		try {
-			DataInputStream onlineFile = null;
-			int lenght = 0;
-			URL url;
 			ZipInputStream fis = new ZipInputStream(webdic);
 			fis.getNextEntry();
-			if (!readFromInput(table, 1024, fis)) {
+			if (!InputStreamUtils.readFromInput(table, 1024, fis)) {
 				setErrorCode(R.string.msg_err_webdic_table);
 				errorDict = true;
 				fis.close();
 				return false;
 			}
 			int totalOffset = 0;
-			int offset = 0;
 			int lastLength = 0;
 			int i = (0xFF & routerESSID[0]) * 4;
-			offset = ((0xFF & table[i]) << 24) | ((0xFF & table[i + 1]) << 16)
+			int offset = ((0xFF & table[i]) << 24) | ((0xFF & table[i + 1]) << 16)
 					| ((0xFF & table[i + 2]) << 8) | (0xFF & table[i + 3]);
 			if (i != 1020) // routerESSID[0] != 0xFF ( 255*4 == 1020 )
 				lastLength = ((0xFF & table[i + 4]) << 24)
@@ -148,11 +140,11 @@ public class ThomsonKeygen extends Keygen {
 						| ((0xFF & table[i + 6]) << 8) | (0xFF & table[i + 7]);
 			totalOffset += offset;
 			long checkLong = 0, retLong;
-			while (checkLong != (i / 4) * 768)/*
+			/*
 											 * ZipInputStream doens't seems to
 											 * block.
 											 */
-			{
+			while (checkLong != (i / 4) * 768) {
 				retLong = fis.skip((i / 4) * 768 - checkLong);
 				if (retLong == -1) {
 					setErrorCode(R.string.msg_err_webdic_table);
@@ -163,7 +155,7 @@ public class ThomsonKeygen extends Keygen {
 					checkLong += retLong;
 			}
 
-			if (!readFromInput(table, 768, fis)) {
+			if (!InputStreamUtils.readFromInput(table, 768, fis)) {
 				setErrorCode(R.string.msg_err_webdic_table);
 				errorDict = true;
 				fis.close();
@@ -176,10 +168,10 @@ public class ThomsonKeygen extends Keygen {
 			 * There's no check here because humans are lazy people and because
 			 * it doesn't matter
 			 */
-			lenght = ((0xFF & table[i + 3]) << 16)
+			int length = ((0xFF & table[i + 3]) << 16)
 					| ((0xFF & table[i + 4]) << 8) | (0xFF & table[i + 5]);
 			totalOffset += offset;
-			lenght -= offset;
+			length -= offset;
 			if ((lastLength != 0) && ((0xFF & routerESSID[1]) == 0xFF)) {
 				/*
 				 * Only for SSID starting with XXFF. We use the next item on the
@@ -187,7 +179,7 @@ public class ThomsonKeygen extends Keygen {
 				 * for.
 				 */
 				lastLength -= totalOffset;
-				lenght = lastLength;
+				length = lastLength;
 			}
 			if (((0xFF & routerESSID[0]) == 0xFF)
 					&& ((0xFF & routerESSID[1]) == 0xFF)) {
@@ -195,16 +187,16 @@ public class ThomsonKeygen extends Keygen {
 				 * Only for SSID starting with FFFF as we don't have a marker of
 				 * the end.
 				 */
-				lenght = 2000;
+				length = 2000;
 			}
-			url = new URL(Preferences.PUB_DOWNLOAD);
+			final URL url = new URL(Preferences.PUB_DOWNLOAD);
 			URLConnection con = url.openConnection();
 			con.setRequestProperty("Range", "bytes=" + totalOffset + "-"
-					+ (totalOffset + lenght));
-			onlineFile = new DataInputStream(con.getInputStream());
-			len = lenght;
+					+ (totalOffset + length));
+			final DataInputStream onlineFile = new DataInputStream(con.getInputStream());
+			len = length;
 			this.entry = new byte[len];
-			if (!readFromInput(entry, len, onlineFile)) {
+			if (!InputStreamUtils.readFromInput(entry, len, onlineFile)) {
 				setErrorCode(R.string.msg_err_webdic_table);
 				onlineFile.close();
 				errorDict = true;
@@ -231,9 +223,9 @@ public class ThomsonKeygen extends Keygen {
 			errorDict = true;
 			return false;
 		}
-		int version = 0;
+		int version;
 		try {
-			if (!readFromInput(table, 1282, fis)) {
+			if (!InputStreamUtils.readFromInput(table, 1282, fis)) {
 				setErrorCode(R.string.msg_errordict);
 				errorDict = true;
 				fis.close();
@@ -256,7 +248,7 @@ public class ThomsonKeygen extends Keygen {
 			}
 			totalOffset += offset;
 			fis.seek(totalOffset);
-			if (!readFromInput(table, 1024, fis)) {
+			if (!InputStreamUtils.readFromInput(table, 1024, fis)) {
 				setErrorCode(R.string.msg_errordict);
 				errorDict = true;
 				fis.close();
@@ -293,10 +285,9 @@ public class ThomsonKeygen extends Keygen {
 				this.entry = new byte[length];
 			}
 
-			int bytesRead = 0;
 			len = 0;
 			while (len < length) {
-				bytesRead = fis.read(entry, len, length - len);
+				int bytesRead = fis.read(entry, len, length - len);
 				if (bytesRead == -1)
 					break;
 				len += bytesRead;
@@ -345,8 +336,8 @@ public class ThomsonKeygen extends Keygen {
 		}
 		if (isStopRequested())
 			return false;
-		for (int i = 0; i < results.length; ++i)
-			addPassword(results[i]);
+		for (String result : results)
+			addPassword(result);
 		return true;
 	}
 
@@ -358,8 +349,8 @@ public class ThomsonKeygen extends Keygen {
 				if (isStopRequested())
 					return;
 				sequenceNumber = i
-						+ (((0xFF & entry[offset + 0]) << 16)
-								| ((0xFF & entry[offset + 1]) << 8) | (0xFF & entry[offset + 2]))
+						+ (((0xFF & entry[offset]) << 16)
+						| ((0xFF & entry[offset + 1]) << 8) | (0xFF & entry[offset + 2]))
 						* 2;
 				c = sequenceNumber % 36;
 				b = sequenceNumber / 36 % 36;
@@ -402,7 +393,7 @@ public class ThomsonKeygen extends Keygen {
 		for (int offset = 0; offset < len; offset += 3) {
 			if (isStopRequested())
 				return;
-			sequenceNumber = ((0xFF & entry[offset + 0]) << 16)
+			sequenceNumber = ((0xFF & entry[offset]) << 16)
 					| ((0xFF & entry[offset + 1]) << 8)
 					| (0xFF & entry[offset + 2]);
 			c = sequenceNumber % 36;
@@ -499,37 +490,11 @@ public class ThomsonKeygen extends Keygen {
 		this.internetAlgorithm = thomson3g;
 	}
 
-	final private static byte[] charectbytes0 = { '3', '3', '3', '3', '3', '3',
-			'3', '3', '3', '3', '4', '4', '4', '4', '4', '4', '4', '4', '4',
-			'4', '4', '4', '4', '4', '4', '5', '5', '5', '5', '5', '5', '5',
-			'5', '5', '5', '5', };
-
-	final private static byte[] charectbytes1 = { '0', '1', '2', '3', '4', '5',
-			'6', '7', '8', '9', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-			'A', 'B', 'C', 'D', 'E', 'F', '0', '1', '2', '3', '4', '5', '6',
-			'7', '8', '9', 'A', };
-
-	private ThomsonKeygen(Parcel in) {
-		super(in);
-		ssidIdentifier = in.readString();
-		errorDict = in.readInt() == 1;
-	}
-
 	public void writeToParcel(Parcel dest, int flags) {
 		super.writeToParcel(dest, flags);
 		dest.writeString(ssidIdentifier);
 		dest.writeInt(errorDict ? 1 : 0);
 	}
-
-	public static final Parcelable.Creator<ThomsonKeygen> CREATOR = new Parcelable.Creator<ThomsonKeygen>() {
-		public ThomsonKeygen createFromParcel(Parcel in) {
-			return new ThomsonKeygen(in);
-		}
-
-		public ThomsonKeygen[] newArray(int size) {
-			return new ThomsonKeygen[size];
-		}
-	};
 
 	@Override
 	public int getSupportState() {
@@ -549,7 +514,7 @@ public class ThomsonKeygen extends Keygen {
 		}
 
 		private native String[] thirdDicNative(byte[] essid, byte[] entry,
-				int size);
+											   int size);
 
 	}
 

@@ -19,38 +19,20 @@
 package org.exobel.routerkeygen.algorithms;
 
 
-import java.util.List;
-
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import java.util.List;
 
 /**
  * The algortihm is described on the pdf below
  * Link:http://www.remote-exploit.org/content/Pirelli_Discus_DRG_A225_WiFi_router.pdf
- * @author Rui Araújo
  *
+ * @author Rui Araújo
  */
 public class DiscusKeygen extends Keygen {
 
 
-	public DiscusKeygen(String ssid, String mac) {
-		super(ssid, mac);
-	}
-
-	static final int essidConst = 0xD0EC31;
-
-	@Override
-	public List<String> getKeys() {
-		int routerEssid = Integer.parseInt( getSsidName().substring(getSsidName().length()-6) , 16);
-		int result  = ( routerEssid - essidConst )>>2;
-		addPassword("YW0" + Integer.toString(result));
-		return getResults();
-	}
-
-	private DiscusKeygen(Parcel in) {
-		super(in);
-	}
-	
     public static final Parcelable.Creator<DiscusKeygen> CREATOR = new Parcelable.Creator<DiscusKeygen>() {
         public DiscusKeygen createFromParcel(Parcel in) {
             return new DiscusKeygen(in);
@@ -60,4 +42,21 @@ public class DiscusKeygen extends Keygen {
             return new DiscusKeygen[size];
         }
     };
+    static final int essidConst = 0xD0EC31;
+
+    public DiscusKeygen(String ssid, String mac) {
+        super(ssid, mac);
+    }
+
+    private DiscusKeygen(Parcel in) {
+        super(in);
+    }
+
+    @Override
+    public List<String> getKeys() {
+        int routerEssid = Integer.parseInt(getSsidName().substring(getSsidName().length() - 6), 16);
+        int result = (routerEssid - essidConst) >> 2;
+        addPassword("YW0" + Integer.toString(result));
+        return getResults();
+    }
 }

@@ -18,117 +18,115 @@
  */
 package org.exobel.routerkeygen.algorithms;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 public abstract class Keygen implements Parcelable {
 
-	public static final int SUPPORTED = 2;
-	public static final int UNLIKELY_SUPPORTED = 1;
-	public static final int UNSUPPORTED = 0;
-	final private String ssidName;
-	final private String macAddress;
-	private List<String> pwList;
+    public static final int SUPPORTED = 2;
+    public static final int UNLIKELY_SUPPORTED = 1;
+    public static final int UNSUPPORTED = 0;
+    public static final Parcelable.Creator<Keygen> CREATOR = new Parcelable.Creator<Keygen>() {
 
-	private boolean stopRequested = false;
-	private int errorCode;
+        public Keygen[] newArray(int size) {
+            return new Keygen[size];
+        }
 
-	public Keygen(final String ssid, final String mac) {
-		this.ssidName = ssid;
-		this.macAddress = mac.replace(":", "").toUpperCase(Locale.getDefault());
-		this.pwList = new ArrayList<String>();
-	}
+        @Override
+        public Keygen createFromParcel(Parcel source) {
+            return null;
+        }
+    };
+    final private String ssidName;
+    final private String macAddress;
+    private List<String> pwList;
+    private boolean stopRequested = false;
+    private int errorCode;
 
-	public synchronized boolean isStopRequested() {
-		return stopRequested;
-	}
+    public Keygen(final String ssid, final String mac) {
+        this.ssidName = ssid;
+        this.macAddress = mac.replace(":", "").toUpperCase(Locale.getDefault());
+        this.pwList = new ArrayList<String>();
+    }
 
-	public synchronized void setStopRequested(boolean stopRequested) {
-		this.stopRequested = stopRequested;
-	}
+    protected Keygen(Parcel in) {
+        ssidName = in.readString();
+        if (in.readInt() == 1)
+            macAddress = in.readString();
+        else
+            macAddress = "";
+        errorCode = in.readInt();
+        stopRequested = in.readInt() == 1;
+        pwList = in.createStringArrayList();
+    }
 
-	public String getMacAddress() {
-		return macAddress;
-	}
+    protected static String incrementMac(String mac, int increment) {
+        String incremented = Long.toHexString(Long.parseLong(mac, 16) + increment)
+                .toLowerCase(Locale.getDefault());
+        //Any leading zeros will disappear in this process.
+        //TODO: add tests for this.
+        final int leadingZerosCount = mac.length() - incremented.length();
+        for (int i = 0; i < leadingZerosCount; ++i) {
+            incremented = "0" + incremented;
+        }
+        return incremented;
+    }
 
-	public String getSsidName() {
-		return ssidName;
-	}
+    public synchronized boolean isStopRequested() {
+        return stopRequested;
+    }
 
-	protected void addPassword(final String key) {
-		if (!pwList.contains(key))
-			pwList.add(key);
-	}
+    public synchronized void setStopRequested(boolean stopRequested) {
+        this.stopRequested = stopRequested;
+    }
 
-	protected List<String> getResults() {
-		return pwList;
-	}
+    public String getMacAddress() {
+        return macAddress;
+    }
 
-	abstract public List<String> getKeys();
+    public String getSsidName() {
+        return ssidName;
+    }
 
-	public int getErrorCode() {
-		return errorCode;
-	}
+    protected void addPassword(final String key) {
+        if (!pwList.contains(key))
+            pwList.add(key);
+    }
 
-	public void setErrorCode(int errorCode) {
-		this.errorCode = errorCode;
-	}
+    protected List<String> getResults() {
+        return pwList;
+    }
 
-	public int getSupportState() {
-		return SUPPORTED;
-	}
+    abstract public List<String> getKeys();
 
-	public int describeContents() {
-		return 0;
-	}
+    public int getErrorCode() {
+        return errorCode;
+    }
 
-	protected static String incrementMac(String mac, int increment) {
-		String incremented = Long.toHexString(Long.parseLong(mac, 16) + increment)
-				.toLowerCase(Locale.getDefault());
-		//Any leading zeros will disappear in this process.
-		//TODO: add tests for this.
-		final int leadingZerosCount = mac.length() - incremented.length();
-		for (int i = 0; i < leadingZerosCount; ++i) {
-			incremented = "0" + incremented;
-		}
-		return incremented;
-	}
-	
-	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(ssidName);
-		dest.writeInt(macAddress != null ? 1 : 0);
-		if (macAddress != null)
-			dest.writeString(macAddress);
-		dest.writeInt(errorCode);
-		dest.writeInt(stopRequested ? 1 : 0);
-		dest.writeStringList(pwList);
-	}
+    public void setErrorCode(int errorCode) {
+        this.errorCode = errorCode;
+    }
 
-	protected Keygen(Parcel in) {
-		ssidName = in.readString();
-		if (in.readInt() == 1)
-			macAddress = in.readString();
-		else
-			macAddress = "";
-		errorCode = in.readInt();
-		stopRequested = in.readInt() == 1;
-		pwList = in.createStringArrayList();
-	}
+    public int getSupportState() {
+        return SUPPORTED;
+    }
 
-	public static final Parcelable.Creator<Keygen> CREATOR = new Parcelable.Creator<Keygen>() {
+    public int describeContents() {
+        return 0;
+    }
 
-		public Keygen[] newArray(int size) {
-			return new Keygen[size];
-		}
-
-		@Override
-		public Keygen createFromParcel(Parcel source) {
-			return null;
-		}
-	};
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(ssidName);
+        dest.writeInt(macAddress != null ? 1 : 0);
+        if (macAddress != null)
+            dest.writeString(macAddress);
+        dest.writeInt(errorCode);
+        dest.writeInt(stopRequested ? 1 : 0);
+        dest.writeStringList(pwList);
+    }
 
 }

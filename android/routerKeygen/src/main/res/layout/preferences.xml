@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
    Copyright 2012 Rui Araújo, Luís Fonseca
   
    This file is part of Router Keygen.
@@ -22,12 +21,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    tools:context=".ui.Preferences" >
+    tools:context=".ui.Preferences">
 
     <PreferenceCategory
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:title="@string/pref_1section" >
+        android:title="@string/pref_1section">
 
         <CheckBoxPreference
             android:layout_width="wrap_content"
@@ -63,7 +62,7 @@
     <PreferenceCategory
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:title="@string/pref_thomson_section" >
+        android:title="@string/pref_thomson_section">
 
         <CheckBoxPreference
             android:layout_width="wrap_content"
@@ -102,7 +101,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:key="2section"
-        android:title="@string/pref_2section" >
+        android:title="@string/pref_2section">
 
         <CheckBoxPreference
             android:id="@+id/analytics"

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
    Copyright 2013 Rui Araújo, Luís Fonseca
   
    This file is part of Router Keygen.
@@ -17,7 +16,7 @@
    You should have received a copy of the GNU General Public License
    along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
     <!-- Deze vertaling is gemaakt door Marco Brohet, Sven Van Hove, X.W. Koehoorn, Matthijs de Rijk, Florian Hoste en Martijn Gerkes-->
     <!-- MISC STRINGS -->
@@ -110,9 +109,10 @@
     <string name="pref_hinton_analytics">Gebruik en crashes worden anoniem bijgehouden</string>
     <string name="pref_hintoff_analytics">Gebruik en crashes word niet bijgehouden</string>
     <string name="pref_changelog">Changelog</string>
-        
+
     <!-- ERROR MESSAGE STRINGS -->
-    <string name="msg_unspported">This network is not supported!</string>  <!-- UNTRANSLATED -->
+    <string name="msg_unspported">This network is not supported!</string>
+    <!-- UNTRANSLATED -->
     <string name="msg_nowifidetected">Geen Wi-Fi-toegangspunten gevonden</string>
     <string name="msg_nowifi">Wi-Fi is niet ingeschakeld</string>
     <string name="msg_scanfailed">Zoeken mislukt</string>
@@ -164,12 +164,14 @@
     <string name="error_selecting_file">Fout bij selecteren van het bestand</string>
 
     <!-- CHANGELOG LIB -->
-    <string name="changelog_internal_error_parsing">Error while parsing file</string> <!--UNTRANSLATED-->
+    <string name="changelog_internal_error_parsing">Error while parsing file</string>
+    <!--UNTRANSLATED-->
     <!--
  String for Version Header.
          You can customize it in your strings.xml.
          Use string with quotes if you want a space
     -->
-    <string name="changelog_header_version">"Version "</string> <!--UNTRANSLATED-->
-    
+    <string name="changelog_header_version">"Version "</string>
+    <!--UNTRANSLATED-->
+
 </resources>

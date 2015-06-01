@@ -19,24 +19,6 @@
 
 package org.exobel.routerkeygen.ui;
 
-import it.gmariotti.changelibs.library.view.ChangeLogListView;
-
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.UnknownHostException;
-
-import org.exobel.routerkeygen.AdsUtils;
-import org.exobel.routerkeygen.DictionaryDownloadService;
-import org.exobel.routerkeygen.R;
-import org.exobel.routerkeygen.UpdateCheckerService;
-import org.exobel.routerkeygen.UpdateCheckerService.LastVersion;
-import org.exobel.routerkeygen.utils.HashUtils;
-
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
@@ -77,10 +59,31 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import com.ipaulpro.afilechooser.FileChooserActivity;
 import com.ipaulpro.afilechooser.utils.FileUtils;
 
+import org.exobel.routerkeygen.AdsUtils;
+import org.exobel.routerkeygen.DictionaryDownloadService;
+import org.exobel.routerkeygen.R;
+import org.exobel.routerkeygen.UpdateCheckerService;
+import org.exobel.routerkeygen.UpdateCheckerService.LastVersion;
+import org.exobel.routerkeygen.utils.HashUtils;
+import org.exobel.routerkeygen.utils.InputStreamUtils;
+
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.UnknownHostException;
+
+import it.gmariotti.changelibs.library.view.ChangeLogListView;
+
 @SuppressWarnings("deprecation")
 public class Preferences extends SherlockPreferenceActivity {
 
-	/** The maximum supported dictionary version */
+	/**
+	 * The maximum supported dictionary version
+	 */
 	public static final int MAX_DIC_VERSION = 4;
 
 	public static final String dicLocalPref = "dictionaryPath";
@@ -94,11 +97,16 @@ public class Preferences extends SherlockPreferenceActivity {
 	public final static String GOOGLE_PLAY_DOWNLOADER = "org.doublecheck.wifiscanner";
 
 	public static final String PUB_DOWNLOAD = "https://github.com/routerkeygen/thomsonDicGenerator/releases/download/v3/RouterKeygen_v3.dic";
+	public static final String VERSION = "3.14.2";
 	private static final String PUB_DIC_CFV = "https://github.com/routerkeygen/thomsonDicGenerator/releases/download/v3/RKDictionary.cfv";
-
-	public static final String VERSION = "3.14.1";
-	private static final String LAUNCH_DATE = "16/05/2015";
-
+	private static final String LAUNCH_DATE = "01/06/2015";
+	private static final int DIALOG_ABOUT = 1001;
+	private static final int DIALOG_ASK_DOWNLOAD = 1002;
+	private static final int DIALOG_WAIT = 1003;
+	private static final int DIALOG_ERROR_TOO_ADVANCED = 1004;
+	private static final int DIALOG_ERROR = 1005;
+	private static final int DIALOG_UPDATE_NEEDED = 1006;
+	private static final int DIALOG_CHANGELOG = 1007;
 	private LastVersion lastVersion;
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -272,26 +280,26 @@ public class Preferences extends SherlockPreferenceActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
-		case 0:
-			if (resultCode == RESULT_OK) {
-				// The URI of the selected file
-				final Uri uri = data.getData();
-				// Create a File from this Uri
-				File file = FileUtils.getFile(this, uri);
-				final SharedPreferences customSharedPreference = PreferenceManager
-						.getDefaultSharedPreferences(getApplicationContext());
-				final SharedPreferences.Editor editor = customSharedPreference
-						.edit();
-				editor.putString(dicLocalPref, file.getAbsolutePath());
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD)
-					editor.apply();
-				else
-					new Thread(new Runnable() {
-						public void run() {
-							editor.commit();
-						}
-					}).start();
-			}
+			case 0:
+				if (resultCode == RESULT_OK) {
+					// The URI of the selected file
+					final Uri uri = data.getData();
+					// Create a File from this Uri
+					File file = FileUtils.getFile(this, uri);
+					final SharedPreferences customSharedPreference = PreferenceManager
+							.getDefaultSharedPreferences(getApplicationContext());
+					final SharedPreferences.Editor editor = customSharedPreference
+							.edit();
+					editor.putString(dicLocalPref, file.getAbsolutePath());
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD)
+						editor.apply();
+					else
+						new Thread(new Runnable() {
+							public void run() {
+								editor.commit();
+							}
+						}).start();
+				}
 		}
 	}
 
@@ -310,10 +318,10 @@ public class Preferences extends SherlockPreferenceActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case android.R.id.home:
-			NavUtils.navigateUpTo(this, new Intent(this,
-					NetworksListActivity.class));
-			return true;
+			case android.R.id.home:
+				NavUtils.navigateUpTo(this, new Intent(this,
+						NetworksListActivity.class));
+				return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -333,132 +341,124 @@ public class Preferences extends SherlockPreferenceActivity {
 		GoogleAnalytics.getInstance(this).reportActivityStop(this);
 	}
 
-	private static final int DIALOG_ABOUT = 1001;
-	private static final int DIALOG_ASK_DOWNLOAD = 1002;
-	private static final int DIALOG_WAIT = 1003;
-	private static final int DIALOG_ERROR_TOO_ADVANCED = 1004;
-	private static final int DIALOG_ERROR = 1005;
-	private static final int DIALOG_UPDATE_NEEDED = 1006;
-	private static final int DIALOG_CHANGELOG = 1007;
-
 	protected Dialog onCreateDialog(int id) {
 		AlertDialog.Builder builder = new Builder(this);
 		switch (id) {
-		case DIALOG_ABOUT: {
-			LayoutInflater inflater = (LayoutInflater) this
-					.getSystemService(LAYOUT_INFLATER_SERVICE);
-			View layout = inflater.inflate(R.layout.about_dialog,
-					(ViewGroup) findViewById(R.id.tabhost));
-			TabHost tabs = (TabHost) layout.findViewById(R.id.tabhost);
-			tabs.setup();
-			TabSpec tspec1 = tabs.newTabSpec("about");
-			tspec1.setIndicator(getString(R.string.pref_about));
+			case DIALOG_ABOUT: {
+				LayoutInflater inflater = (LayoutInflater) this
+						.getSystemService(LAYOUT_INFLATER_SERVICE);
+				View layout = inflater.inflate(R.layout.about_dialog,
+						(ViewGroup) findViewById(R.id.tabhost));
+				TabHost tabs = (TabHost) layout.findViewById(R.id.tabhost);
+				tabs.setup();
+				TabSpec tspec1 = tabs.newTabSpec("about");
+				tspec1.setIndicator(getString(R.string.pref_about));
 
-			tspec1.setContent(R.id.text_about_scroll);
-			TextView text = ((TextView) layout.findViewById(R.id.text_about));
-			text.setMovementMethod(LinkMovementMethod.getInstance());
-			text.append(VERSION + "\n" + LAUNCH_DATE);
-			tabs.addTab(tspec1);
-			TabSpec tspec2 = tabs.newTabSpec("credits");
-			tspec2.setIndicator(getString(R.string.dialog_about_credits));
-			tspec2.setContent(R.id.about_credits_scroll);
-			((TextView) layout.findViewById(R.id.about_credits))
-					.setMovementMethod(LinkMovementMethod.getInstance());
-			tabs.addTab(tspec2);
-			TabSpec tspec3 = tabs.newTabSpec("license");
-			tspec3.setIndicator(getString(R.string.dialog_about_license));
-			tspec3.setContent(R.id.about_license_scroll);
-			((TextView) layout.findViewById(R.id.about_license))
-					.setMovementMethod(LinkMovementMethod.getInstance());
-			tabs.addTab(tspec3);
-			builder.setNeutralButton(R.string.bt_close, new OnClickListener() {
-				public void onClick(DialogInterface dialog, int which) {
-					removeDialog(DIALOG_ABOUT);
+				tspec1.setContent(R.id.text_about_scroll);
+				TextView text = ((TextView) layout.findViewById(R.id.text_about));
+				text.setMovementMethod(LinkMovementMethod.getInstance());
+				text.append(VERSION + "\n" + LAUNCH_DATE);
+				tabs.addTab(tspec1);
+				TabSpec tspec2 = tabs.newTabSpec("credits");
+				tspec2.setIndicator(getString(R.string.dialog_about_credits));
+				tspec2.setContent(R.id.about_credits_scroll);
+				((TextView) layout.findViewById(R.id.about_credits))
+						.setMovementMethod(LinkMovementMethod.getInstance());
+				tabs.addTab(tspec2);
+				TabSpec tspec3 = tabs.newTabSpec("license");
+				tspec3.setIndicator(getString(R.string.dialog_about_license));
+				tspec3.setContent(R.id.about_license_scroll);
+				((TextView) layout.findViewById(R.id.about_license))
+						.setMovementMethod(LinkMovementMethod.getInstance());
+				tabs.addTab(tspec3);
+				builder.setNeutralButton(R.string.bt_close, new OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						removeDialog(DIALOG_ABOUT);
 
-				}
-			});
-			builder.setView(layout);
-			break;
-		}
-		case DIALOG_ASK_DOWNLOAD: {
-			DialogInterface.OnClickListener diOnClickListener = new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int id) {
-					// Check if we have the latest dictionary version.
-					try {
-						checkCurrentDictionary();
-					} catch (Exception e) {
-						e.printStackTrace();
 					}
-				}
-			};
-
-			builder.setTitle(R.string.pref_download);
-			builder.setMessage(R.string.msg_dicislarge);
-			builder.setCancelable(false);
-			builder.setPositiveButton(android.R.string.yes, diOnClickListener);
-			builder.setNegativeButton(android.R.string.no,
-					new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int id) {
-							removeDialog(DIALOG_ASK_DOWNLOAD);
+				});
+				builder.setView(layout);
+				break;
+			}
+			case DIALOG_ASK_DOWNLOAD: {
+				DialogInterface.OnClickListener diOnClickListener = new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						// Check if we have the latest dictionary version.
+						try {
+							checkCurrentDictionary();
+						} catch (Exception e) {
+							e.printStackTrace();
 						}
-					});
-			break;
-		}
-		case DIALOG_UPDATE_NEEDED: {
-			builder.setTitle(R.string.update_title)
-					.setMessage(
-							getString(R.string.update_message,
-									lastVersion.version))
-					.setNegativeButton(R.string.bt_close,
-							new OnClickListener() {
+					}
+				};
 
-								public void onClick(DialogInterface dialog,
-										int which) {
-									removeDialog(DIALOG_UPDATE_NEEDED);
-								}
-							})
-					.setPositiveButton(R.string.bt_website,
-							new OnClickListener() {
+				builder.setTitle(R.string.pref_download);
+				builder.setMessage(R.string.msg_dicislarge);
+				builder.setCancelable(false);
+				builder.setPositiveButton(android.R.string.yes, diOnClickListener);
+				builder.setNegativeButton(android.R.string.no,
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								removeDialog(DIALOG_ASK_DOWNLOAD);
+							}
+						});
+				break;
+			}
+			case DIALOG_UPDATE_NEEDED: {
+				builder.setTitle(R.string.update_title)
+						.setMessage(
+								getString(R.string.update_message,
+										lastVersion.version))
+						.setNegativeButton(R.string.bt_close,
+								new OnClickListener() {
 
-								public void onClick(DialogInterface dialog,
-										int which) {
-									startActivity(new Intent(Intent.ACTION_VIEW)
-											.setData(Uri.parse(lastVersion.url)));
-								}
-							});
-			break;
-		}
-		case DIALOG_WAIT: {
-			ProgressDialog pbarDialog = new ProgressDialog(Preferences.this);
-			pbarDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			pbarDialog.setMessage(getString(R.string.msg_wait));
-			return pbarDialog;
-		}
-		case DIALOG_ERROR_TOO_ADVANCED: {
-			builder.setTitle(R.string.msg_error).setMessage(
-					R.string.msg_err_online_too_adv);
-			break;
-		}
-		case DIALOG_ERROR: {
-			builder.setTitle(R.string.msg_error).setMessage(
-					R.string.msg_err_unkown);
-			break;
-		}
-		case DIALOG_CHANGELOG: {
-			LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			ChangeLogListView chgList = (ChangeLogListView) layoutInflater
-					.inflate(R.layout.dialog_changelog, null);
-			builder.setTitle(R.string.pref_changelog)
-					.setView(chgList)
-					.setPositiveButton(android.R.string.ok,
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int whichButton) {
-									dialog.dismiss();
-								}
-							});
-			break;
-		}
+									public void onClick(DialogInterface dialog,
+														int which) {
+										removeDialog(DIALOG_UPDATE_NEEDED);
+									}
+								})
+						.setPositiveButton(R.string.bt_website,
+								new OnClickListener() {
+
+									public void onClick(DialogInterface dialog,
+														int which) {
+										startActivity(new Intent(Intent.ACTION_VIEW)
+												.setData(Uri.parse(lastVersion.url)));
+									}
+								});
+				break;
+			}
+			case DIALOG_WAIT: {
+				ProgressDialog pbarDialog = new ProgressDialog(Preferences.this);
+				pbarDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+				pbarDialog.setMessage(getString(R.string.msg_wait));
+				return pbarDialog;
+			}
+			case DIALOG_ERROR_TOO_ADVANCED: {
+				builder.setTitle(R.string.msg_error).setMessage(
+						R.string.msg_err_online_too_adv);
+				break;
+			}
+			case DIALOG_ERROR: {
+				builder.setTitle(R.string.msg_error).setMessage(
+						R.string.msg_err_unkown);
+				break;
+			}
+			case DIALOG_CHANGELOG: {
+				LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				ChangeLogListView chgList = (ChangeLogListView) layoutInflater
+						.inflate(R.layout.dialog_changelog, null);
+				builder.setTitle(R.string.pref_changelog)
+						.setView(chgList)
+						.setPositiveButton(android.R.string.ok,
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog,
+														int whichButton) {
+										dialog.dismiss();
+									}
+								});
+				break;
+			}
 		}
 		return builder.create();
 	}
@@ -474,16 +474,16 @@ public class Preferences extends SherlockPreferenceActivity {
 					DictionaryDownloadService.URL_DOWNLOAD, PUB_DOWNLOAD));
 		} else {
 			AsyncTask<Void, Void, Integer> task = new AsyncTask<Void, Void, Integer>() {
-				protected void onPreExecute() {
-					removeDialog(DIALOG_ASK_DOWNLOAD);
-					showDialog(DIALOG_WAIT);
-				}
-
 				private final static int TOO_ADVANCED = 1;
 				private final static int OK = 0;
 				private final static int DOWNLOAD_NEEDED = -1;
 				private final static int ERROR_NETWORK = -2;
 				private final static int ERROR = -3;
+
+				protected void onPreExecute() {
+					removeDialog(DIALOG_ASK_DOWNLOAD);
+					showDialog(DIALOG_WAIT);
+				}
 
 				protected Integer doInBackground(Void... params) {
 
@@ -496,15 +496,23 @@ public class Preferences extends SherlockPreferenceActivity {
 								con.getInputStream());
 
 						byte[] cfvTable = new byte[18];
-						dis.read(cfvTable);
+						boolean readCorrectly = InputStreamUtils.readFromInput(
+								cfvTable, cfvTable.length, dis);
 						dis.close();
 						con.disconnect();
+						if (!readCorrectly) {
+							return ERROR;
+						}
 
 						InputStream is = new FileInputStream(myDicFile);
 						byte[] dicVersion = new byte[2];
 						// Check our version
-						is.read(dicVersion);
+						readCorrectly = InputStreamUtils.readFromInput(
+								dicVersion, dicVersion.length, is);
 						is.close();
+						if (!readCorrectly) {
+							return ERROR;
+						}
 						int thisVersion, onlineVersion;
 						thisVersion = dicVersion[0] << 8 | dicVersion[1];
 						onlineVersion = cfvTable[0] << 8 | cfvTable[1];
@@ -513,8 +521,7 @@ public class Preferences extends SherlockPreferenceActivity {
 							// It is the latest version, but is
 							// it not corrupt?
 							byte[] dicHash = new byte[16];
-							for (int i = 2; i < 18; ++i)
-								dicHash[i - 2] = cfvTable[i];
+							System.arraycopy(cfvTable, 2, dicHash, 0, dicHash.length);
 							if (HashUtils.checkDicMD5(
 									new File(myDicFile).getPath(), dicHash)) {
 								// All is well
@@ -523,7 +530,7 @@ public class Preferences extends SherlockPreferenceActivity {
 						}
 						if (onlineVersion > thisVersion
 								&& onlineVersion > MAX_DIC_VERSION) {
-							// Online version is too advancedv
+							// Online version is too advanced
 							return TOO_ADVANCED;
 						}
 						return DOWNLOAD_NEEDED;
@@ -545,30 +552,30 @@ public class Preferences extends SherlockPreferenceActivity {
 						return;
 					}
 					switch (result) {
-					case ERROR:
-						showDialog(DIALOG_ERROR);
-						break;
-					case ERROR_NETWORK:
-						Toast.makeText(Preferences.this,
-								R.string.msg_errthomson3g, Toast.LENGTH_SHORT)
-								.show();
-						break;
-					case DOWNLOAD_NEEDED:
-						startService(new Intent(getApplicationContext(),
-								DictionaryDownloadService.class).putExtra(
-								DictionaryDownloadService.URL_DOWNLOAD,
-								PUB_DOWNLOAD));
-						break;
-					case OK:
-						Toast.makeText(
-								getBaseContext(),
-								getResources().getString(
-										R.string.msg_dic_updated),
-								Toast.LENGTH_SHORT).show();
-						break;
-					case TOO_ADVANCED:
-						showDialog(DIALOG_ERROR_TOO_ADVANCED);
-						break;
+						case ERROR:
+							showDialog(DIALOG_ERROR);
+							break;
+						case ERROR_NETWORK:
+							Toast.makeText(Preferences.this,
+									R.string.msg_errthomson3g, Toast.LENGTH_SHORT)
+									.show();
+							break;
+						case DOWNLOAD_NEEDED:
+							startService(new Intent(getApplicationContext(),
+									DictionaryDownloadService.class).putExtra(
+									DictionaryDownloadService.URL_DOWNLOAD,
+									PUB_DOWNLOAD));
+							break;
+						case OK:
+							Toast.makeText(
+									getBaseContext(),
+									getResources().getString(
+											R.string.msg_dic_updated),
+									Toast.LENGTH_SHORT).show();
+							break;
+						case TOO_ADVANCED:
+							showDialog(DIALOG_ERROR_TOO_ADVANCED);
+							break;
 					}
 
 				}
@@ -581,4 +588,4 @@ public class Preferences extends SherlockPreferenceActivity {
 		}
 	}
 
-};
+}

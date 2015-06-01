@@ -18,12 +18,12 @@
  */
 package org.exobel.routerkeygen.algorithms;
 
-import java.util.List;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import org.exobel.routerkeygen.R;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import java.util.List;
 
 /*
  * This is not actual an algorithm as
@@ -31,24 +31,6 @@ import android.os.Parcelable;
  */
 public class PtvKeygen extends Keygen {
 
-	public PtvKeygen(String ssid, String mac ) {
-		super(ssid, mac);
-	}
-	
-	@Override
-	public List<String> getKeys() {
-		if (getMacAddress().length() != 12) {
-			setErrorCode(R.string.msg_errpirelli);
-			return null;
-		}
-		addPassword(getMacAddress().substring(2));
-		return getResults();
-	}
-
-	private PtvKeygen(Parcel in) {
-		super(in);
-	}
-	
     public static final Parcelable.Creator<PtvKeygen> CREATOR = new Parcelable.Creator<PtvKeygen>() {
         public PtvKeygen createFromParcel(Parcel in) {
             return new PtvKeygen(in);
@@ -58,6 +40,24 @@ public class PtvKeygen extends Keygen {
             return new PtvKeygen[size];
         }
     };
-	
+
+    public PtvKeygen(String ssid, String mac) {
+        super(ssid, mac);
+    }
+
+    private PtvKeygen(Parcel in) {
+        super(in);
+    }
+
+    @Override
+    public List<String> getKeys() {
+        if (getMacAddress().length() != 12) {
+            setErrorCode(R.string.msg_errpirelli);
+            return null;
+        }
+        addPassword(getMacAddress().substring(2));
+        return getResults();
+    }
+
 
 }

@@ -19,10 +19,6 @@
 
 package org.exobel.routerkeygen.ui;
 
-import org.exobel.routerkeygen.R;
-import org.exobel.routerkeygen.WifiScanReceiver.OnScanListener;
-import org.exobel.routerkeygen.algorithms.WiFiNetwork;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -45,203 +41,203 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
+import org.exobel.routerkeygen.R;
+import org.exobel.routerkeygen.WifiScanReceiver.OnScanListener;
+import org.exobel.routerkeygen.algorithms.WiFiNetwork;
+
 @SuppressWarnings("deprecation")
 public class NetworksListFragment extends SherlockFragment implements
-		OnScanListener, OnItemClickListener, MessagePublisher {
+        OnScanListener, OnItemClickListener, MessagePublisher {
 
-	private static final String STATE_ACTIVATED_POSITION = "activated_position";
-	private static final String NETWORKS_FOUND = "network_found";
+    private static final String STATE_ACTIVATED_POSITION = "activated_position";
+    private static final String NETWORKS_FOUND = "network_found";
+    private static final String MENU_VALUE = "menu_value";
+    private static OnItemSelectionListener sDummyCallbacks = new OnItemSelectionListener() {
+        public void onItemSelected(WiFiNetwork id) {
+        }
 
-	private OnItemSelectionListener mCallbacks = sDummyCallbacks;
-	private int mActivatedPosition = ListView.INVALID_POSITION;
-	private ListView listview;
-	private WifiListAdapter wifiListAdapter;
-	private View noNetworksMessage;
+        public void onItemSelected(String mac) {
+        }
+    };
+    private OnItemSelectionListener mCallbacks = sDummyCallbacks;
+    private int mActivatedPosition = ListView.INVALID_POSITION;
+    private ListView listview;
+    private WifiListAdapter wifiListAdapter;
+    private View noNetworksMessage;
+    private WiFiNetwork[] networksFound;
 
-	private WiFiNetwork[] networksFound;
+    public NetworksListFragment() {
+    }
 
-	public interface OnItemSelectionListener {
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+        RelativeLayout root = (RelativeLayout) inflater.inflate(
+                R.layout.fragment_networks_list, container, false);
+        listview = (ListView) root.findViewById(R.id.networks_list);
+        wifiListAdapter = new WifiListAdapter(getActivity());
+        listview.setAdapter(wifiListAdapter);
+        noNetworksMessage = root.findViewById(R.id.message_group);
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey(NETWORKS_FOUND)) {
+                Parcelable[] storedNetworksFound = savedInstanceState
+                        .getParcelableArray(NETWORKS_FOUND);
+                networksFound = new WiFiNetwork[storedNetworksFound.length];
+                for (int i = 0; i < storedNetworksFound.length; ++i)
+                    networksFound[i] = (WiFiNetwork) storedNetworksFound[i];
+                onScanFinished(networksFound);
+            }
+            if (savedInstanceState.containsKey(STATE_ACTIVATED_POSITION)) {
+                setActivatedPosition(savedInstanceState
+                        .getInt(STATE_ACTIVATED_POSITION));
+            }
+        }
+        registerForContextMenu(listview);
+        listview.setOnItemClickListener(this);
+        return root;
+    }
 
-		public void onItemSelected(WiFiNetwork id);
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (!(activity instanceof OnItemSelectionListener)) {
+            throw new IllegalStateException(
+                    "Activity must implement fragment's callbacks.");
+        }
 
-		public void onItemSelected(String mac);
-	}
+        mCallbacks = (OnItemSelectionListener) activity;
+    }
 
-	private static OnItemSelectionListener sDummyCallbacks = new OnItemSelectionListener() {
-		public void onItemSelected(WiFiNetwork id) {
-		}
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallbacks = sDummyCallbacks;
+    }
 
-		public void onItemSelected(String mac) {
-		}
-	};
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (networksFound != null)
+            outState.putParcelableArray(NETWORKS_FOUND, networksFound);
+        if (mActivatedPosition != ListView.INVALID_POSITION) {
+            outState.putInt(STATE_ACTIVATED_POSITION, mActivatedPosition);
+        }
+    }
 
-	public NetworksListFragment() {
-	}
+    public void setActivateOnItemClick(boolean activateOnItemClick) {
+        listview.setChoiceMode(activateOnItemClick ? ListView.CHOICE_MODE_SINGLE
+                : ListView.CHOICE_MODE_NONE);
+    }
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		super.onCreateView(inflater, container, savedInstanceState);
-		RelativeLayout root = (RelativeLayout) inflater.inflate(
-				R.layout.fragment_networks_list, container, false);
-		listview = (ListView) root.findViewById(R.id.networks_list);
-		wifiListAdapter = new WifiListAdapter(getActivity());
-		listview.setAdapter(wifiListAdapter);
-		noNetworksMessage = root.findViewById(R.id.message_group);
-		if (savedInstanceState != null) {
-			if (savedInstanceState.containsKey(NETWORKS_FOUND)) {
-				Parcelable[] storedNetworksFound = savedInstanceState
-						.getParcelableArray(NETWORKS_FOUND);
-				networksFound = new WiFiNetwork[storedNetworksFound.length];
-				for (int i = 0; i < storedNetworksFound.length; ++i)
-					networksFound[i] = (WiFiNetwork) storedNetworksFound[i];
-				onScanFinished(networksFound);
-			}
-			if (savedInstanceState.containsKey(STATE_ACTIVATED_POSITION)) {
-				setActivatedPosition(savedInstanceState
-						.getInt(STATE_ACTIVATED_POSITION));
-			}
-		}
-		registerForContextMenu(listview);
-		listview.setOnItemClickListener(this);
-		return root;
-	}
+    public void setActivatedPosition(int position) {
+        if (position == ListView.INVALID_POSITION) {
+            listview.setItemChecked(mActivatedPosition, false);
+        } else {
+            listview.setItemChecked(position, true);
+        }
 
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		if (!(activity instanceof OnItemSelectionListener)) {
-			throw new IllegalStateException(
-					"Activity must implement fragment's callbacks.");
-		}
+        mActivatedPosition = position;
+    }
 
-		mCallbacks = (OnItemSelectionListener) activity;
-	}
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        final AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
+        if (networksFound == null || wifiListAdapter.getCount() <= info.position)
+            return;
+        final WiFiNetwork wiFiNetwork = wifiListAdapter.getItem(info.position).wifiNetwork;
+        if (wiFiNetwork == null) // the list is unstable and it can happen
+            return;
 
-	@Override
-	public void onDetach() {
-		super.onDetach();
-		mCallbacks = sDummyCallbacks;
-	}
+        MenuInflater inflater = getActivity().getMenuInflater();
+        inflater.inflate(R.menu.networks_context_menu, menu);
+        // We are copying the values right away as the networks list is
+        // unstable.
+        menu.findItem(R.id.copy_ssid).setIntent(new Intent()
+                .putExtra(MENU_VALUE, wiFiNetwork.getSsidName()));
+        menu.findItem(R.id.copy_mac).setIntent(new Intent()
+                .putExtra(MENU_VALUE, wiFiNetwork.getMacAddress()));
+        menu.findItem(R.id.use_mac).setIntent(new Intent()
+                .putExtra(MENU_VALUE, wiFiNetwork.getMacAddress()));
+    }
 
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		if (networksFound != null)
-			outState.putParcelableArray(NETWORKS_FOUND, networksFound);
-		if (mActivatedPosition != ListView.INVALID_POSITION) {
-			outState.putInt(STATE_ACTIVATED_POSITION, mActivatedPosition);
-		}
-	}
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        String value = item.getIntent().getStringExtra(MENU_VALUE);
+        switch (item.getItemId()) {
+            case R.id.copy_ssid: {
+                ClipboardManager clipboard = (ClipboardManager) getActivity()
+                        .getSystemService(Context.CLIPBOARD_SERVICE);
+                clipboard.setText(value);
+                Toast.makeText(getActivity(),
+                        getString(R.string.msg_copied, value), Toast.LENGTH_SHORT)
+                        .show();
+                return true;
+            }
+            case R.id.copy_mac: {
+                ClipboardManager clipboard = (ClipboardManager) getActivity()
+                        .getSystemService(Context.CLIPBOARD_SERVICE);
+                clipboard.setText(value);
+                Toast.makeText(getActivity(),
+                        getString(R.string.msg_copied, value), Toast.LENGTH_SHORT)
+                        .show();
+                return true;
+            }
+            case R.id.use_mac:
+                mCallbacks.onItemSelected(value);
+                return true;
+        }
+        return super.onContextItemSelected(item);
+    }
 
-	public void setActivateOnItemClick(boolean activateOnItemClick) {
-		listview.setChoiceMode(activateOnItemClick ? ListView.CHOICE_MODE_SINGLE
-				: ListView.CHOICE_MODE_NONE);
-	}
+    public void setMessage(int message) {
+        noNetworksMessage.findViewById(R.id.loading_spinner).setVisibility(
+                View.GONE);
+        listview.setVisibility(View.GONE);
+        TextView messageView = (TextView) noNetworksMessage
+                .findViewById(R.id.message);
+        messageView.setVisibility(View.VISIBLE);
+        messageView.setText(message);
+        noNetworksMessage.setVisibility(View.VISIBLE);
+    }
 
-	public void setActivatedPosition(int position) {
-		if (position == ListView.INVALID_POSITION) {
-			listview.setItemChecked(mActivatedPosition, false);
-		} else {
-			listview.setItemChecked(position, true);
-		}
+    public void onScanFinished(WiFiNetwork[] networks) {
+        networksFound = networks;
+        if (getActivity() == null)
+            return;
+        if (networks.length > 0) {
+            noNetworksMessage.setVisibility(View.GONE);
+            wifiListAdapter.updateNetworks(networks);
+            listview.setVisibility(View.VISIBLE);
+        } else {
+            noNetworksMessage.findViewById(R.id.loading_spinner).setVisibility(
+                    View.GONE);
+            listview.setVisibility(View.GONE);
+            listview.setVisibility(View.GONE);
+            TextView messageView = (TextView) noNetworksMessage
+                    .findViewById(R.id.message);
+            messageView.setVisibility(View.VISIBLE);
+            messageView.setText(R.string.msg_nowifidetected);
+            noNetworksMessage.setVisibility(View.VISIBLE);
+        }
+    }
 
-		mActivatedPosition = position;
-	}
+    public void onItemClick(AdapterView<?> list, View view, int position,
+                            long id) {
+        if (networksFound != null && wifiListAdapter.getCount() > position) {
+            final WiFiNetwork wifiNetwork = wifiListAdapter.getItem(position).wifiNetwork;
+            if (wifiNetwork != null) // the list is unstable and it can happen
+                mCallbacks.onItemSelected(wifiNetwork);
+        }
+    }
 
-	private static final String MENU_VALUE = "menu_value";
+    public interface OnItemSelectionListener {
 
-	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v,
-			ContextMenu.ContextMenuInfo menuInfo) {
-		super.onCreateContextMenu(menu, v, menuInfo);
-		final AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
-		if (networksFound == null || wifiListAdapter.getCount() <= info.position)
-			return;
-		final WiFiNetwork wiFiNetwork = wifiListAdapter.getItem(info.position).wifiNetwork;
-		if (wiFiNetwork == null) // the list is unstable and it can happen
-			return;
+        void onItemSelected(WiFiNetwork id);
 
-		MenuInflater inflater = getActivity().getMenuInflater();
-		inflater.inflate(R.menu.networks_context_menu, menu);
-		// We are copying the values right away as the networks list is
-		// unstable.
-		((MenuItem) menu.findItem(R.id.copy_ssid)).setIntent(new Intent()
-				.putExtra(MENU_VALUE, wiFiNetwork.getSsidName()));
-		((MenuItem) menu.findItem(R.id.copy_mac)).setIntent(new Intent()
-				.putExtra(MENU_VALUE, wiFiNetwork.getMacAddress()));
-		((MenuItem) menu.findItem(R.id.use_mac)).setIntent(new Intent()
-				.putExtra(MENU_VALUE, wiFiNetwork.getMacAddress()));
-	}
-
-	@Override
-	public boolean onContextItemSelected(MenuItem item) {
-		String value = item.getIntent().getStringExtra(MENU_VALUE);
-		switch (item.getItemId()) {
-		case R.id.copy_ssid: {
-			ClipboardManager clipboard = (ClipboardManager) getActivity()
-					.getSystemService(Context.CLIPBOARD_SERVICE);
-			clipboard.setText(value);
-			Toast.makeText(getActivity(),
-					getString(R.string.msg_copied, value), Toast.LENGTH_SHORT)
-					.show();
-			return true;
-		}
-		case R.id.copy_mac: {
-			ClipboardManager clipboard = (ClipboardManager) getActivity()
-					.getSystemService(Context.CLIPBOARD_SERVICE);
-			clipboard.setText(value);
-			Toast.makeText(getActivity(),
-					getString(R.string.msg_copied, value), Toast.LENGTH_SHORT)
-					.show();
-			return true;
-		}
-		case R.id.use_mac:
-			mCallbacks.onItemSelected(value);
-			return true;
-		}
-		return super.onContextItemSelected(item);
-	}
-
-	public void setMessage(int message) {
-		noNetworksMessage.findViewById(R.id.loading_spinner).setVisibility(
-				View.GONE);
-		listview.setVisibility(View.GONE);
-		TextView messageView = (TextView) noNetworksMessage
-				.findViewById(R.id.message);
-		messageView.setVisibility(View.VISIBLE);
-		messageView.setText(message);
-		noNetworksMessage.setVisibility(View.VISIBLE);
-	}
-
-	public void onScanFinished(WiFiNetwork[] networks) {
-		networksFound = networks;
-		if (getActivity() == null)
-			return;
-		if (networks.length > 0) {
-			noNetworksMessage.setVisibility(View.GONE);
-			wifiListAdapter.updateNetworks(networks);
-			listview.setVisibility(View.VISIBLE);
-		} else {
-			noNetworksMessage.findViewById(R.id.loading_spinner).setVisibility(
-					View.GONE);
-			listview.setVisibility(View.GONE);
-			listview.setVisibility(View.GONE);
-			TextView messageView = (TextView) noNetworksMessage
-					.findViewById(R.id.message);
-			messageView.setVisibility(View.VISIBLE);
-			messageView.setText(R.string.msg_nowifidetected);
-			noNetworksMessage.setVisibility(View.VISIBLE);
-		}
-	}
-
-	public void onItemClick(AdapterView<?> list, View view, int position,
-			long id) {
-		if (networksFound != null && wifiListAdapter.getCount() > position) {
-			final WiFiNetwork wifiNetwork = wifiListAdapter.getItem(position).wifiNetwork;
-			if (wifiNetwork != null) // the list is unstable and it can happen
-				mCallbacks.onItemSelected(wifiNetwork);
-		}
-	}
+        void onItemSelected(String mac);
+    }
 
 }

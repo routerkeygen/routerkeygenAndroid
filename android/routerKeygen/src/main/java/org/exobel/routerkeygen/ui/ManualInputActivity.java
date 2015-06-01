@@ -19,11 +19,6 @@
 
 package org.exobel.routerkeygen.ui;
 
-import org.exobel.routerkeygen.AdsUtils;
-import org.exobel.routerkeygen.R;
-import org.exobel.routerkeygen.algorithms.Keygen;
-import org.exobel.routerkeygen.algorithms.WiFiNetwork;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -34,74 +29,79 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.android.gms.analytics.GoogleAnalytics;
 
+import org.exobel.routerkeygen.AdsUtils;
+import org.exobel.routerkeygen.R;
+import org.exobel.routerkeygen.algorithms.Keygen;
+import org.exobel.routerkeygen.algorithms.WiFiNetwork;
+
 public class ManualInputActivity extends SherlockFragmentActivity implements
-		NetworksListFragment.OnItemSelectionListener {
+        NetworksListFragment.OnItemSelectionListener {
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_single_fragment);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_single_fragment);
 
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		AdsUtils.loadAdIfNeeded(this);
-		if (savedInstanceState == null) {
-			getSupportFragmentManager()
-					.beginTransaction()
-					.add(R.id.keygen_fragment,
-							ManualInputFragment
-									.newInstance(getIntent()
-											.getStringExtra(
-													ManualInputFragment.MAC_ADDRESS_ARG)))
-					.commit();
-		}
-	}
+        AdsUtils.loadAdIfNeeded(this);
+        if (savedInstanceState == null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.keygen_fragment,
+                            ManualInputFragment
+                                    .newInstance(getIntent()
+                                            .getStringExtra(
+                                                    ManualInputFragment.MAC_ADDRESS_ARG)))
+                    .commit();
+        }
+    }
 
-	@Override
-	public void onStart() {
-		super.onStart();
-		//Get an Analytics tracker to report app starts and uncaught exceptions etc.
-		GoogleAnalytics.getInstance(this).reportActivityStart(this);
+    @Override
+    public void onStart() {
+        super.onStart();
+        //Get an Analytics tracker to report app starts and uncaught exceptions etc.
+        GoogleAnalytics.getInstance(this).reportActivityStart(this);
 
-	}
+    }
 
-	@Override
-	public void onStop() {
-		super.onStop();
-		//Stop the analytics tracking
+    @Override
+    public void onStop() {
+        super.onStop();
+        //Stop the analytics tracking
         GoogleAnalytics.getInstance(this).reportActivityStop(this);
-	}
+    }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			NavUtils.navigateUpTo(this, new Intent(this,
-					NetworksListActivity.class));
-			return true;
-		case R.id.pref:
-			startActivity(new Intent(this, Preferences.class));
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                NavUtils.navigateUpTo(this, new Intent(this,
+                        NetworksListActivity.class));
+                return true;
+            case R.id.pref:
+                startActivity(new Intent(this, Preferences.class));
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getSupportMenuInflater().inflate(R.menu.preferences, menu);
-		return true;
-	}
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getSupportMenuInflater().inflate(R.menu.preferences, menu);
+        return true;
+    }
 
-	public void onItemSelected(WiFiNetwork wiFiNetwork) {
-		if (wiFiNetwork.getSupportState() == Keygen.UNSUPPORTED) {
-			Toast.makeText(this, R.string.msg_unspported,
-					Toast.LENGTH_SHORT).show();
-			return;
-		}
-		Intent detailIntent = new Intent(this, NetworkActivity.class);
-		detailIntent.putExtra(NetworkFragment.NETWORK_ID, wiFiNetwork);
-		startActivity(detailIntent);
-	}
+    public void onItemSelected(WiFiNetwork wiFiNetwork) {
+        if (wiFiNetwork.getSupportState() == Keygen.UNSUPPORTED) {
+            Toast.makeText(this, R.string.msg_unspported,
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Intent detailIntent = new Intent(this, NetworkActivity.class);
+        detailIntent.putExtra(NetworkFragment.NETWORK_ID, wiFiNetwork);
+        startActivity(detailIntent);
+    }
 
-	public void onItemSelected(String mac) {
-	}
+    public void onItemSelected(String mac) {
+    }
 }

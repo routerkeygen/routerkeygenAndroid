@@ -19,25 +19,6 @@
 
 package org.exobel.routerkeygen.ui;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.zip.ZipInputStream;
-
-import org.acra.ACRA;
-import org.exobel.routerkeygen.AdsUtils;
-import org.exobel.routerkeygen.AutoConnectService;
-import org.exobel.routerkeygen.BuildConfig;
-import org.exobel.routerkeygen.R;
-import org.exobel.routerkeygen.algorithms.Keygen;
-import org.exobel.routerkeygen.algorithms.NativeThomson;
-import org.exobel.routerkeygen.algorithms.ThomsonKeygen;
-import org.exobel.routerkeygen.algorithms.WiFiNetwork;
-
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
@@ -70,16 +51,39 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
+import org.acra.ACRA;
+import org.exobel.routerkeygen.AdsUtils;
+import org.exobel.routerkeygen.AutoConnectService;
+import org.exobel.routerkeygen.BuildConfig;
+import org.exobel.routerkeygen.R;
+import org.exobel.routerkeygen.algorithms.Keygen;
+import org.exobel.routerkeygen.algorithms.NativeThomson;
+import org.exobel.routerkeygen.algorithms.ThomsonKeygen;
+import org.exobel.routerkeygen.algorithms.WiFiNetwork;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.zip.ZipInputStream;
+
 @SuppressWarnings("deprecation")
 public class NetworkFragment extends SherlockFragment {
 
 	public static final String NETWORK_ID = "vulnerable_network";
 	public static final String TAG = "NetworkFragment";
+	private static final String PASSWORD_LIST = "password_list";
 	private WiFiNetwork wifiNetwork;
 	private KeygenThread thread;
 	private ViewSwitcher root;
 	private TextView messages;
 	private List<String> passwordList;
+	private boolean thomson3g;
+	private boolean nativeCalc;
+	private String dicFile;
 
 	public NetworkFragment() {
 	}
@@ -105,7 +109,7 @@ public class NetworkFragment extends SherlockFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+							 Bundle savedInstanceState) {
 		root = (ViewSwitcher) inflater.inflate(R.layout.fragment_network,
 				container, false);
 		messages = (TextView) root.findViewById(R.id.loading_text);
@@ -160,8 +164,6 @@ public class NetworkFragment extends SherlockFragment {
 		return false;
 	}
 
-	private static final String PASSWORD_LIST = "password_list";
-
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
@@ -189,7 +191,7 @@ public class NetworkFragment extends SherlockFragment {
 	@Override
 	public void onDetach() {
 		super.onDetach();
-		if (thread != null){
+		if (thread != null) {
 			//This thread can be null if there was a previosly calculated
 			//password list
 			thread.cancel();
@@ -200,7 +202,7 @@ public class NetworkFragment extends SherlockFragment {
 	 * Some devices seem to have bugs with the parcelable implementation
 	 * So we try to restore missing objects here.
 	 */
-	private void restoreMissingKeygens(){
+	private void restoreMissingKeygens() {
 		boolean foundMissingKeygen = false;
 		for (Keygen keygen : wifiNetwork.getKeygens()) {
 			if (keygen == null) {
@@ -208,7 +210,7 @@ public class NetworkFragment extends SherlockFragment {
 				break;
 			}
 		}
-		if (foundMissingKeygen){
+		if (foundMissingKeygen) {
 			//If any is missing, simply replace them all.
 			ZipInputStream zipInputStream = new ZipInputStream(
 					getActivity().getResources().openRawResource(R.raw.magic_info));
@@ -231,70 +233,70 @@ public class NetworkFragment extends SherlockFragment {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.menu_share:
-			try {
+			case R.id.menu_share:
+				try {
+					if (passwordList == null)
+						return true;
+					Intent i = new Intent(Intent.ACTION_SEND);
+					i.setType("text/plain");
+					i.putExtra(Intent.EXTRA_SUBJECT, wifiNetwork.getSsidName()
+							+ getString(R.string.share_msg_begin));
+					final StringBuilder message = new StringBuilder(
+							wifiNetwork.getSsidName());
+					message.append("\n");
+					message.append(getString(R.string.share_msg_begin));
+					message.append(":\n");
+					for (String password : passwordList) {
+						message.append(password);
+						message.append('\n');
+					}
+					i.putExtra(Intent.EXTRA_TEXT, message.toString());
+					startActivity(Intent.createChooser(i,
+							getString(R.string.share_title)));
+				} catch (Exception e) {
+					Toast.makeText(getActivity(), R.string.msg_err_sendto,
+							Toast.LENGTH_SHORT).show();
+				}
+				return true;
+			case R.id.menu_save_sd:
+				if (!Environment.getExternalStorageState().equals(
+						Environment.MEDIA_MOUNTED)) {
+					Toast.makeText(getActivity(), R.string.msg_nosdcard,
+							Toast.LENGTH_SHORT).show();
+					return true;
+				}
 				if (passwordList == null)
 					return true;
-				Intent i = new Intent(Intent.ACTION_SEND);
-				i.setType("text/plain");
-				i.putExtra(Intent.EXTRA_SUBJECT, wifiNetwork.getSsidName()
-						+ getString(R.string.share_msg_begin));
 				final StringBuilder message = new StringBuilder(
 						wifiNetwork.getSsidName());
-				message.append("\n");
-				message.append(getString(R.string.share_msg_begin));
-				message.append(":\n");
+				message.append(" KEYS\n");
 				for (String password : passwordList) {
 					message.append(password);
 					message.append('\n');
 				}
-				i.putExtra(Intent.EXTRA_TEXT, message.toString());
-				startActivity(Intent.createChooser(i,
-						getString(R.string.share_title)));
-			} catch (Exception e) {
-				Toast.makeText(getActivity(), R.string.msg_err_sendto,
-						Toast.LENGTH_SHORT).show();
-			}
-			return true;
-		case R.id.menu_save_sd:
-			if (!Environment.getExternalStorageState().equals(
-					Environment.MEDIA_MOUNTED)) {
-				Toast.makeText(getActivity(), R.string.msg_nosdcard,
-						Toast.LENGTH_SHORT).show();
-				return true;
-			}
-			if (passwordList == null)
-				return true;
-			final StringBuilder message = new StringBuilder(
-					wifiNetwork.getSsidName());
-			message.append(" KEYS\n");
-			for (String password : passwordList) {
-				message.append(password);
-				message.append('\n');
-			}
-			try {
-				getPrefs();
-				final String path = new File(dicFile).getParent();
-				final BufferedWriter out = new BufferedWriter(new FileWriter(
-						(path != null ? path
-								: Environment.getExternalStorageDirectory())
-								+ File.separator
-								+ wifiNetwork.getSsidName()
-								+ ".txt"));
-				out.write(message.toString());
-				out.close();
-			} catch (IOException e) {
-				Toast.makeText(getActivity(),
-						getString(R.string.msg_err_saving_key_file),
+				try {
+					getPrefs();
+					final String path = new File(dicFile).getParent();
+					final BufferedWriter out = new BufferedWriter(new FileWriter(
+							(path != null ? path
+									: Environment.getExternalStorageDirectory())
+									+ File.separator
+									+ wifiNetwork.getSsidName()
+									+ ".txt"));
+					out.write(message.toString());
+					out.close();
+				} catch (IOException e) {
+					Toast.makeText(getActivity(),
+							getString(R.string.msg_err_saving_key_file),
+							Toast.LENGTH_SHORT).show();
+					return true;
+				}
+				Toast.makeText(
+						getActivity(),
+						wifiNetwork.getSsidName() + ".txt "
+								+ getString(R.string.msg_saved_key_file),
 						Toast.LENGTH_SHORT).show();
 				return true;
-			}
-			Toast.makeText(
-					getActivity(),
-					wifiNetwork.getSsidName() + ".txt "
-							+ getString(R.string.msg_saved_key_file),
-					Toast.LENGTH_SHORT).show();
-			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -307,7 +309,7 @@ public class NetworkFragment extends SherlockFragment {
 			final ListView list = (ListView) root.findViewById(R.id.list_keys);
 			list.setOnItemClickListener(new OnItemClickListener() {
 				public void onItemClick(AdapterView<?> parent, View view,
-						int position, long id) {
+										int position, long id) {
 					final String key = ((TextView) view).getText().toString();
 					Toast.makeText(getActivity(),
 							getString(R.string.msg_copied, key),
@@ -325,7 +327,20 @@ public class NetworkFragment extends SherlockFragment {
 		}
 	}
 
+	private void getPrefs() {
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(getActivity());
+		thomson3g = prefs.getBoolean(Preferences.thomson3gPref, false);
+		nativeCalc = prefs.getBoolean(Preferences.nativeCalcPref, true);
+		dicFile = prefs.getString(Preferences.dicLocalPref, Environment
+				.getExternalStorageDirectory().getAbsolutePath()
+				+ "RouterKeygen.dic");
+	}
+
 	private class KeygenThread extends AsyncTask<Void, Integer, List<String>> {
+		private final static int SHOW_TOAST = 0;
+		private final static int SHOW_MESSAGE_WITH_SPINNER = 1;
+		private final static int SHOW_MESSAGE_NO_SPINNER = 2;
 		private WiFiNetwork wifiNetwork;
 
 		private KeygenThread(WiFiNetwork wifiNetwork) {
@@ -358,22 +373,22 @@ public class NetworkFragment extends SherlockFragment {
 				return;
 			for (int i = 0; i < values.length; i += 2) {
 				switch (values[i]) {
-				case SHOW_TOAST:
-					Toast.makeText(getActivity(), values[i + 1],
-							Toast.LENGTH_SHORT).show();
+					case SHOW_TOAST:
+						Toast.makeText(getActivity(), values[i + 1],
+								Toast.LENGTH_SHORT).show();
 
-					break;
-				case SHOW_MESSAGE_NO_SPINNER:
-					messages.setText(values[i + 1]);
-					root.findViewById(R.id.loading_spinner).setVisibility(
-							View.GONE);
-					break;
+						break;
+					case SHOW_MESSAGE_NO_SPINNER:
+						messages.setText(values[i + 1]);
+						root.findViewById(R.id.loading_spinner).setVisibility(
+								View.GONE);
+						break;
 
-				case SHOW_MESSAGE_WITH_SPINNER:
-					messages.setText(values[i + 1]);
-					root.findViewById(R.id.loading_spinner).setVisibility(
-							View.VISIBLE);
-					break;
+					case SHOW_MESSAGE_WITH_SPINNER:
+						messages.setText(values[i + 1]);
+						root.findViewById(R.id.loading_spinner).setVisibility(
+								View.VISIBLE);
+						break;
 
 				}
 			}
@@ -384,10 +399,6 @@ public class NetworkFragment extends SherlockFragment {
 				keygen.setStopRequested(true);
 			cancel(true);
 		}
-
-		private final static int SHOW_TOAST = 0;
-		private final static int SHOW_MESSAGE_WITH_SPINNER = 1;
-		private final static int SHOW_MESSAGE_NO_SPINNER = 2;
 
 		@Override
 		protected List<String> doInBackground(Void... params) {
@@ -412,7 +423,7 @@ public class NetworkFragment extends SherlockFragment {
 					ACRA.getErrorReporter().handleException(e);
 					if (keygen instanceof ThomsonKeygen) {
 						((ThomsonKeygen) keygen).setErrorDict(true);// native
-																	// should
+						// should
 						// never crash
 					}
 				}
@@ -462,20 +473,6 @@ public class NetworkFragment extends SherlockFragment {
 			return result;
 		}
 
-	}
-
-	private boolean thomson3g;
-	private boolean nativeCalc;
-	private String dicFile;
-
-	private void getPrefs() {
-		SharedPreferences prefs = PreferenceManager
-				.getDefaultSharedPreferences(getActivity());
-		thomson3g = prefs.getBoolean(Preferences.thomson3gPref, false);
-		nativeCalc = prefs.getBoolean(Preferences.nativeCalcPref, true);
-		dicFile = prefs.getString(Preferences.dicLocalPref, Environment
-				.getExternalStorageDirectory().getAbsolutePath()
-				+ "RouterKeygen.dic");
 	}
 
 }

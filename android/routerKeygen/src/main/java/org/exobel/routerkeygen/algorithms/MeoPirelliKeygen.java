@@ -18,56 +18,56 @@
  */
 package org.exobel.routerkeygen.algorithms;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import org.exobel.routerkeygen.R;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
-import org.exobel.routerkeygen.R;
-
-import android.os.Parcel;
-import android.os.Parcelable;
-
 public class MeoPirelliKeygen extends ArnetPirelliKeygen {
 
-	public MeoPirelliKeygen(String ssid, String mac) {
-		super(ssid, mac);
-	}
+    public static final Parcelable.Creator<MeoPirelliKeygen> CREATOR = new Parcelable.Creator<MeoPirelliKeygen>() {
+        public MeoPirelliKeygen createFromParcel(Parcel in) {
+            return new MeoPirelliKeygen(in);
+        }
 
-	@Override
-	public int getSupportState() {
-		if (getSsidName().matches("ADSLPT-AB[0-9]{5}"))
-			return SUPPORTED;
-		return UNLIKELY_SUPPORTED;
-	}
+        public MeoPirelliKeygen[] newArray(int size) {
+            return new MeoPirelliKeygen[size];
+        }
+    };
 
-	@Override
-	public List<String> getKeys() {
-		try {
-			md = MessageDigest.getInstance("SHA-256");
-		} catch (NoSuchAlgorithmException e1) {
-			setErrorCode(R.string.msg_nosha256);
-			return null;
-		}
-		if (getMacAddress().length() != 12) {
-			setErrorCode(R.string.msg_nomac);
-			return null;
-		}
-		generateKey(incrementMac(getMacAddress(), -1), 8);
-		return getResults();
-	}
+    public MeoPirelliKeygen(String ssid, String mac) {
+        super(ssid, mac);
+    }
 
-	private MeoPirelliKeygen(Parcel in) {
-		super(in);
-	}
+    private MeoPirelliKeygen(Parcel in) {
+        super(in);
+    }
 
-	public static final Parcelable.Creator<MeoPirelliKeygen> CREATOR = new Parcelable.Creator<MeoPirelliKeygen>() {
-		public MeoPirelliKeygen createFromParcel(Parcel in) {
-			return new MeoPirelliKeygen(in);
-		}
+    @Override
+    public int getSupportState() {
+        if (getSsidName().matches("ADSLPT-AB[0-9]{5}"))
+            return SUPPORTED;
+        return UNLIKELY_SUPPORTED;
+    }
 
-		public MeoPirelliKeygen[] newArray(int size) {
-			return new MeoPirelliKeygen[size];
-		}
-	};
+    @Override
+    public List<String> getKeys() {
+        try {
+            md = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e1) {
+            setErrorCode(R.string.msg_nosha256);
+            return null;
+        }
+        if (getMacAddress().length() != 12) {
+            setErrorCode(R.string.msg_nomac);
+            return null;
+        }
+        generateKey(incrementMac(getMacAddress(), -1), 8);
+        return getResults();
+    }
 
 }

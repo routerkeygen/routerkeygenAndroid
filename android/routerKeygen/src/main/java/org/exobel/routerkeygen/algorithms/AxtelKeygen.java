@@ -18,42 +18,42 @@
  */
 package org.exobel.routerkeygen.algorithms;
 
-import java.util.List;
-import java.util.Locale;
-
-import org.exobel.routerkeygen.R;
-
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.exobel.routerkeygen.R;
+
+import java.util.List;
+import java.util.Locale;
+
 public class AxtelKeygen extends Keygen {
 
-	public AxtelKeygen(String ssid, String mac) {
-		super(ssid, mac);
-	}
+    public static final Parcelable.Creator<AxtelKeygen> CREATOR = new Parcelable.Creator<AxtelKeygen>() {
+        public AxtelKeygen createFromParcel(Parcel in) {
+            return new AxtelKeygen(in);
+        }
 
-	@Override
-	public List<String> getKeys() {
-		if (getMacAddress().length() != 12) {
-			setErrorCode(R.string.msg_errpirelli);
-			return null;
-		}
-		addPassword(getMacAddress().substring(2).toUpperCase(Locale.getDefault()));
-		return getResults();
-	}
+        public AxtelKeygen[] newArray(int size) {
+            return new AxtelKeygen[size];
+        }
+    };
 
-	private AxtelKeygen(Parcel in) {
-		super(in);
-	}
+    public AxtelKeygen(String ssid, String mac) {
+        super(ssid, mac);
+    }
 
-	public static final Parcelable.Creator<AxtelKeygen> CREATOR = new Parcelable.Creator<AxtelKeygen>() {
-		public AxtelKeygen createFromParcel(Parcel in) {
-			return new AxtelKeygen(in);
-		}
+    private AxtelKeygen(Parcel in) {
+        super(in);
+    }
 
-		public AxtelKeygen[] newArray(int size) {
-			return new AxtelKeygen[size];
-		}
-	};
+    @Override
+    public List<String> getKeys() {
+        if (getMacAddress().length() != 12) {
+            setErrorCode(R.string.msg_errpirelli);
+            return null;
+        }
+        addPassword(getMacAddress().substring(2).toUpperCase(Locale.getDefault()));
+        return getResults();
+    }
 
 }

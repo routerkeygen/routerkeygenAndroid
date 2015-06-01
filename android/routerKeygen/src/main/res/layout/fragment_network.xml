@@ -1,26 +1,32 @@
 <ViewSwitcher xmlns:android="http://schemas.android.com/apk/res/android"
-	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
-	    android:gravity="center">
-	<LinearLayout 
-	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
-	    android:layout_gravity="center"
-	    android:gravity="center">
-	    <ProgressBar android:id="@+id/loading_spinner"
-	        android:indeterminate="true"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_gravity="center"
-	        android:gravity="center"/>
-	    <TextView android:id="@+id/loading_text"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="@string/dialog_nativecalc_msg"
-	        android:layout_gravity="center"
-	        android:paddingLeft="10dp"
-	        android:gravity="center"
-	        android:textSize="20sp"/>
-	</LinearLayout>
-	<include layout="@layout/results"/>
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center">
+
+        <ProgressBar
+            android:id="@+id/loading_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:indeterminate="true" />
+
+        <TextView
+            android:id="@+id/loading_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:text="@string/dialog_nativecalc_msg"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <include layout="@layout/results" />
 </ViewSwitcher>

@@ -6,7 +6,7 @@
     android:paddingBottom="6dip"
     android:paddingLeft="6dip"
     android:paddingRight="?android:attr/scrollbarSize"
-    android:paddingTop="6dip" >
+    android:paddingTop="6dip">
 
     <TextView
         android:id="@+android:id/title"
@@ -33,8 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@android:id/title"
-        android:paddingRight="16dip" >
-    </TextView>
+        android:paddingRight="16dip"></TextView>
 
     <TextView
         android:id="@+id/seekBarPrefValue"
@@ -42,16 +41,14 @@
         android:layout_height="wrap_content"
         android:layout_below="@android:id/title"
         android:layout_toLeftOf="@id/seekBarPrefUnitsRight"
-        android:gravity="right" >
-    </TextView>
+        android:gravity="right"></TextView>
 
     <TextView
         android:id="@+id/seekBarPrefUnitsLeft"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@android:id/title"
-        android:layout_toLeftOf="@id/seekBarPrefValue" >
-    </TextView>
+        android:layout_toLeftOf="@id/seekBarPrefValue"></TextView>
 
     <LinearLayout
         android:id="@+id/seekBarPrefBarContainer"
@@ -60,7 +57,6 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_below="@android:id/summary"
-        android:orientation="horizontal" >
-    </LinearLayout>
+        android:orientation="horizontal"></LinearLayout>
 
 </RelativeLayout>

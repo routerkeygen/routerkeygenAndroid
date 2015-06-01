@@ -18,11 +18,11 @@
  */
 package org.exobel.routerkeygen.algorithms;
 
-import java.util.List;
-import java.util.Locale;
-
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import java.util.List;
+import java.util.Locale;
 
 /*
  * This is not actual an algorithm as
@@ -31,32 +31,6 @@ import android.os.Parcelable;
  * Source: http://jb.ptsec.info/cabovisao/
  */
 public class CabovisaoSagemKeygen extends Keygen {
-	private final static String KEY_BASE = "2ce412e";
-	final private String ssidIdentifier;
-	public CabovisaoSagemKeygen(String ssid, String mac ) {
-		super(ssid, mac);
-		this.ssidIdentifier = ssid.substring(ssid.length()-4).toLowerCase(Locale.getDefault());
-	}
-	
-	@Override
-	public List<String> getKeys() {
-		addPassword(KEY_BASE + 'a' + ssidIdentifier);
-		addPassword(KEY_BASE + 'b' + ssidIdentifier);
-		addPassword(KEY_BASE + 'c' + ssidIdentifier);
-		addPassword(KEY_BASE + 'd' + ssidIdentifier);
-		return getResults();
-	}
-
-	private CabovisaoSagemKeygen(Parcel in) {
-		super(in);
-		ssidIdentifier = in.readString();
-	}
-
-
-	public void writeToParcel(Parcel dest, int flags) {
-		super.writeToParcel(dest, flags);
-		dest.writeString(ssidIdentifier);
-	}
     public static final Parcelable.Creator<CabovisaoSagemKeygen> CREATOR = new Parcelable.Creator<CabovisaoSagemKeygen>() {
         public CabovisaoSagemKeygen createFromParcel(Parcel in) {
             return new CabovisaoSagemKeygen(in);
@@ -66,6 +40,32 @@ public class CabovisaoSagemKeygen extends Keygen {
             return new CabovisaoSagemKeygen[size];
         }
     };
-	
+    private final static String KEY_BASE = "2ce412e";
+    final private String ssidIdentifier;
+
+    public CabovisaoSagemKeygen(String ssid, String mac) {
+        super(ssid, mac);
+        this.ssidIdentifier = ssid.substring(ssid.length() - 4).toLowerCase(Locale.getDefault());
+    }
+
+    private CabovisaoSagemKeygen(Parcel in) {
+        super(in);
+        ssidIdentifier = in.readString();
+    }
+
+    @Override
+    public List<String> getKeys() {
+        addPassword(KEY_BASE + 'a' + ssidIdentifier);
+        addPassword(KEY_BASE + 'b' + ssidIdentifier);
+        addPassword(KEY_BASE + 'c' + ssidIdentifier);
+        addPassword(KEY_BASE + 'd' + ssidIdentifier);
+        return getResults();
+    }
+
+    public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
+        dest.writeString(ssidIdentifier);
+    }
+
 
 }

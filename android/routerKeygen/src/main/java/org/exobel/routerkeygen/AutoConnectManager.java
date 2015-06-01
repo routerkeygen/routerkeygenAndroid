@@ -54,9 +54,9 @@ public class AutoConnectManager extends BroadcastReceiver {
 	}
 
 	public interface onConnectionListener {
-		public void onFailedConnection();
+		void onFailedConnection();
 
-		public void onSuccessfulConection();
+		void onSuccessfulConection();
 	}
 
 }

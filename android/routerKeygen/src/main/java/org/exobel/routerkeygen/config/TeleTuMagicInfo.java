@@ -22,60 +22,59 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class TeleTuMagicInfo implements Parcelable {
-	private final int[] range;
-	private final int base;
-	private final String serial;
-	private final int divider;
+    public static final Parcelable.Creator<TeleTuMagicInfo> CREATOR = new Parcelable.Creator<TeleTuMagicInfo>() {
+        public TeleTuMagicInfo createFromParcel(Parcel in) {
+            return new TeleTuMagicInfo(in);
+        }
 
-	public TeleTuMagicInfo(int[] range, String serial, int base, int divider) {
-		this.serial = serial;
-		this.range = range;
-		this.base = base;
-		this.divider = divider;
-	}
+        public TeleTuMagicInfo[] newArray(int size) {
+            return new TeleTuMagicInfo[size];
+        }
+    };
+    private final int[] range;
+    private final int base;
+    private final String serial;
+    private final int divider;
 
-	public int[] getRange() {
-		return range;
-	}
+    public TeleTuMagicInfo(int[] range, String serial, int base, int divider) {
+        this.serial = serial;
+        this.range = range;
+        this.base = base;
+        this.divider = divider;
+    }
 
-	public int getBase() {
-		return base;
-	}
+    private TeleTuMagicInfo(Parcel in) {
+        this.base = in.readInt();
+        this.divider = in.readInt();
+        this.range = in.createIntArray();
+        this.serial = in.readString();
+    }
 
-	public int getDivider() {
-		return divider;
-	}
+    public int[] getRange() {
+        return range;
+    }
 
-	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeInt(base);
-		dest.writeInt(divider);
-		dest.writeIntArray(range);
-		dest.writeString(serial);
-	}
+    public int getBase() {
+        return base;
+    }
 
-	private TeleTuMagicInfo(Parcel in) {
-		this.base = in.readInt();
-		this.divider = in.readInt();
-		this.range = in.createIntArray();
-		this.serial = in.readString();
-	}
+    public int getDivider() {
+        return divider;
+    }
 
-	public static final Parcelable.Creator<TeleTuMagicInfo> CREATOR = new Parcelable.Creator<TeleTuMagicInfo>() {
-		public TeleTuMagicInfo createFromParcel(Parcel in) {
-			return new TeleTuMagicInfo(in);
-		}
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(base);
+        dest.writeInt(divider);
+        dest.writeIntArray(range);
+        dest.writeString(serial);
+    }
 
-		public TeleTuMagicInfo[] newArray(int size) {
-			return new TeleTuMagicInfo[size];
-		}
-	};
+    public int describeContents() {
+        return 0;
+    }
 
-	public int describeContents() {
-		return 0;
-	}
-
-	public String getSerial() {
-		return serial;
-	}
+    public String getSerial() {
+        return serial;
+    }
 
 }

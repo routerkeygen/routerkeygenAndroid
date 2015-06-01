@@ -18,51 +18,51 @@
  */
 package org.exobel.routerkeygen.algorithms;
 
-import java.util.List;
-import java.util.Locale;
-
-import org.exobel.routerkeygen.R;
-
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.exobel.routerkeygen.R;
+
+import java.util.List;
+import java.util.Locale;
+
 public class InterCableKeygen extends Keygen {
 
-	public InterCableKeygen(String ssid, String mac) {
-		super(ssid, mac);
-	}
+    public static final Parcelable.Creator<InterCableKeygen> CREATOR = new Parcelable.Creator<InterCableKeygen>() {
+        public InterCableKeygen createFromParcel(Parcel in) {
+            return new InterCableKeygen(in);
+        }
 
-	@Override
-	public List<String> getKeys() {
-		if (getMacAddress().length() != 12) {
-			setErrorCode(R.string.msg_nomac);
-			return null;
-		}
-		String wep = "m" + getMacAddress().substring(0, 10).toLowerCase(Locale.getDefault());
-		String hex = getMacAddress().substring(10, 12);
-		int intValue = Integer.parseInt(hex, 16);
-		intValue += 1; // we add 1 and then convert again to hex
-		hex = Integer.toHexString(intValue).toLowerCase(Locale.getDefault());
-		addPassword(wep+hex);
-		//There's a version where 2 is added so we repeat again
-		intValue += 1; // we add 1 and then convert again to hex
-		hex = Integer.toHexString(intValue).toLowerCase(Locale.getDefault());
-		addPassword(wep+hex);
-		return getResults();
-	}
+        public InterCableKeygen[] newArray(int size) {
+            return new InterCableKeygen[size];
+        }
+    };
 
-	private InterCableKeygen(Parcel in) {
-		super(in);
-	}
+    public InterCableKeygen(String ssid, String mac) {
+        super(ssid, mac);
+    }
 
-	public static final Parcelable.Creator<InterCableKeygen> CREATOR = new Parcelable.Creator<InterCableKeygen>() {
-		public InterCableKeygen createFromParcel(Parcel in) {
-			return new InterCableKeygen(in);
-		}
+    private InterCableKeygen(Parcel in) {
+        super(in);
+    }
 
-		public InterCableKeygen[] newArray(int size) {
-			return new InterCableKeygen[size];
-		}
-	};
+    @Override
+    public List<String> getKeys() {
+        if (getMacAddress().length() != 12) {
+            setErrorCode(R.string.msg_nomac);
+            return null;
+        }
+        String wep = "m" + getMacAddress().substring(0, 10).toLowerCase(Locale.getDefault());
+        String hex = getMacAddress().substring(10, 12);
+        int intValue = Integer.parseInt(hex, 16);
+        intValue += 1; // we add 1 and then convert again to hex
+        hex = Integer.toHexString(intValue).toLowerCase(Locale.getDefault());
+        addPassword(wep + hex);
+        //There's a version where 2 is added so we repeat again
+        intValue += 1; // we add 1 and then convert again to hex
+        hex = Integer.toHexString(intValue).toLowerCase(Locale.getDefault());
+        addPassword(wep + hex);
+        return getResults();
+    }
 
 }

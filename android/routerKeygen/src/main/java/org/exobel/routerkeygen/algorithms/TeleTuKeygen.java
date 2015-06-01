@@ -18,13 +18,14 @@
  */
 package org.exobel.routerkeygen.algorithms;
 
-import java.util.List;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.config.TeleTuMagicInfo;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import java.util.List;
+
 /*
  * Using the last 6 bytes of the mac address which should be in a certain range
  * in the config file, we calculate the end of the serial number
@@ -35,48 +36,47 @@ import android.os.Parcelable;
  */
 public class TeleTuKeygen extends Keygen {
 
-	final private TeleTuMagicInfo magicInfo;
+    public static final Parcelable.Creator<TeleTuKeygen> CREATOR = new Parcelable.Creator<TeleTuKeygen>() {
+        public TeleTuKeygen createFromParcel(Parcel in) {
+            return new TeleTuKeygen(in);
+        }
 
-	public TeleTuKeygen(String ssid, String mac,
-			TeleTuMagicInfo magicInfo) {
-		super(ssid, mac);
-		this.magicInfo = magicInfo;
-	}
+        public TeleTuKeygen[] newArray(int size) {
+            return new TeleTuKeygen[size];
+        }
+    };
+    final private TeleTuMagicInfo magicInfo;
 
-	@Override
-	public List<String> getKeys() {
-		if (getMacAddress().length() != 12) {
-			setErrorCode(R.string.msg_errpirelli);
-			return null;
-		}
-		String serialEnd = Integer.toString((Integer.parseInt(getMacAddress()
-				.substring(6), 16) - magicInfo.getBase())
-				/ magicInfo.getDivider());
-		while (serialEnd.length() < 7) {
-			serialEnd = "0" + serialEnd;
-		}
-		addPassword(magicInfo.getSerial() + "Y" + serialEnd);
-		return getResults();
-	}
+    public TeleTuKeygen(String ssid, String mac,
+                        TeleTuMagicInfo magicInfo) {
+        super(ssid, mac);
+        this.magicInfo = magicInfo;
+    }
 
-	private TeleTuKeygen(Parcel in) {
-		super(in);
-		magicInfo = in.readParcelable(TeleTuMagicInfo.class.getClassLoader());
-	}
+    private TeleTuKeygen(Parcel in) {
+        super(in);
+        magicInfo = in.readParcelable(TeleTuMagicInfo.class.getClassLoader());
+    }
 
-	public void writeToParcel(Parcel dest, int flags) {
-		super.writeToParcel(dest, flags);
-		dest.writeParcelable(magicInfo, flags);
-	}
+    @Override
+    public List<String> getKeys() {
+        if (getMacAddress().length() != 12) {
+            setErrorCode(R.string.msg_errpirelli);
+            return null;
+        }
+        String serialEnd = Integer.toString((Integer.parseInt(getMacAddress()
+                .substring(6), 16) - magicInfo.getBase())
+                / magicInfo.getDivider());
+        while (serialEnd.length() < 7) {
+            serialEnd = "0" + serialEnd;
+        }
+        addPassword(magicInfo.getSerial() + "Y" + serialEnd);
+        return getResults();
+    }
 
-	public static final Parcelable.Creator<TeleTuKeygen> CREATOR = new Parcelable.Creator<TeleTuKeygen>() {
-		public TeleTuKeygen createFromParcel(Parcel in) {
-			return new TeleTuKeygen(in);
-		}
-
-		public TeleTuKeygen[] newArray(int size) {
-			return new TeleTuKeygen[size];
-		}
-	};
+    public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
+        dest.writeParcelable(magicInfo, flags);
+    }
 
 }

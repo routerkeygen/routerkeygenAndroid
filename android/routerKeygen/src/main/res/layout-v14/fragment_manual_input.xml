@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
    Copyright 2013 Rui Araújo, Luís Fonseca
   
    This file is part of Router Keygen.
@@ -19,12 +18,12 @@
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/manual_root"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/label_ssid"
@@ -54,7 +53,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/manual_autotext"
             android:gravity="center_horizontal"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/label_bssid"
@@ -193,7 +192,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:gravity="center"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/bt_cancel"

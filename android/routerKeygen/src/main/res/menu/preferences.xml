@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
    Copyright 2012 Rui Araújo, Luís Fonseca
   
    This file is part of Router Keygen.
@@ -17,13 +16,13 @@
    You should have received a copy of the GNU General Public License
    along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
     <item
         android:id="@+id/pref"
         android:icon="@drawable/ic_menu_settings"
-        android:showAsAction="ifRoom"
         android:orderInCategory="100"
-        android:title="@string/menu_preferences"/>
+        android:showAsAction="ifRoom"
+        android:title="@string/menu_preferences" />
 
 </menu>

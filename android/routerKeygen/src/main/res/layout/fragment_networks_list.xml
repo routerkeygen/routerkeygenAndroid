@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center" >
+    android:gravity="center">
 
     <com.hb.views.PinnedSectionListView
         android:id="@+id/networks_list"
@@ -16,7 +16,7 @@
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:gravity="center" >
+        android:gravity="center">
 
         <ProgressBar
             android:id="@+id/loading_spinner"

@@ -18,15 +18,6 @@
  */
 package org.exobel.routerkeygen;
 
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.zip.ZipInputStream;
-
-import org.exobel.routerkeygen.algorithms.WiFiNetwork;
-
 import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -39,15 +30,19 @@ import android.os.AsyncTask.Status;
 import android.os.Build;
 import android.widget.Toast;
 
+import org.exobel.routerkeygen.algorithms.WiFiNetwork;
+
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.zip.ZipInputStream;
+
 public class WifiScanReceiver extends BroadcastReceiver {
 	final private OnScanListener[] scanListeners;
 	final private WifiManager wifi;
 	private KeygenMatcherTask task;
-
-	public interface OnScanListener {
-
-		public void onScanFinished(WiFiNetwork[] networks);
-	}
 
 	public WifiScanReceiver(WifiManager wifi, OnScanListener... scanListener) {
 		this.scanListeners = scanListener;
@@ -58,7 +53,7 @@ public class WifiScanReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		if (intent == null
 				|| !intent.getAction().equals(
-						WifiManager.SCAN_RESULTS_AVAILABLE_ACTION))
+				WifiManager.SCAN_RESULTS_AVAILABLE_ACTION))
 			return;
 		if (scanListeners == null)
 			return;
@@ -75,6 +70,7 @@ public class WifiScanReceiver extends BroadcastReceiver {
 				// Single scan
 				context.unregisterReceiver(this);
 			} catch (Exception e) {
+				e.printStackTrace();
 			}
 			if (task == null || task.getStatus() == Status.FINISHED) {
 				task = new KeygenMatcherTask(results, context);
@@ -87,6 +83,11 @@ public class WifiScanReceiver extends BroadcastReceiver {
 		} catch (SecurityException e) {
 			//Sometimes getScanResults triggers a SecurityException
 		}
+	}
+
+	public interface OnScanListener {
+
+		void onScanFinished(WiFiNetwork[] networks);
 	}
 
 	private class KeygenMatcherTask extends
@@ -112,7 +113,7 @@ public class WifiScanReceiver extends BroadcastReceiver {
 		@Override
 		protected WiFiNetwork[] doInBackground(Void... params) {
 
-			final Set<WiFiNetwork> set = new TreeSet<WiFiNetwork>();
+			final Set<WiFiNetwork> set = new TreeSet<>();
 			for (int i = 0; i < results.size() - 1; ++i)
 				for (int j = i + 1; j < results.size(); ++j)
 					if (results.get(i).SSID.equals(results.get(j).SSID))
@@ -125,11 +126,8 @@ public class WifiScanReceiver extends BroadcastReceiver {
 					magicInfo.close();
 				} catch (LinkageError e) {
 					misbuiltAPK = true;
-				} catch (NotFoundException e1) {
-					e1.printStackTrace();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+				} catch (NotFoundException | IOException e) {
+					e.printStackTrace();
 				}
 			}
 

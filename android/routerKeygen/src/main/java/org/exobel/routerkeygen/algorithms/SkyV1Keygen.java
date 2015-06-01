@@ -18,14 +18,14 @@
  */
 package org.exobel.routerkeygen.algorithms;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.List;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import org.exobel.routerkeygen.R;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 
 /*
@@ -37,48 +37,8 @@ import android.os.Parcelable;
  *  Use theses numbers, modulus 26, to find the correct letter
  *  and append to the key.
  */
-public class SkyV1Keygen extends Keygen{
+public class SkyV1Keygen extends Keygen {
 
-	private MessageDigest md;
-	public SkyV1Keygen(String ssid, String mac ) {
-		super(ssid, mac);
-	}
-
-	final static String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-
-	@Override
-	public List<String> getKeys() {
-		if ( getMacAddress().length() != 12 ) 
-		{
-			setErrorCode(R.string.msg_nomac);
-			return null;
-		}
-		try {
-			md = MessageDigest.getInstance("MD5");
-		} catch (NoSuchAlgorithmException e1) {
-			setErrorCode(R.string.msg_nomd5);
-			return null;
-		}
-		md.reset();
-		md.update(getMacAddress().getBytes());
-		byte [] hash = md.digest();
-		String key ="";
-		for ( int i = 1 ; i <= 15 ; i += 2 )
-		{
-			int index = hash[i] & 0xFF;
-			index %= 26;
-			key += ALPHABET.substring(index,index+1 );
-		}
-
-		addPassword(key);
-		return getResults();
-	}
-
-	private SkyV1Keygen(Parcel in) {
-		super(in);
-	}
-	
     public static final Parcelable.Creator<SkyV1Keygen> CREATOR = new Parcelable.Creator<SkyV1Keygen>() {
         public SkyV1Keygen createFromParcel(Parcel in) {
             return new SkyV1Keygen(in);
@@ -88,5 +48,42 @@ public class SkyV1Keygen extends Keygen{
             return new SkyV1Keygen[size];
         }
     };
-	
+    final static String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private MessageDigest md;
+
+
+    public SkyV1Keygen(String ssid, String mac) {
+        super(ssid, mac);
+    }
+
+    private SkyV1Keygen(Parcel in) {
+        super(in);
+    }
+
+    @Override
+    public List<String> getKeys() {
+        if (getMacAddress().length() != 12) {
+            setErrorCode(R.string.msg_nomac);
+            return null;
+        }
+        try {
+            md = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e1) {
+            setErrorCode(R.string.msg_nomd5);
+            return null;
+        }
+        md.reset();
+        md.update(getMacAddress().getBytes());
+        byte[] hash = md.digest();
+        String key = "";
+        for (int i = 1; i <= 15; i += 2) {
+            int index = hash[i] & 0xFF;
+            index %= 26;
+            key += ALPHABET.substring(index, index + 1);
+        }
+
+        addPassword(key);
+        return getResults();
+    }
+
 }

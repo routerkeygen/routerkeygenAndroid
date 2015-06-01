@@ -6,7 +6,7 @@
     android:layout_marginLeft="12dp"
     android:gravity="center_vertical"
     android:minHeight="?android:attr/listPreferredItemHeightSmall"
-    android:orientation="horizontal" >
+    android:orientation="horizontal">
 
     <!-- ChangeLog Row [Bullet Point] You have to use the id="chg_textbullet" -->
 

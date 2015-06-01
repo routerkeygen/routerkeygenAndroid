@@ -24,21 +24,21 @@ import java.io.InputStreamReader;
 
 public class OTEHuaweiConfigParser {
 
-	public static String[] parse(InputStream in) {
-		final String[] supportedOTE = new String[61440];
-		final BufferedReader bufferedInput = new BufferedReader(
-				new InputStreamReader(in));
-		int j = 0;
-		try {
-			String line;
-			while ((line = bufferedInput.readLine()) != null)
-				supportedOTE[j++] = line;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		if (j != supportedOTE.length)
-			throw new RuntimeException();
-		return supportedOTE;
-	}
+    public static String[] parse(InputStream in) {
+        final String[] supportedOTE = new String[61440];
+        final BufferedReader bufferedInput = new BufferedReader(
+                new InputStreamReader(in));
+        int j = 0;
+        try {
+            String line;
+            while ((line = bufferedInput.readLine()) != null)
+                supportedOTE[j++] = line;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (j != supportedOTE.length)
+            throw new RuntimeException();
+        return supportedOTE;
+    }
 
 }

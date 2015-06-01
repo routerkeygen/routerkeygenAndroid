@@ -27,34 +27,34 @@ import java.util.Map;
 
 public class TeleTuConfigParser {
 
-	public static Map<String, ArrayList<TeleTuMagicInfo>> parse(InputStream in) {
-		Map<String, ArrayList<TeleTuMagicInfo>> supportedTeleTu = new HashMap<String, ArrayList<TeleTuMagicInfo>>();
-		final BufferedReader bufferedInput = new BufferedReader(
-				new InputStreamReader(in));
-		try {
-			String line;
-			while ((line = bufferedInput.readLine()) != null) {
-				final String[] infos = line.split(" ");
-				final String name = infos[0];
-				ArrayList<TeleTuMagicInfo> supported = supportedTeleTu
-						.get(name);
-				if (supported == null) {
-					supported = new ArrayList<TeleTuMagicInfo>(5);
-					supportedTeleTu.put(name, supported);
-				}
-				int[] range = new int[2];
-				range[0] = Integer.parseInt(infos[1], 16); // from
-				range[1] = Integer.parseInt(infos[2], 16); // to
-				final String serial = infos[3];
-				final int base = Integer.parseInt(infos[4], 16);
-				final int divider = Integer.parseInt(infos[5]);
-				supported
-						.add(new TeleTuMagicInfo(range, serial, base, divider));
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return supportedTeleTu;
-	}
+    public static Map<String, ArrayList<TeleTuMagicInfo>> parse(InputStream in) {
+        Map<String, ArrayList<TeleTuMagicInfo>> supportedTeleTu = new HashMap<String, ArrayList<TeleTuMagicInfo>>();
+        final BufferedReader bufferedInput = new BufferedReader(
+                new InputStreamReader(in));
+        try {
+            String line;
+            while ((line = bufferedInput.readLine()) != null) {
+                final String[] infos = line.split(" ");
+                final String name = infos[0];
+                ArrayList<TeleTuMagicInfo> supported = supportedTeleTu
+                        .get(name);
+                if (supported == null) {
+                    supported = new ArrayList<TeleTuMagicInfo>(5);
+                    supportedTeleTu.put(name, supported);
+                }
+                int[] range = new int[2];
+                range[0] = Integer.parseInt(infos[1], 16); // from
+                range[1] = Integer.parseInt(infos[2], 16); // to
+                final String serial = infos[3];
+                final int base = Integer.parseInt(infos[4], 16);
+                final int divider = Integer.parseInt(infos[5]);
+                supported
+                        .add(new TeleTuMagicInfo(range, serial, base, divider));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return supportedTeleTu;
+    }
 
 }

@@ -1,67 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
 
-    <changelogversion versionName="3.14.1" changeDate="May 16,2015">
+    <changelogversion changeDate="Jun 1,2015" versionName="3.14.2">
+        <changelogtext>More delicious bug fixes</changelogtext>
+    </changelogversion>
+
+    <changelogversion changeDate="May 16,2015" versionName="3.14.1">
         <changelogtext>Bug fixes</changelogtext>
     </changelogversion>
-    
-    <changelogversion versionName="3.14.0" changeDate="May 15,2015">
+
+    <changelogversion changeDate="May 15,2015" versionName="3.14.0">
         <changelogtext>[b]New![/b] Meo Pirelli algorithm</changelogtext>
         <changelogtext>[b]New![/b] Belkin algorithm</changelogtext>
         <changelogtext>Extended Pirelli coverage</changelogtext>
     </changelogversion>
-    
-    
-    <changelogversion versionName="3.12.0" changeDate="May 5,2015">
+
+
+    <changelogversion changeDate="May 5,2015" versionName="3.12.0">
         <changelogtext>[b]New![/b] Arnet Pirelli algorithm</changelogtext>
         <changelogtext>[b]New![/b] Sitecom algorithm</changelogtext>
         <changelogtext>[b]New![/b] Tplink algorithm</changelogtext>
         <changelogtext>Fixed Alice Italy algorithm</changelogtext>
     </changelogversion>
-    
-    
-    <changelogversion versionName="3.9.1" changeDate="Sep 6,2014">
+
+
+    <changelogversion changeDate="Sep 6,2014" versionName="3.9.1">
         <changelogtext>Restored the old update dialog</changelogtext>
         <changelogtext>Italian translation fixes</changelogtext>
     </changelogversion>
-    
-    <changelogversion versionName="3.9.0" changeDate="Sep 6,2014">
+
+    <changelogversion changeDate="Sep 6,2014" versionName="3.9.0">
         <changelogtext>Move to the Github repository</changelogtext>
         <changelogtext>Lots of bug fixes</changelogtext>
     </changelogversion>
-    
-    <changelogversion versionName="3.8.0" changeDate="Nov 19,2013">
+
+    <changelogversion changeDate="Nov 19,2013" versionName="3.8.0">
         <changelogtext>Added new Comtrend, Intercable and CONN variations.</changelogtext>
-        <changelogtext>Fixed bugs in the PBS support and odwngrade it because it is very rare.</changelogtext>
+        <changelogtext>Fixed bugs in the PBS support and odwngrade it because it is very rare.
+        </changelogtext>
         <changelogtext>Lots of bug fixes</changelogtext>
     </changelogversion>
-    
-    <changelogversion versionName="3.7.0" changeDate="Aug 18,2013">
-        <changelogtext>[b]New![/b] Some support for Alice in Germany and Speedport500</changelogtext>
-        <changelogtext>[b]New![/b] Multiple key generators can be used now if there are more than one matches.</changelogtext>
+
+    <changelogversion changeDate="Aug 18,2013" versionName="3.7.0">
+        <changelogtext>[b]New![/b] Some support for Alice in Germany and Speedport500
+        </changelogtext>
+        <changelogtext>[b]New![/b] Multiple key generators can be used now if there are more than
+            one matches.
+        </changelogtext>
     </changelogversion>
-    
-    <changelogversion versionName="3.6.2" changeDate="Jul 16,2013">
-        <changelogtext>Bug fixes</changelogtext>
-    </changelogversion>
-    
-    <changelogversion versionName="3.6.1" changeDate="Jul 15,2013">
+
+    <changelogversion changeDate="Jul 16,2013" versionName="3.6.2">
         <changelogtext>Bug fixes</changelogtext>
     </changelogversion>
 
-    <changelogversion versionName="3.6.0" changeDate="Jul 13,2013">
+    <changelogversion changeDate="Jul 15,2013" versionName="3.6.1">
+        <changelogtext>Bug fixes</changelogtext>
+    </changelogversion>
+
+    <changelogversion changeDate="Jul 13,2013" versionName="3.6.0">
         <changelogtext>[b]New![/b] HOLO UI</changelogtext>
         <changelogtext>[b]New![/b] Automatic update checker.</changelogtext>
-        <changelogtext>Bug fixes ( including a nasty battery destroyer bug when auto scanning was enabled )</changelogtext>
+        <changelogtext>Bug fixes ( including a nasty battery destroyer bug when auto scanning was
+            enabled )
+        </changelogtext>
     </changelogversion>
 
-    <changelogversion versionName="3.5.1" changeDate="Apr 14,2013">
+    <changelogversion changeDate="Apr 14,2013" versionName="3.5.1">
         <changelogtext>Added more possible Huawei routers (better support in Mexico)</changelogtext>
         <changelogtext>Bug fixes</changelogtext>
     </changelogversion>
 
-    <changelogversion versionName="3.5.0" changeDate="Mar 25,2013">
-        <changelogtext>[b]New![/b] Added OTE variations for Huawei routers and others</changelogtext>
+    <changelogversion changeDate="Mar 25,2013" versionName="3.5.0">
+        <changelogtext>[b]New![/b] Added OTE variations for Huawei routers and others
+        </changelogtext>
         <changelogtext>[b]New![/b] Added color (yellow) that means unlikely support</changelogtext>
         <changelogtext>Improve start up times and memory consumption</changelogtext>
     </changelogversion>

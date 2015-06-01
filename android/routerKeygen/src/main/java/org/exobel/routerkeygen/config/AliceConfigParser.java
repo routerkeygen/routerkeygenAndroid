@@ -27,31 +27,31 @@ import java.util.Map;
 
 public class AliceConfigParser {
 
-	public static Map<String, ArrayList<AliceMagicInfo>> parse(InputStream in) {
-		Map<String, ArrayList<AliceMagicInfo>> supportedAlices = new HashMap<String, ArrayList<AliceMagicInfo>>();
-		final BufferedReader bufferedInput = new BufferedReader(
-				new InputStreamReader(in));
-		try {
-			String line;
-			while ((line = bufferedInput.readLine()) != null) {
-				final String[] infos = line.split(",");
-				final String name = infos[0];
-				ArrayList<AliceMagicInfo> supported = supportedAlices.get(name);
-				if (supported == null) {
-					supported = new ArrayList<AliceMagicInfo>(5);
-					supportedAlices.put(name, supported);
-				}
-				final String serial = infos[1];
-				int[] magic = new int[2];
-				magic[0] = Integer.parseInt(infos[2]); // k
-				magic[1] = Integer.parseInt(infos[3]); // q
-				final String mac = infos[4];
-				supported.add(new AliceMagicInfo(name, magic, serial, mac));
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return supportedAlices;
-	}
+    public static Map<String, ArrayList<AliceMagicInfo>> parse(InputStream in) {
+        Map<String, ArrayList<AliceMagicInfo>> supportedAlices = new HashMap<String, ArrayList<AliceMagicInfo>>();
+        final BufferedReader bufferedInput = new BufferedReader(
+                new InputStreamReader(in));
+        try {
+            String line;
+            while ((line = bufferedInput.readLine()) != null) {
+                final String[] infos = line.split(",");
+                final String name = infos[0];
+                ArrayList<AliceMagicInfo> supported = supportedAlices.get(name);
+                if (supported == null) {
+                    supported = new ArrayList<AliceMagicInfo>(5);
+                    supportedAlices.put(name, supported);
+                }
+                final String serial = infos[1];
+                int[] magic = new int[2];
+                magic[0] = Integer.parseInt(infos[2]); // k
+                magic[1] = Integer.parseInt(infos[3]); // q
+                final String mac = infos[4];
+                supported.add(new AliceMagicInfo(name, magic, serial, mac));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return supportedAlices;
+    }
 
 }

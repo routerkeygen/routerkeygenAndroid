@@ -18,64 +18,17 @@
  */
 package org.exobel.routerkeygen.algorithms;
 
-import java.util.List;
-import java.util.Locale;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import org.exobel.routerkeygen.R;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import java.util.List;
+import java.util.Locale;
 
 public class VerizonKeygen extends Keygen {
 
 
-	public VerizonKeygen(String ssid, String mac ) {
-		super(ssid, mac);
-	}
-
-	@Override
-	public List<String> getKeys() {
-		if ( getSsidName().length() != 5 )
-		{
-			setErrorCode(R.string.msg_shortessid5);
-			return null;
-		}
-		char [] inverse = new char[5];
-		inverse[0] = getSsidName().charAt(4);
-		inverse[1] = getSsidName().charAt(3);
-        inverse[2] = getSsidName().charAt(2);
-		inverse[3] = getSsidName().charAt(1);
-		inverse[4] = getSsidName().charAt(0);
-		
-		int result = 0;
-		try{
-			result = Integer.valueOf(String.copyValueOf(inverse), 36);
-		}catch(NumberFormatException e){
-			setErrorCode(R.string.msg_err_verizon_ssid);
-			return null;
-		}
-		
-		String ssidKey = Integer.toHexString(result).toUpperCase(Locale.getDefault());
-		while ( ssidKey.length() < 6 )
-			ssidKey = "0" + ssidKey;
-	    if ( !getMacAddress().equals(""))
-	    {
-	    	addPassword(getMacAddress().substring(3,5) + getMacAddress().substring(6,8) + 
-	    					ssidKey);
-	    }
-	    else	
-	    {
-	    	addPassword("1801" + ssidKey);
-	    	addPassword("1F90" + ssidKey);
-	    }
-		return getResults();
-	}
-
-
-	private VerizonKeygen(Parcel in) {
-		super(in);
-	}
-	
     public static final Parcelable.Creator<VerizonKeygen> CREATOR = new Parcelable.Creator<VerizonKeygen>() {
         public VerizonKeygen createFromParcel(Parcel in) {
             return new VerizonKeygen(in);
@@ -85,4 +38,47 @@ public class VerizonKeygen extends Keygen {
             return new VerizonKeygen[size];
         }
     };
+
+    public VerizonKeygen(String ssid, String mac) {
+        super(ssid, mac);
+    }
+
+
+    private VerizonKeygen(Parcel in) {
+        super(in);
+    }
+
+    @Override
+    public List<String> getKeys() {
+        if (getSsidName().length() != 5) {
+            setErrorCode(R.string.msg_shortessid5);
+            return null;
+        }
+        char[] inverse = new char[5];
+        inverse[0] = getSsidName().charAt(4);
+        inverse[1] = getSsidName().charAt(3);
+        inverse[2] = getSsidName().charAt(2);
+        inverse[3] = getSsidName().charAt(1);
+        inverse[4] = getSsidName().charAt(0);
+
+        int result = 0;
+        try {
+            result = Integer.valueOf(String.copyValueOf(inverse), 36);
+        } catch (NumberFormatException e) {
+            setErrorCode(R.string.msg_err_verizon_ssid);
+            return null;
+        }
+
+        String ssidKey = Integer.toHexString(result).toUpperCase(Locale.getDefault());
+        while (ssidKey.length() < 6)
+            ssidKey = "0" + ssidKey;
+        if (!getMacAddress().equals("")) {
+            addPassword(getMacAddress().substring(3, 5) + getMacAddress().substring(6, 8) +
+                    ssidKey);
+        } else {
+            addPassword("1801" + ssidKey);
+            addPassword("1F90" + ssidKey);
+        }
+        return getResults();
+    }
 }

@@ -16,18 +16,19 @@
 
 package com.hb.views;
 
-import org.exobel.routerkeygen.BuildConfig;
-
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.graphics.Canvas;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SectionIndexer;
+
+import org.exobel.routerkeygen.BuildConfig;
 
 /**
  * ListView capable to pin views at its top while the rest is still scrolled.
@@ -36,52 +37,52 @@ public class PinnedSectionListView extends ListView {
 
     //-- inner classes
 
-	/** List adapter to be implemented for being used with PinnedSectionListView adapter. */
-	public static interface PinnedSectionListAdapter extends ListAdapter {
-		/** This method shall return 'true' if views of given type has to be pinned. */
-		boolean isItemViewTypePinned(int viewType);
-	}
-
-	/** Wrapper class for pinned section view and its position in the list. */
-	static class PinnedViewShadow {
-		public View view;
-		public int position;
-	}
+	/**
+	 * Shadow for being recycled, can be null.
+	 */
+	PinnedViewShadow mRecycleShadow;
+	/**
+	 * shadow instance with a pinned view, can be null.
+	 */
+	PinnedViewShadow mPinnedShadow;
 
 	//-- class fields
-
-	/** Default change observer. */
+	/**
+	 * Default change observer.
+	 */
 	private final DataSetObserver mDataSetObserver = new DataSetObserver() {
-	    @Override public void onChanged() {
-	        destroyPinnedShadow();
-	    };
-	    @Override public void onInvalidated() {
-	        destroyPinnedShadow();
-	    }
-    };
+		@Override
+		public void onChanged() {
+			destroyPinnedShadow();
+		}
 
-    /** Delegating listener, can be null. */
-    private OnScrollListener mDelegateOnScrollListener;
-
-    /** Shadow for being recycled, can be null. */
-    PinnedViewShadow mRecycleShadow;
-
-    /** shadow instance with a pinned view, can be null. */
-    PinnedViewShadow mPinnedShadow;
-
-    /** Pinned view Y-translation. We use it to stick pinned view to the next section. */
-    int mTranslateY;
-
-	/** Scroll listener which does the magic */
+		@Override
+		public void onInvalidated() {
+			destroyPinnedShadow();
+		}
+	};
+	/**
+	 * Pinned view Y-translation. We use it to stick pinned view to the next section.
+	 */
+	int mTranslateY;
+	/**
+	 * Delegating listener, can be null.
+	 */
+	private OnScrollListener mDelegateOnScrollListener;
+	/**
+	 * Scroll listener which does the magic
+	 */
 	private final OnScrollListener mOnScrollListener = new OnScrollListener() {
 
-		@Override public void onScrollStateChanged(AbsListView view, int scrollState) {
+		@Override
+		public void onScrollStateChanged(AbsListView view, int scrollState) {
 			if (mDelegateOnScrollListener != null) { // delegate
 				mDelegateOnScrollListener.onScrollStateChanged(view, scrollState);
 			}
 		}
 
-		@Override public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+		@Override
+		public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 
 			if (mDelegateOnScrollListener != null) { // delegate
 				mDelegateOnScrollListener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
@@ -155,8 +156,6 @@ public class PinnedSectionListView extends ListView {
 		}
 	};
 
-	//-- class methods
-
     public PinnedSectionListView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initView();
@@ -164,10 +163,14 @@ public class PinnedSectionListView extends ListView {
 
     public PinnedSectionListView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        initView();
-    }
+		initView();
+	}
 
-	/** Create shadow wrapper with a pinned view for a view at given position */
+	//-- class methods
+
+	/**
+	 * Create shadow wrapper with a pinned view for a view at given position
+	 */
 	private void createPinnedShadow(int position) {
 
 		// try to recycle shadow
@@ -211,7 +214,9 @@ public class PinnedSectionListView extends ListView {
 		mPinnedShadow = pinnedShadow;
 	}
 
-	/** Destroy shadow wrapper for currently pinned view */
+	/**
+	 * Destroy shadow wrapper for currently pinned view
+	 */
 	private void destroyPinnedShadow() {
 		// store shadow for being recycled later
 		mRecycleShadow = mPinnedShadow;
@@ -243,7 +248,7 @@ public class PinnedSectionListView extends ListView {
 		}
 
 		// try slow way by looking through to the next section item above
-		for (int position=fromPosition; position>=0; position--) {
+		for (int position = fromPosition; position >= 0; position--) {
 			int viewType = adapter.getItemViewType(position);
 			if (adapter.isItemViewTypePinned(viewType)) return position;
 		}
@@ -269,7 +274,8 @@ public class PinnedSectionListView extends ListView {
 
 		// restore pinned view after configuration change
 		post(new Runnable() {
-			@Override public void run() {
+			@Override
+			public void run() {
 				ListAdapter adapter = getAdapter();
 				if (adapter == null) return; // nothing to restore as adapter is still null
 
@@ -294,7 +300,7 @@ public class PinnedSectionListView extends ListView {
 	@Override
 	public void setAdapter(ListAdapter adapter) {
 
-	    // assert adapter in debug mode
+		// assert adapter in debug mode
 		if (BuildConfig.DEBUG && adapter != null) {
 			if (!(adapter instanceof PinnedSectionListAdapter))
 				throw new IllegalArgumentException("Does your adapter implement PinnedSectionListAdapter?");
@@ -314,7 +320,7 @@ public class PinnedSectionListView extends ListView {
 	}
 
 	@Override
-	protected void dispatchDraw(Canvas canvas) {
+	protected void dispatchDraw(@NonNull Canvas canvas) {
 		super.dispatchDraw(canvas);
 
 		if (mPinnedShadow != null) {
@@ -331,5 +337,23 @@ public class PinnedSectionListView extends ListView {
 			drawChild(canvas, mPinnedShadow.view, getDrawingTime());
 			canvas.restore();
 		}
+	}
+
+	/**
+	 * List adapter to be implemented for being used with PinnedSectionListView adapter.
+	 */
+	public interface PinnedSectionListAdapter extends ListAdapter {
+		/**
+		 * This method shall return 'true' if views of given type has to be pinned.
+		 */
+		boolean isItemViewTypePinned(int viewType);
+	}
+
+	/**
+	 * Wrapper class for pinned section view and its position in the list.
+	 */
+	static class PinnedViewShadow {
+		public View view;
+		public int position;
 	}
 }

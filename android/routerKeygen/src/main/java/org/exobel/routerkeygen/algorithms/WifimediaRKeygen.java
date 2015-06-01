@@ -18,54 +18,53 @@
  */
 package org.exobel.routerkeygen.algorithms;
 
-import java.util.List;
-import java.util.Locale;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import org.exobel.routerkeygen.R;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Simple algorithm for "wifimedia_R-XXXX" seen here:
  * "http://foro.seguridadwireless.net/aplicaciones/(r-wlanxdecrypter-0-9)-generador-de-diccionarios-para-claves-por-defecto-de-r/msg264486/#msg264486"
- * 
+ *
  * @author Rui Araujo
- * 
  */
 public class WifimediaRKeygen extends Keygen {
 
-	public WifimediaRKeygen(String ssid, String mac) {
-		super(ssid, mac);
-	}
+    public static final Parcelable.Creator<WifimediaRKeygen> CREATOR = new Parcelable.Creator<WifimediaRKeygen>() {
+        public WifimediaRKeygen createFromParcel(Parcel in) {
+            return new WifimediaRKeygen(in);
+        }
 
-	@Override
-	public List<String> getKeys() {
-		final String mac = getMacAddress();
-		if (mac.length() != 12) {
-			setErrorCode(R.string.msg_errpirelli);
-			return null;
-		}
-		final String possibleKey = mac.substring(0, 11).toLowerCase(
-				Locale.getDefault())
-				+ "0";
-		addPassword(possibleKey);
-		addPassword(possibleKey.toUpperCase(Locale.getDefault()));
-		return getResults();
-	}
+        public WifimediaRKeygen[] newArray(int size) {
+            return new WifimediaRKeygen[size];
+        }
+    };
 
-	private WifimediaRKeygen(Parcel in) {
-		super(in);
-	}
+    public WifimediaRKeygen(String ssid, String mac) {
+        super(ssid, mac);
+    }
 
-	public static final Parcelable.Creator<WifimediaRKeygen> CREATOR = new Parcelable.Creator<WifimediaRKeygen>() {
-		public WifimediaRKeygen createFromParcel(Parcel in) {
-			return new WifimediaRKeygen(in);
-		}
+    private WifimediaRKeygen(Parcel in) {
+        super(in);
+    }
 
-		public WifimediaRKeygen[] newArray(int size) {
-			return new WifimediaRKeygen[size];
-		}
-	};
+    @Override
+    public List<String> getKeys() {
+        final String mac = getMacAddress();
+        if (mac.length() != 12) {
+            setErrorCode(R.string.msg_errpirelli);
+            return null;
+        }
+        final String possibleKey = mac.substring(0, 11).toLowerCase(
+                Locale.getDefault())
+                + "0";
+        addPassword(possibleKey);
+        addPassword(possibleKey.toUpperCase(Locale.getDefault()));
+        return getResults();
+    }
 
 }

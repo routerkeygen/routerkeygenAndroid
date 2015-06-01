@@ -18,54 +18,53 @@
  */
 package org.exobel.routerkeygen.algorithms;
 
-import java.util.List;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import org.exobel.routerkeygen.R;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import java.util.List;
 
 /**
  * The algortihm is described on the link below
  * Link:http://www.wardriving-forum.
  * de/wiki/Standardpassw%C3%B6rter#Diverse_Speedport-Modelle
- * 
+ *
  * @author Rui Araújo
- * 
  */
 public class Speedport500Keygen extends Keygen {
 
-	public Speedport500Keygen(String ssid, String mac) {
-		super(ssid, mac);
-	}
+    public static final Parcelable.Creator<Speedport500Keygen> CREATOR = new Parcelable.Creator<Speedport500Keygen>() {
+        public Speedport500Keygen createFromParcel(Parcel in) {
+            return new Speedport500Keygen(in);
+        }
 
-	@Override
-	public List<String> getKeys() {
-		final String mac = getMacAddress();
-		if (mac.length() != 12) {
-			setErrorCode(R.string.msg_errpirelli);
-			return null;
-		}
-		final String ssid = getSsidName();
-		final String block = ssid.charAt(10) + mac.substring(9);
-		for (int x = 0; x < 10; ++x)
-			for (int y = 0; y < 10; ++y)
-				for (int z = 0; z < 10; ++z)
-					addPassword("SP-" + ssid.charAt(9) + z + block + x + y + z);
-		return getResults();
-	}
+        public Speedport500Keygen[] newArray(int size) {
+            return new Speedport500Keygen[size];
+        }
+    };
 
-	private Speedport500Keygen(Parcel in) {
-		super(in);
-	}
+    public Speedport500Keygen(String ssid, String mac) {
+        super(ssid, mac);
+    }
 
-	public static final Parcelable.Creator<Speedport500Keygen> CREATOR = new Parcelable.Creator<Speedport500Keygen>() {
-		public Speedport500Keygen createFromParcel(Parcel in) {
-			return new Speedport500Keygen(in);
-		}
+    private Speedport500Keygen(Parcel in) {
+        super(in);
+    }
 
-		public Speedport500Keygen[] newArray(int size) {
-			return new Speedport500Keygen[size];
-		}
-	};
+    @Override
+    public List<String> getKeys() {
+        final String mac = getMacAddress();
+        if (mac.length() != 12) {
+            setErrorCode(R.string.msg_errpirelli);
+            return null;
+        }
+        final String ssid = getSsidName();
+        final String block = ssid.charAt(10) + mac.substring(9);
+        for (int x = 0; x < 10; ++x)
+            for (int y = 0; y < 10; ++y)
+                for (int z = 0; z < 10; ++z)
+                    addPassword("SP-" + ssid.charAt(9) + z + block + x + y + z);
+        return getResults();
+    }
 }

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
    Copyright 2013 Rui Araújo, Luís Fonseca
   
    This file is part of Router Keygen.
@@ -15,9 +14,10 @@
    GNU General Public License for more details.
    
    You should have received a copy of the GNU General Public License
-   along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
+   along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
+
 -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
     <!-- Main file and reference for the others. -->
     <!-- MISC STRINGS -->
@@ -110,7 +110,7 @@
     <string name="pref_hinton_analytics">Usage and crashes are being tracked anonymously</string>
     <string name="pref_hintoff_analytics">Usage and crashes are not being tracked</string>
     <string name="pref_changelog">Changelog</string>
-    
+
     <!-- ERROR MESSAGE STRINGS -->
     <string name="msg_unspported">This network is not supported!</string>
     <string name="msg_nowifidetected">No WIFI networks detected!</string>
@@ -177,7 +177,7 @@
     -->
     <string name="changelog_row_bulletpoint" translatable="false">\u2022"</string>
     <!-- AUTOCOMPLETE SUPPORT -->
-    <string-array name="supported_routers" translatable="false" >
+    <string-array name="supported_routers" translatable="false">
         <item>Alice-</item>
         <item>Arcor-</item>
         <item>AXTEL-</item>

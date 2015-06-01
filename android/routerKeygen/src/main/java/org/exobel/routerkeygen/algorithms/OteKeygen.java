@@ -18,11 +18,11 @@
  */
 package org.exobel.routerkeygen.algorithms;
 
-import java.util.List;
-import java.util.Locale;
-
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import java.util.List;
+import java.util.Locale;
 
 /*
  * This is not actual an algorithm as
@@ -31,38 +31,38 @@ import android.os.Parcelable;
  */
 public class OteKeygen extends Keygen {
 
-	public OteKeygen(String ssid, String mac) {
-		super(ssid, mac);
-	}
+    public static final Parcelable.Creator<OteKeygen> CREATOR = new Parcelable.Creator<OteKeygen>() {
+        public OteKeygen createFromParcel(Parcel in) {
+            return new OteKeygen(in);
+        }
 
-	@Override
-	public List<String> getKeys() {
-		if (getMacAddress().length() == 12) {
-			addPassword(getMacAddress().toLowerCase(Locale.getDefault()));
-		} else {
-			final String ssidIdentifier = getSsidName().substring(getSsidName().length()-4);
-			addPassword("c87b5b" + ssidIdentifier);
-			addPassword("fcc897" + ssidIdentifier);
-			addPassword("681ab2" + ssidIdentifier);
-			addPassword("b075d5" + ssidIdentifier);
-			addPassword("384608" + ssidIdentifier);
-		}
-		return getResults();
-	}
+        public OteKeygen[] newArray(int size) {
+            return new OteKeygen[size];
+        }
+    };
 
-	private OteKeygen(Parcel in) {
-		super(in);
+    public OteKeygen(String ssid, String mac) {
+        super(ssid, mac);
+    }
 
-	}
+    private OteKeygen(Parcel in) {
+        super(in);
 
-	public static final Parcelable.Creator<OteKeygen> CREATOR = new Parcelable.Creator<OteKeygen>() {
-		public OteKeygen createFromParcel(Parcel in) {
-			return new OteKeygen(in);
-		}
+    }
 
-		public OteKeygen[] newArray(int size) {
-			return new OteKeygen[size];
-		}
-	};
+    @Override
+    public List<String> getKeys() {
+        if (getMacAddress().length() == 12) {
+            addPassword(getMacAddress().toLowerCase(Locale.getDefault()));
+        } else {
+            final String ssidIdentifier = getSsidName().substring(getSsidName().length() - 4);
+            addPassword("c87b5b" + ssidIdentifier);
+            addPassword("fcc897" + ssidIdentifier);
+            addPassword("681ab2" + ssidIdentifier);
+            addPassword("b075d5" + ssidIdentifier);
+            addPassword("384608" + ssidIdentifier);
+        }
+        return getResults();
+    }
 
 }

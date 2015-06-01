@@ -1,18 +1,20 @@
-/*******************************************************************************
+/**
+ * ****************************************************************************
  * Copyright (c) 2013 Gabriele Mariotti.
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p/>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- ******************************************************************************/
+ * ****************************************************************************
+ */
 package it.gmariotti.changelibs.library.internal;
 
 /**
@@ -22,40 +24,40 @@ package it.gmariotti.changelibs.library.internal;
  */
 public class ChangeLogRow {
 
-   /**
-    * Flag to indicate a header row
-    */
-   protected boolean header;
+    /**
+     * Flag to indicate a header row
+     */
+    protected boolean header;
 
-   /**
-    *  This corresponds to the android:versionName attribute in your manifest file. It is a required data
-    */
-   protected String versionName;
+    /**
+     * This corresponds to the android:versionName attribute in your manifest file. It is a required data
+     */
+    protected String versionName;
 
-   /**
-    * Change data. It is optional
-    */
-   protected String changeDate;
+    /**
+     * Change data. It is optional
+     */
+    protected String changeDate;
 
-   //-------------------------------------------------------------------------------------------------------------------
+    //-------------------------------------------------------------------------------------------------------------------
 
-   /**
-    *  Use a bulleted list. It overrides general flag. It is optional
-    */
-   private boolean bulletedList;
+    /**
+     * Use a bulleted list. It overrides general flag. It is optional
+     */
+    private boolean bulletedList;
 
-   /**
-    *  Special marker in change text. It is optional
-    *  TODO: not yet implemented
-    */
-   private String changeTextTitle;
+    /**
+     * Special marker in change text. It is optional
+     * TODO: not yet implemented
+     */
+    private String changeTextTitle;
 
-   /**
-    * Contains the actual text that will be displayed in your change log. It is required
-    */
-   private String changeText;
+    /**
+     * Contains the actual text that will be displayed in your change log. It is required
+     */
+    private String changeText;
 
-   //-------------------------------------------------------------------------------------------------------------------
+    //-------------------------------------------------------------------------------------------------------------------
 
     /**
      * Replace special tags [b] [i]
@@ -63,22 +65,22 @@ public class ChangeLogRow {
      * @param changeLogText
      */
     public void parseChangeText(String changeLogText) {
-        if (changeLogText!=null){
-            changeLogText=changeLogText.replaceAll("\\[", "<").replaceAll("\\]",">");
+        if (changeLogText != null) {
+            changeLogText = changeLogText.replaceAll("\\[", "<").replaceAll("\\]", ">");
         }
         setChangeText(changeLogText);
     }
 
     @Override
     public String toString() {
-        StringBuilder sb=new StringBuilder();
-        sb.append("header="+header);
+        StringBuilder sb = new StringBuilder();
+        sb.append("header=" + header);
         sb.append(",");
-        sb.append("versionName="+versionName);
+        sb.append("versionName=" + versionName);
         sb.append(",");
-        sb.append("bulletedList="+bulletedList);
+        sb.append("bulletedList=" + bulletedList);
         sb.append(",");
-        sb.append("changeText="+changeText);
+        sb.append("changeText=" + changeText);
         //sb.append(",");
         //sb.append("changeTextTitle="+changeTextTitle);
         return sb.toString();
@@ -87,7 +89,7 @@ public class ChangeLogRow {
     //-------------------------------------------------------------------------------------------------------------------
 
 
-   public boolean isHeader() {
+    public boolean isHeader() {
         return header;
     }
 

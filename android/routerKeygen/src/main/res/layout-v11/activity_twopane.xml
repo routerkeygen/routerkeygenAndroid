@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".NetworksListActivity" >
+    tools:context=".NetworksListActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,7 +12,7 @@
         android:baselineAligned="false"
         android:divider="?android:attr/dividerHorizontal"
         android:orientation="horizontal"
-        android:showDividers="middle" >
+        android:showDividers="middle">
 
         <fragment
             android:id="@+id/frag_networks_list"
@@ -29,7 +29,7 @@
             android:layout_weight="50" />
     </LinearLayout>
 
-    
+
     <RelativeLayout
         android:id="@+id/adBannerRelativeLayout"
         android:layout_width="fill_parent"

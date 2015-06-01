@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- 
+<?xml version="1.0" encoding="utf-8"?><!--
    Copyright 2012 Rui Araújo, Luís Fonseca
   
    This file is part of Router Keygen.
@@ -17,65 +16,67 @@
    You should have received a copy of the GNU General Public License
    along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
    -->
-<TabHost android:id="@+id/tabhost"
-		xmlns:android="http://schemas.android.com/apk/res/android"
-	    android:layout_width="fill_parent"
-	    android:layout_height="fill_parent">
-	    <LinearLayout
-	        android:orientation="vertical"
-	        android:layout_width="fill_parent"
-	        android:layout_height="fill_parent"
-	        android:padding="5dp">
-	        <TabWidget
-	            android:id="@android:id/tabs"
-	            android:layout_width="fill_parent"
-	            android:layout_height="wrap_content" />
-	        <FrameLayout
-	            android:id="@android:id/tabcontent"
-	            android:layout_width="fill_parent"
-	            android:layout_height="fill_parent"
-	            android:padding="5dp" >
-	            <ScrollView
-		            android:id="@+id/text_about_scroll"
-	                android:layout_width="fill_parent" 
-	                android:layout_height="fill_parent" 
-	                >
-		            <TextView
-				        android:id="@+id/text_about"
-				        android:layout_width="fill_parent"
-				        android:layout_height="wrap_content" 
-				        android:textSize="17sp"
-				   		android:text="@string/pref_about_desc"
-						/>
-				</ScrollView> 
-				<ScrollView
-	               	android:id="@+id/about_credits_scroll"
-	                android:layout_width="fill_parent" 
-	                android:layout_height="fill_parent"  
-	                >
-		            <TextView
-		               	android:id="@+id/about_credits"
-				        android:layout_width="fill_parent"
-				        android:layout_height="wrap_content" 
-				        android:textSize="17sp"
-				   		android:text="@string/dialog_about_credits_desc"
-					/>
-				</ScrollView> 
-				
-				<ScrollView
-	               	android:id="@+id/about_license_scroll"
-	                android:layout_width="fill_parent" 
-	                android:layout_height="fill_parent" 
-	                >
-		            <TextView
-		               	android:id="@+id/about_license"
-				        android:layout_width="fill_parent"
-				        android:layout_height="wrap_content" 
-				        android:textSize="17sp"
-				   		android:text="@string/dialog_about_license_desc"
-					/>
-				</ScrollView> 	
-		</FrameLayout>
-	    </LinearLayout>
+<TabHost xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tabhost"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:padding="5dp">
+
+        <TabWidget
+            android:id="@android:id/tabs"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+
+        <FrameLayout
+            android:id="@android:id/tabcontent"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:padding="5dp">
+
+            <ScrollView
+                android:id="@+id/text_about_scroll"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+                <TextView
+                    android:id="@+id/text_about"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/pref_about_desc"
+                    android:textSize="17sp" />
+            </ScrollView>
+
+            <ScrollView
+                android:id="@+id/about_credits_scroll"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+                <TextView
+                    android:id="@+id/about_credits"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/dialog_about_credits_desc"
+                    android:textSize="17sp" />
+            </ScrollView>
+
+            <ScrollView
+                android:id="@+id/about_license_scroll"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+                <TextView
+                    android:id="@+id/about_license"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/dialog_about_license_desc"
+                    android:textSize="17sp" />
+            </ScrollView>
+        </FrameLayout>
+    </LinearLayout>
 </TabHost>
 	

@@ -18,16 +18,16 @@
  */
 package org.exobel.routerkeygen.algorithms;
 
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.List;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.utils.StringUtils;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 /*
  * This is the algorithm to generate the WPA passphrase 
@@ -37,35 +37,6 @@ import android.os.Parcelable;
  */
 public class TecomKeygen extends Keygen {
 
-	private MessageDigest md;
-	
-	public TecomKeygen(String ssid, String mac ) {
-		super(ssid, mac);
-	}
-
-	@Override
-	public List<String> getKeys() {
-		try {
-			md = MessageDigest.getInstance("SHA1");
-		} catch (NoSuchAlgorithmException e1) {
-			setErrorCode(R.string.msg_nosha1);
-			return null;
-		}
-		md.reset();
-		md.update(getSsidName().getBytes());
-		byte [] hash = md.digest();
-		try {
-			addPassword(StringUtils.getHexString(hash).substring(0,26));
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		return getResults();
-	}
-
-	private TecomKeygen(Parcel in) {
-		super(in);
-	}
-	
     public static final Parcelable.Creator<TecomKeygen> CREATOR = new Parcelable.Creator<TecomKeygen>() {
         public TecomKeygen createFromParcel(Parcel in) {
             return new TecomKeygen(in);
@@ -75,4 +46,32 @@ public class TecomKeygen extends Keygen {
             return new TecomKeygen[size];
         }
     };
+    private MessageDigest md;
+
+    public TecomKeygen(String ssid, String mac) {
+        super(ssid, mac);
+    }
+
+    private TecomKeygen(Parcel in) {
+        super(in);
+    }
+
+    @Override
+    public List<String> getKeys() {
+        try {
+            md = MessageDigest.getInstance("SHA1");
+        } catch (NoSuchAlgorithmException e1) {
+            setErrorCode(R.string.msg_nosha1);
+            return null;
+        }
+        md.reset();
+        md.update(getSsidName().getBytes());
+        byte[] hash = md.digest();
+        try {
+            addPassword(StringUtils.getHexString(hash).substring(0, 26));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return getResults();
+    }
 }

@@ -18,84 +18,83 @@
  */
 package org.exobel.routerkeygen.algorithms;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import org.exobel.routerkeygen.Base64;
+import org.exobel.routerkeygen.R;
+import org.exobel.routerkeygen.utils.StringUtils;
+
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Locale;
 
-import org.exobel.routerkeygen.Base64;
-import org.exobel.routerkeygen.R;
-import org.exobel.routerkeygen.utils.StringUtils;
-
-import android.os.Parcel;
-import android.os.Parcelable;
-
 /**
  * The algortihm is described on the link below
  * Link:http://www.wardriving-forum.de/wiki/Standardpassw%C3%B6rter#ALICE
- * 
+ *
  * @author Rui Araújo
- * 
  */
 public class AliceGermanyKeygen extends Keygen {
 
-	public AliceGermanyKeygen(String ssid, String mac) {
-		super(ssid, mac);
-	}
+    public static final Parcelable.Creator<AliceGermanyKeygen> CREATOR = new Parcelable.Creator<AliceGermanyKeygen>() {
+        public AliceGermanyKeygen createFromParcel(Parcel in) {
+            return new AliceGermanyKeygen(in);
+        }
 
-	@Override
-	public int getSupportState() {
-		if (getSsidName().matches("ALICE-WLAN[0-9a-fA-F]{2}"))
-			return SUPPORTED;
-		return UNLIKELY_SUPPORTED;
-	}
+        public AliceGermanyKeygen[] newArray(int size) {
+            return new AliceGermanyKeygen[size];
+        }
+    };
 
-	@Override
-	public List<String> getKeys() {
-		MessageDigest md;
-		try {
-			md = MessageDigest.getInstance("MD5");
-		} catch (NoSuchAlgorithmException e1) {
-			setErrorCode(R.string.msg_nomd5);
-			return null;
-		}
-		final String mac = getMacAddress();
-		if (mac.length() != 12) {
-			setErrorCode(R.string.msg_errpirelli);
-			return null;
-		}
-		try {
-			int macEthInt = Integer.parseInt(mac.substring(6), 16) - 1;
-			if (macEthInt < 0)
-				macEthInt = 0xFFFFFF;
-			String macEth = Integer.toHexString(macEthInt);
-			while (macEth.length() < 6)
-				macEth = "0" + macEth;
-			macEth = mac.substring(0, 6) + macEth;
-			md.reset();
-			md.update(macEth.toLowerCase(Locale.getDefault()).getBytes("ASCII"));
-			final byte[] hash = StringUtils.getHexString(md.digest())
-					.substring(0, 12).getBytes("ASCII");
-			addPassword(Base64.encodeToString(hash, Base64.DEFAULT).trim());
-			return getResults();
-		} catch (UnsupportedEncodingException e) {
-		}
-		return null;
-	}
+    public AliceGermanyKeygen(String ssid, String mac) {
+        super(ssid, mac);
+    }
 
-	private AliceGermanyKeygen(Parcel in) {
-		super(in);
-	}
+    private AliceGermanyKeygen(Parcel in) {
+        super(in);
+    }
 
-	public static final Parcelable.Creator<AliceGermanyKeygen> CREATOR = new Parcelable.Creator<AliceGermanyKeygen>() {
-		public AliceGermanyKeygen createFromParcel(Parcel in) {
-			return new AliceGermanyKeygen(in);
-		}
+    @Override
+    public int getSupportState() {
+        if (getSsidName().matches("ALICE-WLAN[0-9a-fA-F]{2}"))
+            return SUPPORTED;
+        return UNLIKELY_SUPPORTED;
+    }
 
-		public AliceGermanyKeygen[] newArray(int size) {
-			return new AliceGermanyKeygen[size];
-		}
-	};
+    @Override
+    public List<String> getKeys() {
+        MessageDigest md;
+        try {
+            md = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e1) {
+            setErrorCode(R.string.msg_nomd5);
+            return null;
+        }
+        final String mac = getMacAddress();
+        if (mac.length() != 12) {
+            setErrorCode(R.string.msg_errpirelli);
+            return null;
+        }
+        try {
+            int macEthInt = Integer.parseInt(mac.substring(6), 16) - 1;
+            if (macEthInt < 0)
+                macEthInt = 0xFFFFFF;
+            String macEth = Integer.toHexString(macEthInt);
+            while (macEth.length() < 6)
+                macEth = "0" + macEth;
+            macEth = mac.substring(0, 6) + macEth;
+            md.reset();
+            md.update(macEth.toLowerCase(Locale.getDefault()).getBytes("ASCII"));
+            final byte[] hash = StringUtils.getHexString(md.digest())
+                    .substring(0, 12).getBytes("ASCII");
+            addPassword(Base64.encodeToString(hash, Base64.DEFAULT).trim());
+            return getResults();
+        } catch (UnsupportedEncodingException e) {
+        }
+        return null;
+    }
 
 }

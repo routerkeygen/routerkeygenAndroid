@@ -19,11 +19,6 @@
 
 package org.exobel.routerkeygen.ui;
 
-import org.exobel.routerkeygen.AdsUtils;
-import org.exobel.routerkeygen.R;
-import org.exobel.routerkeygen.RefreshHandler;
-import org.exobel.routerkeygen.algorithms.WiFiNetwork;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -34,79 +29,84 @@ import com.actionbarsherlock.view.MenuItem;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.millennialmedia.android.MMAdView;
 
+import org.exobel.routerkeygen.AdsUtils;
+import org.exobel.routerkeygen.R;
+import org.exobel.routerkeygen.RefreshHandler;
+import org.exobel.routerkeygen.algorithms.WiFiNetwork;
+
 public class NetworkActivity extends SherlockFragmentActivity {
 
-	private RefreshHandler adRefreshHandler;
+    private RefreshHandler adRefreshHandler;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_single_fragment);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_single_fragment);
 
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		MMAdView ad = AdsUtils.loadAdIfNeeded(this);
-		if (ad != null) {
-			adRefreshHandler = new RefreshHandler(ad);
-		}
-		if (savedInstanceState == null) {
-			final Bundle arguments = new Bundle();
-			final WiFiNetwork wiFiNetwork = getIntent().getParcelableExtra(NetworkFragment.NETWORK_ID);
-			arguments.putParcelable(NetworkFragment.NETWORK_ID, wiFiNetwork);
-			setTitle(wiFiNetwork.getSsidName());
-			NetworkFragment fragment = new NetworkFragment();
-			fragment.setArguments(arguments);
-			getSupportFragmentManager().beginTransaction()
-					.add(R.id.keygen_fragment, fragment).commit();
-		}
-	}
+        MMAdView ad = AdsUtils.loadAdIfNeeded(this);
+        if (ad != null) {
+            adRefreshHandler = new RefreshHandler(ad);
+        }
+        if (savedInstanceState == null) {
+            final Bundle arguments = new Bundle();
+            final WiFiNetwork wiFiNetwork = getIntent().getParcelableExtra(NetworkFragment.NETWORK_ID);
+            arguments.putParcelable(NetworkFragment.NETWORK_ID, wiFiNetwork);
+            setTitle(wiFiNetwork.getSsidName());
+            NetworkFragment fragment = new NetworkFragment();
+            fragment.setArguments(arguments);
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.keygen_fragment, fragment).commit();
+        }
+    }
 
 
-	@Override
-	public void onStart() {
-		super.onStart();
-		//Get an Analytics tracker to report app starts and uncaught exceptions etc.
-		GoogleAnalytics.getInstance(this).reportActivityStart(this);
+    @Override
+    public void onStart() {
+        super.onStart();
+        //Get an Analytics tracker to report app starts and uncaught exceptions etc.
+        GoogleAnalytics.getInstance(this).reportActivityStart(this);
 
-	}
+    }
 
-	@Override
-	public void onStop() {
-		super.onStop();
-		//Stop the analytics tracking
-		GoogleAnalytics.getInstance(this).reportActivityStop(this);
-	}
+    @Override
+    public void onStop() {
+        super.onStop();
+        //Stop the analytics tracking
+        GoogleAnalytics.getInstance(this).reportActivityStop(this);
+    }
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		if (adRefreshHandler != null)
-			adRefreshHandler.onResume();
-	}
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (adRefreshHandler != null)
+            adRefreshHandler.onResume();
+    }
 
-	@Override
-	protected void onPause() {
-		super.onPause();
-		if (adRefreshHandler != null)
-			adRefreshHandler.onPause();
-	}
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (adRefreshHandler != null)
+            adRefreshHandler.onPause();
+    }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			NavUtils.navigateUpTo(this, new Intent(this,
-					NetworksListActivity.class));
-			return true;
-		case R.id.pref:
-			startActivity(new Intent(this, Preferences.class));
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                NavUtils.navigateUpTo(this, new Intent(this,
+                        NetworksListActivity.class));
+                return true;
+            case R.id.pref:
+                startActivity(new Intent(this, Preferences.class));
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getSupportMenuInflater().inflate(R.menu.preferences, menu);
-		return true;
-	}
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getSupportMenuInflater().inflate(R.menu.preferences, menu);
+        return true;
+    }
 }

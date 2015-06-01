@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
    Copyright 2013 Rui Araújo, Luís Fonseca
   
    This file is part of Router Keygen.
@@ -19,7 +18,7 @@
 
 
 -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
     <!-- Translation to Español Latinoamericano by Axel Martínez R. (Spectrum) -->
     <!-- MISC STRINGS -->
@@ -113,7 +112,7 @@
     <string name="pref_hinton_analytics">El uso y las fallas son rastreadas de manera anónima.</string>
     <string name="pref_hintoff_analytics">El uso y las fallas no son rastreadas.</string>
     <string name="pref_changelog">Registro de cambios</string>
-    
+
     <!-- ERROR MESSAGE STRINGS -->
     <string name="msg_unspported">Esta red no esta soportada!</string>
     <string name="msg_nowifidetected">¡No se detectan redes WiFi!</string>
@@ -167,12 +166,14 @@
     <string name="choose_file">Selecciona un archivo</string>
     <string name="error_selecting_file">Error al seleccionar el archivo</string>
     <!-- CHANGELOG LIB -->
-    <string name="changelog_internal_error_parsing">Error while parsing file</string> <!--UNTRANSLATED-->
+    <string name="changelog_internal_error_parsing">Error while parsing file</string>
+    <!--UNTRANSLATED-->
     <!--
  String for Version Header.
          You can customize it in your strings.xml.
          Use string with quotes if you want a space
     -->
-    <string name="changelog_header_version">"Version "</string> <!--UNTRANSLATED-->
+    <string name="changelog_header_version">"Version "</string>
+    <!--UNTRANSLATED-->
 
 </resources>

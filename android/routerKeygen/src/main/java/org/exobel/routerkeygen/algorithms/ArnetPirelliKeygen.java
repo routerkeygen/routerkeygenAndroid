@@ -18,80 +18,79 @@
  */
 package org.exobel.routerkeygen.algorithms;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import org.exobel.routerkeygen.R;
+
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
-import org.exobel.routerkeygen.R;
-
-import android.os.Parcel;
-import android.os.Parcelable;
-
 public class ArnetPirelliKeygen extends Keygen {
-	private final static String LOOKUP = "0123456789abcdefghijklmnopqrstuvwxyz";
-	protected MessageDigest md;
+    public static final Parcelable.Creator<ArnetPirelliKeygen> CREATOR = new Parcelable.Creator<ArnetPirelliKeygen>() {
+        public ArnetPirelliKeygen createFromParcel(Parcel in) {
+            return new ArnetPirelliKeygen(in);
+        }
 
-	public ArnetPirelliKeygen(String ssid, String mac) {
-		super(ssid, mac);
-	}
+        public ArnetPirelliKeygen[] newArray(int size) {
+            return new ArnetPirelliKeygen[size];
+        }
+    };
+    private final static String LOOKUP = "0123456789abcdefghijklmnopqrstuvwxyz";
+    protected MessageDigest md;
 
-	@Override
-	public int getSupportState() {
-		if (getSsidName().startsWith("WiFi-Arnet-"))
-			return SUPPORTED;
-		return UNLIKELY_SUPPORTED;
-	}
+    public ArnetPirelliKeygen(String ssid, String mac) {
+        super(ssid, mac);
+    }
 
-	protected void generateKey(String mac, int length) {
-		byte[] macBytes = new byte[6];
-		for (int i = 0; i < 12; i += 2) {
-			macBytes[i / 2] = (byte) ((Character.digit(mac.charAt(i), 16) << 4) + Character
-					.digit(mac.charAt(i + 1), 16));
-		}
-		md.reset();
-		md.update(AliceItalyKeygen.ALICE_SEED);
-		try {
-			md.update("1236790".getBytes("UTF-8"));
-		} catch (UnsupportedEncodingException e) {
-		}
-		md.update(macBytes);
-		final byte[] hash = md.digest();
-		final StringBuilder key = new StringBuilder();
-		for (int i = 0; i < length; ++i) {
-			key.append(LOOKUP.charAt((hash[i] & 0xFF) % LOOKUP.length()));
-		}
-		addPassword(key.toString());
-	}
+    protected ArnetPirelliKeygen(Parcel in) {
+        super(in);
+    }
 
-	@Override
-	public List<String> getKeys() {
-		try {
-			md = MessageDigest.getInstance("SHA-256");
-		} catch (NoSuchAlgorithmException e1) {
-			setErrorCode(R.string.msg_nosha256);
-			return null;
-		}
-		if (getMacAddress().length() != 12) {
-			setErrorCode(R.string.msg_nomac);
-			return null;
-		}
-		generateKey(incrementMac(getMacAddress(), 1), 10);
-		return getResults();
-	}
+    @Override
+    public int getSupportState() {
+        if (getSsidName().startsWith("WiFi-Arnet-"))
+            return SUPPORTED;
+        return UNLIKELY_SUPPORTED;
+    }
 
-	protected ArnetPirelliKeygen(Parcel in) {
-		super(in);
-	}
+    protected void generateKey(String mac, int length) {
+        byte[] macBytes = new byte[6];
+        for (int i = 0; i < 12; i += 2) {
+            macBytes[i / 2] = (byte) ((Character.digit(mac.charAt(i), 16) << 4) + Character
+                    .digit(mac.charAt(i + 1), 16));
+        }
+        md.reset();
+        md.update(AliceItalyKeygen.ALICE_SEED);
+        try {
+            md.update("1236790".getBytes("UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+        }
+        md.update(macBytes);
+        final byte[] hash = md.digest();
+        final StringBuilder key = new StringBuilder();
+        for (int i = 0; i < length; ++i) {
+            key.append(LOOKUP.charAt((hash[i] & 0xFF) % LOOKUP.length()));
+        }
+        addPassword(key.toString());
+    }
 
-	public static final Parcelable.Creator<ArnetPirelliKeygen> CREATOR = new Parcelable.Creator<ArnetPirelliKeygen>() {
-		public ArnetPirelliKeygen createFromParcel(Parcel in) {
-			return new ArnetPirelliKeygen(in);
-		}
-
-		public ArnetPirelliKeygen[] newArray(int size) {
-			return new ArnetPirelliKeygen[size];
-		}
-	};
+    @Override
+    public List<String> getKeys() {
+        try {
+            md = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e1) {
+            setErrorCode(R.string.msg_nosha256);
+            return null;
+        }
+        if (getMacAddress().length() != 12) {
+            setErrorCode(R.string.msg_nomac);
+            return null;
+        }
+        generateKey(incrementMac(getMacAddress(), 1), 10);
+        return getResults();
+    }
 
 }
