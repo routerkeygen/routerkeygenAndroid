@@ -24,7 +24,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.zip.ZipInputStream;
 
 import org.acra.ACRA;
 import org.exobel.routerkeygen.AdsUtils;
@@ -86,17 +88,16 @@ public class NetworkFragment extends SherlockFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (getArguments().containsKey(NETWORK_ID)) {
-			wifiNetwork = (WiFiNetwork) getArguments()
-					.getParcelable(NETWORK_ID);
+			wifiNetwork = getArguments().getParcelable(NETWORK_ID);
+			restoreMissingKeygens();
 			thread = new KeygenThread(wifiNetwork);
 		}
 		if (savedInstanceState != null) {
 			String[] passwords = savedInstanceState
 					.getStringArray(PASSWORD_LIST);
 			if (passwords != null) {
-				passwordList = new ArrayList<String>();
-				for (String p : passwords)
-					passwordList.add(p);
+				passwordList = new ArrayList<>();
+				passwordList.addAll(Arrays.asList(passwords));
 			}
 		}
 		setHasOptionsMenu(true);
@@ -164,9 +165,10 @@ public class NetworkFragment extends SherlockFragment {
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		if (passwordList != null)
+		if (passwordList != null) {
 			outState.putStringArray(PASSWORD_LIST,
-					passwordList.toArray(new String[0]));
+					passwordList.toArray(new String[passwordList.size()]));
+		}
 	}
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -187,7 +189,36 @@ public class NetworkFragment extends SherlockFragment {
 	@Override
 	public void onDetach() {
 		super.onDetach();
-		thread.cancel();
+		if (thread != null){
+			//This thread can be null if there was a previosly calculated
+			//password list
+			thread.cancel();
+		}
+	}
+
+	/**
+	 * Some devices seem to have bugs with the parcelable implementation
+	 * So we try to restore missing objects here.
+	 */
+	private void restoreMissingKeygens(){
+		boolean foundMissingKeygen = false;
+		for (Keygen keygen : wifiNetwork.getKeygens()) {
+			if (keygen == null) {
+				foundMissingKeygen = true;
+				break;
+			}
+		}
+		if (foundMissingKeygen){
+			//If any is missing, simply replace them all.
+			ZipInputStream zipInputStream = new ZipInputStream(
+					getActivity().getResources().openRawResource(R.raw.magic_info));
+			wifiNetwork.setKeygens(zipInputStream);
+			try {
+				zipInputStream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@Override
@@ -288,7 +319,7 @@ public class NetworkFragment extends SherlockFragment {
 					startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
 				}
 			});
-			list.setAdapter(new ArrayAdapter<String>(getActivity(),
+			list.setAdapter(new ArrayAdapter<>(getActivity(),
 					android.R.layout.simple_list_item_1, passwordList));
 			root.showNext();
 		}
@@ -360,7 +391,7 @@ public class NetworkFragment extends SherlockFragment {
 
 		@Override
 		protected List<String> doInBackground(Void... params) {
-			final List<String> result = new ArrayList<String>();
+			final List<String> result = new ArrayList<>();
 			for (Keygen keygen : wifiNetwork.getKeygens()) {
 				if (keygen instanceof ThomsonKeygen) {
 					getPrefs();

@@ -10,24 +10,22 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 public class WiFiNetwork implements Comparable<WiFiNetwork>, Parcelable {
 
-	final private ScanResult scanResult;
+	private ScanResult scanResult;
 	final private String ssidName;
 	final private String macAddress;
 	final private int level;
 	final private String encryption;
-	final private ArrayList<Keygen> keygens;
+	private ArrayList<Keygen> keygens;
 
 	public WiFiNetwork(ScanResult scanResult, ZipInputStream magicInfo) {
-		this.ssidName = scanResult.SSID;
-		this.macAddress = scanResult.BSSID.toUpperCase(Locale.getDefault());
-		this.level = WifiManager.calculateSignalLevel(scanResult.level, 4);
-		this.encryption = scanResult.capabilities;
-		this.scanResult = scanResult;
-		this.keygens = WirelessMatcher.getKeygen(ssidName, macAddress,
-				magicInfo);
+		this(scanResult.SSID,scanResult.BSSID,
+                WifiManager.calculateSignalLevel(scanResult.level, 4),
+                scanResult.capabilities, magicInfo);
+        this.scanResult = scanResult;
 	}
 
 	public WiFiNetwork(final String ssid, final String mac, int level,
@@ -70,7 +68,7 @@ public class WiFiNetwork implements Comparable<WiFiNetwork>, Parcelable {
 		return macAddress;
 	}
 
-	public int compareTo(WiFiNetwork another) {
+	public int compareTo(@NonNull WiFiNetwork another) {
 		if (getSupportState() == another.getSupportState()) {
 			if (another.level == this.level)
 				return ssidName.compareTo(another.ssidName);
@@ -110,7 +108,7 @@ public class WiFiNetwork implements Comparable<WiFiNetwork>, Parcelable {
 		else
 			encryption = OPEN;
 		level = in.readInt();
-		keygens = new ArrayList<Keygen>();
+		keygens = new ArrayList<>();
 		in.readList(keygens, Keygen.class.getClassLoader());
 		if (in.readInt() == 1)
 			scanResult = in.readParcelable(ScanResult.class.getClassLoader());
@@ -141,9 +139,13 @@ public class WiFiNetwork implements Comparable<WiFiNetwork>, Parcelable {
 		return scanResult;
 	}
 
-	public ArrayList<Keygen> getKeygens() {
-		return keygens;
-	}
+    public void setKeygens(ZipInputStream magicInfo) {
+        this.keygens = WirelessMatcher.getKeygen(ssidName, macAddress,
+                magicInfo);
+    }
+    public ArrayList<Keygen> getKeygens() {
+        return keygens;
+    }
 
 	// Constants used for different security types
 	public static final String PSK = "PSK";
