@@ -45,6 +45,7 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import com.millennialmedia.android.MMAdView;
 
 import org.exobel.routerkeygen.AdsUtils;
+import org.exobel.routerkeygen.BuildConfig;
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.RefreshHandler;
 import org.exobel.routerkeygen.UpdateCheckerService;
@@ -117,8 +118,10 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
             editor.apply();
 
             // Checking for updates every week
-            startService(new Intent(getApplicationContext(),
-                    UpdateCheckerService.class));
+            if (BuildConfig.APPLICATION_ID.equals("org.exobel.routerkeygen")) {
+                startService(new Intent(getApplicationContext(),
+                        UpdateCheckerService.class));
+            }
             if (!AdsUtils.checkDonation(this)) {
                 final String whatsNewTitle = getString(R.string.msg_welcome_title);
                 final String whatsNewText = getString(R.string.msg_welcome_text);
