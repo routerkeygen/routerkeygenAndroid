@@ -25,6 +25,7 @@ import android.app.ActivityManager.RunningServiceInfo;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.AsyncTask.Status;
 import android.os.Build;
@@ -318,12 +319,29 @@ public class NetworkFragment extends SherlockFragment {
 							.getSystemService(Context.CLIPBOARD_SERVICE);
 
 					clipboard.setText(key);
-					startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+					openWifiSettings();
 				}
 			});
 			list.setAdapter(new ArrayAdapter<>(getActivity(),
 					android.R.layout.simple_list_item_1, passwordList));
 			root.showNext();
+		}
+	}
+
+	/**
+	 * Try to open wifi settings activity.
+	 * Tries to different actions.
+	 */
+	private void openWifiSettings(){
+		Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
+		final PackageManager packageManager = getActivity().getPackageManager();
+		if (packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
+			startActivity(intent);
+			return;
+		}
+		intent = new Intent(Settings.ACTION_WIRELESS_SETTINGS);
+		if (packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
+			startActivity(intent);
 		}
 	}
 
