@@ -29,6 +29,7 @@ import org.exobel.routerkeygen.algorithms.PBSKeygen;
 import org.exobel.routerkeygen.algorithms.PirelliKeygen;
 import org.exobel.routerkeygen.algorithms.PtvKeygen;
 import org.exobel.routerkeygen.algorithms.SitecomKeygen;
+import org.exobel.routerkeygen.algorithms.SitecomWLR400xKeygen;
 import org.exobel.routerkeygen.algorithms.SkyV1Keygen;
 import org.exobel.routerkeygen.algorithms.Speedport500Keygen;
 import org.exobel.routerkeygen.algorithms.TecomKeygen;
@@ -331,7 +332,17 @@ public class WirelessMatcher {
         if (ssid.matches("(PTV-|ptv|ptv-)[0-9a-zA-Z]{6}"))
             keygens.add(new PtvKeygen(ssid, mac));
 
-        if (mac.startsWith("00:0C:F6"))
+        if (ssid.toLowerCase(Locale.getDefault()).matches("^sitecom[0-9a-f]{6}$") ||
+                (mac.startsWith("00:0C:F6") || mac.startsWith("64:D1:A3"))) {
+            if (mac.replace(":", "").length() != 12) {
+                keygens.add(new SitecomWLR400xKeygen(ssid, "00:0C:F6" + ssid.substring(7)));
+                keygens.add(new SitecomWLR400xKeygen(ssid, "64:D1:A3" + ssid.substring(7)));
+            } else {
+                keygens.add(new SitecomWLR400xKeygen(ssid, mac));
+            }
+        }
+
+        if (mac.startsWith("00:0C:F6") || mac.startsWith("64:D1:A3"))
             keygens.add(new SitecomKeygen(ssid, mac));
 
         if (ssid.matches("SKY[0-9]{5}")
