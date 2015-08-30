@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
 
+    <changelogversion changeDate="Ago 31,2015" versionName="3.15.0">
+        <changelogtext>[b]New![/b] Alcatel Lucent algorithm</changelogtext>
+        <changelogtext>[b]New![/b] Sitecom algorithm</changelogtext>
+        <changelogtext>[b]New![/b] Huawei algorithm</changelogtext>
+    </changelogversion>
+
     <changelogversion changeDate="Jun 1,2015" versionName="3.14.2">
         <changelogtext>More delicious bug fixes</changelogtext>
     </changelogversion>
