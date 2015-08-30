@@ -1,5 +1,6 @@
 package org.exobel.routerkeygen;
 
+import org.exobel.routerkeygen.algorithms.AlcatelLucentKeygen;
 import org.exobel.routerkeygen.algorithms.AliceGermanyKeygen;
 import org.exobel.routerkeygen.algorithms.AliceItalyKeygen;
 import org.exobel.routerkeygen.algorithms.AndaredKeygen;
@@ -65,6 +66,11 @@ public class WirelessMatcher {
     public synchronized static ArrayList<Keygen> getKeygen(String ssid,
                                                            String mac, ZipInputStream magicInfo) {
         final ArrayList<Keygen> keygens = new ArrayList<>();
+
+        if (mac.startsWith("00:19:C7") || mac.startsWith("18:80:F5") || mac.startsWith("A4:C7:DE")
+                || mac.startsWith("A8:AD:3D") || mac.startsWith("AC:9C:E4") || mac.startsWith("D0:54:2D")
+                || mac.startsWith("E0:1D:3B") || mac.startsWith("E0:30:05"))
+            keygens.add(new AlcatelLucentKeygen(ssid, mac));
 
         if (ssid.matches("[aA]lice-[0-9]{8}")) {
             if (supportedAlices == null) {
