@@ -72,7 +72,7 @@ public class ManualInputFragment extends SherlockFragment {
         loading = root.findViewById(R.id.loading_spinner);
         final String[] routers = getResources().getStringArray(
                 R.array.supported_routers);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
                 android.R.layout.simple_dropdown_item_1line, routers);
         final AutoCompleteTextView edit = (AutoCompleteTextView) root
                 .findViewById(R.id.manual_autotext);
@@ -175,9 +175,6 @@ public class ManualInputFragment extends SherlockFragment {
                         Toast.makeText(getActivity(), R.string.msg_invalid_mac,
                                 Toast.LENGTH_SHORT).show();
                 }
-
-                if (ssid.equals(""))
-                    return;
                 KeygenMatcherTask matcher = new KeygenMatcherTask(ssid, mac
                         .toString().toUpperCase(Locale.getDefault()));
                 if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
