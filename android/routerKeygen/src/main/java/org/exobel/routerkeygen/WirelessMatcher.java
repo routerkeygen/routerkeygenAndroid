@@ -338,6 +338,9 @@ public class WirelessMatcher {
         if (ssid.matches("(PTV-|ptv|ptv-)[0-9a-zA-Z]{6}"))
             keygens.add(new PtvKeygen(ssid, mac));
 
+        if (mac.startsWith("00:0C:F6") || mac.startsWith("64:D1:A3"))
+            keygens.add(new SitecomKeygen(ssid, mac));
+
         if (ssid.toLowerCase(Locale.getDefault()).matches("^sitecom[0-9a-f]{6}$") ||
                 (mac.startsWith("00:0C:F6") || mac.startsWith("64:D1:A3"))) {
             if (mac.replace(":", "").length() != 12) {
@@ -347,9 +350,6 @@ public class WirelessMatcher {
                 keygens.add(new SitecomWLR400xKeygen(ssid, mac));
             }
         }
-
-        if (mac.startsWith("00:0C:F6") || mac.startsWith("64:D1:A3"))
-            keygens.add(new SitecomKeygen(ssid, mac));
 
         if (ssid.matches("SKY[0-9]{5}")
                 && (mac.startsWith("C4:3D:C7") || mac.startsWith("E0:46:9A")
