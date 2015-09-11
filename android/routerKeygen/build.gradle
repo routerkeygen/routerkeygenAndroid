@@ -55,8 +55,21 @@ android {
     }
 
     clean.dependsOn cleanNative
+
+    testOptions {
+        unitTests.all {
+            // All the usual Gradle options.
+            jvmArgs '-XX:MaxPermSize=256m'
+        }
+    }
 }
 
+
+
+task copyResDirectoryToClasses(type: Copy){
+    from "${projectDir}/src/main/res"
+    into "${buildDir}/intermediates/classes/test/github/debug/res"
+}
 def getNdkDir() {
     if (System.env.ANDROID_NDK_ROOT != null)
         return System.env.ANDROID_NDK_ROOT
@@ -79,6 +92,7 @@ def getNdkBuildCmd() {
 }
 
 
+
 dependencies {
     compile project(':aFileChooser')
     compile 'com.android.support:support-v4:22.1.1'
@@ -86,4 +100,6 @@ dependencies {
     compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
     compile 'ch.acra:acra:4.6.2'
     compile files('libs/MMSDK.jar')
+
+    testCompile 'junit:junit:4.12'
 }
