@@ -125,7 +125,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
             if (!AdsUtils.checkDonation(this)) {
                 final String whatsNewTitle = getString(R.string.msg_welcome_title);
                 final String whatsNewText = getString(R.string.msg_welcome_text);
-                new AlertDialog.Builder(this)
+                final AlertDialog.Builder initialDialog = new AlertDialog.Builder(this)
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .setTitle(whatsNewTitle)
                         .setMessage(whatsNewText)
@@ -133,17 +133,6 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog,
                                                         int which) {
-                                        dialog.dismiss();
-                                    }
-                                })
-                        .setNeutralButton(R.string.bt_paypal,
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog,
-                                                        int which) {
-                                        final String donateLink = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=V3FFBTRTTV5DN";
-                                        Uri uri = Uri.parse(donateLink);
-                                        startActivity(new Intent(
-                                                Intent.ACTION_VIEW, uri));
                                         dialog.dismiss();
                                     }
                                 })
@@ -167,7 +156,22 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
                                                 Toast.LENGTH_LONG).show();
                                         dialog.dismiss();
                                     }
-                                }).show();
+                                });
+                if (BuildConfig.APPLICATION_ID.equals("org.exobel.routerkeygen")) {
+                    initialDialog.setNeutralButton(R.string.bt_paypal,
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                    final String donateLink = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=V3FFBTRTTV5DN";
+                                    Uri uri = Uri.parse(donateLink);
+                                    startActivity(new Intent(
+                                            Intent.ACTION_VIEW, uri));
+                                    dialog.dismiss();
+                                }
+                            }).show();
+                } else {
+                    initialDialog.show();
+                }
             }
         }
         if (welcomeScreenShown) {
