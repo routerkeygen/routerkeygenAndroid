@@ -65,27 +65,27 @@ public class WifiListAdapter extends BaseAdapter implements
             switch (i) {
                 case 0:
                     wifiSignal[i] = resources
-                            .getDrawable(R.drawable.ic_wifi_signal_1);
+                            .getDrawable(R.drawable.ic_signal_wifi_1_bar_black_24dp);
                     wifiSignalLocked[i] = resources
-                            .getDrawable(R.drawable.ic_wifi_lock_signal_1);
+                            .getDrawable(R.drawable.ic_signal_wifi_1_bar_lock_black_24dp);
                     break;
                 case 1:
                     wifiSignal[i] = resources
-                            .getDrawable(R.drawable.ic_wifi_signal_2);
+                            .getDrawable(R.drawable.ic_signal_wifi_2_bar_black_24dp);
                     wifiSignalLocked[i] = resources
-                            .getDrawable(R.drawable.ic_wifi_lock_signal_2);
+                            .getDrawable(R.drawable.ic_signal_wifi_2_bar_lock_black_24dp);
                     break;
                 case 2:
                     wifiSignal[i] = resources
-                            .getDrawable(R.drawable.ic_wifi_signal_3);
+                            .getDrawable(R.drawable.ic_signal_wifi_3_bar_black_24dp);
                     wifiSignalLocked[i] = resources
-                            .getDrawable(R.drawable.ic_wifi_lock_signal_3);
+                            .getDrawable(R.drawable.ic_signal_wifi_3_bar_lock_black_24dp);
                     break;
                 case 3:
                     wifiSignal[i] = resources
-                            .getDrawable(R.drawable.ic_wifi_signal_4);
+                            .getDrawable(R.drawable.ic_signal_wifi_4_bar_black_24dp);
                     wifiSignalLocked[i] = resources
-                            .getDrawable(R.drawable.ic_wifi_lock_signal_4);
+                            .getDrawable(R.drawable.ic_signal_wifi_4_bar_lock_black_24dp);
                     break;
             }
         }

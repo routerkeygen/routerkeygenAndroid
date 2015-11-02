@@ -8,4 +8,7 @@
     <!-- A dark Holo shade of orange -->
     <color name="holo_orange_dark">#ffff8800</color>
 
+    <color name="indigo">#303F9F</color>
+    <color name="indigo_dark">#1A237E</color>
+
 </resources>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <style name="Theme.Sherlock" parent="@android:style/Theme.Material.Light.DarkActionBar">
+        <item name="android:colorPrimary">@color/indigo</item>
+        <item name="android:colorPrimaryDark">@color/indigo_dark</item>
+    </style>
+    
+</resources>
