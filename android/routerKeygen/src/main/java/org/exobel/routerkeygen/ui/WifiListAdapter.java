@@ -18,6 +18,7 @@
  */
 package org.exobel.routerkeygen.ui;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Typeface;
@@ -48,6 +49,7 @@ public class WifiListAdapter extends BaseAdapter implements
     private Typeface typeface = null;
 
     @SuppressWarnings("deprecation")
+    @TargetApi(21)
     public WifiListAdapter(Context context) {
         this.listNetworks = new ArrayList<WifiListAdapter.Item>();
         try {
@@ -88,6 +90,13 @@ public class WifiListAdapter extends BaseAdapter implements
                             .getDrawable(R.drawable.ic_signal_wifi_4_bar_lock_black_24dp);
                     break;
             }
+            int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+            if (currentapiVersion >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                wifiSignal[i].setTint(resources.getColor(R.color.accent));
+                wifiSignalLocked[i].setTint(resources.getColor(R.color.accent));
+            } else{
+            }
+
         }
     }
 

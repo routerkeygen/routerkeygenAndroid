@@ -2,8 +2,9 @@
 <resources>
     
     <style name="Theme.Sherlock" parent="@android:style/Theme.Material.Light.DarkActionBar">
-        <item name="android:colorPrimary">@color/indigo</item>
-        <item name="android:colorPrimaryDark">@color/indigo_dark</item>
+        <item name="android:colorPrimary">@color/primary</item>
+        <item name="android:colorPrimaryDark">@color/primary_dark</item>
+        <item name="android:colorAccent">@color/accent</item>
     </style>
     
 </resources>
