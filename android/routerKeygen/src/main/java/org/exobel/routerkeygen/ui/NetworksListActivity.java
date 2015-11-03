@@ -33,6 +33,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -81,6 +82,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
             mHandler.postDelayed(mAutoScanTask, autoScanInterval * 1000L);
         }
     };
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     @Override
@@ -177,6 +179,17 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
         if (welcomeScreenShown) {
             AdsUtils.displayStartupInterstitial(this);
         }
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
+        mSwipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        scan();
+                    }
+                }
+        );
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.accent);
 
     }
 
@@ -329,7 +342,8 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
                     .show();
         } else {
             if (wifi.startScan()) {
-                setRefreshActionItemState(true);
+                //setRefreshActionItemState(true);
+                mSwipeRefreshLayout.setRefreshing(true);
             } else
                 networkListFragment.setMessage(R.string.msg_scanfailed);
         }
@@ -351,6 +365,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
     @Override
     public void onScanFinished(WiFiNetwork[] networks) {
         setRefreshActionItemState(false);
+        mSwipeRefreshLayout.setRefreshing(false);
         if (!welcomeScreenShown) {
             Toast.makeText(this, R.string.msg_welcome_tip, Toast.LENGTH_LONG)
                     .show();
