@@ -20,6 +20,7 @@
 package org.exobel.routerkeygen.ui;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -42,6 +43,7 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.millennialmedia.android.MMAdView;
 
@@ -57,7 +59,7 @@ import org.exobel.routerkeygen.algorithms.Keygen;
 import org.exobel.routerkeygen.algorithms.WiFiNetwork;
 
 public class NetworksListActivity extends SherlockFragmentActivity implements
-        NetworksListFragment.OnItemSelectionListener, OnScanListener {
+        NetworksListFragment.OnItemSelectionListener, OnScanListener, View.OnClickListener {
     private final static String LAST_DIALOG_TIME = "last_time";
     private boolean mTwoPane;
     private NetworksListFragment networkListFragment;
@@ -83,6 +85,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
         }
     };
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private FloatingActionButton fabManualInput;
 
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     @Override
@@ -190,6 +193,8 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
                 }
         );
         mSwipeRefreshLayout.setColorSchemeResources(R.color.accent);
+        fabManualInput = (FloatingActionButton) findViewById(R.id.fab_manual_input);
+        fabManualInput.setOnClickListener(this);
 
     }
 
@@ -386,4 +391,15 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
         }
     }
 
+    @Override
+    public void onClick(View view) {
+        if (mTwoPane) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.keygen_fragment,
+                            ManualInputFragment.newInstance()).commit();
+        } else {
+            startActivity(new Intent(this, ManualInputActivity.class));
+        }
+    }
 }
