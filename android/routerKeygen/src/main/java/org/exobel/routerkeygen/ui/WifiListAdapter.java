@@ -21,6 +21,7 @@ package org.exobel.routerkeygen.ui;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils.TruncateAt;
@@ -95,6 +96,14 @@ public class WifiListAdapter extends BaseAdapter implements
                 wifiSignal[i].setTint(resources.getColor(R.color.accent));
                 wifiSignalLocked[i].setTint(resources.getColor(R.color.accent));
             } else{
+                wifiSignal[i].setColorFilter(
+                        resources.getColor(R.color.accent),
+                        PorterDuff.Mode.SRC_IN
+                );
+                wifiSignalLocked[i].setColorFilter(
+                        resources.getColor(R.color.accent),
+                        PorterDuff.Mode.SRC_IN
+                );
             }
 
         }
