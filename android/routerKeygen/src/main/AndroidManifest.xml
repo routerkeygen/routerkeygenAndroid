@@ -40,7 +40,7 @@
         <activity
             android:name=".ui.Preferences"
             android:configChanges="screenSize|orientation|keyboard"
-            android:label="@string/menu_preferences"></activity>
+            android:label="@string/menu_preferences" />
         <activity
             android:name=".ui.NetworksListActivity"
             android:configChanges="screenSize|keyboard|orientation"

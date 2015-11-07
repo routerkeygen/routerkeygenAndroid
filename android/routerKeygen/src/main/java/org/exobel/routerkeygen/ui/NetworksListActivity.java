@@ -193,6 +193,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
                 }
         );
         mSwipeRefreshLayout.setColorSchemeResources(R.color.accent);
+
         fabManualInput = (FloatingActionButton) findViewById(R.id.fab_manual_input);
         fabManualInput.setOnClickListener(this);
 
@@ -207,6 +208,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.keygen_fragment, fragment).commit();
+            fabManualInput.setVisibility(View.VISIBLE);
 
         } else {
             if (keygen.getSupportState() == Keygen.UNSUPPORTED) {
@@ -230,16 +232,6 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.manual_input:
-                if (mTwoPane) {
-                    getSupportFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.keygen_fragment,
-                                    ManualInputFragment.newInstance()).commit();
-                } else {
-                    startActivity(new Intent(this, ManualInputActivity.class));
-                }
-                return true;
             case R.id.wifi_scan:
                 scan();
                 return true;
@@ -309,6 +301,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
         }
     }
 
+    //stub
     public void setRefreshActionItemState(boolean refreshing) {
         // On Honeycomb, we can set the state of the refresh button by giving it
         // a custom
@@ -385,6 +378,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
                     .beginTransaction()
                     .replace(R.id.keygen_fragment,
                             ManualInputFragment.newInstance(mac)).commit();
+            fabManualInput.setVisibility(View.VISIBLE);
         } else {
             startActivity(new Intent(this, ManualInputActivity.class).putExtra(
                     ManualInputFragment.MAC_ADDRESS_ARG, mac));
@@ -398,6 +392,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
                     .beginTransaction()
                     .replace(R.id.keygen_fragment,
                             ManualInputFragment.newInstance()).commit();
+            fabManualInput.setVisibility(View.GONE);
         } else {
             startActivity(new Intent(this, ManualInputActivity.class));
         }

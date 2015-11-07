@@ -44,20 +44,4 @@
             android:visibility="gone" />
     </LinearLayout>
 
-    <com.getbase.floatingactionbutton.FloatingActionButton
-        xmlns:fab="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/fab_manual_input"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="8dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginEnd="16dp"
-        fab:fab_icon="@drawable/ic_create_white_24dp"
-        fab:fab_colorNormal="@color/accent"
-        fab:fab_colorPressed="@color/accent"
-        fab:fab_title="@string/menu_manual"
-        fab:fab_size="normal" />
 </RelativeLayout>
