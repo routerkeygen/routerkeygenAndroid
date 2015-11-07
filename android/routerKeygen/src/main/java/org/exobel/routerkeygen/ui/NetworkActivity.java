@@ -95,8 +95,10 @@ public class NetworkActivity extends SherlockFragmentActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                NavUtils.navigateUpTo(this, new Intent(this,
-                        NetworksListActivity.class));
+                NavUtils.navigateUpTo(
+                        this, new Intent(this, NetworksListActivity.class)
+                                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                );
                 return true;
             case R.id.pref:
                 startActivity(new Intent(this, Preferences.class));
