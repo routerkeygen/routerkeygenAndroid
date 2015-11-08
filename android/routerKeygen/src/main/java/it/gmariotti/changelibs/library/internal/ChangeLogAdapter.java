@@ -38,8 +38,8 @@ import it.gmariotti.changelibs.library.Constants;
  */
 public class ChangeLogAdapter extends ArrayAdapter<ChangeLogRow> {
 
-    protected static final int TYPE_ROW = 0;
-    protected static final int TYPE_HEADER = 1;
+    private static final int TYPE_ROW = 0;
+    private static final int TYPE_HEADER = 1;
     private final Context mContext;
     private int mRowLayoutId = Constants.mRowLayoutId;
     private int mRowHeaderLayoutId = Constants.mRowHeaderLayoutId;
@@ -215,8 +215,8 @@ public class ChangeLogAdapter extends ArrayAdapter<ChangeLogRow> {
     }
 
     static class ViewHolderHeader {
-        TextView version;
-        TextView date;
+        final TextView version;
+        final TextView date;
 
         public ViewHolderHeader(TextView version, TextView date) {
             this.version = version;
@@ -225,8 +225,8 @@ public class ChangeLogAdapter extends ArrayAdapter<ChangeLogRow> {
     }
 
     static class ViewHolderRow {
-        TextView text;
-        TextView bulletText;
+        final TextView text;
+        final TextView bulletText;
 
         public ViewHolderRow(TextView text, TextView bulletText) {
             this.text = text;

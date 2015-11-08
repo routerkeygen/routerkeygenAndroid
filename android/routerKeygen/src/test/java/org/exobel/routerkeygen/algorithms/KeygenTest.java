@@ -9,7 +9,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
@@ -546,7 +545,7 @@ public class KeygenTest{
 	private final static String[] DICTIONARY_URL = { "https://github.com/routerkeygen/thomsonDicGenerator/releases/download/v3/RouterKeygen_v3.dic" };
 
 	@Test
-	public void testThomson() throws MalformedURLException, IOException {
+	public void testThomson() throws IOException {
 		final WiFiNetwork wifi = new WiFiNetwork("Thomson41518c", "", 0, "",
                 getMagicFile());
 		assertEquals("There should be only 1 keygen", 1, wifi.getKeygens()

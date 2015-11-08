@@ -69,7 +69,7 @@ public class TelseyKeygen extends Keygen implements Parcelable {
     }
 
     //Scramble Function
-    long[] scrambler(String mac) {
+    private long[] scrambler(String mac) {
         long[] vector = new long[64];
         byte[] macValue = new byte[6];
         for (int i = 0; i < 12; i += 2)
@@ -229,13 +229,13 @@ public class TelseyKeygen extends Keygen implements Parcelable {
 
         for (int x = 0; x < 64; x++) {
             if (x < 8)
-                key[x] = (key[x] << 3) & 0xFFFFFFFF;
+                key[x] = (key[x] << 3);
             else if (x < 16)
                 key[x] >>>= 5;
             else if (x < 32)
                 key[x] >>>= 2;
             else
-                key[x] = (key[x] << 7) & 0xFFFFFFFF;
+                key[x] = (key[x] << 7);
         }
 
         seed = 0;

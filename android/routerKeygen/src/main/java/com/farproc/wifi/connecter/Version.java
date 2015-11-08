@@ -9,7 +9,7 @@ import java.lang.reflect.Field;
  *
  * @author yuanxiaohui
  */
-public class Version {
+class Version {
 
     public final static int SDK = get();
 

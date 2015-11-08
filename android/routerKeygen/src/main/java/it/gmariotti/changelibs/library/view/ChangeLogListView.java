@@ -46,15 +46,15 @@ public class ChangeLogListView extends ListView implements
         AdapterView.OnItemClickListener {
 
     // --------------------------------------------------------------------------
-    protected static String TAG = "ChangeLogListView";
+    private static final String TAG = "ChangeLogListView";
     // --------------------------------------------------------------------------
     // Custom Attrs
     // --------------------------------------------------------------------------
-    protected int mRowLayoutId = Constants.mRowLayoutId;
-    protected int mRowHeaderLayoutId = Constants.mRowHeaderLayoutId;
-    protected int mChangeLogFileResourceId = Constants.mChangeLogFileResourceId;
+    private int mRowLayoutId = Constants.mRowLayoutId;
+    private int mRowHeaderLayoutId = Constants.mRowHeaderLayoutId;
+    private int mChangeLogFileResourceId = Constants.mChangeLogFileResourceId;
     // Adapter
-    protected ChangeLogAdapter mAdapter;
+    private ChangeLogAdapter mAdapter;
 
     // --------------------------------------------------------------------------
     // Constructors
@@ -85,7 +85,7 @@ public class ChangeLogListView extends ListView implements
      * @param attrs
      * @param defStyle
      */
-    protected void init(AttributeSet attrs, int defStyle) {
+    private void init(AttributeSet attrs, int defStyle) {
         // Init attrs
         initAttrs(attrs, defStyle);
         // Init adapter
@@ -101,7 +101,7 @@ public class ChangeLogListView extends ListView implements
      * @param attrs
      * @param defStyle
      */
-    protected void initAttrs(AttributeSet attrs, int defStyle) {
+    private void initAttrs(AttributeSet attrs, int defStyle) {
         TypedArray a = getContext().getTheme().obtainStyledAttributes(attrs,
                 R.styleable.ChangeLogListView, defStyle, defStyle);
 
@@ -130,7 +130,7 @@ public class ChangeLogListView extends ListView implements
     /**
      * Init adapter
      */
-    protected void initAdapter() {
+    private void initAdapter() {
 
         try {
             // Read and parse changelog.xml
@@ -157,7 +157,7 @@ public class ChangeLogListView extends ListView implements
     /**
      * Sets the list's adapter, enforces the use of only a ChangeLogAdapter
      */
-    public void setAdapter(ChangeLogAdapter adapter) {
+    private void setAdapter(ChangeLogAdapter adapter) {
         super.setAdapter(adapter);
     }
 
@@ -170,14 +170,16 @@ public class ChangeLogListView extends ListView implements
     /**
      * Async Task to parse xml file in a separate thread
      */
-    protected class ParseAsyncTask extends AsyncTask<Void, Void, ChangeLog> {
+    class ParseAsyncTask extends AsyncTask<Void, Void, ChangeLog> {
 
-        private ChangeLogAdapter mAdapter;
-        private XmlParser mParse;
+        private final ChangeLogAdapter mAdapter;
+        private final XmlParser mParse;
+        private final String errorString;
 
         public ParseAsyncTask(ChangeLogAdapter adapter, XmlParser parse) {
             mAdapter = adapter;
             mParse = parse;
+            errorString =  getResources().getString(R.string.changelog_internal_error_parsing);
         }
 
         @Override
@@ -185,13 +187,10 @@ public class ChangeLogListView extends ListView implements
 
             try {
                 if (mParse != null) {
-                    ChangeLog chg = mParse.readChangeLogFile();
-                    return chg;
+                    return mParse.readChangeLogFile();
                 }
             } catch (Exception e) {
-                Log.e(TAG,
-                        getResources().getString(
-                                R.string.changelog_internal_error_parsing), e);
+                Log.e(TAG,errorString, e);
             }
             return null;
         }

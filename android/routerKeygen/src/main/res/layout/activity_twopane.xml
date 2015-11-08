@@ -9,6 +9,7 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/adBannerRelativeLayout"
         android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
         android:baselineAligned="false"
         android:orientation="horizontal"
         android:showDividers="middle">

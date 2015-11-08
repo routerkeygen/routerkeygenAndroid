@@ -13,8 +13,8 @@ package org.exobel.routerkeygen.utils.dns;
 
 import java.io.*;
 
-public class DNSInputStream extends ByteArrayInputStream {
-    protected DataInputStream dataIn;
+class DNSInputStream extends ByteArrayInputStream {
+    private final DataInputStream dataIn;
 
     public DNSInputStream(byte[] data, int off, int len) {
         super(data, off, len);
@@ -29,11 +29,11 @@ public class DNSInputStream extends ByteArrayInputStream {
         return dataIn.readUnsignedShort();
     }
 
-    public long readInt() throws IOException {
+    private long readInt() throws IOException {
         return dataIn.readInt() & 0xffffffffL;
     }
 
-    public String readString() throws IOException {
+    private String readString() throws IOException {
         int len;
         try {
             len = readByte();

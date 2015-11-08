@@ -28,7 +28,7 @@ import java.util.Map;
 public class AliceConfigParser {
 
     public static Map<String, ArrayList<AliceMagicInfo>> parse(InputStream in) {
-        Map<String, ArrayList<AliceMagicInfo>> supportedAlices = new HashMap<String, ArrayList<AliceMagicInfo>>();
+        Map<String, ArrayList<AliceMagicInfo>> supportedAlices = new HashMap<>();
         final BufferedReader bufferedInput = new BufferedReader(
                 new InputStreamReader(in));
         try {
@@ -38,7 +38,7 @@ public class AliceConfigParser {
                 final String name = infos[0];
                 ArrayList<AliceMagicInfo> supported = supportedAlices.get(name);
                 if (supported == null) {
-                    supported = new ArrayList<AliceMagicInfo>(5);
+                    supported = new ArrayList<>(5);
                     supportedAlices.put(name, supported);
                 }
                 final String serial = infos[1];

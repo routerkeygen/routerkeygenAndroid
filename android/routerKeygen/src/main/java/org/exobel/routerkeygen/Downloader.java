@@ -29,9 +29,9 @@ import java.io.FileOutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
-public class Downloader extends Thread {
-    Handler messHand;
-    String urlDownload;
+class Downloader extends Thread {
+    private final Handler messHand;
+    private final String urlDownload;
     private boolean stopRequested = false;
     private boolean deleteTemp = false;
 
@@ -46,7 +46,7 @@ public class Downloader extends Thread {
         URLConnection con;
         DataInputStream dis;
         FileOutputStream fos;
-        int myProgress = 0;
+        int myProgress;
         int fileLen, byteRead;
         byte[] buf;
         try {
@@ -105,7 +105,7 @@ public class Downloader extends Thread {
         }
     }
 
-    public boolean isStopRequested() {
+    private boolean isStopRequested() {
         return stopRequested;
     }
 
@@ -113,7 +113,7 @@ public class Downloader extends Thread {
         this.stopRequested = stopRequested;
     }
 
-    public boolean isDeleteTemp() {
+    private boolean isDeleteTemp() {
         return deleteTemp;
     }
 

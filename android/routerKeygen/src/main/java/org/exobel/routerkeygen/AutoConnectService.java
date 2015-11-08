@@ -65,7 +65,7 @@ public class AutoConnectService extends Service implements onConnectionListener 
     private int currentNetworkId = -1;
     private boolean cancelNotification = true;
     private long lastTimeDisconnected = -1;
-    private Runnable tryAfterDisconnecting = new Runnable() {
+    private final Runnable tryAfterDisconnecting = new Runnable() {
         public void run() {
             tryingConnection();
         }
@@ -262,7 +262,7 @@ public class AutoConnectService extends Service implements onConnectionListener 
      * Class for clients to access. Because we know this service always runs in
      * the same process as its clients, we don't need to deal with IPC.
      */
-    public class LocalBinder extends Binder {
+    private class LocalBinder extends Binder {
         AutoConnectService getService() {
             return AutoConnectService.this;
         }

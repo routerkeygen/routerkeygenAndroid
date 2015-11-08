@@ -5,7 +5,9 @@
     android:layout_height="wrap_content"
     android:paddingBottom="6dip"
     android:paddingLeft="6dip"
+    android:paddingStart="?android:attr/scrollbarSize"
     android:paddingRight="?android:attr/scrollbarSize"
+    android:paddingEnd="?android:attr/scrollbarSize"
     android:paddingTop="6dip">
 
     <TextView
@@ -22,6 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@android:id/title"
+        android:layout_alignStart="@android:id/title"
         android:layout_below="@android:id/title"
         android:maxLines="10"
         android:textAppearance="?android:attr/textAppearanceSmall"
@@ -32,8 +35,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_below="@android:id/title"
-        android:paddingRight="16dip"></TextView>
+        android:paddingLeft="16dip"
+        android:paddingRight="16dip"
+        android:paddingEnd="16dip"/>
 
     <TextView
         android:id="@+id/seekBarPrefValue"
@@ -41,14 +47,16 @@
         android:layout_height="wrap_content"
         android:layout_below="@android:id/title"
         android:layout_toLeftOf="@id/seekBarPrefUnitsRight"
-        android:gravity="right"></TextView>
+        android:layout_toStartOf="@id/seekBarPrefUnitsRight"
+        android:gravity="end"/>
 
     <TextView
         android:id="@+id/seekBarPrefUnitsLeft"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@android:id/title"
-        android:layout_toLeftOf="@id/seekBarPrefValue"></TextView>
+        android:layout_toLeftOf="@id/seekBarPrefValue"
+        android:layout_toStartOf="@id/seekBarPrefValue"/>
 
     <LinearLayout
         android:id="@+id/seekBarPrefBarContainer"
@@ -56,7 +64,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_below="@android:id/summary"
-        android:orientation="horizontal"></LinearLayout>
+        android:orientation="horizontal"/>
 
 </RelativeLayout>

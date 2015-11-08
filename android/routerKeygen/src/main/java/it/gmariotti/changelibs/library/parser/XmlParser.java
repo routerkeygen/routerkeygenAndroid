@@ -82,7 +82,7 @@ public class XmlParser extends BaseParser {
     /**
      * TAG for logging *
      */
-    private static String TAG = "XmlParser";
+    private static final String TAG = "XmlParser";
     private int mChangeLogFileResourceId = Constants.mChangeLogFileResourceId;
 
     //--------------------------------------------------------------------------------
@@ -123,7 +123,7 @@ public class XmlParser extends BaseParser {
     @Override
     public ChangeLog readChangeLogFile() throws Exception {
 
-        ChangeLog chg = null;
+        ChangeLog chg;
 
         try {
             InputStream is = mContext.getResources().openRawResource(mChangeLogFileResourceId);
@@ -167,7 +167,7 @@ public class XmlParser extends BaseParser {
      * @param parser
      * @param changeLog
      */
-    protected void readChangeLogNode(XmlPullParser parser, ChangeLog changeLog) throws Exception {
+    private void readChangeLogNode(XmlPullParser parser, ChangeLog changeLog) throws Exception {
 
         if (parser == null || changeLog == null) return;
 
@@ -207,7 +207,7 @@ public class XmlParser extends BaseParser {
      * @param changeLog
      * @throws Exception
      */
-    protected void readChangeLogVersionNode(XmlPullParser parser, ChangeLog changeLog) throws Exception {
+    private void readChangeLogVersionNode(XmlPullParser parser, ChangeLog changeLog) throws Exception {
 
         if (parser == null) return;
 

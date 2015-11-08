@@ -30,6 +30,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:clickable="false"
             android:text="@string/lb_manual" />
 
@@ -60,6 +61,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:clickable="false"
                 android:text="@string/lb_manual_bssid" />
 
@@ -69,6 +71,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/label_bssid"
                 android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:imeOptions="actionNext"
                 android:inputType="textFilter"
                 android:maxLength="2"
@@ -81,6 +84,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/label_bssid"
                 android:layout_toRightOf="@id/input_mac_pair1"
+                android:layout_toEndOf="@id/input_mac_pair1"
                 android:clickable="false"
                 android:text="@string/manual_mac_separator"
                 android:textSize="@dimen/separator_mac" />
@@ -91,6 +95,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/label_bssid"
                 android:layout_toRightOf="@id/lb_input_mac_pair1"
+                android:layout_toEndOf="@id/lb_input_mac_pair1"
                 android:imeOptions="actionNext"
                 android:inputType="textFilter"
                 android:maxLength="2"
@@ -103,6 +108,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/label_bssid"
                 android:layout_toRightOf="@id/input_mac_pair2"
+                android:layout_toEndOf="@id/input_mac_pair2"
                 android:clickable="false"
                 android:text="@string/manual_mac_separator"
                 android:textSize="@dimen/separator_mac" />
@@ -113,6 +119,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/label_bssid"
                 android:layout_toRightOf="@id/lb_input_mac_pair2"
+                android:layout_toEndOf="@id/lb_input_mac_pair2"
                 android:imeOptions="actionNext"
                 android:inputType="textFilter"
                 android:maxLength="2"
@@ -125,6 +132,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/label_bssid"
                 android:layout_toRightOf="@id/input_mac_pair3"
+                android:layout_toEndOf="@id/input_mac_pair3"
                 android:clickable="false"
                 android:text="@string/manual_mac_separator"
                 android:textSize="@dimen/separator_mac" />
@@ -135,6 +143,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/label_bssid"
                 android:layout_toRightOf="@id/lb_input_mac_pair3"
+                android:layout_toEndOf="@id/lb_input_mac_pair3"
                 android:imeOptions="actionNext"
                 android:inputType="textFilter"
                 android:maxLength="2"
@@ -147,6 +156,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/label_bssid"
                 android:layout_toRightOf="@id/input_mac_pair4"
+                android:layout_toEndOf="@id/input_mac_pair4"
                 android:clickable="false"
                 android:text="@string/manual_mac_separator"
                 android:textSize="@dimen/separator_mac" />
@@ -157,6 +167,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/label_bssid"
                 android:layout_toRightOf="@id/lb_input_mac_pair4"
+                android:layout_toEndOf="@id/input_mac_pair4"
                 android:imeOptions="actionNext"
                 android:inputType="textFilter"
                 android:maxLength="2"
@@ -169,6 +180,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/label_bssid"
                 android:layout_toRightOf="@id/input_mac_pair5"
+                android:layout_toEndOf="@id/input_mac_pair5"
                 android:clickable="false"
                 android:text="@string/manual_mac_separator"
                 android:textSize="@dimen/separator_mac" />
@@ -179,6 +191,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/label_bssid"
                 android:layout_toRightOf="@id/lb_input_mac_pair5"
+                android:layout_toEndOf="@id/input_mac_pair5"
                 android:imeOptions="actionDone"
                 android:inputType="textFilter"
                 android:maxLength="2"
@@ -190,6 +203,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:gravity="center"
             android:orientation="horizontal">
 

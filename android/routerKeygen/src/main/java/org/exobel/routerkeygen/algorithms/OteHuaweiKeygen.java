@@ -41,14 +41,19 @@ public class OteHuaweiKeygen extends Keygen {
         final String[] magic = magicValues.split(" ");
         final String series = mac.substring(0, 2) + mac.substring(6, 8);
         final int point;
-        if (series.equals("E8FD"))
-            point = 0;
-        else if (series.equals("E8F5"))
-            point = 1;
-        else if (series.equals("E8F6"))
-            point = 2;
-        else
-            return getResults();
+        switch (series) {
+            case "E8FD":
+                point = 0;
+                break;
+            case "E8F5":
+                point = 1;
+                break;
+            case "E8F6":
+                point = 2;
+                break;
+            default:
+                return getResults();
+        }
         if (point >= magic.length)
             return getResults();
         final String pass = "000000" + magic[point];

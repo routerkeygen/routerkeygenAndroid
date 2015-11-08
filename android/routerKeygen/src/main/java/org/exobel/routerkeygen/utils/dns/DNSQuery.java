@@ -18,7 +18,6 @@ public class DNSQuery {
     private String queryHost;
     private int queryType, queryClass, queryID;
     private static int globalID;
-    public int code;
 
     public DNSQuery(String host, int type, int clas) {
         StringTokenizer labels = new StringTokenizer(host, ".");
@@ -54,9 +53,7 @@ public class DNSQuery {
         DataOutputStream dataOut = new DataOutputStream(byteArrayOut);
         try {
             dataOut.writeShort(queryID);
-            dataOut.writeShort((0 << DNS.SHIFT_QUERY) |
-                    (DNS.OPCODE_QUERY << DNS.SHIFT_OPCODE) |
-                    (1 << DNS.SHIFT_RECURSE_PLEASE));
+            dataOut.writeShort((1 << DNS.SHIFT_RECURSE_PLEASE));
             dataOut.writeShort(1); // # queries
             dataOut.writeShort(0); // # answers
             dataOut.writeShort(0); // # authorities
@@ -75,9 +72,9 @@ public class DNSQuery {
         return byteArrayOut.toByteArray();
     }
 
-    private Vector<DNSRR> answers = new Vector<>();
-    private Vector<DNSRR> authorities = new Vector<>();
-    private Vector<DNSRR> additional = new Vector<>();
+    private final Vector<DNSRR> answers = new Vector<>();
+    private final Vector<DNSRR> authorities = new Vector<>();
+    private final Vector<DNSRR> additional = new Vector<>();
 
     public void receiveResponse(byte[] data, int length) throws IOException {
         DNSInputStream dnsIn = new DNSInputStream(data, 0, length);
@@ -111,7 +108,7 @@ public class DNSQuery {
 
     private boolean authoritative, truncated, recursive;
 
-    protected void decodeFlags(int flags) throws IOException {
+    private void decodeFlags(int flags) throws IOException {
         boolean isResponse = ((flags >> DNS.SHIFT_QUERY) & 1) != 0;
         if (!isResponse)
             throw new IOException("Response flag not set");
@@ -120,7 +117,7 @@ public class DNSQuery {
         truncated = ((flags >> DNS.SHIFT_TRUNCATED) & 1) != 0;
         // could check recurse request
         recursive = ((flags >> DNS.SHIFT_RECURSE_AVAILABLE) & 1) != 0;
-        code = (flags >> DNS.SHIFT_RESPONSE_CODE) & 15;
+        int code = (flags) & 15;
         if (code != 0)
             throw new IOException(DNS.codeName(code) + " (" + code + ")");
     }

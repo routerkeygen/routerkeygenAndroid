@@ -47,7 +47,7 @@ public class PinnedSectionListView extends ListView {
 	//-- inner classes
 
 	/** List adapter to be implemented for being used with PinnedSectionListView adapter. */
-	public static interface PinnedSectionListAdapter extends ListAdapter {
+	public interface PinnedSectionListAdapter extends ListAdapter {
 		/** This method shall return 'true' if views of given type has to be pinned. */
 		boolean isItemViewTypePinned(int viewType);
 	}
@@ -74,16 +74,16 @@ public class PinnedSectionListView extends ListView {
 	private int mShadowHeight;
 
 	/** Delegating listener, can be null. */
-	OnScrollListener mDelegateOnScrollListener;
+	private OnScrollListener mDelegateOnScrollListener;
 
 	/** Shadow for being recycled, can be null. */
-	PinnedSection mRecycleSection;
+	private PinnedSection mRecycleSection;
 
 	/** shadow instance with a pinned view, can be null. */
-	PinnedSection mPinnedSection;
+	private PinnedSection mPinnedSection;
 
 	/** Pinned view Y-translation. We use it to stick pinned view to the next section. */
-	int mTranslateY;
+	private int mTranslateY;
 
 	/** Scroll listener which does the magic */
 	private final OnScrollListener mOnScrollListener = new OnScrollListener() {
@@ -124,7 +124,7 @@ public class PinnedSectionListView extends ListView {
 					destroyPinnedShadow();
 				}
 			}
-		};
+		}
 
 	};
 
@@ -132,7 +132,8 @@ public class PinnedSectionListView extends ListView {
 	private final DataSetObserver mDataSetObserver = new DataSetObserver() {
 		@Override public void onChanged() {
 			recreatePinnedShadow();
-		};
+		}
+
 		@Override public void onInvalidated() {
 			recreatePinnedShadow();
 		}
@@ -168,7 +169,7 @@ public class PinnedSectionListView extends ListView {
 
 	//-- pinned section drawing methods
 
-	public void initShadow(boolean visible) {
+	private void initShadow(boolean visible) {
 		if (visible) {
 			if (mShadowDrawable == null) {
 				mShadowDrawable = new GradientDrawable(Orientation.TOP_BOTTOM,
@@ -184,7 +185,7 @@ public class PinnedSectionListView extends ListView {
 	}
 
 	/** Create shadow wrapper with a pinned view for a view at given position */
-	void createPinnedShadow(int position) {
+	private void createPinnedShadow(int position) {
 
 		// try to recycle shadow
 		PinnedSection pinnedShadow = mRecycleSection;
@@ -227,7 +228,7 @@ public class PinnedSectionListView extends ListView {
 	}
 
 	/** Destroy shadow wrapper for currently pinned view */
-	void destroyPinnedShadow() {
+	private void destroyPinnedShadow() {
 		if (mPinnedSection != null) {
 			// keep shadow for being recycled later
 			mRecycleSection = mPinnedSection;
@@ -236,7 +237,7 @@ public class PinnedSectionListView extends ListView {
 	}
 
 	/** Makes sure we have an actual pinned shadow for given position. */
-	void ensureShadowForPosition(int sectionPosition, int firstVisibleItem, int visibleItemCount) {
+	private void ensureShadowForPosition(int sectionPosition, int firstVisibleItem, int visibleItemCount) {
 		if (visibleItemCount < 2) { // no need for creating shadow at all, we have a single visible item
 			destroyPinnedShadow();
 			return;
@@ -276,7 +277,7 @@ public class PinnedSectionListView extends ListView {
 
 	}
 
-	int findFirstVisibleSectionPosition(int firstVisibleItem, int visibleItemCount) {
+	private int findFirstVisibleSectionPosition(int firstVisibleItem, int visibleItemCount) {
 		ListAdapter adapter = getAdapter();
 
 		int adapterDataCount = adapter.getCount();
@@ -294,7 +295,7 @@ public class PinnedSectionListView extends ListView {
 		return -1;
 	}
 
-	int findCurrentSectionPosition(int fromPosition) {
+	private int findCurrentSectionPosition(int fromPosition) {
 		ListAdapter adapter = getAdapter();
 
 		if (fromPosition >= adapter.getCount()) return -1; // dataset has changed, no candidate
@@ -318,7 +319,7 @@ public class PinnedSectionListView extends ListView {
 		return -1; // no candidate found
 	}
 
-	void recreatePinnedShadow() {
+	private void recreatePinnedShadow() {
 		destroyPinnedShadow();
 		ListAdapter adapter = getAdapter();
 		if (adapter != null && adapter.getCount() > 0) {
@@ -514,7 +515,7 @@ public class PinnedSectionListView extends ListView {
 		return false;
 	}
 
-	public static boolean isItemViewTypePinned(ListAdapter adapter, int viewType) {
+	private static boolean isItemViewTypePinned(ListAdapter adapter, int viewType) {
 		if (adapter instanceof HeaderViewListAdapter) {
 			adapter = ((HeaderViewListAdapter)adapter).getWrappedAdapter();
 		}

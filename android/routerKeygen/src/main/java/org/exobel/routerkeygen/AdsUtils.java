@@ -11,7 +11,6 @@ import android.preference.PreferenceManager;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
@@ -49,9 +48,10 @@ public class AdsUtils {
     public static MMAdView loadAdIfNeeded(Activity activity) {
         // Create the adView
         MMAdView adView = new MMAdView(activity);
+        final RelativeLayout adRelativeLayout = (RelativeLayout) activity
+                .findViewById(R.id.adBannerRelativeLayout);
         if (checkDonation(activity)) {
-            final View vg = activity.findViewById(R.id.adBannerRelativeLayout);
-            ((ViewGroup) vg.getParent()).removeView(adView);
+            ((ViewGroup) adRelativeLayout.getParent()).removeView(adView);
             return null;
         }
         // Set your apid
@@ -80,8 +80,6 @@ public class AdsUtils {
         adView.setHeight(placementHeight);
         adView.getAd();
         // Add the adview to the view layout
-        RelativeLayout adRelativeLayout = (RelativeLayout) activity
-                .findViewById(R.id.adBannerRelativeLayout);
         int layoutWidth = (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP, placementWidth, activity
                         .getResources().getDisplayMetrics());
@@ -107,7 +105,7 @@ public class AdsUtils {
         if (location != null) {
             MMRequest.setUserLocation(location);
         }
-        Map<String, String> metaData = new HashMap<String, String>();
+        Map<String, String> metaData = new HashMap<>();
         metaData.put(MMRequest.KEY_ETHNICITY, MMRequest.ETHNICITY_HISPANIC);
         adRequest.setMetaValues(metaData);
         return adRequest;
@@ -160,7 +158,7 @@ public class AdsUtils {
 
     public static boolean checkDonation(Activity activity) {
         final PackageManager pm = activity.getPackageManager();
-        boolean app_installed = false;
+        boolean app_installed;
         try {
             pm.getPackageInfo("org.exobel.routerkeygendownloader",
                     PackageManager.GET_ACTIVITIES);
@@ -174,6 +172,7 @@ public class AdsUtils {
                         PackageManager.GET_ACTIVITIES);
                 app_installed = true;
             } catch (PackageManager.NameNotFoundException e) {
+                app_installed = false;
             }
         }
         return app_installed;

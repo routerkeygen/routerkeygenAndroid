@@ -29,7 +29,7 @@ public abstract class DNSRR {
 
     protected abstract void decode(DNSInputStream dnsIn) throws IOException;
 
-    public String getRRName() {
+    String getRRName() {
         return rrName;
     }
 

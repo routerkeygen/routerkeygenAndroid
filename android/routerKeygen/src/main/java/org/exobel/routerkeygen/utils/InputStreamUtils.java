@@ -27,10 +27,10 @@ public class InputStreamUtils {
         while (check != length) {
             int ret = input.read(buf, check, length - check);
             if (ret == -1) {
-                return false;
+                return true;
             } else
                 check += ret;
         }
-        return true;
+        return false;
     }
 }

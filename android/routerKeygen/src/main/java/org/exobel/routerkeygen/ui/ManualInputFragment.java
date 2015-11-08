@@ -32,7 +32,7 @@ import java.util.zip.ZipInputStream;
 
 public class ManualInputFragment extends SherlockFragment {
     public final static String MAC_ADDRESS_ARG = "mac_address";
-    private static OnItemSelectionListener sDummyCallbacks = new OnItemSelectionListener() {
+    private static final OnItemSelectionListener sDummyCallbacks = new OnItemSelectionListener() {
         public void onItemSelected(WiFiNetwork id) {
         }
 
@@ -67,7 +67,7 @@ public class ManualInputFragment extends SherlockFragment {
         else
             macAddress = null;
         final View root = inflater
-                .inflate(R.layout.fragment_manual_input, null);
+                .inflate(R.layout.fragment_manual_input, container, false);
         mainView = root.findViewById(R.id.manual_root);
         loading = root.findViewById(R.id.loading_spinner);
         final String[] routers = getResources().getStringArray(

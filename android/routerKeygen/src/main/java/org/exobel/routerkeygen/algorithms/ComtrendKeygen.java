@@ -41,11 +41,10 @@ public class ComtrendKeygen extends Keygen {
             return new ComtrendKeygen[size];
         }
     };
-    static final String magic = "bcgbghgg";
-    static final String lowermagic = "64680C";
-    static final String highermagic = "3872C0";
-    static final String mac001a2b = "001A2B";
-    private MessageDigest md;
+    private static final String magic = "bcgbghgg";
+    private static final String lowermagic = "64680C";
+    private static final String highermagic = "3872C0";
+    private static final String mac001a2b = "001A2B";
 
     public ComtrendKeygen(String ssid, String mac) {
         super(ssid, mac);
@@ -59,6 +58,7 @@ public class ComtrendKeygen extends Keygen {
     public List<String> getKeys() {
         final String ssidIdentifier = getSsidName().substring(
                 getSsidName().length() - 4);
+        MessageDigest md;
         try {
             md = MessageDigest.getInstance("MD5");
         } catch (NoSuchAlgorithmException e1) {

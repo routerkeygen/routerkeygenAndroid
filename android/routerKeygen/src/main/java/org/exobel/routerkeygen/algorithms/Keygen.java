@@ -43,17 +43,17 @@ public abstract class Keygen implements Parcelable {
     };
     final private String ssidName;
     final private String macAddress;
-    private List<String> pwList;
+    private final List<String> pwList;
     private boolean stopRequested = false;
     private int errorCode;
 
     public Keygen(final String ssid, final String mac) {
         this.ssidName = ssid;
         this.macAddress = mac.replace(":", "").toUpperCase(Locale.getDefault());
-        this.pwList = new ArrayList<String>();
+        this.pwList = new ArrayList<>();
     }
 
-    protected Keygen(Parcel in) {
+    Keygen(Parcel in) {
         ssidName = in.readString();
         if (in.readInt() == 1)
             macAddress = in.readString();
@@ -64,7 +64,7 @@ public abstract class Keygen implements Parcelable {
         pwList = in.createStringArrayList();
     }
 
-    protected static String incrementMac(String mac, int increment) {
+    static String incrementMac(String mac, int increment) {
         String incremented = Long.toHexString(Long.parseLong(mac, 16) + increment)
                 .toLowerCase(Locale.getDefault());
         //Any leading zeros will disappear in this process.
@@ -76,7 +76,7 @@ public abstract class Keygen implements Parcelable {
         return incremented;
     }
 
-    public synchronized boolean isStopRequested() {
+    synchronized boolean isStopRequested() {
         return stopRequested;
     }
 
@@ -84,20 +84,20 @@ public abstract class Keygen implements Parcelable {
         this.stopRequested = stopRequested;
     }
 
-    public String getMacAddress() {
+    String getMacAddress() {
         return macAddress;
     }
 
-    public String getSsidName() {
+    String getSsidName() {
         return ssidName;
     }
 
-    protected void addPassword(final String key) {
+    void addPassword(final String key) {
         if (!pwList.contains(key))
             pwList.add(key);
     }
 
-    protected List<String> getResults() {
+    List<String> getResults() {
         return pwList;
     }
 
@@ -107,7 +107,7 @@ public abstract class Keygen implements Parcelable {
         return errorCode;
     }
 
-    public void setErrorCode(int errorCode) {
+    void setErrorCode(int errorCode) {
         this.errorCode = errorCode;
     }
 

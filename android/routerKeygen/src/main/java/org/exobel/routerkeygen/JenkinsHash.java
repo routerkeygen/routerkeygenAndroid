@@ -83,9 +83,9 @@ public class JenkinsHash {
     private static final long MAX_VALUE = 0xFFFFFFFFL;
 
     // internal variables used in the various calculations
-    long a;
-    long b;
-    long c;
+    private long a;
+    private long b;
+    private long c;
 
 
     /**
@@ -164,7 +164,7 @@ public class JenkinsHash {
 
         int i = 0;
         while (length > 3) {
-            a = add(a, k[i + 0]);
+            a = add(a, k[i]);
             b = add(b, k[i + 1]);
             c = add(c, k[i + 2]);
             hashMix();
@@ -179,7 +179,7 @@ public class JenkinsHash {
             case 2:
                 b = add(b, k[i + 1]);  // fall through
             case 1:
-                a = add(a, k[i + 0]);  // fall through
+                a = add(a, k[i]);  // fall through
                 finalHash();
             case 0:
                 break;
@@ -187,7 +187,7 @@ public class JenkinsHash {
         return c;
     }
 
-    void finalHash() {
+    private void finalHash() {
         c = xor(c, b);
         c = subtract(c, rot(b, 14));
         a = xor(a, c);

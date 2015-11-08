@@ -28,7 +28,7 @@ import java.util.Map;
 public class TeleTuConfigParser {
 
     public static Map<String, ArrayList<TeleTuMagicInfo>> parse(InputStream in) {
-        Map<String, ArrayList<TeleTuMagicInfo>> supportedTeleTu = new HashMap<String, ArrayList<TeleTuMagicInfo>>();
+        Map<String, ArrayList<TeleTuMagicInfo>> supportedTeleTu = new HashMap<>();
         final BufferedReader bufferedInput = new BufferedReader(
                 new InputStreamReader(in));
         try {
@@ -39,7 +39,7 @@ public class TeleTuConfigParser {
                 ArrayList<TeleTuMagicInfo> supported = supportedTeleTu
                         .get(name);
                 if (supported == null) {
-                    supported = new ArrayList<TeleTuMagicInfo>(5);
+                    supported = new ArrayList<>(5);
                     supportedTeleTu.put(name, supported);
                 }
                 int[] range = new int[2];

@@ -9,7 +9,7 @@ import java.lang.ref.WeakReference;
 public class RefreshHandler extends Handler {
 	private static final long TIME_TO_REFRESH_IN_MILLIS = 15000;
 	private static final int MSG_REFRESH_BANNER = 4;
-	private WeakReference<MMAdView> mmAdViewRef;
+	private final WeakReference<MMAdView> mmAdViewRef;
 
 	public RefreshHandler(MMAdView adView) {
 		mmAdViewRef = new WeakReference<>(adView);
@@ -19,13 +19,11 @@ public class RefreshHandler extends Handler {
 	public void handleMessage(android.os.Message msg) {
 		switch (msg.what) {
 			case MSG_REFRESH_BANNER:
-				if (mmAdViewRef != null) {
-					MMAdView adView = mmAdViewRef.get();
-					if (adView != null) {
-						adView.getAd();
-						sendEmptyMessageDelayed(MSG_REFRESH_BANNER, TIME_TO_REFRESH_IN_MILLIS);
-					}
-				}
+				MMAdView adView = mmAdViewRef.get();
+				if (adView != null) {
+                    adView.getAd();
+                    sendEmptyMessageDelayed(MSG_REFRESH_BANNER, TIME_TO_REFRESH_IN_MILLIS);
+                }
 				break;
 		}
 	}

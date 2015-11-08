@@ -5,10 +5,6 @@
     android:versionCode="39"
     android:versionName="3.15.0">
 
-    <uses-sdk
-        android:minSdkVersion="10"
-        android:targetSdkVersion="22" />
-
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"

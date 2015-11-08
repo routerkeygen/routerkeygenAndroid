@@ -22,12 +22,13 @@ package it.gmariotti.changelibs.library.internal;
  *
  * @author Gabriele Mariotti (gabri.mariotti@gmail.com)
  */
+@SuppressWarnings("ALL")
 public class ChangeLogRow {
 
     /**
      * Flag to indicate a header row
      */
-    protected boolean header;
+    boolean header;
 
     /**
      * This corresponds to the android:versionName attribute in your manifest file. It is a required data
@@ -73,17 +74,9 @@ public class ChangeLogRow {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("header=" + header);
-        sb.append(",");
-        sb.append("versionName=" + versionName);
-        sb.append(",");
-        sb.append("bulletedList=" + bulletedList);
-        sb.append(",");
-        sb.append("changeText=" + changeText);
         //sb.append(",");
         //sb.append("changeTextTitle="+changeTextTitle);
-        return sb.toString();
+        return "header=" + header + "," + "versionName=" + versionName + "," + "bulletedList=" + bulletedList + "," + "changeText=" + changeText;
     }
 
     //-------------------------------------------------------------------------------------------------------------------

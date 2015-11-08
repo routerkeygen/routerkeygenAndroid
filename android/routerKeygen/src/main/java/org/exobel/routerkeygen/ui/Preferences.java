@@ -85,7 +85,7 @@ public class Preferences extends SherlockPreferenceActivity {
     /**
      * The maximum supported dictionary version
      */
-    public static final int MAX_DIC_VERSION = 4;
+    private static final int MAX_DIC_VERSION = 4;
 
     public static final String dicLocalPref = "dictionaryPath";
     public static final String wifiOnPref = "wifion";
@@ -113,7 +113,7 @@ public class Preferences extends SherlockPreferenceActivity {
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.layout.preferences);
+        addPreferencesFromResource(R.xml.preferences);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -300,14 +300,7 @@ public class Preferences extends SherlockPreferenceActivity {
                     final SharedPreferences.Editor editor = customSharedPreference
                             .edit();
                     editor.putString(dicLocalPref, file.getAbsolutePath());
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD)
-                        editor.apply();
-                    else
-                        new Thread(new Runnable() {
-                            public void run() {
-                                editor.commit();
-                            }
-                        }).start();
+                    editor.apply();
                 }
         }
     }
@@ -458,7 +451,8 @@ public class Preferences extends SherlockPreferenceActivity {
             case DIALOG_CHANGELOG: {
                 LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 ChangeLogListView chgList = (ChangeLogListView) layoutInflater
-                        .inflate(R.layout.dialog_changelog, null);
+                        .inflate(R.layout.dialog_changelog,
+                                (ViewGroup)this.getWindow().getDecorView().getRootView(), false);
                 builder.setTitle(R.string.pref_changelog)
                         .setView(chgList)
                         .setPositiveButton(android.R.string.ok,

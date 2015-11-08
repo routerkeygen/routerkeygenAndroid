@@ -44,7 +44,6 @@ public class EircomKeygen extends Keygen {
             return new EircomKeygen[size];
         }
     };
-    private MessageDigest md;
 
     public EircomKeygen(String ssid, String mac) {
         super(ssid, mac);
@@ -58,6 +57,7 @@ public class EircomKeygen extends Keygen {
     @Override
     public List<String> getKeys() {
         String mac = getMacAddress().substring(6);
+        MessageDigest md;
         try {
             md = MessageDigest.getInstance("SHA1");
         } catch (NoSuchAlgorithmException e1) {

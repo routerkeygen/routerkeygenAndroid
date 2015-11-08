@@ -15,10 +15,10 @@ import java.util.zip.ZipInputStream;
 public class WiFiNetwork implements Comparable<WiFiNetwork>, Parcelable {
 
 	// Constants used for different security types
-	public static final String PSK = "PSK";
-	public static final String WEP = "WEP";
-	public static final String EAP = "EAP";
-	public static final String OPEN = "Open";
+	private static final String PSK = "PSK";
+	private static final String WEP = "WEP";
+	private static final String EAP = "EAP";
+	private static final String OPEN = "Open";
 	public static final Parcelable.Creator<WiFiNetwork> CREATOR = new Parcelable.Creator<WiFiNetwork>() {
 
 		public WiFiNetwork[] newArray(int size) {
@@ -55,7 +55,7 @@ public class WiFiNetwork implements Comparable<WiFiNetwork>, Parcelable {
 				magicInfo);
 	}
 
-	protected WiFiNetwork(Parcel in) {
+	private WiFiNetwork(Parcel in) {
 		ssidName = in.readString();
 		if (in.readInt() == 1)
 			macAddress = in.readString();
@@ -77,7 +77,7 @@ public class WiFiNetwork implements Comparable<WiFiNetwork>, Parcelable {
 	/**
 	 * @return The security of a given {@link ScanResult}.
 	 */
-	public static String getScanResultSecurity(WiFiNetwork scanResult) {
+	private static String getScanResultSecurity(WiFiNetwork scanResult) {
 		final String cap = scanResult.encryption;
 		final String[] securityModes = {WEP, PSK, EAP};
 		for (int i = securityModes.length - 1; i >= 0; i--) {

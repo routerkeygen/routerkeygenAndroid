@@ -24,6 +24,8 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:paddingLeft="10dp"
+            android:paddingEnd="10dp"
+            android:paddingRight="10dp"
             android:text="@string/dialog_nativecalc_msg"
             android:textSize="20sp" />
     </LinearLayout>

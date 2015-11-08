@@ -50,7 +50,6 @@ public class AliceItalyKeygen extends Keygen {
     final static private String preInitCharset = "0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvWxyz0123";
     final private String ssidIdentifier;
     final private List<AliceMagicInfo> supportedAlice;
-    private MessageDigest md;
 
     public AliceItalyKeygen(String ssid, String mac,
                             List<AliceMagicInfo> supportedAlice) {
@@ -73,6 +72,7 @@ public class AliceItalyKeygen extends Keygen {
             setErrorCode(R.string.msg_erralicenotsupported);
             return null;
         }
+        MessageDigest md;
         try {
             md = MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e1) {

@@ -28,10 +28,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.List;
-import java.util.Locale;
 
 /*
  * http://www.routerpwn.com/vecinitum-de-fibra/decoded.php
@@ -92,8 +89,6 @@ public class AlcatelLucentKeygen extends Keygen {
             } while (!noReply);
             getResponse(dnsquery, datagramsocket);
             addPassword(NSLookup.getKey(dnsquery));
-        } catch (SocketException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -104,7 +99,7 @@ public class AlcatelLucentKeygen extends Keygen {
         return getResults();
     }
 
-    public static void getResponse(DNSQuery dnsquery, DatagramSocket datagramsocket)
+    private static void getResponse(DNSQuery dnsquery, DatagramSocket datagramsocket)
             throws IOException
     {
         byte packet[] = new byte[512];
@@ -113,7 +108,7 @@ public class AlcatelLucentKeygen extends Keygen {
         dnsquery.receiveResponse(datagrampacket.getData(), datagrampacket.getLength());
     }
 
-    public static void sendQuery(DNSQuery dnsquery, DatagramSocket datagramsocket, InetAddress inetaddress)
+    private static void sendQuery(DNSQuery dnsquery, DatagramSocket datagramsocket, InetAddress inetaddress)
             throws IOException
     {
         final byte [] query = dnsquery.extractQuery();

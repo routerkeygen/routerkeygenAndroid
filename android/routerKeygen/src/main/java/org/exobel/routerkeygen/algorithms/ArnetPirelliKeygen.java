@@ -39,13 +39,13 @@ public class ArnetPirelliKeygen extends Keygen {
         }
     };
     private final static String LOOKUP = "0123456789abcdefghijklmnopqrstuvwxyz";
-    protected MessageDigest md;
+    MessageDigest md;
 
     public ArnetPirelliKeygen(String ssid, String mac) {
         super(ssid, mac);
     }
 
-    protected ArnetPirelliKeygen(Parcel in) {
+    ArnetPirelliKeygen(Parcel in) {
         super(in);
     }
 
@@ -56,7 +56,7 @@ public class ArnetPirelliKeygen extends Keygen {
         return UNLIKELY_SUPPORTED;
     }
 
-    protected void generateKey(String mac, int length) {
+    void generateKey(String mac, int length) {
         byte[] macBytes = new byte[6];
         for (int i = 0; i < 12; i += 2) {
             macBytes[i / 2] = (byte) ((Character.digit(mac.charAt(i), 16) << 4) + Character

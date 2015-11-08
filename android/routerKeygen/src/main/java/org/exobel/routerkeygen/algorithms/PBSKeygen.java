@@ -45,14 +45,13 @@ public class PBSKeygen extends Keygen {
             return new PBSKeygen[size];
         }
     };
-    final static byte[] saltSHA256 = {0x54, 0x45, 0x4F, 0x74, 0x65, 0x6C,
+    private final static byte[] saltSHA256 = {0x54, 0x45, 0x4F, 0x74, 0x65, 0x6C,
             (byte) 0xB6, (byte) 0xD9, (byte) 0x86, (byte) 0x96, (byte) 0x8D,
             0x34, 0x45, (byte) 0xD2, 0x3B, 0x15, (byte) 0xCA, (byte) 0xAF,
             0x12, (byte) 0x84, 0x02, (byte) 0xAC, 0x56, 0x00, 0x05,
             (byte) 0xCE, 0x20, 0x75, (byte) 0x94, 0x3F, (byte) 0xDC,
             (byte) 0xE8};
-    final static String lookup = "0123456789ABCDEFGHIKJLMNOPQRSTUVWXYZabcdefghikjlmnopqrstuvwxyz";
-    transient private MessageDigest md;
+    private final static String lookup = "0123456789ABCDEFGHIKJLMNOPQRSTUVWXYZabcdefghikjlmnopqrstuvwxyz";
 
     public PBSKeygen(String ssid, String mac) {
         super(ssid, mac);
@@ -78,6 +77,7 @@ public class PBSKeygen extends Keygen {
 
     @Override
     public List<String> getKeys() {
+        MessageDigest md;
         try {
             md = MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e1) {

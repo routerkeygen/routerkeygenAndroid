@@ -24,7 +24,7 @@
     android:layout_height="?android:attr/listPreferredItemHeight"
     android:baselineAligned="false"
     android:focusable="false"
-    android:gravity="left|center_vertical"
+    android:gravity="start|center_vertical"
     android:orientation="horizontal"
     android:padding="0dp">
 

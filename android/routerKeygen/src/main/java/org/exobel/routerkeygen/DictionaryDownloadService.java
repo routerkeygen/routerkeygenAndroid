@@ -40,9 +40,7 @@ public class DictionaryDownloadService extends IntentService {
     private final int UNIQUE_ID = R.string.app_name
             + DictionaryDownloadService.class.getName().hashCode();
     private NotificationManager mNotificationManager;
-    private Notification update;
     private boolean cancelNotification = true;
-    private int fileLen;
     private boolean stopRequested = false;
 
     public DictionaryDownloadService() {
@@ -69,7 +67,7 @@ public class DictionaryDownloadService extends IntentService {
         HttpURLConnection con = null;
         DataInputStream dis = null;
         FileOutputStream fos = null;
-        int myProgress = 0;
+        int myProgress;
         int byteRead;
         byte[] buf;
 
@@ -94,10 +92,10 @@ public class DictionaryDownloadService extends IntentService {
 
             con = (HttpURLConnection) new URL(urlDownload).openConnection();
 
-            myProgress = byteRead = 0;
+            myProgress = 0;
 
             dis = new DataInputStream(con.getInputStream());
-            fileLen = con.getContentLength();
+            int fileLen = con.getContentLength();
             if (noSpaceLeft(fileLen)) {
                 mNotificationManager.notify(
                         UNIQUE_ID,
@@ -118,11 +116,11 @@ public class DictionaryDownloadService extends IntentService {
                 final SharedPreferences.Editor editor = PreferenceManager
                         .getDefaultSharedPreferences(getBaseContext()).edit();
                 editor.putString(Preferences.dicLocalPref, dicFile);
-                editor.commit();
+                editor.apply();
             }
 
             // Testing if we can write to the file
-            if (!canWrite(dicFile) || !canWrite(dicTemp)) {
+            if (canNotWrite(dicFile) || canNotWrite(dicTemp)) {
                 mNotificationManager.notify(
                         UNIQUE_ID,
                         NotificationUtils.getSimple(this,
@@ -149,7 +147,7 @@ public class DictionaryDownloadService extends IntentService {
                     .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB)
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            update = NotificationUtils.createProgressBar(this,
+            Notification update = NotificationUtils.createProgressBar(this,
                     getString(R.string.msg_dl_dlingdic), "", fileLen,
                     myProgress, false, PendingIntent.getActivity(
                             getApplicationContext(), 0, i,
@@ -177,8 +175,8 @@ public class DictionaryDownloadService extends IntentService {
                 }
                 if ((System.currentTimeMillis() - lastNotificationTime) > MIN_TIME_BETWWEN_UPDATES) {
                     mNotificationManager.notify(UNIQUE_ID, NotificationUtils
-                            .updateProgressBar(update, fileLen, myProgress,
-                                    false));
+                            .updateProgressBar(update, fileLen, myProgress
+                            ));
                     lastNotificationTime = System.currentTimeMillis();
                 }
             }
@@ -205,7 +203,7 @@ public class DictionaryDownloadService extends IntentService {
                 cancelNotification = false;
                 return;
             }
-            if (!renameFile(dicTemp, dicFile, true)) {
+            if (renameFile(dicTemp, dicFile, true)) {
                 new File(dicTemp).delete();
                 mNotificationManager.notify(
                         UNIQUE_ID,
@@ -259,7 +257,7 @@ public class DictionaryDownloadService extends IntentService {
         }
     }
 
-    private boolean canWrite(String filename) {
+    private boolean canNotWrite(String filename) {
         File file;
         while ((file = new File(filename)).exists()) {
             filename += "1";
@@ -268,11 +266,11 @@ public class DictionaryDownloadService extends IntentService {
             file.createNewFile();
             boolean ret = file.canWrite();
             file.delete();
-            return ret;
+            return !ret;
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return false;
+        return true;
     }
 
     private boolean renameFile(String file, String toFile, boolean saveOld) {
@@ -282,17 +280,17 @@ public class DictionaryDownloadService extends IntentService {
 
         if (!toBeRenamed.exists() || toBeRenamed.isDirectory()
                 || newFile.isDirectory())
-            return false;
+            return true;
 
         if (newFile.exists() && saveOld) {
-            if (!renameFile(toFile, toFile + "_backup", true))
+            if (renameFile(toFile, toFile + "_backup", true))
                 Toast.makeText(getBaseContext(),
                         R.string.pref_msg_err_backup_dic, Toast.LENGTH_SHORT)
                         .show();
         }
 
         // Rename
-        return toBeRenamed.renameTo(newFile);
+        return !toBeRenamed.renameTo(newFile);
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
@@ -302,15 +300,9 @@ public class DictionaryDownloadService extends IntentService {
         android.os.StatFs stat = new android.os.StatFs(Environment
                 .getExternalStorageDirectory().getPath());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            long fileLenLong = fileLen;
-            if (stat.getBlockSizeLong() == 0)
-                return true;
-            return stat.getAvailableBlocksLong() < (fileLenLong / stat
-                    .getBlockSizeLong());
+            return stat.getBlockSizeLong() == 0 || stat.getAvailableBlocksLong() < ((long) fileLen / stat.getBlockSizeLong());
         } else {
-            if (stat.getBlockSize() == 0)
-                return true;
-            return stat.getAvailableBlocks() < (fileLen / stat.getBlockSize());
+            return stat.getBlockSize() == 0 || stat.getAvailableBlocks() < (fileLen / stat.getBlockSize());
         }
     }
 }

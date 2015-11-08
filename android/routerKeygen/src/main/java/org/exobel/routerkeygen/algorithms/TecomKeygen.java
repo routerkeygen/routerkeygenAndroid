@@ -46,7 +46,6 @@ public class TecomKeygen extends Keygen {
             return new TecomKeygen[size];
         }
     };
-    private MessageDigest md;
 
     public TecomKeygen(String ssid, String mac) {
         super(ssid, mac);
@@ -58,6 +57,7 @@ public class TecomKeygen extends Keygen {
 
     @Override
     public List<String> getKeys() {
+        MessageDigest md;
         try {
             md = MessageDigest.getInstance("SHA1");
         } catch (NoSuchAlgorithmException e1) {

@@ -53,9 +53,9 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
         mMaxValue = attrs.getAttributeIntValue(ANDROIDNS, "max", 60);
         mMinValue = attrs.getAttributeIntValue(ROBOBUNNYNS, "min", 5);
 
-        mUnitsLeft = getAttributeStringValue(attrs, ROBOBUNNYNS, "unitsLeft", "");
-        String units = getAttributeStringValue(attrs, ROBOBUNNYNS, "units", "");
-        mUnitsRight = getAttributeStringValue(attrs, ROBOBUNNYNS, "unitsRight", units);
+        mUnitsLeft = getAttributeStringValue(attrs, "unitsLeft", "");
+        String units = getAttributeStringValue(attrs, "units", "");
+        mUnitsRight = getAttributeStringValue(attrs, "unitsRight", units);
 
         try {
             String newInterval = attrs.getAttributeValue(ROBOBUNNYNS, "interval");
@@ -67,8 +67,8 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 
     }
 
-    private String getAttributeStringValue(AttributeSet attrs, String namespace, String name, String defaultValue) {
-        String value = attrs.getAttributeValue(namespace, name);
+    private String getAttributeStringValue(AttributeSet attrs, String name, String defaultValue) {
+        String value = attrs.getAttributeValue(ROBOBUNNYNS, name);
         if (value == null)
             value = defaultValue;
 
@@ -77,7 +77,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 
     @Override
     protected View onCreateView(ViewGroup parent) {
-
+        super.onCreateView(parent);
         RelativeLayout layout = null;
 
         try {
@@ -123,7 +123,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
      *
      * @param view
      */
-    protected void updateView(View view) {
+    private void updateView(View view) {
 
         try {
             RelativeLayout layout = (RelativeLayout) view;
@@ -182,8 +182,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
     @Override
     protected Object onGetDefaultValue(TypedArray ta, int index) {
 
-        int defaultValue = ta.getInt(index, DEFAULT_VALUE);
-        return defaultValue;
+        return ta.getInt(index, DEFAULT_VALUE);
 
     }
 

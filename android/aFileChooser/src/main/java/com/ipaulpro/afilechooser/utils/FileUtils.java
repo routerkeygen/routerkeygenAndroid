@@ -47,19 +47,19 @@ import java.util.Comparator;
 public class FileUtils {
     public static final String MIME_TYPE_AUDIO = "audio/*";
     public static final String MIME_TYPE_TEXT = "text/*";
-    public static final String MIME_TYPE_IMAGE = "image/*";
+    private static final String MIME_TYPE_IMAGE = "image/*";
     public static final String MIME_TYPE_VIDEO = "video/*";
     public static final String MIME_TYPE_APP = "application/*";
-    public static final String HIDDEN_PREFIX = ".";
+    private static final String HIDDEN_PREFIX = ".";
     /** TAG for log messages. */
-    static final String TAG = "FileUtils";
+    private static final String TAG = "FileUtils";
     private static final boolean DEBUG = false; // Set to true to enable logging
     /**
      * File and folder comparator. TODO Expose sorting option method
      *
      * @author paulburke
      */
-    public static Comparator<File> sComparator = new Comparator<File>() {
+    public static final Comparator<File> sComparator = new Comparator<File>() {
         @Override
         public int compare(File f1, File f2) {
             // Sort alphabetically by lower case, which is much cleaner
@@ -72,7 +72,7 @@ public class FileUtils {
      *
      * @author paulburke
      */
-    public static FileFilter sFileFilter = new FileFilter() {
+    public static final FileFilter sFileFilter = new FileFilter() {
         @Override
         public boolean accept(File file) {
             final String fileName = file.getName();
@@ -85,7 +85,7 @@ public class FileUtils {
      *
      * @author paulburke
      */
-    public static FileFilter sDirFilter = new FileFilter() {
+    public static final FileFilter sDirFilter = new FileFilter() {
         @Override
         public boolean accept(File file) {
             final String fileName = file.getName();
@@ -104,7 +104,7 @@ public class FileUtils {
      * @return Extension including the dot("."); "" if there is no extension;
      *         null if uri was null.
      */
-    public static String getExtension(String uri) {
+    private static String getExtension(String uri) {
         if (uri == null) {
             return null;
         }
@@ -121,7 +121,7 @@ public class FileUtils {
     /**
      * @return Whether the URI is a local one.
      */
-    public static boolean isLocal(String url) {
+    private static boolean isLocal(String url) {
         return url != null && !url.startsWith("http://") && !url.startsWith("https://");
     }
 
@@ -129,7 +129,7 @@ public class FileUtils {
      * @return True if Uri is a MediaStore Uri.
      * @author paulburke
      */
-    public static boolean isMediaUri(Uri uri) {
+    private static boolean isMediaUri(Uri uri) {
         return "media".equalsIgnoreCase(uri.getAuthority());
     }
 
@@ -139,7 +139,7 @@ public class FileUtils {
      * @param file
      * @return uri
      */
-    public static Uri getUri(File file) {
+    private static Uri getUri(File file) {
         if (file != null) {
             return Uri.fromFile(file);
         }
@@ -176,7 +176,7 @@ public class FileUtils {
     /**
      * @return The MIME type for the given file.
      */
-    public static String getMimeType(File file) {
+    private static String getMimeType(File file) {
 
         String extension = getExtension(file.getName());
 
@@ -189,7 +189,7 @@ public class FileUtils {
     /**
      * @return The MIME type for the give Uri.
      */
-    public static String getMimeType(Context context, Uri uri) {
+    private static String getMimeType(Context context, Uri uri) {
         File file = new File(getPath(context, uri));
         return getMimeType(file);
     }
@@ -199,7 +199,7 @@ public class FileUtils {
      * @return Whether the Uri authority is {@link LocalStorageProvider}.
      * @author paulburke
      */
-    public static boolean isLocalStorageDocument(Uri uri) {
+    private static boolean isLocalStorageDocument(Uri uri) {
         return LocalStorageProvider.AUTHORITY.equals(uri.getAuthority());
     }
 
@@ -208,7 +208,7 @@ public class FileUtils {
      * @return Whether the Uri authority is ExternalStorageProvider.
      * @author paulburke
      */
-    public static boolean isExternalStorageDocument(Uri uri) {
+    private static boolean isExternalStorageDocument(Uri uri) {
         return "com.android.externalstorage.documents".equals(uri.getAuthority());
     }
 
@@ -217,7 +217,7 @@ public class FileUtils {
      * @return Whether the Uri authority is DownloadsProvider.
      * @author paulburke
      */
-    public static boolean isDownloadsDocument(Uri uri) {
+    private static boolean isDownloadsDocument(Uri uri) {
         return "com.android.providers.downloads.documents".equals(uri.getAuthority());
     }
 
@@ -226,7 +226,7 @@ public class FileUtils {
      * @return Whether the Uri authority is MediaProvider.
      * @author paulburke
      */
-    public static boolean isMediaDocument(Uri uri) {
+    private static boolean isMediaDocument(Uri uri) {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 
@@ -234,7 +234,7 @@ public class FileUtils {
      * @param uri The Uri to check.
      * @return Whether the Uri authority is Google Photos.
      */
-    public static boolean isGooglePhotosUri(Uri uri) {
+    private static boolean isGooglePhotosUri(Uri uri) {
         return "com.google.android.apps.photos.content".equals(uri.getAuthority());
     }
 
@@ -249,8 +249,8 @@ public class FileUtils {
      * @return The value of the _data column, which is typically a file path.
      * @author paulburke
      */
-    public static String getDataColumn(Context context, Uri uri, String selection,
-                                       String[] selectionArgs) {
+    private static String getDataColumn(Context context, Uri uri, String selection,
+                                        String[] selectionArgs) {
 
         Cursor cursor = null;
         final String column = "_data";
@@ -289,7 +289,7 @@ public class FileUtils {
      * @see #getFile(Context, Uri)
      * @author paulburke
      */
-    public static String getPath(final Context context, final Uri uri) {
+    private static String getPath(final Context context, final Uri uri) {
 
         if (DEBUG)
             Log.d(TAG + " File -",
@@ -457,7 +457,7 @@ public class FileUtils {
      * @return
      * @author paulburke
      */
-    public static Bitmap getThumbnail(Context context, Uri uri, String mimeType) {
+    private static Bitmap getThumbnail(Context context, Uri uri, String mimeType) {
         if (DEBUG)
             Log.d(TAG, "Attempting to get thumbnail");
 

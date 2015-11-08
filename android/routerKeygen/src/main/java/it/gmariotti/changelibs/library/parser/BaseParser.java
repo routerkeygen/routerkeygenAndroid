@@ -27,17 +27,17 @@ import it.gmariotti.changelibs.library.internal.ChangeLog;
  *
  * @author Gabriele Mariotti (gabri.mariotti@gmail.com)
  */
-public abstract class BaseParser {
+abstract class BaseParser {
 
     /**
      *  Context
      */
-    protected Context mContext;
+    final Context mContext;
 
     /**
      * Use a bulleted List
      */
-    protected boolean bulletedList;
+    boolean bulletedList;
 
     //--------------------------------------------------------------------------------
     // Constructors
@@ -48,7 +48,7 @@ public abstract class BaseParser {
      *
      * @param context  current Context
      */
-    public BaseParser(Context context) {
+    BaseParser(Context context) {
         this.mContext = context;
     }
 

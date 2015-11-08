@@ -48,8 +48,7 @@ public class SkyV1Keygen extends Keygen {
             return new SkyV1Keygen[size];
         }
     };
-    final static String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    private MessageDigest md;
+    private final static String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 
     public SkyV1Keygen(String ssid, String mac) {
@@ -66,6 +65,7 @@ public class SkyV1Keygen extends Keygen {
             setErrorCode(R.string.msg_nomac);
             return null;
         }
+        MessageDigest md;
         try {
             md = MessageDigest.getInstance("MD5");
         } catch (NoSuchAlgorithmException e1) {

@@ -15,7 +15,7 @@ import java.io.*;
 import java.net.*;
 
 public class Address extends DNSRR {
-    private int[] ipAddress = new int[4];
+    private final int[] ipAddress = new int[4];
 
     protected void decode(DNSInputStream dnsIn) throws IOException {
         for (int i = 0; i < 4; ++i)
@@ -33,7 +33,7 @@ public class Address extends DNSRR {
         return InetAddress.getByName(toByteString());
     }
 
-    public String toByteString() {
+    private String toByteString() {
         return ipAddress[0] + "." + ipAddress[1] + "." +
                 ipAddress[2] + "." + ipAddress[3];
     }

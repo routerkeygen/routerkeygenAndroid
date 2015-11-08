@@ -33,14 +33,14 @@ import java.util.List;
  * @version 2013-12-11
  * @author paulburke (ipaulpro)
  */
-public class FileListAdapter extends BaseAdapter {
+class FileListAdapter extends BaseAdapter {
 
     private final static int ICON_FOLDER = R.drawable.ic_folder;
     private final static int ICON_FILE = R.drawable.ic_file;
 
     private final LayoutInflater mInflater;
 
-    private List<File> mData = new ArrayList<File>();
+    private List<File> mData = new ArrayList<>();
 
     public FileListAdapter(Context context) {
         mInflater = LayoutInflater.from(context);

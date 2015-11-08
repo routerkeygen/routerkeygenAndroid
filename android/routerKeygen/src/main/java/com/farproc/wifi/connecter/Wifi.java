@@ -37,7 +37,7 @@ import java.util.List;
 
 public class Wifi {
 
-    public static final ConfigurationSecurities ConfigSec = ConfigurationSecurities.newInstance();
+    private static final ConfigurationSecurities ConfigSec = ConfigurationSecurities.newInstance();
 
     private static final String TAG = "Wifi Connecter";
     private static final int MAX_PRIORITY = 99999;
@@ -109,12 +109,13 @@ public class Wifi {
     /**
      * Connect to a configured network.
      *
+     * @param ctx
      * @param wifiManager
      * @param config
-     * @param numOpenNetworksKept Settings.Secure.WIFI_NUM_OPEN_NETWORKS_KEPT
+     * @param reassociate
      * @return
      */
-    public static int connectToConfiguredNetwork(final Context ctx, final WifiManager wifiMgr, WifiConfiguration config, boolean reassociate) {
+    private static int connectToConfiguredNetwork(final Context ctx, final WifiManager wifiMgr, WifiConfiguration config, boolean reassociate) {
         final String security = ConfigSec.getWifiConfigurationSecurity(config);
         int configId = config.networkId;
         int oldPri = config.priority;
@@ -199,11 +200,8 @@ public class Wifi {
                 }
             }
         }
-        if (modified) {
-            return wifiMgr.saveConfiguration();
-        }
+        return !modified || wifiMgr.saveConfiguration();
 
-        return true;
     }
 
     private static int shiftPriorityAndSave(final WifiManager wifiMgr) {
@@ -239,7 +237,7 @@ public class Wifi {
         } while (config != null);
     }
 
-    public static WifiConfiguration getWifiConfiguration(final WifiManager wifiMgr, final ScanResult hotspot, String hotspotSecurity) {
+    private static WifiConfiguration getWifiConfiguration(final WifiManager wifiMgr, final ScanResult hotspot, String hotspotSecurity) {
         final String ssid = convertToQuotedString(hotspot.SSID);
         if (ssid.length() == 0) {
             return null;
@@ -273,7 +271,7 @@ public class Wifi {
         return null;
     }
 
-    public static WifiConfiguration getWifiConfiguration(final WifiManager wifiMgr, final WifiConfiguration configToFind, String security) {
+    private static WifiConfiguration getWifiConfiguration(final WifiManager wifiMgr, final WifiConfiguration configToFind, String security) {
         final String ssid = configToFind.SSID;
         if (ssid.length() == 0) {
             return null;

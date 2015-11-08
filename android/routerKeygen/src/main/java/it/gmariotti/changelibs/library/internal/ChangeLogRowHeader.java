@@ -39,14 +39,8 @@ public class ChangeLogRowHeader extends ChangeLogRow {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("header=" + super.header);
-        sb.append(",");
-        sb.append("versionName=" + versionName);
-        sb.append(",");
-        sb.append("changeDate=" + changeDate);
 
-        return sb.toString();
+        return "header=" + super.header + "," + "versionName=" + versionName + "," + "changeDate=" + changeDate;
     }
 
 }

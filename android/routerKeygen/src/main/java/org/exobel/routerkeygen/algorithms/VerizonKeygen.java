@@ -61,7 +61,7 @@ public class VerizonKeygen extends Keygen {
         inverse[3] = getSsidName().charAt(1);
         inverse[4] = getSsidName().charAt(0);
 
-        int result = 0;
+        int result;
         try {
             result = Integer.valueOf(String.copyValueOf(inverse), 36);
         } catch (NumberFormatException e) {

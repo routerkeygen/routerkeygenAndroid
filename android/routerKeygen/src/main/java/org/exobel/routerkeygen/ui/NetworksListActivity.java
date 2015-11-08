@@ -20,7 +20,6 @@
 package org.exobel.routerkeygen.ui;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -36,8 +35,6 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.format.DateUtils;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -68,14 +65,13 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
     private boolean welcomeScreenShown;
     private RefreshHandler adRefreshHandler;
 
-    private Handler mHandler = new Handler();
-    private Menu mOptionsMenu;
+    private final Handler mHandler = new Handler();
     private boolean wifiState;
     private boolean wifiOn;
     private boolean autoScan;
     private boolean analyticsOptIn;
     private long autoScanInterval;
-    private Runnable mAutoScanTask = new Runnable() {
+    private final Runnable mAutoScanTask = new Runnable() {
         @Override
         public void run() {
             scan();
@@ -214,7 +210,6 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
-        mOptionsMenu = menu;
         getSupportMenuInflater().inflate(R.menu.networks_list, menu);
         getSupportMenuInflater().inflate(R.menu.preferences, menu);
         return true;
@@ -301,7 +296,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
         }
     }
 
-    public void scan() {
+    private void scan() {
         if (!wifiState && !wifiOn) {
             networkListFragment.setMessage(R.string.msg_nowifi);
             return;

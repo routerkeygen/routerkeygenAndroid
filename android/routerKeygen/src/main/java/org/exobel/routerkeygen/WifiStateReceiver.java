@@ -49,7 +49,6 @@ public class WifiStateReceiver extends BroadcastReceiver {
         }
         if (wifi.getWifiState() != WifiManager.WIFI_STATE_ENABLING) {
             messagePublisher.setMessage(R.string.msg_nowifi);
-            return;
         }
     }
 }

@@ -41,13 +41,12 @@ public class BelkinKeygen extends Keygen {
             {1, 2, 3, 8, 5, 1, 7, 4}, {1, 2, 3, 8, 5, 6, 7, 4}};
     private final static String[] CHARSETS = {"024613578ACE9BDF",
             "944626378ace9bdf"};
-    protected MessageDigest md;
 
     public BelkinKeygen(String ssid, String mac) {
         super(ssid, mac);
     }
 
-    protected BelkinKeygen(Parcel in) {
+    private BelkinKeygen(Parcel in) {
         super(in);
     }
 
@@ -58,7 +57,7 @@ public class BelkinKeygen extends Keygen {
         return UNLIKELY_SUPPORTED;
     }
 
-    protected void generateKey(String mac, String charset, int[] order) {
+    private void generateKey(String mac, String charset, int[] order) {
         StringBuilder key = new StringBuilder();
         if (mac.length() != 8) {
             return;
@@ -73,7 +72,7 @@ public class BelkinKeygen extends Keygen {
     @Override
     public List<String> getKeys() {
         try {
-            md = MessageDigest.getInstance("SHA-256");
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e1) {
             setErrorCode(R.string.msg_nosha256);
             return null;
@@ -97,9 +96,9 @@ public class BelkinKeygen extends Keygen {
         } else {
             //Bruteforcing
             for (int i = 0; i < 3; ++i) {
-                for (int j = 0; j < ORDERS.length; ++j) {
-                    generateKey(mac.substring(4), CHARSETS[0], ORDERS[j]);
-                    generateKey(mac.substring(4), CHARSETS[1], ORDERS[j]);
+                for (int[] ORDER : ORDERS) {
+                    generateKey(mac.substring(4), CHARSETS[0], ORDER);
+                    generateKey(mac.substring(4), CHARSETS[1], ORDER);
                 }
                 mac = incrementMac(mac, 1);
             }

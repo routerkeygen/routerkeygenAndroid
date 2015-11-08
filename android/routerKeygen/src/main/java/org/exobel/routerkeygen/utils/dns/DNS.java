@@ -11,7 +11,7 @@ package org.exobel.routerkeygen.utils.dns;
  * all rights reserved; see license.txt for details.
  */
 
-public final class DNS {
+final class DNS {
     public static final int
             DEFAULT_PORT = 53;
 

@@ -42,7 +42,7 @@ public class DiscusKeygen extends Keygen {
             return new DiscusKeygen[size];
         }
     };
-    static final int essidConst = 0xD0EC31;
+    private static final int essidConst = 0xD0EC31;
 
     public DiscusKeygen(String ssid, String mac) {
         super(ssid, mac);

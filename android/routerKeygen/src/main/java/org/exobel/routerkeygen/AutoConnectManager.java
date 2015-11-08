@@ -26,12 +26,11 @@ import android.net.wifi.WifiManager;
 import android.util.Log;
 
 public class AutoConnectManager extends BroadcastReceiver {
-	final WifiManager wifi;
-	final onConnectionListener listener;
+	private final onConnectionListener listener;
 
 	public AutoConnectManager(WifiManager wifi, onConnectionListener listener) {
 		this.listener = listener;
-		this.wifi = wifi;
+		WifiManager wifi1 = wifi;
 	}
 
 	@Override
@@ -47,7 +46,6 @@ public class AutoConnectManager extends BroadcastReceiver {
 			}
 			if (state.equals(SupplicantState.DISCONNECTED)) {
 				listener.onFailedConnection();
-				return; /* Failed */
 			}
 		}
 

@@ -225,7 +225,7 @@ public class ThomsonKeygen extends Keygen {
 		}
 		int version;
 		try {
-			if (!InputStreamUtils.readFromInput(table, 1282, fis)) {
+			if (InputStreamUtils.readFromInput(table, 1282, fis)) {
 				setErrorCode(R.string.msg_errordict);
 				errorDict = true;
 				fis.close();
@@ -248,7 +248,7 @@ public class ThomsonKeygen extends Keygen {
 			}
 			totalOffset += offset;
 			fis.seek(totalOffset);
-			if (!InputStreamUtils.readFromInput(table, 1024, fis)) {
+			if (InputStreamUtils.readFromInput(table, 1024, fis)) {
 				setErrorCode(R.string.msg_errordict);
 				errorDict = true;
 				fis.close();

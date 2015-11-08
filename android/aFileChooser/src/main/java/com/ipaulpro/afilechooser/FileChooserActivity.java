@@ -46,13 +46,13 @@ public class FileChooserActivity extends FragmentActivity implements
         OnBackStackChangedListener, FileListFragment.Callbacks {
 
     public static final String PATH = "path";
-    public static final String EXTERNAL_BASE_PATH = Environment
+    private static final String EXTERNAL_BASE_PATH = Environment
             .getExternalStorageDirectory().getAbsolutePath();
 
     private static final boolean HAS_ACTIONBAR = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
 
     private FragmentManager mFragmentManager;
-    private BroadcastReceiver mStorageListener = new BroadcastReceiver() {
+    private final BroadcastReceiver mStorageListener = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             Toast.makeText(context, R.string.storage_removed, Toast.LENGTH_LONG).show();

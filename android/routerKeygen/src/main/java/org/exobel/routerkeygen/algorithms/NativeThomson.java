@@ -49,13 +49,13 @@ public class NativeThomson extends Keygen {
         super(keygen.getSsidName(), keygen.getMacAddress());
         ssidIdentifier = keygen.getSsidName().substring(
                 keygen.getSsidName().length() - 6);
-        tasks = new ArrayList<ThomsonTask>();
+        tasks = new ArrayList<>();
     }
 
     private NativeThomson(Parcel in) {
         super(in);
         ssidIdentifier = in.readString();
-        tasks = new ArrayList<ThomsonTask>();
+        tasks = new ArrayList<>();
     }
 
     @Override
@@ -107,8 +107,7 @@ public class NativeThomson extends Keygen {
                 setErrorCode(R.string.msg_err_native);
             if (isStopRequested())
                 return null;
-            for (int i = 0; i < results.length; ++i)
-                addPassword(results[i]);
+            for (String result : results) addPassword(result);
         }
         if (getResults().size() == 0)
             setErrorCode(R.string.msg_errnomatches);

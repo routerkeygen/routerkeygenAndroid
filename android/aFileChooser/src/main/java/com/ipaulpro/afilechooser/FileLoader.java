@@ -25,6 +25,7 @@ import com.ipaulpro.afilechooser.utils.FileUtils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -33,7 +34,7 @@ import java.util.List;
  * @version 2013-12-11
  * @author paulburke (ipaulpro)
  */
-public class FileLoader extends AsyncTaskLoader<List<File>> {
+class FileLoader extends AsyncTaskLoader<List<File>> {
 
 	private static final int FILE_OBSERVER_MASK = FileObserver.CREATE
 			| FileObserver.DELETE | FileObserver.DELETE_SELF
@@ -43,7 +44,7 @@ public class FileLoader extends AsyncTaskLoader<List<File>> {
 	private FileObserver mFileObserver;
 
 	private List<File> mData;
-	private String mPath;
+	private final String mPath;
 
 	public FileLoader(Context context, String path) {
 		super(context);
@@ -53,7 +54,7 @@ public class FileLoader extends AsyncTaskLoader<List<File>> {
 	@Override
 	public List<File> loadInBackground() {
 
-        ArrayList<File> list = new ArrayList<File>();
+        ArrayList<File> list = new ArrayList<>();
 
         // Current directory File instance
         final File pathDir = new File(mPath);
@@ -64,8 +65,7 @@ public class FileLoader extends AsyncTaskLoader<List<File>> {
             // Sort the folders alphabetically
             Arrays.sort(dirs, FileUtils.sComparator);
             // Add each folder to the File list for the list adapter
-            for (File dir : dirs)
-                list.add(dir);
+			Collections.addAll(list, dirs);
         }
 
         // List file in this directory with the file filter
@@ -74,8 +74,7 @@ public class FileLoader extends AsyncTaskLoader<List<File>> {
             // Sort the files alphabetically
             Arrays.sort(files, FileUtils.sComparator);
             // Add each file to the File list for the list adapter
-            for (File file : files)
-                list.add(file);
+			Collections.addAll(list, files);
         }
 
         return list;
@@ -139,7 +138,7 @@ public class FileLoader extends AsyncTaskLoader<List<File>> {
 		onReleaseResources(data);
 	}
 
-	protected void onReleaseResources(List<File> data) {
+	private void onReleaseResources(List<File> data) {
 
 		if (mFileObserver != null) {
 			mFileObserver.stopWatching();

@@ -41,13 +41,12 @@ public class PirelliKeygen extends Keygen {
             return new PirelliKeygen[size];
         }
     };
-    final static byte[] saltMD5 = {
+    private final static byte[] saltMD5 = {
             0x22, 0x33, 0x11, 0x34, 0x02,
             (byte) 0x81, (byte) 0xFA, 0x22, 0x11, 0x41,
             0x68, 0x11, 0x12, 0x01, 0x05,
             0x22, 0x71, 0x42, 0x10, 0x66};
     final private String ssidIdentifier;
-    private MessageDigest md;
 
 
     public PirelliKeygen(String ssid, String mac) {
@@ -62,6 +61,7 @@ public class PirelliKeygen extends Keygen {
 
     @Override
     public List<String> getKeys() {
+        MessageDigest md;
         try {
             md = MessageDigest.getInstance("MD5");
         } catch (NoSuchAlgorithmException e1) {

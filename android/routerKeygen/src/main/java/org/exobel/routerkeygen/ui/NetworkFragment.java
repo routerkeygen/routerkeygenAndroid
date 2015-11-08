@@ -75,7 +75,7 @@ import java.util.zip.ZipInputStream;
 public class NetworkFragment extends SherlockFragment {
 
 	public static final String NETWORK_ID = "vulnerable_network";
-	public static final String TAG = "NetworkFragment";
+	private static final String TAG = "NetworkFragment";
 	private static final String PASSWORD_LIST = "password_list";
 	private WiFiNetwork wifiNetwork;
 	private KeygenThread thread;
@@ -359,7 +359,7 @@ public class NetworkFragment extends SherlockFragment {
 		private final static int SHOW_TOAST = 0;
 		private final static int SHOW_MESSAGE_WITH_SPINNER = 1;
 		private final static int SHOW_MESSAGE_NO_SPINNER = 2;
-		private WiFiNetwork wifiNetwork;
+		private final WiFiNetwork wifiNetwork;
 
 		private KeygenThread(WiFiNetwork wifiNetwork) {
 			this.wifiNetwork = wifiNetwork;

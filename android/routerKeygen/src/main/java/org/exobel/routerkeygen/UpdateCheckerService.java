@@ -40,9 +40,7 @@ public class UpdateCheckerService extends IntentService {
             lV.version = version.getString("version");
             lV.url = version.getString("url");
             return lV;
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (MalformedURLException e) {
+        } catch (JSONException | MalformedURLException e) {
             e.printStackTrace();
         }
         return null;
@@ -52,8 +50,8 @@ public class UpdateCheckerService extends IntentService {
         InputStream inputStream = null;
         try {
             byte[] buffer = new byte[128];
-            int read = 0;
-            String jsonAsString = new String();
+            int read;
+            String jsonAsString = "";
 
             inputStream = url.openStream();
 

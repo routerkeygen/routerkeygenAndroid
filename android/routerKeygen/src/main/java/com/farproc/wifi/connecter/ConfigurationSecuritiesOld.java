@@ -13,21 +13,21 @@ import android.util.Log;
 public class ConfigurationSecuritiesOld extends ConfigurationSecurities {
 
     // Constants used for different security types
-    public static final String WPA2 = "WPA2";
-    public static final String WPA = "WPA";
-    public static final String WEP = "WEP";
-    public static final String OPEN = "Open";
+    private static final String WPA2 = "WPA2";
+    private static final String WPA = "WPA";
+    private static final String WEP = "WEP";
+    private static final String OPEN = "Open";
     // For EAP Enterprise fields
-    public static final String WPA_EAP = "WPA-EAP";
-    public static final String IEEE8021X = "IEEE8021X";
+    private static final String WPA_EAP = "WPA-EAP";
+    private static final String IEEE8021X = "IEEE8021X";
 
     public static final String[] EAP_METHOD = {"PEAP", "TLS", "TTLS"};
 
-    public static final int WEP_PASSWORD_AUTO = 0;
-    public static final int WEP_PASSWORD_ASCII = 1;
+    private static final int WEP_PASSWORD_AUTO = 0;
+    private static final int WEP_PASSWORD_ASCII = 1;
     public static final int WEP_PASSWORD_HEX = 2;
 
-    static final String[] SECURITY_MODES = {WEP, WPA, WPA2, WPA_EAP, IEEE8021X};
+    private static final String[] SECURITY_MODES = {WEP, WPA, WPA2, WPA_EAP, IEEE8021X};
 
     private static final String TAG = "ConfigurationSecuritiesOld";
 
@@ -35,11 +35,8 @@ public class ConfigurationSecuritiesOld extends ConfigurationSecurities {
         final int len = wepKey.length();
 
         // WEP-40, WEP-104, and some vendors using 256-bit WEP (WEP-232?)
-        if (len != 10 && len != 26 && len != 58) {
-            return false;
-        }
+        return !(len != 10 && len != 26 && len != 58) && isHex(wepKey);
 
-        return isHex(wepKey);
     }
 
     private static boolean isHex(String key) {
@@ -113,68 +110,75 @@ public class ConfigurationSecuritiesOld extends ConfigurationSecurities {
             Log.w(TAG, "Empty security, assuming open");
         }
 
-        if (security.equals(WEP)) {
-            int wepPasswordType = WEP_PASSWORD_AUTO;
-            // If password is empty, it should be left untouched
-            if (!TextUtils.isEmpty(password)) {
-                if (wepPasswordType == WEP_PASSWORD_AUTO) {
-                    if (isHexWepKey(password)) {
-                        config.wepKeys[0] = password;
+        switch (security) {
+            case WEP:
+                int wepPasswordType = WEP_PASSWORD_AUTO;
+                // If password is empty, it should be left untouched
+                if (!TextUtils.isEmpty(password)) {
+                    if (wepPasswordType == WEP_PASSWORD_AUTO) {
+                        if (isHexWepKey(password)) {
+                            config.wepKeys[0] = password;
+                        } else {
+                            config.wepKeys[0] = Wifi.convertToQuotedString(password);
+                        }
                     } else {
-                        config.wepKeys[0] = Wifi.convertToQuotedString(password);
+                        config.wepKeys[0] = wepPasswordType == WEP_PASSWORD_ASCII
+                                ? Wifi.convertToQuotedString(password)
+                                : password;
                     }
-                } else {
-                    config.wepKeys[0] = wepPasswordType == WEP_PASSWORD_ASCII
-                            ? Wifi.convertToQuotedString(password)
-                            : password;
                 }
-            }
 
-            config.wepTxKeyIndex = 0;
+                config.wepTxKeyIndex = 0;
 
-            config.allowedAuthAlgorithms.set(AuthAlgorithm.OPEN);
-            config.allowedAuthAlgorithms.set(AuthAlgorithm.SHARED);
+                config.allowedAuthAlgorithms.set(AuthAlgorithm.OPEN);
+                config.allowedAuthAlgorithms.set(AuthAlgorithm.SHARED);
 
-            config.allowedKeyManagement.set(KeyMgmt.NONE);
+                config.allowedKeyManagement.set(KeyMgmt.NONE);
 
-            config.allowedGroupCiphers.set(GroupCipher.WEP40);
-            config.allowedGroupCiphers.set(GroupCipher.WEP104);
+                config.allowedGroupCiphers.set(GroupCipher.WEP40);
+                config.allowedGroupCiphers.set(GroupCipher.WEP104);
 
-        } else if (security.equals(WPA) || security.equals(WPA2)) {
-            config.allowedGroupCiphers.set(GroupCipher.TKIP);
-            config.allowedGroupCiphers.set(GroupCipher.CCMP);
+                break;
+            case WPA:
+            case WPA2:
+                config.allowedGroupCiphers.set(GroupCipher.TKIP);
+                config.allowedGroupCiphers.set(GroupCipher.CCMP);
 
-            config.allowedKeyManagement.set(KeyMgmt.WPA_PSK);
+                config.allowedKeyManagement.set(KeyMgmt.WPA_PSK);
 
-            config.allowedPairwiseCiphers.set(PairwiseCipher.CCMP);
-            config.allowedPairwiseCiphers.set(PairwiseCipher.TKIP);
+                config.allowedPairwiseCiphers.set(PairwiseCipher.CCMP);
+                config.allowedPairwiseCiphers.set(PairwiseCipher.TKIP);
 
-            config.allowedProtocols.set(security.equals(WPA2) ? Protocol.RSN : Protocol.WPA);
+                config.allowedProtocols.set(security.equals(WPA2) ? Protocol.RSN : Protocol.WPA);
 
-            // If password is empty, it should be left untouched
-            if (!TextUtils.isEmpty(password)) {
-                if (password.length() == 64 && isHex(password)) {
-                    // Goes unquoted as hex
-                    config.preSharedKey = password;
+                // If password is empty, it should be left untouched
+                if (!TextUtils.isEmpty(password)) {
+                    if (password.length() == 64 && isHex(password)) {
+                        // Goes unquoted as hex
+                        config.preSharedKey = password;
+                    } else {
+                        // Goes quoted as ASCII
+                        config.preSharedKey = Wifi.convertToQuotedString(password);
+                    }
+                }
+
+                break;
+            case OPEN:
+                config.allowedKeyManagement.set(KeyMgmt.NONE);
+                break;
+            case WPA_EAP:
+            case IEEE8021X:
+                config.allowedGroupCiphers.set(GroupCipher.TKIP);
+                config.allowedGroupCiphers.set(GroupCipher.CCMP);
+                if (security.equals(WPA_EAP)) {
+                    config.allowedKeyManagement.set(KeyMgmt.WPA_EAP);
                 } else {
-                    // Goes quoted as ASCII
+                    config.allowedKeyManagement.set(KeyMgmt.IEEE8021X);
+                }
+                if (!TextUtils.isEmpty(password)) {
                     config.preSharedKey = Wifi.convertToQuotedString(password);
                 }
-            }
-
-        } else if (security.equals(OPEN)) {
-            config.allowedKeyManagement.set(KeyMgmt.NONE);
-        } else if (security.equals(WPA_EAP) || security.equals(IEEE8021X)) {
-            config.allowedGroupCiphers.set(GroupCipher.TKIP);
-            config.allowedGroupCiphers.set(GroupCipher.CCMP);
-            if (security.equals(WPA_EAP)) {
-                config.allowedKeyManagement.set(KeyMgmt.WPA_EAP);
-            } else {
-                config.allowedKeyManagement.set(KeyMgmt.IEEE8021X);
-            }
-            if (!TextUtils.isEmpty(password)) {
-                config.preSharedKey = Wifi.convertToQuotedString(password);
-            }
+                break;
         }
     }
 

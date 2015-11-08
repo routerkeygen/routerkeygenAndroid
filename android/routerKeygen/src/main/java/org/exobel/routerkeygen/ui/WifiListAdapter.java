@@ -48,7 +48,7 @@ public class WifiListAdapter extends BaseAdapter implements
     final private LayoutInflater inflater;
     private final Drawable[] wifiSignal;
     private final Drawable[] wifiSignalLocked;
-    private ArrayList<Item> listNetworks;
+    private final ArrayList<Item> listNetworks;
     private Typeface typeface = null;
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)

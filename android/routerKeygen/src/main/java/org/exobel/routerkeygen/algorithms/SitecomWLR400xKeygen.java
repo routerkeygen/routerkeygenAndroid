@@ -25,7 +25,7 @@ public class SitecomWLR400xKeygen extends Keygen {
         return UNLIKELY_SUPPORTED;
     }
 
-    void generateKey(String mac, String []charsets) {
+    private void generateKey(String mac, String[] charsets) {
         long val = Long.parseLong(mac.substring(4), 16);
         int [] offsets = new int[12];
         for (int i = 0; i < 12; ++i) {

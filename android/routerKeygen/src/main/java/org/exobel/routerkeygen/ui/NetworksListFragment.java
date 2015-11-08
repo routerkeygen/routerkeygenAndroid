@@ -52,7 +52,7 @@ public class NetworksListFragment extends SherlockFragment implements
     private static final String STATE_ACTIVATED_POSITION = "activated_position";
     private static final String NETWORKS_FOUND = "network_found";
     private static final String MENU_VALUE = "menu_value";
-    private static OnItemSelectionListener sDummyCallbacks = new OnItemSelectionListener() {
+    private static final OnItemSelectionListener sDummyCallbacks = new OnItemSelectionListener() {
         public void onItemSelected(WiFiNetwork id) {}
         public void onItemSelected(String mac) {}
     };
@@ -126,7 +126,7 @@ public class NetworksListFragment extends SherlockFragment implements
                 : ListView.CHOICE_MODE_NONE);
     }
 
-    public void setActivatedPosition(int position) {
+    private void setActivatedPosition(int position) {
         if (position == ListView.INVALID_POSITION) {
             listview.setItemChecked(mActivatedPosition, false);
         } else {

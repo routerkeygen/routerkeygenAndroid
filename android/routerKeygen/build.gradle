@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId "org.exobel.routerkeygen"
-        minSdkVersion 14
+        minSdkVersion 10
         targetSdkVersion 22
 
     }

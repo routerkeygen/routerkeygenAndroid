@@ -17,9 +17,8 @@ public class HashUtils {
             InputStream is = new FileInputStream(dicFile);
             try {
                 is = new DigestInputStream(is, md);
-                byte[] buffer = new byte[16384];
-                while (is.read(buffer) != -1)
-                    ;
+                while (is.read() != -1) {
+                }
             } finally {
                 is.close();
             }

@@ -53,7 +53,6 @@ public class OnoKeygen extends Keygen {
             return new OnoKeygen[size];
         }
     };
-    private MessageDigest md;
 
     public OnoKeygen(String ssid, String mac) {
         super(ssid, mac);
@@ -79,20 +78,21 @@ public class OnoKeygen extends Keygen {
         pseed[1] = 0;
         pseed[2] = 0;
         pseed[3] = 0;
-        int randNumber = 0;
+        int randNumber;
         String key = "";
         for (int i = 0; i < val.length(); i++) {
             pseed[i % 4] ^= (int) val.charAt(i);
         }
         randNumber = pseed[0] | (pseed[1] << 8) | (pseed[2] << 16) | (pseed[3] << 24);
-        short tmp = 0;
+        short tmp;
         for (int j = 0; j < 5; j++) {
-            randNumber = (randNumber * 0x343fd + 0x269ec3) & 0xffffffff;
+            randNumber = (randNumber * 0x343fd + 0x269ec3);
             tmp = (short) ((randNumber >> 16) & 0xff);
             key += StringUtils.getHexString(tmp).toUpperCase(Locale.getDefault());
         }
         addPassword(key);
         key = "";
+        MessageDigest md;
         try {
             md = MessageDigest.getInstance("MD5");
         } catch (NoSuchAlgorithmException e1) {

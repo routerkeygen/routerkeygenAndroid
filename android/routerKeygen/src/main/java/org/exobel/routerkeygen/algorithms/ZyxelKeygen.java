@@ -42,7 +42,6 @@ public class ZyxelKeygen extends Keygen {
         }
     };
     final private String ssidIdentifier;
-    private MessageDigest md;
 
     public ZyxelKeygen(String ssid, String mac) {
         super(ssid, mac);
@@ -56,6 +55,7 @@ public class ZyxelKeygen extends Keygen {
 
     @Override
     public List<String> getKeys() {
+        MessageDigest md;
         try {
             md = MessageDigest.getInstance("MD5");
         } catch (NoSuchAlgorithmException e1) {

@@ -41,7 +41,7 @@ public class DlinkKeygen extends Keygen {
             return new DlinkKeygen[size];
         }
     };
-    final static char hash[] = {'X', 'r', 'q', 'a', 'H', 'N',
+    private final static char[] hash = {'X', 'r', 'q', 'a', 'H', 'N',
             'p', 'd', 'S', 'Y', 'w',
             '8', '6', '2', '1', '5'};
 
@@ -99,7 +99,7 @@ public class DlinkKeygen extends Keygen {
         key[19] = mac.charAt(10);
         char[] newkey = new char[20];
         char t;
-        int index = 0;
+        int index;
         for (int i = 0; i < 20; i++) {
             t = key[i];
             if ((t >= '0') && (t <= '9'))

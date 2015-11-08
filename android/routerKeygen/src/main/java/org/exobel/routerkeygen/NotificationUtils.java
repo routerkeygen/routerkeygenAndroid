@@ -11,7 +11,7 @@ import android.widget.RemoteViews;
 
 import org.exobel.routerkeygen.ui.NetworksListActivity;
 
-public final class NotificationUtils {
+final class NotificationUtils {
 
     private NotificationUtils() {
     }
@@ -27,16 +27,16 @@ public final class NotificationUtils {
 
     @TargetApi(16)
     public static Notification updateProgressBar(Notification update, int max,
-                                                 int progress, boolean indeterminate) {
+                                                 int progress) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
             update.contentView.setProgressBar(android.R.id.progress, max,
-                    progress, indeterminate);
+                    progress, false);
         else
             update.contentView.setProgressBar(R.id.progress, max, progress,
-                    indeterminate);
+                    false);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
             update.bigContentView.setProgressBar(android.R.id.progress, max,
-                    progress, indeterminate);
+                    progress, false);
         return update;
     }
 
