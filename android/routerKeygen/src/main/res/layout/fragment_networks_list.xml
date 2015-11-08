@@ -3,12 +3,18 @@
     android:layout_height="match_parent"
     android:gravity="center">
 
-    <com.hb.views.PinnedSectionListView
-        android:id="@+id/networks_list"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swiperefresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone" />
+        android:layout_height="match_parent">
 
+        <com.hb.views.PinnedSectionListView
+            android:id="@+id/networks_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <LinearLayout
         android:id="@+id/message_group"

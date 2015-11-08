@@ -29,11 +29,10 @@
             android:layout_weight="50" />
     </LinearLayout>
 
-
     <RelativeLayout
         android:id="@+id/adBannerRelativeLayout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>

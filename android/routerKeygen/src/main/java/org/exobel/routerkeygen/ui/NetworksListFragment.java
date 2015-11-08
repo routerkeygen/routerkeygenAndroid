@@ -53,11 +53,8 @@ public class NetworksListFragment extends SherlockFragment implements
     private static final String NETWORKS_FOUND = "network_found";
     private static final String MENU_VALUE = "menu_value";
     private static OnItemSelectionListener sDummyCallbacks = new OnItemSelectionListener() {
-        public void onItemSelected(WiFiNetwork id) {
-        }
-
-        public void onItemSelected(String mac) {
-        }
+        public void onItemSelected(WiFiNetwork id) {}
+        public void onItemSelected(String mac) {}
     };
     private OnItemSelectionListener mCallbacks = sDummyCallbacks;
     private int mActivatedPosition = ListView.INVALID_POSITION;
@@ -66,8 +63,7 @@ public class NetworksListFragment extends SherlockFragment implements
     private View noNetworksMessage;
     private WiFiNetwork[] networksFound;
 
-    public NetworksListFragment() {
-    }
+    public NetworksListFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -192,6 +188,7 @@ public class NetworksListFragment extends SherlockFragment implements
         return super.onContextItemSelected(item);
     }
 
+    @Override
     public void setMessage(int message) {
         noNetworksMessage.findViewById(R.id.loading_spinner).setVisibility(
                 View.GONE);
@@ -203,6 +200,7 @@ public class NetworksListFragment extends SherlockFragment implements
         noNetworksMessage.setVisibility(View.VISIBLE);
     }
 
+    @Override
     public void onScanFinished(WiFiNetwork[] networks) {
         networksFound = networks;
         if (getActivity() == null)
@@ -224,6 +222,7 @@ public class NetworksListFragment extends SherlockFragment implements
         }
     }
 
+    @Override
     public void onItemClick(AdapterView<?> list, View view, int position,
                             long id) {
         if (networksFound != null && wifiListAdapter.getCount() > position) {

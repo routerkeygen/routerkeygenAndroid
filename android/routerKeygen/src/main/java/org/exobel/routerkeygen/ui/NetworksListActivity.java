@@ -20,6 +20,7 @@
 package org.exobel.routerkeygen.ui;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -33,6 +34,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,7 +70,6 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 
     private Handler mHandler = new Handler();
     private Menu mOptionsMenu;
-    private View mRefreshIndeterminateProgressView = null;
     private boolean wifiState;
     private boolean wifiOn;
     private boolean autoScan;
@@ -81,6 +82,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
             mHandler.postDelayed(mAutoScanTask, autoScanInterval * 1000L);
         }
     };
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     @Override
@@ -178,6 +180,16 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
             AdsUtils.displayStartupInterstitial(this);
         }
 
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
+        mSwipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        scan();
+                    }
+                }
+        );
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.accent);
     }
 
     @Override
@@ -189,7 +201,6 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.keygen_fragment, fragment).commit();
-
         } else {
             if (keygen.getSupportState() == Keygen.UNSUPPORTED) {
                 Toast.makeText(this, R.string.msg_unspported,
@@ -221,7 +232,6 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
                 } else {
                     startActivity(new Intent(this, ManualInputActivity.class));
                 }
-                return true;
             case R.id.wifi_scan:
                 scan();
                 return true;
@@ -291,30 +301,6 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
         }
     }
 
-    public void setRefreshActionItemState(boolean refreshing) {
-        // On Honeycomb, we can set the state of the refresh button by giving it
-        // a custom
-        // action view.
-        if (mOptionsMenu == null) {
-            return;
-        }
-
-        final MenuItem refreshItem = mOptionsMenu.findItem(R.id.wifi_scan);
-        if (refreshItem != null) {
-            if (refreshing) {
-                if (mRefreshIndeterminateProgressView == null) {
-                    LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    mRefreshIndeterminateProgressView = inflater.inflate(
-                            R.layout.actionbar_indeterminate_progress, null);
-                }
-
-                refreshItem.setActionView(mRefreshIndeterminateProgressView);
-            } else {
-                refreshItem.setActionView(null);
-            }
-        }
-    }
-
     public void scan() {
         if (!wifiState && !wifiOn) {
             networkListFragment.setMessage(R.string.msg_nowifi);
@@ -329,7 +315,8 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
                     .show();
         } else {
             if (wifi.startScan()) {
-                setRefreshActionItemState(true);
+                //setRefreshActionItemState(true);
+                mSwipeRefreshLayout.setRefreshing(true);
             } else
                 networkListFragment.setMessage(R.string.msg_scanfailed);
         }
@@ -350,7 +337,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 
     @Override
     public void onScanFinished(WiFiNetwork[] networks) {
-        setRefreshActionItemState(false);
+        mSwipeRefreshLayout.setRefreshing(false);
         if (!welcomeScreenShown) {
             Toast.makeText(this, R.string.msg_welcome_tip, Toast.LENGTH_LONG)
                     .show();
@@ -370,5 +357,4 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
                     ManualInputFragment.MAC_ADDRESS_ARG, mac));
         }
     }
-
 }

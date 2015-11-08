@@ -8,4 +8,12 @@
     <!-- A dark Holo shade of orange -->
     <color name="holo_orange_dark">#ffff8800</color>
 
+    <color name="primary">#303F9F</color>
+    <color name="primary_dark">#1A237E</color>
+    <color name="accent">#00695C</color>
+    <color name="accent_dark">#004D40</color>
+
+    <color name="text_primary">#D9000000</color>
+    <color name="text_secondary">#8C000000</color>
+
 </resources>

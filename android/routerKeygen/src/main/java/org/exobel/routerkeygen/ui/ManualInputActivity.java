@@ -19,9 +19,12 @@
 
 package org.exobel.routerkeygen.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -76,8 +79,10 @@ public class ManualInputActivity extends SherlockFragmentActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                NavUtils.navigateUpTo(this, new Intent(this,
-                        NetworksListActivity.class));
+                NavUtils.navigateUpTo(this,
+                        new Intent(this, NetworksListActivity.class)
+                                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                );
                 return true;
             case R.id.pref:
                 startActivity(new Intent(this, Preferences.class));
