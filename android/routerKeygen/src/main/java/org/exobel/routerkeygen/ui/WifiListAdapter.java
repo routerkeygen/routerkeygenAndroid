@@ -24,6 +24,8 @@ import android.content.res.Resources;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils.TruncateAt;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -49,10 +51,9 @@ public class WifiListAdapter extends BaseAdapter implements
     private ArrayList<Item> listNetworks;
     private Typeface typeface = null;
 
-    @SuppressWarnings("deprecation")
-    @TargetApi(21)
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public WifiListAdapter(Context context) {
-        this.listNetworks = new ArrayList<WifiListAdapter.Item>();
+        this.listNetworks = new ArrayList<>();
         try {
             typeface = Typeface.createFromAsset(context.getAssets(),
                     "fonts/Roboto-Light.ttf");
@@ -64,44 +65,44 @@ public class WifiListAdapter extends BaseAdapter implements
         inflater = LayoutInflater.from(context);
         wifiSignal = new Drawable[4];
         wifiSignalLocked = new Drawable[4];
+        final int currentApiVersion = android.os.Build.VERSION.SDK_INT;
         for (int i = 0; i < 4; ++i) {
             switch (i) {
                 case 0:
-                    wifiSignal[i] = resources
-                            .getDrawable(R.drawable.ic_signal_wifi_1_bar_black_24dp);
-                    wifiSignalLocked[i] = resources
-                            .getDrawable(R.drawable.ic_signal_wifi_1_bar_lock_black_24dp);
+                    wifiSignal[i] = ContextCompat
+                            .getDrawable(context, R.drawable.ic_signal_wifi_1_bar_black_24dp);
+                    wifiSignalLocked[i] = ContextCompat
+                            .getDrawable(context, R.drawable.ic_signal_wifi_1_bar_lock_black_24dp);
                     break;
                 case 1:
-                    wifiSignal[i] = resources
-                            .getDrawable(R.drawable.ic_signal_wifi_2_bar_black_24dp);
-                    wifiSignalLocked[i] = resources
-                            .getDrawable(R.drawable.ic_signal_wifi_2_bar_lock_black_24dp);
+                    wifiSignal[i] = ContextCompat
+                            .getDrawable(context, R.drawable.ic_signal_wifi_2_bar_black_24dp);
+                    wifiSignalLocked[i] = ContextCompat
+                            .getDrawable(context, R.drawable.ic_signal_wifi_2_bar_lock_black_24dp);
                     break;
                 case 2:
-                    wifiSignal[i] = resources
-                            .getDrawable(R.drawable.ic_signal_wifi_3_bar_black_24dp);
-                    wifiSignalLocked[i] = resources
-                            .getDrawable(R.drawable.ic_signal_wifi_3_bar_lock_black_24dp);
+                    wifiSignal[i] = ContextCompat
+                            .getDrawable(context, R.drawable.ic_signal_wifi_3_bar_black_24dp);
+                    wifiSignalLocked[i] = ContextCompat
+                            .getDrawable(context, R.drawable.ic_signal_wifi_3_bar_lock_black_24dp);
                     break;
                 case 3:
-                    wifiSignal[i] = resources
-                            .getDrawable(R.drawable.ic_signal_wifi_4_bar_black_24dp);
-                    wifiSignalLocked[i] = resources
-                            .getDrawable(R.drawable.ic_signal_wifi_4_bar_lock_black_24dp);
+                    wifiSignal[i] = ContextCompat
+                            .getDrawable(context, R.drawable.ic_signal_wifi_4_bar_black_24dp);
+                    wifiSignalLocked[i] = ContextCompat
+                            .getDrawable(context, R.drawable.ic_signal_wifi_4_bar_lock_black_24dp);
                     break;
             }
-            int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-            if (currentapiVersion >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                wifiSignal[i].setTint(resources.getColor(R.color.accent));
-                wifiSignalLocked[i].setTint(resources.getColor(R.color.accent));
+            if (currentApiVersion >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                wifiSignal[i].setTint(resources.getColor(R.color.wifi_icons));
+                wifiSignalLocked[i].setTint(resources.getColor(R.color.wifi_icons));
             } else{
                 wifiSignal[i].setColorFilter(
-                        resources.getColor(R.color.accent),
+                        resources.getColor(R.color.wifi_icons),
                         PorterDuff.Mode.SRC_IN
                 );
                 wifiSignalLocked[i].setColorFilter(
-                        resources.getColor(R.color.accent),
+                        resources.getColor(R.color.wifi_icons),
                         PorterDuff.Mode.SRC_IN
                 );
             }
@@ -136,9 +137,7 @@ public class WifiListAdapter extends BaseAdapter implements
 
     @Override
     public boolean isEnabled(int position) {
-        if (position >= getCount())
-            return false;
-        return getItem(position).type == Item.ITEM;
+        return position < getCount() && getItem(position).type == Item.ITEM;
     }
 
     public long getItemId(int position) {
@@ -199,14 +198,16 @@ public class WifiListAdapter extends BaseAdapter implements
 
         if (wifi.type == Item.ITEM) {
             final ViewHolder holder = (ViewHolder) convertView.getTag();
-            holder.ssid.setText(wifi.wifiNetwork.getSsidName());
-            holder.mac.setText(wifi.wifiNetwork.getMacAddress());
-            final int strenght = wifi.wifiNetwork.getLevel();
-            if (wifi.wifiNetwork.isLocked()) {
-                holder.networkStrenght
-                        .setImageDrawable(wifiSignalLocked[strenght]);
-            } else {
-                holder.networkStrenght.setImageDrawable(wifiSignal[strenght]);
+            if (holder != null){
+                holder.ssid.setText(wifi.wifiNetwork.getSsidName());
+                holder.mac.setText(wifi.wifiNetwork.getMacAddress());
+                final int strenght = wifi.wifiNetwork.getLevel();
+                if (wifi.wifiNetwork.isLocked()) {
+                    holder.networkStrength
+                            .setImageDrawable(wifiSignalLocked[strenght]);
+                } else {
+                    holder.networkStrength.setImageDrawable(wifiSignal[strenght]);
+                }
             }
         } else {
             TextView view = (TextView) convertView;
@@ -236,17 +237,17 @@ public class WifiListAdapter extends BaseAdapter implements
                         case Keygen.SUPPORTED:
                             listNetworks.add(new Item(Item.SECTION,
                                     R.string.networklist_supported, null,
-                                    R.color.holo_green_dark));
+                                    R.color.green_dark));
                             break;
                         case Keygen.UNLIKELY_SUPPORTED:
                             listNetworks.add(new Item(Item.SECTION,
                                     R.string.networklist_unlikely_supported, null,
-                                    R.color.holo_orange_dark));
+                                    R.color.orange_dark));
                             break;
                         case Keygen.UNSUPPORTED:
                             listNetworks.add(new Item(Item.SECTION,
                                     R.string.networklist_unsupported, null,
-                                    R.color.holo_red_dark));
+                                    R.color.red_dark));
                             break;
                     }
                 }
@@ -259,12 +260,12 @@ public class WifiListAdapter extends BaseAdapter implements
     private static class ViewHolder {
         final private TextView ssid;
         final private TextView mac;
-        final private ImageView networkStrenght;
+        final private ImageView networkStrength;
 
-        public ViewHolder(TextView ssid, TextView mac, ImageView networkStrenght) {
+        public ViewHolder(TextView ssid, TextView mac, ImageView networkStrength) {
             this.ssid = ssid;
             this.mac = mac;
-            this.networkStrenght = networkStrenght;
+            this.networkStrength = networkStrength;
         }
     }
 

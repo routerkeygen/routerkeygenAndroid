@@ -2,16 +2,18 @@
 <resources>
 
     <!-- A dark Holo shade of green -->
-    <color name="holo_green_dark">#ff669900</color>
+    <color name="green_dark">#43A047</color>
     <!-- A dark Holo shade of red -->
-    <color name="holo_red_dark">#ffcc0000</color>
+    <color name="red_dark">#F44336</color>
     <!-- A dark Holo shade of orange -->
-    <color name="holo_orange_dark">#ffff8800</color>
+    <color name="orange_dark">#FF7043</color>
 
-    <color name="primary">#303F9F</color>
+    <color name="primary">#3F51B5</color>
     <color name="primary_dark">#1A237E</color>
-    <color name="accent">#00695C</color>
-    <color name="accent_dark">#004D40</color>
+    <color name="accent">#FF4081</color>
+    <color name="accent_dark">#F50057</color>
+
+    <color name="wifi_icons">#607D8B</color>
 
     <color name="text_primary">#D9000000</color>
     <color name="text_secondary">#8C000000</color>
