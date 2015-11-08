@@ -99,7 +99,6 @@ dependencies {
     compile 'com.google.android.gms:play-services:7.3.0'
     compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
     compile 'ch.acra:acra:4.6.2'
-    compile 'com.getbase:floatingactionbutton:1.10.1'
     compile files('libs/MMSDK.jar')
 
     testCompile 'junit:junit:4.12'

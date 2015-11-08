@@ -43,7 +43,6 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.millennialmedia.android.MMAdView;
 
@@ -59,7 +58,7 @@ import org.exobel.routerkeygen.algorithms.Keygen;
 import org.exobel.routerkeygen.algorithms.WiFiNetwork;
 
 public class NetworksListActivity extends SherlockFragmentActivity implements
-        NetworksListFragment.OnItemSelectionListener, OnScanListener, View.OnClickListener {
+        NetworksListFragment.OnItemSelectionListener, OnScanListener {
     private final static String LAST_DIALOG_TIME = "last_time";
     private boolean mTwoPane;
     private NetworksListFragment networkListFragment;
@@ -71,7 +70,6 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 
     private Handler mHandler = new Handler();
     private Menu mOptionsMenu;
-    private View mRefreshIndeterminateProgressView = null;
     private boolean wifiState;
     private boolean wifiOn;
     private boolean autoScan;
@@ -85,7 +83,6 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
         }
     };
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private FloatingActionButton fabManualInput;
 
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     @Override
@@ -193,10 +190,6 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
                 }
         );
         mSwipeRefreshLayout.setColorSchemeResources(R.color.accent);
-
-        fabManualInput = (FloatingActionButton) findViewById(R.id.fab_manual_input);
-        fabManualInput.setOnClickListener(this);
-
     }
 
     @Override
@@ -208,8 +201,6 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.keygen_fragment, fragment).commit();
-            fabManualInput.setVisibility(View.VISIBLE);
-
         } else {
             if (keygen.getSupportState() == Keygen.UNSUPPORTED) {
                 Toast.makeText(this, R.string.msg_unspported,
@@ -232,6 +223,15 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.manual_input:
+                if (mTwoPane) {
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.keygen_fragment,
+                                    ManualInputFragment.newInstance()).commit();
+                } else {
+                    startActivity(new Intent(this, ManualInputActivity.class));
+                }
             case R.id.wifi_scan:
                 scan();
                 return true;
@@ -301,31 +301,6 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
         }
     }
 
-    //stub
-    public void setRefreshActionItemState(boolean refreshing) {
-        // On Honeycomb, we can set the state of the refresh button by giving it
-        // a custom
-        // action view.
-        if (mOptionsMenu == null) {
-            return;
-        }
-
-        final MenuItem refreshItem = mOptionsMenu.findItem(R.id.wifi_scan);
-        if (refreshItem != null) {
-            if (refreshing) {
-                if (mRefreshIndeterminateProgressView == null) {
-                    LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    mRefreshIndeterminateProgressView = inflater.inflate(
-                            R.layout.actionbar_indeterminate_progress, null);
-                }
-
-                refreshItem.setActionView(mRefreshIndeterminateProgressView);
-            } else {
-                refreshItem.setActionView(null);
-            }
-        }
-    }
-
     public void scan() {
         if (!wifiState && !wifiOn) {
             networkListFragment.setMessage(R.string.msg_nowifi);
@@ -362,7 +337,6 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
 
     @Override
     public void onScanFinished(WiFiNetwork[] networks) {
-        setRefreshActionItemState(false);
         mSwipeRefreshLayout.setRefreshing(false);
         if (!welcomeScreenShown) {
             Toast.makeText(this, R.string.msg_welcome_tip, Toast.LENGTH_LONG)
@@ -378,23 +352,9 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
                     .beginTransaction()
                     .replace(R.id.keygen_fragment,
                             ManualInputFragment.newInstance(mac)).commit();
-            fabManualInput.setVisibility(View.VISIBLE);
         } else {
             startActivity(new Intent(this, ManualInputActivity.class).putExtra(
                     ManualInputFragment.MAC_ADDRESS_ARG, mac));
-        }
-    }
-
-    @Override
-    public void onClick(View view) {
-        if (mTwoPane) {
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.keygen_fragment,
-                            ManualInputFragment.newInstance()).commit();
-            fabManualInput.setVisibility(View.GONE);
-        } else {
-            startActivity(new Intent(this, ManualInputActivity.class));
         }
     }
 }

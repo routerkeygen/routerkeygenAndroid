@@ -25,8 +25,8 @@
         android:title="@string/menu_scan" />
     <item
         android:id="@+id/manual_input"
-        android:icon="@drawable/ic_manual_add"
-        android:visible="false"
+        android:icon="@drawable/ic_create_white_24dp"
+        android:showAsAction="ifRoom"
         android:title="@string/menu_manual" />
 
 </menu>
