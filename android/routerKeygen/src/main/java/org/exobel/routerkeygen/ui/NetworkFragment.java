@@ -22,6 +22,7 @@ package org.exobel.routerkeygen.ui;
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -36,6 +37,9 @@ import android.provider.Settings;
 import android.text.ClipboardManager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -46,11 +50,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
-
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 
 import org.acra.ACRA;
 import org.exobel.routerkeygen.AdsUtils;
@@ -71,8 +70,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.zip.ZipInputStream;
 
-@SuppressWarnings("deprecation")
-public class NetworkFragment extends SherlockFragment {
+public class NetworkFragment extends Fragment {
 
 	public static final String NETWORK_ID = "vulnerable_network";
 	private static final String TAG = "NetworkFragment";

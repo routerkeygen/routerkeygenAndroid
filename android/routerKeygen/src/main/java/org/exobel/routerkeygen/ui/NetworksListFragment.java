@@ -20,6 +20,7 @@
 package org.exobel.routerkeygen.ui;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -39,14 +40,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragment;
 
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.WifiScanReceiver.OnScanListener;
 import org.exobel.routerkeygen.algorithms.WiFiNetwork;
 
 @SuppressWarnings("deprecation")
-public class NetworksListFragment extends SherlockFragment implements
+public class NetworksListFragment extends Fragment implements
         OnScanListener, OnItemClickListener, MessagePublisher {
 
     private static final String STATE_ACTIVATED_POSITION = "activated_position";

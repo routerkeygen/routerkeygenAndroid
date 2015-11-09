@@ -19,13 +19,13 @@
 
 package org.exobel.routerkeygen.ui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.millennialmedia.android.MMAdView;
 
@@ -34,7 +34,7 @@ import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.RefreshHandler;
 import org.exobel.routerkeygen.algorithms.WiFiNetwork;
 
-public class NetworkActivity extends SherlockFragmentActivity {
+public class NetworkActivity extends Activity {
 
     private RefreshHandler adRefreshHandler;
 
@@ -43,7 +43,7 @@ public class NetworkActivity extends SherlockFragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_fragment);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
 
         MMAdView ad = AdsUtils.loadAdIfNeeded(this);
         if (ad != null) {
@@ -56,7 +56,7 @@ public class NetworkActivity extends SherlockFragmentActivity {
             setTitle(wiFiNetwork.getSsidName());
             NetworkFragment fragment = new NetworkFragment();
             fragment.setArguments(arguments);
-            getSupportFragmentManager().beginTransaction()
+            getFragmentManager().beginTransaction()
                     .add(R.id.keygen_fragment, fragment).commit();
         }
     }
@@ -108,7 +108,7 @@ public class NetworkActivity extends SherlockFragmentActivity {
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
-        getSupportMenuInflater().inflate(R.menu.preferences, menu);
+        getMenuInflater().inflate(R.menu.preferences, menu);
         return true;
     }
 }

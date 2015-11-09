@@ -1,19 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.Sherlock.Dialog" parent="Theme.Sherlock">
+    <style name="Theme.Dialog" parent="@android:style/Theme.Holo.Light.DarkActionBar">
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowBackground">@android:color/background_light</item>
     </style>
 
-    <style name="Theme.Sherlock" parent="Theme.Sherlock.Light.DarkActionBar">
+    <style name="Theme" parent="@android:style/Theme.Holo.Light.DarkActionBar">
         <item name="android:autoCompleteTextViewStyle">@style/AutoCompleteTextViewLight</item>
         <item name="android:dropDownItemStyle">@style/Widget.DropDownItemLight</item>
-        <!--
-        <item name="colorPrimary">@color/primary</item>
-        <item name="colorPrimaryDark">@color/primary_dark</item>
-        <item name="colorAccent">@color/accent</item>
-        -->
     </style>
     <style name="AutoCompleteTextViewLight" parent="@android:style/Widget.AutoCompleteTextView">
         <item name="android:textColor">@android:color/primary_text_light</item>

@@ -41,11 +41,13 @@ import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
+import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TabHost;
@@ -53,8 +55,6 @@ import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockPreferenceActivity;
-import com.actionbarsherlock.view.MenuItem;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.ipaulpro.afilechooser.FileChooserActivity;
 import com.ipaulpro.afilechooser.utils.FileUtils;
@@ -79,8 +79,7 @@ import java.net.UnknownHostException;
 
 import it.gmariotti.changelibs.library.view.ChangeLogListView;
 
-@SuppressWarnings("deprecation")
-public class Preferences extends SherlockPreferenceActivity {
+public class Preferences extends PreferenceActivity {
 
     /**
      * The maximum supported dictionary version
@@ -115,7 +114,7 @@ public class Preferences extends SherlockPreferenceActivity {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
 
         findPreference("download").setOnPreferenceClickListener(
                 new OnPreferenceClickListener() {

@@ -2,6 +2,7 @@ package org.exobel.routerkeygen.ui;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.Fragment;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,7 +20,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragment;
 
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.algorithms.Keygen;
@@ -30,7 +30,7 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.zip.ZipInputStream;
 
-public class ManualInputFragment extends SherlockFragment {
+public class ManualInputFragment extends Fragment {
     public final static String MAC_ADDRESS_ARG = "mac_address";
     private static final OnItemSelectionListener sDummyCallbacks = new OnItemSelectionListener() {
         public void onItemSelected(WiFiNetwork id) {

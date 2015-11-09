@@ -20,6 +20,7 @@
 package org.exobel.routerkeygen.ui;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -35,11 +36,10 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.format.DateUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.millennialmedia.android.MMAdView;
 
@@ -54,7 +54,7 @@ import org.exobel.routerkeygen.WifiStateReceiver;
 import org.exobel.routerkeygen.algorithms.Keygen;
 import org.exobel.routerkeygen.algorithms.WiFiNetwork;
 
-public class NetworksListActivity extends SherlockFragmentActivity implements
+public class NetworksListActivity extends Activity implements
         NetworksListFragment.OnItemSelectionListener, OnScanListener {
     private final static String LAST_DIALOG_TIME = "last_time";
     private boolean mTwoPane;
@@ -86,7 +86,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_networks_list);
 
-        networkListFragment = ((NetworksListFragment) getSupportFragmentManager()
+        networkListFragment = ((NetworksListFragment) getFragmentManager()
                 .findFragmentById(R.id.frag_networks_list));
         if (findViewById(R.id.keygen_fragment) != null) {
             mTwoPane = true;
@@ -195,7 +195,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
             arguments.putParcelable(NetworkFragment.NETWORK_ID, keygen);
             final NetworkFragment fragment = new NetworkFragment();
             fragment.setArguments(arguments);
-            getSupportFragmentManager().beginTransaction()
+            getFragmentManager().beginTransaction()
                     .replace(R.id.keygen_fragment, fragment).commit();
         } else {
             if (keygen.getSupportState() == Keygen.UNSUPPORTED) {
@@ -210,8 +210,8 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
-        getSupportMenuInflater().inflate(R.menu.networks_list, menu);
-        getSupportMenuInflater().inflate(R.menu.preferences, menu);
+        getMenuInflater().inflate(R.menu.networks_list, menu);
+        getMenuInflater().inflate(R.menu.preferences, menu);
         return true;
     }
 
@@ -220,7 +220,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
         switch (item.getItemId()) {
             case R.id.manual_input:
                 if (mTwoPane) {
-                    getSupportFragmentManager()
+                    getFragmentManager()
                             .beginTransaction()
                             .replace(R.id.keygen_fragment,
                                     ManualInputFragment.newInstance()).commit();
@@ -343,7 +343,7 @@ public class NetworksListActivity extends SherlockFragmentActivity implements
     @Override
     public void onItemSelected(String mac) {
         if (mTwoPane) {
-            getSupportFragmentManager()
+            getFragmentManager()
                     .beginTransaction()
                     .replace(R.id.keygen_fragment,
                             ManualInputFragment.newInstance(mac)).commit();

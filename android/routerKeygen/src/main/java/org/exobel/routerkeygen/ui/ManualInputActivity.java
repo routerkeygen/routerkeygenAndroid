@@ -19,14 +19,15 @@
 
 package org.exobel.routerkeygen.ui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
+
 import com.google.android.gms.analytics.GoogleAnalytics;
 
 import org.exobel.routerkeygen.AdsUtils;
@@ -34,7 +35,7 @@ import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.algorithms.Keygen;
 import org.exobel.routerkeygen.algorithms.WiFiNetwork;
 
-public class ManualInputActivity extends SherlockFragmentActivity implements
+public class ManualInputActivity extends Activity implements
         NetworksListFragment.OnItemSelectionListener {
 
     @Override
@@ -42,11 +43,11 @@ public class ManualInputActivity extends SherlockFragmentActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_fragment);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
 
         AdsUtils.loadAdIfNeeded(this);
         if (savedInstanceState == null) {
-            getSupportFragmentManager()
+            getFragmentManager()
                     .beginTransaction()
                     .add(R.id.keygen_fragment,
                             ManualInputFragment
@@ -89,7 +90,7 @@ public class ManualInputActivity extends SherlockFragmentActivity implements
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
-        getSupportMenuInflater().inflate(R.menu.preferences, menu);
+        getMenuInflater().inflate(R.menu.preferences, menu);
         return true;
     }
 
