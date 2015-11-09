@@ -27,16 +27,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
-import com.millennialmedia.android.MMAdView;
 
 import org.exobel.routerkeygen.AdsUtils;
 import org.exobel.routerkeygen.R;
-import org.exobel.routerkeygen.RefreshHandler;
 import org.exobel.routerkeygen.algorithms.WiFiNetwork;
 
 public class NetworkActivity extends Activity {
 
-    private RefreshHandler adRefreshHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +42,7 @@ public class NetworkActivity extends Activity {
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
-        MMAdView ad = AdsUtils.loadAdIfNeeded(this);
-        if (ad != null) {
-            adRefreshHandler = new RefreshHandler(ad);
-        }
+        AdsUtils.loadAdIfNeeded(this);
         if (savedInstanceState == null) {
             final Bundle arguments = new Bundle();
             final WiFiNetwork wiFiNetwork = getIntent().getParcelableExtra(NetworkFragment.NETWORK_ID);
@@ -77,19 +71,6 @@ public class NetworkActivity extends Activity {
         GoogleAnalytics.getInstance(this).reportActivityStop(this);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (adRefreshHandler != null)
-            adRefreshHandler.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (adRefreshHandler != null)
-            adRefreshHandler.onPause();
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

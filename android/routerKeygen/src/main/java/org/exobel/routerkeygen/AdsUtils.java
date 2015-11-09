@@ -1,38 +1,26 @@
 package org.exobel.routerkeygen;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
-import android.location.Location;
-import android.location.LocationManager;
 import android.preference.PreferenceManager;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import com.millennialmedia.android.MMAd;
-import com.millennialmedia.android.MMAdView;
-import com.millennialmedia.android.MMInterstitial;
-import com.millennialmedia.android.MMRequest;
-import com.millennialmedia.android.MMSDK;
-import com.millennialmedia.android.RequestListener.RequestListenerImpl;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.millennialmedia.InterstitialAd;
+import com.millennialmedia.MMSDK;
+import com.millennialmedia.InlineAd;
+import com.millennialmedia.MMException;
+
+import java.lang.ref.WeakReference;
 
 public class AdsUtils {
-    // Constants for tablet sized ads (728x90)
-    private static final int IAB_LEADERBOARD_WIDTH = 728;
-    private static final int IAB_LEADERBOARD_HEIGHT = 90;
-    private static final int MED_BANNER_WIDTH = 480;
-    private static final int MED_BANNER_HEIGHT = 60;
-    // Constants for phone sized ads (320x50)
-    private static final int BANNER_AD_WIDTH = 320;
-    private static final int BANNER_AD_HEIGHT = 50;
     private static final String BANNER_APID = "136973";
     private static final String CONNECT_APID = "200804";
     private static final String STARTUP_APID = "201332";
@@ -45,71 +33,81 @@ public class AdsUtils {
     private AdsUtils() {
     }
 
-    public static MMAdView loadAdIfNeeded(Activity activity) {
-        // Create the adView
-        MMAdView adView = new MMAdView(activity);
+    public static void loadAdIfNeeded(final Activity activity) {
+        final String TAG = activity.getLocalClassName();
         final RelativeLayout adRelativeLayout = (RelativeLayout) activity
                 .findViewById(R.id.adBannerRelativeLayout);
         if (checkDonation(activity)) {
-            ((ViewGroup) adRelativeLayout.getParent()).removeView(adView);
-            return null;
+            adRelativeLayout.getLayoutParams().height = 0;
+            return;
         }
-        // Set your apid
-        adView.setApid(BANNER_APID);
-        adView.setMMRequest(getAdRequest(activity));
-        // (Highly Recommended) Set the id to preserve your ad on
-        // configuration changes. Save Battery!
-        // Each MMAdView you give requires a unique id.
-        adView.setId(MMSDK.getDefaultAdId());
+        MMSDK.initialize(activity);
+        // Create the adView
+        try {
+            final InlineAd inlineAd = InlineAd.createInstance(BANNER_APID, adRelativeLayout);
+            // set a refresh rate of 30 seconds that will be applied after the first request
+            inlineAd.setRefreshInterval(15000);
+            InlineAd.AdSize adSize = InlineAd.AdSize.BANNER;
+            // (Optional) Set the ad size
+            if (canFit(activity.getResources(), InlineAd.AdSize.LEADERBOARD.width)) {
+                adSize = InlineAd.AdSize.LEADERBOARD;
+            } else if (canFit(activity.getResources(), InlineAd.AdSize.FULL_BANNER.width)) {
+                adSize = InlineAd.AdSize.FULL_BANNER;
+            }
+            final float scale = activity.getResources().getDisplayMetrics().density;
+            final int adHeight = (int) (adSize.height * scale + 0.5f);
+            final WeakReference<RelativeLayout> adLayoutRef = new WeakReference<RelativeLayout>(adRelativeLayout);
+            // The InlineAdMetadata instance is used to pass additional metadata to the server to
+            // improve ad selection
+            final InlineAd.InlineAdMetadata inlineAdMetadata = new InlineAd.InlineAdMetadata().
+                    setAdSize(adSize);
+            inlineAd.setListener(new InlineAd.InlineListener() {
+                @Override
+                public void onRequestSucceeded(InlineAd inlineAd) {
+                    Log.i(TAG, "Inline Ad loaded.");
+                    final RelativeLayout ad = adLayoutRef.get();
+                    if (ad != null) {
+                        ad.getLayoutParams().height = adHeight;
+                    }
+                }
+                @Override
+                public void onRequestFailed(InlineAd inlineAd, InlineAd.InlineErrorStatus errorStatus) {
+                    Log.i(TAG, errorStatus.toString());
+                }
+                @Override
+                public void onClicked(InlineAd inlineAd) {
+                    Log.i(TAG, "Inline Ad clicked.");
+                }
+                @Override
+                public void onResize(InlineAd inlineAd, int width, int height) {
+                    Log.i(TAG, "Inline Ad starting resize.");
+                }
+                @Override
+                public void onResized(InlineAd inlineAd, int width, int height, boolean toOriginalSize) {
+                    Log.i(TAG, "Inline Ad resized.");
+                }
+                @Override
+                public void onExpanded(InlineAd inlineAd) {
+                    Log.i(TAG, "Inline Ad expanded.");
+                }
+                @Override
+                public void onCollapsed(InlineAd inlineAd) {
+                    Log.i(TAG, "Inline Ad collapsed.");
+                }
+                @Override
+                public void onAdLeftApplication(InlineAd inlineAd) {
+                    Log.i(TAG, "Inline Ad left application.");
+                }
+            });
 
-        int placementWidth = BANNER_AD_WIDTH;
-        int placementHeight = BANNER_AD_HEIGHT;
-
-        // (Optional) Set the ad size
-        if (canFit(activity.getResources(), IAB_LEADERBOARD_WIDTH)) {
-            placementWidth = IAB_LEADERBOARD_WIDTH;
-            placementHeight = IAB_LEADERBOARD_HEIGHT;
-        } else if (canFit(activity.getResources(), MED_BANNER_WIDTH)) {
-            placementWidth = MED_BANNER_WIDTH;
-            placementHeight = MED_BANNER_HEIGHT;
+            inlineAd.request(inlineAdMetadata);
+        } catch (MMException e) {
+            Log.e(TAG, "Error creating inline ad", e);
+            // abort loading ad
         }
 
-        // (Optional) Set the AdView size based on the placement size. You
-        // could use WRAP_CONTENT and not specify the placement size
-        adView.setWidth(placementWidth);
-        adView.setHeight(placementHeight);
-        adView.getAd();
-        // Add the adview to the view layout
-        int layoutWidth = (int) TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, placementWidth, activity
-                        .getResources().getDisplayMetrics());
-        int layoutHeight = (int) TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, placementHeight, activity
-                        .getResources().getDisplayMetrics());
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
-                layoutWidth, layoutHeight);
-        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-        layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-
-        adRelativeLayout.addView(adView, layoutParams);
-        return adView;
     }
 
-    private static MMRequest getAdRequest(Activity activity) {
-        // Acquire a reference to the system Location Manager
-        final LocationManager locationManager = (LocationManager) activity
-                .getSystemService(Context.LOCATION_SERVICE);
-        final MMRequest adRequest = new MMRequest();
-        final Location location = locationManager
-                .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-        if (location != null) {
-            MMRequest.setUserLocation(location);
-        }
-        Map<String, String> metaData = new HashMap<>();
-        metaData.put(MMRequest.KEY_ETHNICITY, MMRequest.ETHNICITY_HISPANIC);
-        adRequest.setMetaValues(metaData);
-        return adRequest;
-    }
 
     public static void displayStartupInterstitial(Activity activity) {
         displayInterstitial(activity, STARTUP_APID, STARTUP_LAST_SHOWN_COUNT,
@@ -121,11 +119,13 @@ public class AdsUtils {
                 CONNECT_LAST_SHOWN_TIME);
     }
 
-    private static void displayInterstitial(Activity activity,
+    private static void displayInterstitial(final Activity activity,
                                             final String apid, final String countKey, final String timeKey) {
+        final String TAG = activity.getLocalClassName();
         if (checkDonation(activity)) {
             return; // NO ADS!
         }
+        MMSDK.initialize(activity);
         final SharedPreferences mPrefs = PreferenceManager
                 .getDefaultSharedPreferences(activity);
         final SharedPreferences.Editor editor = mPrefs.edit();
@@ -135,23 +135,58 @@ public class AdsUtils {
         counter++;
         editor.putInt(countKey, counter);
         editor.apply();
-        if (timePassed > DateUtils.WEEK_IN_MILLIS || counter >= COUNTER_LIMIT) {
-            final MMInterstitial interstitial = new MMInterstitial(activity);
-
-            // Add the MMRequest object to your MMInterstitial.
-            interstitial.setMMRequest(getAdRequest(activity));
-            interstitial.setApid(apid);
-            interstitial.setListener(new RequestListenerImpl() {
+        if (timePassed > DateUtils.WEEK_IN_MILLIS || counter >= COUNTER_LIMIT) try {
+            final InterstitialAd interstitialAd = InterstitialAd.createInstance(apid);
+            interstitialAd.setListener(new InterstitialAd.InterstitialListener() {
                 @Override
-                public void requestCompleted(MMAd mmAd) {
-                    interstitial.display(); // display the ad that was cached by
-                    // fetch
+                public void onLoaded(InterstitialAd interstitialAd) {
+                    Log.i(TAG, "Interstitial Ad loaded.");
+                    // Show the Ad using the display options you configured.
+                    try {
+                        interstitialAd.show(activity);
+                    } catch (MMException e) {
+                        Log.i(activity.getLocalClassName(), "Unable to show interstitial ad content, exception occurred");
+                        e.printStackTrace();
+                    }
+                }
+                @Override
+                public void onLoadFailed(InterstitialAd interstitialAd,
+                                         InterstitialAd.InterstitialErrorStatus errorStatus) {
+                    Log.i(TAG, "Interstitial Ad load failed.");
+                }
+                @Override
+                public void onShown(InterstitialAd interstitialAd) {
                     editor.putInt(countKey, 0);
                     editor.putLong(timeKey, System.currentTimeMillis());
                     editor.apply();
+                    Log.i(TAG, "Interstitial Ad shown.");
+                }
+                @Override
+                public void onShowFailed(InterstitialAd interstitialAd,
+                                         InterstitialAd.InterstitialErrorStatus errorStatus) {
+                    Log.i(TAG, "Interstitial Ad show failed.");
+                }
+                @Override
+                public void onClosed(InterstitialAd interstitialAd) {
+                    Log.i(TAG, "Interstitial Ad closed.");
+                }
+                @Override
+                public void onClicked(InterstitialAd interstitialAd) {
+                    Log.i(TAG, "Interstitial Ad clicked.");
+                }
+                @Override
+                public void onAdLeftApplication(InterstitialAd interstitialAd) {
+                    Log.i(TAG, "Interstitial Ad left application.");
+                }
+                @Override
+                public void onExpired(InterstitialAd interstitialAd) {
+                    Log.i(TAG, "Interstitial Ad expired.");
                 }
             });
-            interstitial.fetch(); // request ad to be cached locally
+            interstitialAd.load(activity, null);
+        } catch (MMException e) {
+            Log.e(activity.getLocalClassName(), "Error creating interstitial ad", e);
+            // abort loading ad
         }
 
     }

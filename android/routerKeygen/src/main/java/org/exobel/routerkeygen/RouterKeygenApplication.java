@@ -7,7 +7,8 @@ import android.os.StrictMode;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
-import com.millennialmedia.android.MMSDK;
+import com.millennialmedia.MMSDK;
+import com.millennialmedia.UserData;
 
 import org.acra.ACRA;
 import org.acra.ReportField;
@@ -42,7 +43,9 @@ public class RouterKeygenApplication extends Application {
 
         }
         try {
-            MMSDK.initialize(this);
+            UserData userData = new UserData().
+            setEthnicity(UserData.Ethnicity.HISPANIC);
+            MMSDK.setUserData(userData);
         } catch (Exception e) {
         }
         if (BuildConfig.DEBUG) {

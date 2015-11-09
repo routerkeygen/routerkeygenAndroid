@@ -15,7 +15,8 @@
     <RelativeLayout
         android:id="@+id/adBannerRelativeLayout"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dip"
+        android:layout_gravity="bottom"
         android:layout_alignParentBottom="true" />
 
 </RelativeLayout>

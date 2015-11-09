@@ -41,12 +41,10 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
-import com.millennialmedia.android.MMAdView;
 
 import org.exobel.routerkeygen.AdsUtils;
 import org.exobel.routerkeygen.BuildConfig;
 import org.exobel.routerkeygen.R;
-import org.exobel.routerkeygen.RefreshHandler;
 import org.exobel.routerkeygen.UpdateCheckerService;
 import org.exobel.routerkeygen.WifiScanReceiver;
 import org.exobel.routerkeygen.WifiScanReceiver.OnScanListener;
@@ -63,7 +61,6 @@ public class NetworksListActivity extends Activity implements
     private BroadcastReceiver scanFinished;
     private BroadcastReceiver stateChanged;
     private boolean welcomeScreenShown;
-    private RefreshHandler adRefreshHandler;
 
     private final Handler mHandler = new Handler();
     private boolean wifiState;
@@ -80,7 +77,7 @@ public class NetworksListActivity extends Activity implements
     };
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
-    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,10 +96,6 @@ public class NetworksListActivity extends Activity implements
         scanFinished = new WifiScanReceiver(wifi, networkListFragment, this);
         stateChanged = new WifiStateReceiver(wifi, networkListFragment);
 
-        final MMAdView ad = AdsUtils.loadAdIfNeeded(this);
-        if (ad != null) {
-            adRefreshHandler = new RefreshHandler(ad);
-        }
         final SharedPreferences mPrefs = PreferenceManager
                 .getDefaultSharedPreferences(this);
         welcomeScreenShown = mPrefs.getBoolean(Preferences.VERSION, false);
@@ -241,6 +234,7 @@ public class NetworksListActivity extends Activity implements
     @Override
     public void onStart() {
         super.onStart();
+        AdsUtils.loadAdIfNeeded(this);
         //Get an Analytics tracker to report app starts and uncaught exceptions etc.
         GoogleAnalytics.getInstance(this).reportActivityStart(this);
         getPrefs();
@@ -269,8 +263,6 @@ public class NetworksListActivity extends Activity implements
         } else
             mHandler.removeCallbacks(mAutoScanTask);
         scan();
-        if (adRefreshHandler != null)
-            adRefreshHandler.onResume();
     }
 
     @Override
@@ -280,8 +272,6 @@ public class NetworksListActivity extends Activity implements
             mHandler.removeCallbacks(mAutoScanTask);
         } catch (Exception e) {
         }
-        if (adRefreshHandler != null)
-            adRefreshHandler.onPause();
     }
 
     @Override

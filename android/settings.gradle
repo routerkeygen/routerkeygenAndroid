@@ -1,2 +1,2 @@
-include ':aFileChooser'
+include ':aFileChooser', ':mm-ad-sdk'
 include ':routerKeygen'
