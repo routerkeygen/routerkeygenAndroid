@@ -38,6 +38,9 @@ import android.provider.Settings;
 import android.util.Log;
 
 import com.farproc.wifi.connecter.Wifi;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.StandardExceptionParser;
+import com.google.android.gms.analytics.Tracker;
 
 import org.exobel.routerkeygen.AutoConnectManager.onConnectionListener;
 
@@ -97,7 +100,7 @@ public class AutoConnectService extends Service implements onConnectionListener 
         wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        mReceiver = new AutoConnectManager(wifi, this);
+        mReceiver = new AutoConnectManager(this);
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1)
             mNumOpenNetworksKept = Settings.Secure.getInt(getContentResolver(),
@@ -109,6 +112,7 @@ public class AutoConnectService extends Service implements onConnectionListener 
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent == null) {
             stopSelf();
@@ -187,6 +191,16 @@ public class AutoConnectService extends Service implements onConnectionListener 
             }
         } catch (Exception e) {
             e.printStackTrace();
+            // Get tracker.
+            Tracker t = ((RouterKeygenApplication) getApplication()).getTracker();
+            t.send(new HitBuilders.ExceptionBuilder()
+                            .setDescription(
+                                    new StandardExceptionParser(this, null)
+                                            .getDescription(Thread.currentThread().getName(), e))
+                            .setFatal(false)
+                            .build()
+            );
+
         }
         if (currentNetworkId == -1) {
             mNotificationManager.notify(
@@ -199,6 +213,7 @@ public class AutoConnectService extends Service implements onConnectionListener 
         }
     }
 
+    @Override
     public void onDestroy() {
         super.onDestroy();
         handler.removeCallbacks(tryAfterDisconnecting);
@@ -212,6 +227,7 @@ public class AutoConnectService extends Service implements onConnectionListener 
         }
     }
 
+    @Override
     public void onFailedConnection() {
         /* Some phone are very strange and report multiples failures */
         if ((System.currentTimeMillis() - lastTimeDisconnected) < FAILING_MINIMUM_TIME) {
@@ -234,6 +250,7 @@ public class AutoConnectService extends Service implements onConnectionListener 
         tryingConnection();
     }
 
+    @Override
     public void onSuccessfulConection() {
         reenableAllHotspots();
         mNotificationManager.notify(

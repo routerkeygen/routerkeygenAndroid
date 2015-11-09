@@ -28,9 +28,8 @@ import android.util.Log;
 public class AutoConnectManager extends BroadcastReceiver {
 	private final onConnectionListener listener;
 
-	public AutoConnectManager(WifiManager wifi, onConnectionListener listener) {
+	public AutoConnectManager(onConnectionListener listener) {
 		this.listener = listener;
-		WifiManager wifi1 = wifi;
 	}
 
 	@Override

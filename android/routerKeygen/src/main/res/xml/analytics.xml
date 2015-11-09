@@ -11,6 +11,14 @@
     <!-- Enable Activity tracking -->
     <bool name="ga_autoActivityTracking">true</bool>
 
+    <!-- The screen names that will appear in reports -->
+    <screenName name="org.exobel.routerkeygen.ui.NetworksListFragment">
+        RouterKeygen NetworksListFragment
+    </screenName>
+    <screenName name="org.exobel.routerkeygen.ui.NetworkFragment">
+        RouterKeygen NetworkFragment
+    </screenName>
+
     <!-- Enable automatic exception tracking -->
     <bool name="ga_reportUncaughtExceptions">true</bool>
     <!-- Set session time out to 60 seconds -->

@@ -20,9 +20,12 @@
 package org.exobel.routerkeygen.ui;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.app.Fragment;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -34,7 +37,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.text.ClipboardManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -51,11 +53,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.StandardExceptionParser;
+import com.google.android.gms.analytics.Tracker;
+
 import org.acra.ACRA;
 import org.exobel.routerkeygen.AdsUtils;
 import org.exobel.routerkeygen.AutoConnectService;
 import org.exobel.routerkeygen.BuildConfig;
 import org.exobel.routerkeygen.R;
+import org.exobel.routerkeygen.RouterKeygenApplication;
 import org.exobel.routerkeygen.algorithms.Keygen;
 import org.exobel.routerkeygen.algorithms.NativeThomson;
 import org.exobel.routerkeygen.algorithms.ThomsonKeygen;
@@ -315,8 +322,9 @@ public class NetworkFragment extends Fragment {
 							Toast.LENGTH_SHORT).show();
 					ClipboardManager clipboard = (ClipboardManager) getActivity()
 							.getSystemService(Context.CLIPBOARD_SERVICE);
-
-					clipboard.setText(key);
+					ClipData clip = ClipData.newPlainText("key",key);
+					// Set the clipboard's primary clip.
+					clipboard.setPrimaryClip(clip);
 					openWifiSettings();
 				}
 			});
@@ -442,6 +450,19 @@ public class NetworkFragment extends Fragment {
 						// should
 						// never crash
 					}
+					// Get tracker.
+					final Activity activity = getActivity();
+					if (activity != null) {
+                        Tracker t = ((RouterKeygenApplication) activity.getApplication()).getTracker();
+                        t.send(new HitBuilders.ExceptionBuilder()
+                                        .setDescription(
+                                                new StandardExceptionParser(activity, null)
+                                                        .getDescription(Thread.currentThread().getName(), e))
+                                        .setFatal(false)
+                                        .build()
+
+                        );
+                    }
 				}
 				if (nativeCalc && (keygen instanceof ThomsonKeygen)) {
 					if (((ThomsonKeygen) keygen).isErrorDict()) {

@@ -250,6 +250,8 @@ public class NetworksListActivity extends Activity implements
                 networkListFragment.setMessage(R.string.msg_wifibroken);
             }
         }
+
+        scan();
     }
 
     @Override
@@ -262,7 +264,6 @@ public class NetworksListActivity extends Activity implements
             mHandler.postDelayed(mAutoScanTask, autoScanInterval * 1000L);
         } else
             mHandler.removeCallbacks(mAutoScanTask);
-        scan();
     }
 
     @Override
@@ -271,6 +272,7 @@ public class NetworksListActivity extends Activity implements
         try {
             mHandler.removeCallbacks(mAutoScanTask);
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -283,6 +285,7 @@ public class NetworksListActivity extends Activity implements
             unregisterReceiver(scanFinished);
             unregisterReceiver(stateChanged);
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

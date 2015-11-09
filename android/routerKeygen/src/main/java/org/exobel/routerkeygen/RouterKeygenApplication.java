@@ -24,29 +24,37 @@ import org.exobel.routerkeygen.ui.Preferences;
         ReportField.STACK_TRACE, ReportField.LOGCAT}, mode = ReportingInteractionMode.TOAST, resToastText = R.string.crash_toast_text)
 public class RouterKeygenApplication extends Application {
 
-    private Tracker tracker;
+    private Tracker mTracker;
 
-    public Tracker getTracker() {
-        return tracker;
+    /**
+     * Gets the default {@link Tracker} for this {@link Application}.
+     * @return tracker
+     */
+    synchronized public Tracker getTracker() {
+        if (mTracker == null) {
+            GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
+            // To enable debug logging use: adb shell setprop log.tag.GAv4 DEBUG
+            mTracker = analytics.newTracker(R.xml.analytics);
+            mTracker.enableAdvertisingIdCollection(true);
+        }
+        return mTracker;
     }
-
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     public void onCreate() {
         super.onCreate();
         try {
-            tracker = GoogleAnalytics.getInstance(this).newTracker(R.xml.analytics);
-            tracker.enableAdvertisingIdCollection(true);
             ACRA.init(this);
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
         try {
             UserData userData = new UserData().
             setEthnicity(UserData.Ethnicity.HISPANIC);
             MMSDK.setUserData(userData);
         } catch (Exception e) {
+            e.printStackTrace();
         }
         if (BuildConfig.DEBUG) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
