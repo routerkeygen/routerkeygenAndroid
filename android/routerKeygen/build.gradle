@@ -85,7 +85,7 @@ def getNdkDir() {
 }
 
 def getNdkBuildCmd() {
-    def ndkBuild = getNdkDir() + "/ndk-build"
+    def ndkBuild = getNdkDir() + File.separator + "ndk-build"
     if (Os.isFamily(Os.FAMILY_WINDOWS))
         ndkBuild += ".cmd"
 
