@@ -65,12 +65,11 @@ android {
     }
 }
 
-
-
 task copyResDirectoryToClasses(type: Copy){
     from "${projectDir}/src/main/res"
     into "${buildDir}/intermediates/classes/test/github/debug/res"
 }
+
 def getNdkDir() {
     if (System.env.ANDROID_NDK_ROOT != null)
         return System.env.ANDROID_NDK_ROOT

@@ -7,12 +7,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Router Keygen is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -54,6 +54,9 @@ public class ConnKeygen extends Keygen {
     @Override
     public int getSupportState() {
         final String ssid = getSsidName();
+        if (ssid.matches("OTE[0-9a-fA-F]{6}")) {
+            return SUPPORTED;
+        }
         if (ssid.matches("conn-x[0-9a-fA-F]{6}")) {
             final String mac = getMacAddress();
             if (mac.length() == 12) {
@@ -72,18 +75,11 @@ public class ConnKeygen extends Keygen {
 
     @Override
     public List<String> getKeys() {
-        final String ssid = getSsidName();
-        if (ssid.matches("conn-x[0-9a-fA-F]{6}")) {
-            final String mac = getMacAddress();
-            if (mac.length() == 12) {
-                addPassword(getMacAddress().toLowerCase(Locale.getDefault()));
-            } else {
-                setErrorCode(R.string.msg_nomac);
-                return null;
-            }
-        } else {
-            addPassword("1234567890123");
+        final String mac = getMacAddress();
+        if (mac.length() == 12) {
+            addPassword(getMacAddress().toLowerCase(Locale.getDefault()));
         }
+        addPassword("1234567890123");
         return getResults();
     }
 }

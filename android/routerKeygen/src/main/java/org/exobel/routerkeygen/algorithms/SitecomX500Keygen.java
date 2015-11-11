@@ -5,12 +5,12 @@ import org.exobel.routerkeygen.R;
 import java.util.List;
 import java.util.Locale;
 
-public class SitecomKeygen extends Keygen {
+public class SitecomX500Keygen extends Keygen {
 
     private final static String CHARSET = "123456789abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ"; // without
     // i,l,o,0
 
-    public SitecomKeygen(String ssid, String mac) {
+    public SitecomX500Keygen(String ssid, String mac) {
         super(ssid, mac);
     }
 
@@ -60,17 +60,10 @@ public class SitecomKeygen extends Keygen {
             setErrorCode(R.string.msg_errpirelli);
             return null;
         }
-        generateKey(mac);
-        final String shortMac = mac.substring(0, 11);
-        int lastChar = Integer.parseInt(mac.substring(11), 16);
-        lastChar = (lastChar + 1) % 0x10;
-        generateKey(shortMac
-                + Integer.toHexString(lastChar)
-                .toUpperCase(Locale.getDefault()));
-        lastChar = (lastChar + 1) % 0x10;
-        generateKey(shortMac
-                + Integer.toHexString(lastChar)
-                .toUpperCase(Locale.getDefault()));
+        generateKey(mac.toLowerCase(Locale.getDefault()));//wlm2500
+        generateKey(mac.toUpperCase(Locale.getDefault()));//wlm3500
+        generateKey(incrementMac(mac, 1).toUpperCase(Locale.getDefault()));// wlm5500 5ghz
+        generateKey(incrementMac(mac, 2).toUpperCase(Locale.getDefault()));// wlm5500 2.4ghz
         return getResults();
     }
 

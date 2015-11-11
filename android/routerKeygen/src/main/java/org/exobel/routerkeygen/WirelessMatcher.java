@@ -11,6 +11,8 @@ import org.exobel.routerkeygen.algorithms.BelkinKeygen;
 import org.exobel.routerkeygen.algorithms.CabovisaoSagemKeygen;
 import org.exobel.routerkeygen.algorithms.ComtrendKeygen;
 import org.exobel.routerkeygen.algorithms.ConnKeygen;
+import org.exobel.routerkeygen.algorithms.CytaKeygen;
+import org.exobel.routerkeygen.algorithms.CytaZTEKeygen;
 import org.exobel.routerkeygen.algorithms.DiscusKeygen;
 import org.exobel.routerkeygen.algorithms.DlinkKeygen;
 import org.exobel.routerkeygen.algorithms.EircomKeygen;
@@ -22,6 +24,7 @@ import org.exobel.routerkeygen.algorithms.Keygen;
 import org.exobel.routerkeygen.algorithms.MaxcomKeygen;
 import org.exobel.routerkeygen.algorithms.MegaredKeygen;
 import org.exobel.routerkeygen.algorithms.MeoPirelliKeygen;
+import org.exobel.routerkeygen.algorithms.NetFasterKeygen;
 import org.exobel.routerkeygen.algorithms.OnoKeygen;
 import org.exobel.routerkeygen.algorithms.OteBAUDKeygen;
 import org.exobel.routerkeygen.algorithms.OteHuaweiKeygen;
@@ -29,8 +32,9 @@ import org.exobel.routerkeygen.algorithms.OteKeygen;
 import org.exobel.routerkeygen.algorithms.PBSKeygen;
 import org.exobel.routerkeygen.algorithms.PirelliKeygen;
 import org.exobel.routerkeygen.algorithms.PtvKeygen;
-import org.exobel.routerkeygen.algorithms.SitecomKeygen;
-import org.exobel.routerkeygen.algorithms.SitecomWLR400xKeygen;
+import org.exobel.routerkeygen.algorithms.Sitecom2100Keygen;
+import org.exobel.routerkeygen.algorithms.SitecomX500Keygen;
+import org.exobel.routerkeygen.algorithms.SitecomWLR341_400xKeygen;
 import org.exobel.routerkeygen.algorithms.SkyV1Keygen;
 import org.exobel.routerkeygen.algorithms.Speedport500Keygen;
 import org.exobel.routerkeygen.algorithms.TecomKeygen;
@@ -45,6 +49,11 @@ import org.exobel.routerkeygen.algorithms.Wlan6Keygen;
 import org.exobel.routerkeygen.algorithms.ZyxelKeygen;
 import org.exobel.routerkeygen.config.AliceConfigParser;
 import org.exobel.routerkeygen.config.AliceMagicInfo;
+import org.exobel.routerkeygen.config.CytaConfigParser;
+import org.exobel.routerkeygen.config.CytaMagicInfo;
+import org.exobel.routerkeygen.config.CytaZTEConfigParser;
+import org.exobel.routerkeygen.config.NetfasterConfigParser;
+import org.exobel.routerkeygen.config.NetfasterMagicInfo;
 import org.exobel.routerkeygen.config.OTEHuaweiConfigParser;
 import org.exobel.routerkeygen.config.TeleTuConfigParser;
 import org.exobel.routerkeygen.config.TeleTuMagicInfo;
@@ -61,6 +70,9 @@ public class WirelessMatcher {
 
     private static Map<String, ArrayList<AliceMagicInfo>> supportedAlices = null;
     private static Map<String, ArrayList<TeleTuMagicInfo>> supportedTeletu = null;
+    private static Map<String, ArrayList<CytaMagicInfo>> supportedCytaZTEs = null;
+    private static Map<String, ArrayList<CytaMagicInfo>> supportedCytas = null;
+    private static ArrayList<NetfasterMagicInfo> supportedNetfasters;
     private static String[] supportedOTE = null;
 
     public synchronized static ArrayList<Keygen> getKeygen(String ssid,
@@ -102,8 +114,9 @@ public class WirelessMatcher {
                 || mac.startsWith("00:1D:19") || mac.startsWith("00:23:08")
                 || mac.startsWith("00:26:4D") || mac.startsWith("50:7E:5D")
                 || mac.startsWith("1C:C6:3C") || mac.startsWith("74:31:70")
-                || mac.startsWith("7C:4F:B5") || mac.startsWith("88:25:2C")
-                || mac.startsWith("7E:4F:B5"))
+                || mac.startsWith("7C:4F:B5") || mac.startsWith("7E:4F:B5")
+                || mac.startsWith("88:25:2C") || mac.startsWith("84:9C:A6")
+                || mac.startsWith("88:03:55"))
             keygens.add(new ArcadyanKeygen(ssid, mac));
 
         if (mac.startsWith("00:08:27") || mac.startsWith("00:13:C8")
@@ -142,11 +155,42 @@ public class WirelessMatcher {
         if (ssid.equals("CONN-X"))
             keygens.add(new ConnKeygen(ssid, mac));
 
-        if (ssid.matches("conn-x[0-9a-fA-F]{6}")) {
-            if (mac.length() == 12) {
-                keygens.add(new ConnKeygen(ssid, mac));
+        if (ssid.matches("conn-x[0-9a-fA-F]{6}") ||
+                mac.startsWith("48:28:2F") || mac.startsWith("B0:75:D5") ||
+                mac.startsWith("C8:7B:5B") || mac.startsWith("FC:C8:97") ||
+                mac.startsWith("68:1A:B2") || mac.startsWith("38:46:08") ||
+                mac.startsWith("4C:09:9B") || mac.startsWith("4C:09:B4") ||
+                mac.startsWith("8C:E0:81") || mac.startsWith("DC:02:8E") ||
+                mac.startsWith("2C:26:C5") || mac.startsWith("FC:C8:97") ||
+                mac.startsWith("CC:1A:FA") || mac.startsWith("A0:EC:80") ||
+                mac.startsWith("54:22:F8") || mac.startsWith("14:60:80")) {
+            keygens.add(new ConnKeygen(ssid, mac));
+        }
+
+        if (mac.startsWith("00:1C:A2") || mac.startsWith("00:17:C2") || mac.startsWith("00:19:3E") ||
+                mac.startsWith("00:23:8E") || mac.startsWith("00:25:53") || mac.startsWith("38:22:9D") || mac.startsWith("64:87:D7") ||
+                mac.startsWith("DC:0B:1A")) {
+            if (supportedCytas == null) {
+                supportedCytas = CytaConfigParser.parse(getEntry("cyta_bases.txt", magicInfo));
+            }
+            final String filteredMac = mac.replace(":", "");
+            if (filteredMac.length() == 12) {
+                final String key = filteredMac.substring(0, 8);
+                final ArrayList<CytaMagicInfo> supportedCyta = supportedCytas.get(key);
+                if (supportedCyta != null) {
+                    keygens.add(new CytaKeygen(ssid, mac, supportedCyta));
+                }
             }
         }
+
+        if (mac.startsWith("CC:1A:FA") || mac.startsWith("14:60:80") || mac.startsWith("DC:02:8E") || mac.startsWith("CC:7B:35") ||
+                mac.startsWith("20:89:86") || mac.startsWith("2C:95:7F") || mac.startsWith("F8:DF:A8") || mac.startsWith("EC:8A:4C")) {
+            if (supportedCytaZTEs == null) {
+                supportedCytaZTEs = CytaZTEConfigParser.parse(getEntry("cyta_zte_bases.txt", magicInfo));
+            }
+            keygens.add(new CytaZTEKeygen(ssid, mac, supportedCytaZTEs));
+        }
+
 
         if (ssid.matches("Discus--?[0-9a-fA-F]{6}"))
             keygens.add(new DiscusKeygen(ssid, mac));
@@ -283,6 +327,14 @@ public class WirelessMatcher {
                 keygens.add(new MegaredKeygen(ssid, mac));
         }
 
+        if (mac.startsWith("00:05:59")) {
+            if (supportedNetfasters == null) {
+                supportedNetfasters = NetfasterConfigParser.parse(getEntry(
+                        "netfaster_bases.txt", magicInfo));
+            }
+            keygens.add(new NetFasterKeygen(ssid, mac, supportedNetfasters));
+        }
+
 		/* ssid must be of the form P1XXXXXX0000X or p1XXXXXX0000X */
         if (ssid.matches("[Pp]1[0-9]{6}0{4}[0-9]"))
             keygens.add(new OnoKeygen(ssid, mac));
@@ -338,16 +390,18 @@ public class WirelessMatcher {
         if (ssid.matches("(PTV-|ptv|ptv-)[0-9a-zA-Z]{6}"))
             keygens.add(new PtvKeygen(ssid, mac));
 
-        if (mac.startsWith("00:0C:F6") || mac.startsWith("64:D1:A3"))
-            keygens.add(new SitecomKeygen(ssid, mac));
+        if (mac.startsWith("00:0C:F6") || mac.startsWith("64:D1:A3")) {
+            keygens.add(new SitecomX500Keygen(ssid, mac));
+            keygens.add(new Sitecom2100Keygen(ssid, mac));
+        }
 
         if (ssid.toLowerCase(Locale.getDefault()).matches("^sitecom[0-9a-f]{6}$") ||
                 (mac.startsWith("00:0C:F6") || mac.startsWith("64:D1:A3"))) {
             if (mac.replace(":", "").length() != 12) {
-                keygens.add(new SitecomWLR400xKeygen(ssid, "00:0C:F6" + ssid.substring(7)));
-                keygens.add(new SitecomWLR400xKeygen(ssid, "64:D1:A3" + ssid.substring(7)));
+                keygens.add(new SitecomWLR341_400xKeygen(ssid, "00:0C:F6" + ssid.substring(7)));
+                keygens.add(new SitecomWLR341_400xKeygen(ssid, "64:D1:A3" + ssid.substring(7)));
             } else {
-                keygens.add(new SitecomWLR400xKeygen(ssid, mac));
+                keygens.add(new SitecomWLR341_400xKeygen(ssid, mac));
             }
         }
 
