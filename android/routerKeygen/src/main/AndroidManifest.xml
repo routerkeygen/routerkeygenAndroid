@@ -58,6 +58,7 @@
         <activity
             android:name=".ui.ManualInputActivity"
             android:configChanges="screenSize|keyboard|orientation"
+            android:windowSoftInputMode="stateVisible|adjustResize"
             android:label="@string/menu_manual">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

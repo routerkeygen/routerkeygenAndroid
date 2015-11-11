@@ -78,6 +78,7 @@ public class ManualInputFragment extends Fragment {
                 .findViewById(R.id.manual_autotext);
         edit.setAdapter(adapter);
         edit.setThreshold(1);
+        edit.requestFocus();
         final InputFilter filterSSID = new InputFilter() {
             public CharSequence filter(CharSequence source, int start, int end,
                                        Spanned dest, int dstart, int dend) {
@@ -195,6 +196,7 @@ public class ManualInputFragment extends Fragment {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         if (!(activity instanceof OnItemSelectionListener)) {
