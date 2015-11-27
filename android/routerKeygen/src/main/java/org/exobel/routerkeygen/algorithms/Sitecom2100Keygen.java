@@ -1,5 +1,8 @@
 package org.exobel.routerkeygen.algorithms;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.utils.StringUtils;
 
@@ -7,17 +10,32 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 public class Sitecom2100Keygen extends Keygen {
 
     private final static String CHARSET = "ABCDEFGHJKLMNPQRSTUVWXYZ"; //Missing I,O
+    public static final Parcelable.Creator<Sitecom2100Keygen> CREATOR = new Creator<Sitecom2100Keygen>()
+    {
+        @Override
+        public Sitecom2100Keygen createFromParcel(Parcel in)
+        {
+            return new Sitecom2100Keygen(in);
+        }
+
+        @Override
+        public Sitecom2100Keygen[] newArray(int size)
+        {
+            return new Sitecom2100Keygen[size];
+        }
+    };
 
     public Sitecom2100Keygen(String ssid, String mac) {
         super(ssid, mac);
     }
+
+    public Sitecom2100Keygen(Parcel in) {super(in);}
 
     @Override
     public int getSupportState() {
