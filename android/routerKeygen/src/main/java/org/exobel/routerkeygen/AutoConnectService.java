@@ -38,9 +38,6 @@ import android.provider.Settings;
 import android.util.Log;
 
 import com.farproc.wifi.connecter.Wifi;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.StandardExceptionParser;
-import com.google.android.gms.analytics.Tracker;
 
 import org.exobel.routerkeygen.AutoConnectManager.onConnectionListener;
 
@@ -191,16 +188,7 @@ public class AutoConnectService extends Service implements onConnectionListener 
             }
         } catch (Exception e) {
             e.printStackTrace();
-            // Get tracker.
-            Tracker t = ((RouterKeygenApplication) getApplication()).getTracker();
-            t.send(new HitBuilders.ExceptionBuilder()
-                            .setDescription(
-                                    new StandardExceptionParser(this, null)
-                                            .getDescription(Thread.currentThread().getName(), e))
-                            .setFatal(false)
-                            .build()
-            );
-
+            Log.e(AutoConnectService.class.getSimpleName(), "Error during connection", e);
         }
         if (currentNetworkId == -1) {
             mNotificationManager.notify(

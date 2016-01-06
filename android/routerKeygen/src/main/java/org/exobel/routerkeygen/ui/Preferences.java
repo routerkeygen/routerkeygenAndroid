@@ -55,11 +55,9 @@ import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.analytics.GoogleAnalytics;
 import com.ipaulpro.afilechooser.FileChooserActivity;
 import com.ipaulpro.afilechooser.utils.FileUtils;
 
-import org.exobel.routerkeygen.AdsUtils;
 import org.exobel.routerkeygen.BuildConfig;
 import org.exobel.routerkeygen.DictionaryDownloadService;
 import org.exobel.routerkeygen.R;
@@ -152,51 +150,51 @@ public class Preferences extends PreferenceActivity {
                     }
                 });
 
-        boolean app_installed = AdsUtils.checkDonation(this);
+//        boolean app_installed = AdsUtils.checkDonation(this);
         final PreferenceCategory mCategory = (PreferenceCategory) findPreference("2section");
-        if (!app_installed) {
-            mCategory.removePreference(findPreference("analytics_enabled"));
-            // If you haven't the donate app installed remove the paypal donate
-            // link.
-            mCategory.removePreference(findPreference("donate_paypal"));
-            findPreference("donate_playstore").setOnPreferenceClickListener(
-                    new OnPreferenceClickListener() {
-                        public boolean onPreferenceClick(Preference preference) {
-                            try {
-                                startActivity(new Intent(Intent.ACTION_VIEW,
-                                        Uri.parse("market://details?id="
-                                                + GOOGLE_PLAY_DOWNLOADER)));
-                            } catch (android.content.ActivityNotFoundException anfe) {
-                                startActivity(new Intent(
-                                        Intent.ACTION_VIEW,
-                                        Uri.parse("http://play.google.com/store/apps/details?id="
-                                                + GOOGLE_PLAY_DOWNLOADER)));
-                            }
-                            Toast.makeText(getApplicationContext(),
-                                    R.string.msg_donation, Toast.LENGTH_LONG)
-                                    .show();
-                            return true;
-                        }
-                    });
-        } else {
-            // If you have the donate app installed no need to link to it.
-            mCategory.removePreference(findPreference("donate_playstore"));
-            if (BuildConfig.APPLICATION_ID.equals("io.github.routerkeygen")) {
-                //Play Store is quite restrictive nowadays
-                mCategory.removePreference(findPreference("donate_paypal"));
-            } else {
-                findPreference("donate_paypal").setOnPreferenceClickListener(
-                        new OnPreferenceClickListener() {
-                            public boolean onPreferenceClick(Preference preference) {
-                                final String donateLink = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=V3FFBTRTTV5DN";
-                                Uri uri = Uri.parse(donateLink);
-                                startActivity(new Intent(Intent.ACTION_VIEW, uri));
-
-                                return true;
-                            }
-                        });
-            }
-        }
+//        if (!app_installed) {
+//            mCategory.removePreference(findPreference("analytics_enabled"));
+//            // If you haven't the donate app installed remove the paypal donate
+//            // link.
+//            mCategory.removePreference(findPreference("donate_paypal"));
+//            findPreference("donate_playstore").setOnPreferenceClickListener(
+//                    new OnPreferenceClickListener() {
+//                        public boolean onPreferenceClick(Preference preference) {
+//                            try {
+//                                startActivity(new Intent(Intent.ACTION_VIEW,
+//                                        Uri.parse("market://details?id="
+//                                                + GOOGLE_PLAY_DOWNLOADER)));
+//                            } catch (android.content.ActivityNotFoundException anfe) {
+//                                startActivity(new Intent(
+//                                        Intent.ACTION_VIEW,
+//                                        Uri.parse("http://play.google.com/store/apps/details?id="
+//                                                + GOOGLE_PLAY_DOWNLOADER)));
+//                            }
+//                            Toast.makeText(getApplicationContext(),
+//                                    R.string.msg_donation, Toast.LENGTH_LONG)
+//                                    .show();
+//                            return true;
+//                        }
+//                    });
+//        } else {
+//            // If you have the donate app installed no need to link to it.
+//            mCategory.removePreference(findPreference("donate_playstore"));
+//            if (BuildConfig.APPLICATION_ID.equals("io.github.routerkeygen")) {
+//                //Play Store is quite restrictive nowadays
+//                mCategory.removePreference(findPreference("donate_paypal"));
+//            } else {
+//                findPreference("donate_paypal").setOnPreferenceClickListener(
+//                        new OnPreferenceClickListener() {
+//                            public boolean onPreferenceClick(Preference preference) {
+//                                final String donateLink = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=V3FFBTRTTV5DN";
+//                                Uri uri = Uri.parse(donateLink);
+//                                startActivity(new Intent(Intent.ACTION_VIEW, uri));
+//
+//                                return true;
+//                            }
+//                        });
+//            }
+//        }
         if (BuildConfig.APPLICATION_ID.equals("io.github.routerkeygen")) {
             mCategory.removePreference(findPreference("update"));
         } else {
@@ -332,16 +330,11 @@ public class Preferences extends PreferenceActivity {
     @Override
     public void onStart() {
         super.onStart();
-        //Get an Analytics tracker to report app starts and uncaught exceptions etc.
-        GoogleAnalytics.getInstance(this).reportActivityStart(this);
-
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        //Stop the analytics tracking
-        GoogleAnalytics.getInstance(this).reportActivityStop(this);
     }
 
     protected Dialog onCreateDialog(int id) {

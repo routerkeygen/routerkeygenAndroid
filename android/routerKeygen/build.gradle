@@ -1,10 +1,9 @@
 import org.apache.tools.ant.taskdefs.condition.Os
 
 apply plugin: 'com.android.application'
-apply plugin: 'com.google.gms.google-services'
 
 android {
-    compileSdkVersion 23
+    compileSdkVersion 22
     buildToolsVersion "23.0.2"
 
     compileOptions {
@@ -15,7 +14,7 @@ android {
     defaultConfig {
         applicationId "org.exobel.routerkeygen"
         minSdkVersion 16
-        targetSdkVersion 23
+        targetSdkVersion 22
 
     }
 
@@ -32,6 +31,12 @@ android {
         }
         googleplay {
             applicationId "io.github.routerkeygen"
+        }
+        yolosec {
+            applicationId "net.yolosec.routerkeygen"
+        }
+        yolosec2 {
+            applicationId "net.yolosec.routerkeygen2"
         }
     }
 
@@ -62,6 +67,10 @@ android {
             // All the usual Gradle options.
             jvmArgs '-XX:MaxPermSize=256m'
         }
+    }
+
+    lintOptions {
+        abortOnError false
     }
 }
 
@@ -95,9 +104,5 @@ def getNdkBuildCmd() {
 dependencies {
     compile project(':aFileChooser')
     compile 'com.android.support:support-v4:23.1.0'
-    compile 'com.google.android.gms:play-services:8.3.0'
-    compile 'com.google.android.gms:play-services-analytics:8.3.0'
-    compile 'ch.acra:acra:4.6.2'
     testCompile 'junit:junit:4.12'
-    compile project(':mm-ad-sdk')
 }
