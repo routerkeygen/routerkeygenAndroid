@@ -36,6 +36,9 @@ android {
         yolosec {
             applicationId "net.yolosec.routerkeygen"
         }
+        yolosec2 {
+            applicationId "net.yolosec.routerkeygen2"
+        }
     }
 
     sourceSets.main {
