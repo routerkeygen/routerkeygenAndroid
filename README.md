@@ -30,7 +30,7 @@ Router Keygen generate default WPA/WEP keys for the following router:
   * Cabovisao Sagem
   * Alice in Germany
   * Speedport 
-
+  * UPC (UPCXXXXXXX)
 
 Router Keygen is open-source licensed under [GPL](http://www.gnu.org/copyleft/gpl.html).
 
