@@ -1,5 +1,8 @@
 package org.exobel.routerkeygen.algorithms;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.exobel.routerkeygen.R;
 
 import java.util.List;
@@ -9,10 +12,25 @@ public class SitecomX500Keygen extends Keygen {
 
     private final static String CHARSET = "123456789abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ"; // without
     // i,l,o,0
+    public static final Parcelable.Creator<SitecomX500Keygen> CREATOR = new Creator<SitecomX500Keygen>()
+    {
+        @Override
+        public SitecomX500Keygen createFromParcel(Parcel in)
+        {
+            return new SitecomX500Keygen(in);
+        }
 
+        @Override
+        public SitecomX500Keygen[] newArray(int size)
+        {
+            return new SitecomX500Keygen[size];
+        }
+    };
     public SitecomX500Keygen(String ssid, String mac) {
         super(ssid, mac);
     }
+
+    public SitecomX500Keygen(Parcel in) {super(in);}
 
     @Override
     public int getSupportState() {

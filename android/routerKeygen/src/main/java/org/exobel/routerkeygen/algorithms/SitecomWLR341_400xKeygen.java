@@ -1,5 +1,8 @@
 package org.exobel.routerkeygen.algorithms;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.exobel.routerkeygen.R;
 
 import java.util.List;
@@ -14,9 +17,26 @@ public class SitecomWLR341_400xKeygen extends Keygen {
     private final static long MAGIC2 = 0x0004321aL;
     private final static long MAGIC3 = 0x80000000L;
 
+    public static final Parcelable.Creator<SitecomWLR341_400xKeygen> CREATOR = new Creator<SitecomWLR341_400xKeygen>()
+    {
+        @Override
+        public SitecomWLR341_400xKeygen createFromParcel(Parcel in)
+        {
+            return new SitecomWLR341_400xKeygen(in);
+        }
+
+        @Override
+        public SitecomWLR341_400xKeygen[] newArray(int size)
+        {
+            return new SitecomWLR341_400xKeygen[size];
+        }
+    };
+
     public SitecomWLR341_400xKeygen(String ssid, String mac) {
         super(ssid, mac);
     }
+
+    private SitecomWLR341_400xKeygen(Parcel in) {super(in);}
 
     @Override
     public int getSupportState() {
