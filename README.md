@@ -1,5 +1,8 @@
 #RouterKeygen for Android
 
+This fork is also available on GooglePlay
+https://play.google.com/store/apps/details?id=net.yolosec.routerkeygen2
+
 Router Keygen generate default WPA/WEP keys for the following router:
 
   * Thomson based routers ( this includes Thomson, SpeedTouch, Orange, Infinitum, BBox, DMax, BigPond, O2Wireless, Otenet, Cyta , TN_private, Blink )
@@ -39,3 +42,18 @@ Router Keygen is open-source licensed under [GPL](http://www.gnu.org/copyleft/gp
 
 Get them from here:
 https://github.com/routerkeygen/routerkeygenAndroid/releases
+
+Or this fork:
+https://github.com/yolosec/routerkeygenAndroid/releases
+
+#Source
+This application is Routerkeygen derivate with UPC router support added. 
+For original project please refer to: https://play.google.com/store/apps/details?id=io.github.routerkeygen 
+Or visit http://routerkeygen.github.io/ for more information.
+
+Application source codes are released under GPL license here: https://github.com/yolosec/routerkeygenAndroid/releases
+
+Forker from original repository: https://github.com/routerkeygen/routerkeygenAndroid
+
+Note: If you download this app please also download the original one so the main author 
+also takes the credit. This app was published to make it ASAP to the production (and end users).
