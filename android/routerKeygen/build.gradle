@@ -3,7 +3,7 @@ import org.apache.tools.ant.taskdefs.condition.Os
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
+    compileSdkVersion 22
     buildToolsVersion "23.0.2"
 
     compileOptions {
@@ -14,7 +14,7 @@ android {
     defaultConfig {
         applicationId "org.exobel.routerkeygen"
         minSdkVersion 16
-        targetSdkVersion 23
+        targetSdkVersion 22
 
     }
 
