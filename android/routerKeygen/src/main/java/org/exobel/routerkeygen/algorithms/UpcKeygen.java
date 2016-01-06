@@ -55,8 +55,11 @@ public class UpcKeygen extends Keygen {
     public int getSupportState() {
         if (getSsidName().matches("UPC[0-9]{5,7}")) {
             return SUPPORTED;
+        } else if (getSsidName().matches("UPC[0-9]{8}")) {
+            return UNLIKELY_SUPPORTED;
         }
-        return UNLIKELY_SUPPORTED;
+
+        return UNSUPPORTED;
     }
 
     @Override
