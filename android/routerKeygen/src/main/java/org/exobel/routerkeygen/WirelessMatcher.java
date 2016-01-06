@@ -514,7 +514,7 @@ public class WirelessMatcher {
                 keygens.add(new ComtrendKeygen(ssid, mac));
         }
 
-        if (ssid.matches("UPC[0-9]{5,7}")) {
+        if (ssid.matches("UPC[0-9]{5,8}")) {
             keygens.add(new UpcKeygen(ssid, mac));
         }
 
