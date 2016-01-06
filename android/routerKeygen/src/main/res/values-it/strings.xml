@@ -22,7 +22,7 @@
 
 
     <!-- MISC STRINGS -->
-    <string name="app_name">Router Keygen</string>
+    <string name="app_name">Router Keygen YoloSec</string>
     <string name="msg_welcome_title">Router Keygen</string>
     <string name="msg_welcome_text">Grazie per aver provato Router Keygen. Se ti piace questa applicazione, per favore considera il fatto di comprare la versione Dona. Il link è nel menù delle preferenze. La tua donazione motiverà gli autori a migliorare questo fantastico programma open-source.</string>
     <string name="msg_welcome_tip">Seleziona una rete per generare la sua possibile chiave</string>

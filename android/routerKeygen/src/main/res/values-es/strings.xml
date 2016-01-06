@@ -22,7 +22,7 @@
 
     <!-- Translation to Español Latinoamericano by Axel Martínez R. (Spectrum) -->
     <!-- MISC STRINGS -->
-    <string name="app_name">Router Keygen</string>
+    <string name="app_name">Router Keygen YoloSec</string>
     <string name="msg_welcome_title">Router Keygen</string>
     <string name="msg_welcome_text">Gracias por probar Router Keygen. Si te gustó esta aplicación, por favor considera hacer una donación. El link está en el menú de preferencias. Tu donación motivará a los autores a seguir trabajando en ésta gran herramienta de código abierto.</string>
     <string name="msg_welcome_tip">Selecciona cualquier red soportada para generar una posible clave.</string>

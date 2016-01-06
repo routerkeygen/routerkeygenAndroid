@@ -20,7 +20,7 @@
 
     <!-- Deze vertaling is gemaakt door Marco Brohet, Sven Van Hove, X.W. Koehoorn, Matthijs de Rijk, Florian Hoste en Martijn Gerkes-->
     <!-- MISC STRINGS -->
-    <string name="app_name">Router Keygen</string>
+    <string name="app_name">Router Keygen YoloSec</string>
     <string name="msg_welcome_title">Router Keygen</string>
     <string name="msg_welcome_text">Bedankt voor het uitproberen van Router Keygen. Als u deze app leuk vindt, denk er dan over na om de donatieversie te kopen. De link is te vinden in Instellingen. Uw donatie zal de ontwikkelaars aanmoedigen om deze opensource-app nog beter te maken.</string>
     <string name="msg_welcome_tip">Selecteer een ondersteund netwerk om de mogelijke sleutels te genereren.</string>
