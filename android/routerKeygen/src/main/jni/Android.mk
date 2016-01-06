@@ -1,4 +1,5 @@
 LOCAL_PATH := $(call my-dir)
+JNI_PATH := $(LOCAL_PATH)
 
 include $(CLEAR_VARS)
 include $(LOCAL_PATH)/android-config.mk
@@ -31,3 +32,5 @@ LOCAL_LDLIBS := -llog
 LOCAL_MODULE:= thomson
 
 include $(BUILD_SHARED_LIBRARY)
+
+include $(JNI_PATH)/upc/android_toolchain/Android.mk
