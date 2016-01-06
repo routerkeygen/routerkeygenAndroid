@@ -2,6 +2,7 @@ package org.exobel.routerkeygen.algorithms;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import org.exobel.routerkeygen.R;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ import java.util.List;
  * Source: https://haxx.in/upc_keys.c
  */
 public class UpcKeygen extends Keygen {
+    private static final String TAG="UpcKeygen";
     static {
         System.loadLibrary("upc");
     }
@@ -72,7 +74,8 @@ public class UpcKeygen extends Keygen {
     public List<String> getKeys() {
         // No paralelization yet.
         try {
-            final UpcNativeTask task = new UpcNativeTask(this, getSsidName().getBytes("UTF-8"));
+            Log.d(TAG, "Starting a new task for ssid: " + getSsidName());
+            final UpcNativeTask task = new UpcNativeTask(this, getSsidName().getBytes("US-ASCII"));
             tasks.add(task);
 
             task.start();
