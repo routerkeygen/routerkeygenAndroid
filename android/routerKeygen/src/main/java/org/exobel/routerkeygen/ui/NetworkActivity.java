@@ -26,9 +26,6 @@ import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.google.android.gms.analytics.GoogleAnalytics;
-
-import org.exobel.routerkeygen.AdsUtils;
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.algorithms.WiFiNetwork;
 
@@ -42,7 +39,6 @@ public class NetworkActivity extends Activity {
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
-        AdsUtils.loadAdIfNeeded(this);
         if (savedInstanceState == null) {
             final Bundle arguments = new Bundle();
             final WiFiNetwork wiFiNetwork = getIntent().getParcelableExtra(NetworkFragment.NETWORK_ID);
@@ -54,23 +50,6 @@ public class NetworkActivity extends Activity {
                     .add(R.id.keygen_fragment, fragment).commit();
         }
     }
-
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        //Get an Analytics tracker to report app starts and uncaught exceptions etc.
-        GoogleAnalytics.getInstance(this).reportActivityStart(this);
-
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        //Stop the analytics tracking
-        GoogleAnalytics.getInstance(this).reportActivityStop(this);
-    }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

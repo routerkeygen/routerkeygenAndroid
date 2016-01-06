@@ -103,35 +103,11 @@
         android:key="2section"
         android:title="@string/pref_2section">
 
-        <CheckBoxPreference
-            android:id="@+id/analytics"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:defaultValue="@bool/analyticsDefault"
-            android:key="analytics_enabled"
-            android:summaryOff="@string/pref_hintoff_analytics"
-            android:summaryOn="@string/pref_hinton_analytics"
-            android:title="@string/pref_analytics" />
-
         <Preference
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:key="update"
             android:title="@string/pref_update" />
-
-        <Preference
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:key="donate_playstore"
-            android:summary="@string/pref_donate_why"
-            android:title="@string/pref_donate_google_play" />
-
-        <Preference
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:key="donate_paypal"
-            android:summary="@string/pref_donate_why"
-            android:title="@string/pref_donate_paypal" />
 
         <Preference
             android:layout_width="wrap_content"

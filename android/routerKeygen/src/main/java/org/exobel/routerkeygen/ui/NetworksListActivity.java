@@ -21,14 +21,11 @@ package org.exobel.routerkeygen.ui;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -40,9 +37,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.google.android.gms.analytics.GoogleAnalytics;
-
-import org.exobel.routerkeygen.AdsUtils;
 import org.exobel.routerkeygen.BuildConfig;
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.UpdateCheckerService;
@@ -113,60 +107,7 @@ public class NetworksListActivity extends Activity implements
                 startService(new Intent(getApplicationContext(),
                         UpdateCheckerService.class));
             }
-            if (!AdsUtils.checkDonation(this)) {
-                final String whatsNewTitle = getString(R.string.msg_welcome_title);
-                final String whatsNewText = getString(R.string.msg_welcome_text);
-                final AlertDialog.Builder initialDialog = new AlertDialog.Builder(this)
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .setTitle(whatsNewTitle)
-                        .setMessage(whatsNewText)
-                        .setNegativeButton(R.string.bt_dont_donate,
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog,
-                                                        int which) {
-                                        dialog.dismiss();
-                                    }
-                                })
-                        .setPositiveButton(R.string.bt_google_play,
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog,
-                                                        int which) {
-                                        try {
-                                            startActivity(new Intent(
-                                                    Intent.ACTION_VIEW,
-                                                    Uri.parse("market://details?id="
-                                                            + Preferences.GOOGLE_PLAY_DOWNLOADER)));
-                                        } catch (android.content.ActivityNotFoundException anfe) {
-                                            startActivity(new Intent(
-                                                    Intent.ACTION_VIEW,
-                                                    Uri.parse("http://play.google.com/store/apps/details?id="
-                                                            + Preferences.GOOGLE_PLAY_DOWNLOADER)));
-                                        }
-                                        Toast.makeText(getApplicationContext(),
-                                                R.string.msg_donation,
-                                                Toast.LENGTH_LONG).show();
-                                        dialog.dismiss();
-                                    }
-                                });
-                if (BuildConfig.APPLICATION_ID.equals("org.exobel.routerkeygen")) {
-                    initialDialog.setNeutralButton(R.string.bt_paypal,
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog,
-                                                    int which) {
-                                    final String donateLink = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=V3FFBTRTTV5DN";
-                                    Uri uri = Uri.parse(donateLink);
-                                    startActivity(new Intent(
-                                            Intent.ACTION_VIEW, uri));
-                                    dialog.dismiss();
-                                }
-                            }).show();
-                } else {
-                    initialDialog.show();
-                }
-            }
-        }
-        if (welcomeScreenShown) {
-            AdsUtils.displayStartupInterstitial(this);
+//
         }
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
@@ -234,9 +175,6 @@ public class NetworksListActivity extends Activity implements
     @Override
     public void onStart() {
         super.onStart();
-        AdsUtils.loadAdIfNeeded(this);
-        //Get an Analytics tracker to report app starts and uncaught exceptions etc.
-        GoogleAnalytics.getInstance(this).reportActivityStart(this);
         getPrefs();
         if (wifiOn) {
             try {
@@ -258,7 +196,6 @@ public class NetworksListActivity extends Activity implements
     public void onResume() {
         super.onResume();
         getPrefs();
-        GoogleAnalytics.getInstance(this).setAppOptOut(!analyticsOptIn);
         if (autoScan) {
             mHandler.removeCallbacks(mAutoScanTask);
             mHandler.postDelayed(mAutoScanTask, autoScanInterval * 1000L);
@@ -280,8 +217,6 @@ public class NetworksListActivity extends Activity implements
     public void onStop() {
         super.onStop();
         try {
-            //Stop the analytics tracking
-            GoogleAnalytics.getInstance(this).reportActivityStop(this);
             unregisterReceiver(scanFinished);
             unregisterReceiver(stateChanged);
         } catch (Exception e) {

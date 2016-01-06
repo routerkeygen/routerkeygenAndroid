@@ -53,12 +53,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.StandardExceptionParser;
-import com.google.android.gms.analytics.Tracker;
-
-import org.acra.ACRA;
-import org.exobel.routerkeygen.AdsUtils;
 import org.exobel.routerkeygen.AutoConnectService;
 import org.exobel.routerkeygen.BuildConfig;
 import org.exobel.routerkeygen.R;
@@ -146,7 +140,6 @@ public class NetworkFragment extends Fragment {
 					i.putExtra(AutoConnectService.SCAN_RESULT,
 							wifiNetwork.getScanResult());
 					getActivity().startService(i);
-					AdsUtils.displayConnectInterstitial(getActivity());
 				}
 			});
 		}
@@ -440,29 +433,7 @@ public class NetworkFragment extends Fragment {
 					if (keygenResult != null)
 						result.addAll(keygenResult);
 				} catch (Exception e) {
-					ACRA.getErrorReporter().putCustomData("ssid",
-							wifiNetwork.getSsidName());
-					ACRA.getErrorReporter().putCustomData("mac",
-							wifiNetwork.getMacAddress());
-					ACRA.getErrorReporter().handleException(e);
-					if (keygen instanceof ThomsonKeygen) {
-						((ThomsonKeygen) keygen).setErrorDict(true);// native
-						// should
-						// never crash
-					}
-					// Get tracker.
-					final Activity activity = getActivity();
-					if (activity != null) {
-                        Tracker t = ((RouterKeygenApplication) activity.getApplication()).getTracker();
-                        t.send(new HitBuilders.ExceptionBuilder()
-                                        .setDescription(
-                                                new StandardExceptionParser(activity, null)
-                                                        .getDescription(Thread.currentThread().getName(), e))
-                                        .setFatal(false)
-                                        .build()
-
-                        );
-                    }
+					Log.e(NetworkFragment.class.getSimpleName(), String.format("Error, ssid=%s, mac=%s", wifiNetwork.getSsidName(), wifiNetwork.getMacAddress()));
 				}
 				if (nativeCalc && (keygen instanceof ThomsonKeygen)) {
 					if (((ThomsonKeygen) keygen).isErrorDict()) {
@@ -481,11 +452,7 @@ public class NetworkFragment extends Fragment {
 									R.string.err_misbuilt_apk);
 							return null;
 						} catch (Exception e) {
-							ACRA.getErrorReporter().putCustomData("ssid",
-									wifiNetwork.getSsidName());
-							ACRA.getErrorReporter().putCustomData("mac",
-									wifiNetwork.getMacAddress());
-							ACRA.getErrorReporter().handleException(e);
+							Log.e(NetworkFragment.class.getSimpleName(), String.format("Error, ssid=%s, mac=%s", wifiNetwork.getSsidName(), wifiNetwork.getMacAddress()));
 						}
 					}
 				}

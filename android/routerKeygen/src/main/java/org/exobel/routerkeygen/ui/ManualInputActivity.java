@@ -27,10 +27,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-
-import com.google.android.gms.analytics.GoogleAnalytics;
-
-import org.exobel.routerkeygen.AdsUtils;
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.algorithms.Keygen;
 import org.exobel.routerkeygen.algorithms.WiFiNetwork;
@@ -45,7 +41,7 @@ public class ManualInputActivity extends Activity implements
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
-        AdsUtils.loadAdIfNeeded(this);
+
         if (savedInstanceState == null) {
             getFragmentManager()
                     .beginTransaction()
@@ -56,21 +52,6 @@ public class ManualInputActivity extends Activity implements
                                                     ManualInputFragment.MAC_ADDRESS_ARG)))
                     .commit();
         }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        //Get an Analytics tracker to report app starts and uncaught exceptions etc.
-        GoogleAnalytics.getInstance(this).reportActivityStart(this);
-
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        //Stop the analytics tracking
-        GoogleAnalytics.getInstance(this).reportActivityStop(this);
     }
 
     @Override
