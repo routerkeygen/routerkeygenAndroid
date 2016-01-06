@@ -33,6 +33,9 @@ android {
         googleplay {
             applicationId "io.github.routerkeygen"
         }
+        yolosec {
+            applicationId "net.yolosec.routerkeygen"
+        }
     }
 
     sourceSets.main {
@@ -62,6 +65,10 @@ android {
             // All the usual Gradle options.
             jvmArgs '-XX:MaxPermSize=256m'
         }
+    }
+
+    lintOptions {
+        abortOnError false
     }
 }
 

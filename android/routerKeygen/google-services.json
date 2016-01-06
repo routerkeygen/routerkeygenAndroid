@@ -1,1 +1,81 @@
-{"project_info":{"project_id":"routerkeygen-de3de","project_number":"640176020187","name":"Routerkeygen"},"client":[{"client_info":{"mobilesdk_app_id":"1:640176020187:android:cec0e54019dd85eb","client_id":"android:io.github.routerkeygen","client_type":1,"android_client_info":{"package_name":"io.github.routerkeygen"}},"oauth_client":[],"api_key":[],"services":{"analytics_service":{"status":2,"analytics_property":{"tracking_id":"UA-8008640-7"}},"cloud_messaging_service":{"status":1,"apns_config":[]},"appinvite_service":{"status":1,"other_platform_oauth_client":[]},"google_signin_service":{"status":1},"ads_service":{"status":2,"test_banner_ad_unit_id":"ca-app-pub-3940256099942544/6300978111","test_interstitial_ad_unit_id":"ca-app-pub-3940256099942544/1033173712"}}},{"client_info":{"mobilesdk_app_id":"1:640176020187:android:f20199c625c2e4b1","client_id":"android:org.exobel.routerkeygen","client_type":1,"android_client_info":{"package_name":"org.exobel.routerkeygen"}},"oauth_client":[],"api_key":[],"services":{"analytics_service":{"status":2,"analytics_property":{"tracking_id":"UA-8008640-7"}},"cloud_messaging_service":{"status":1,"apns_config":[]},"appinvite_service":{"status":1,"other_platform_oauth_client":[]},"google_signin_service":{"status":1},"ads_service":{"status":1}}}],"client_info":[],"ARTIFACT_VERSION":"1"}
+{
+  "project_info": {
+    "project_id": "routerkeygen-de3de",
+    "project_number": "640176020187",
+    "name": "Routerkeygen"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:640176020187:android:cec0e54019dd85eb",
+        "client_id": "android:io.github.routerkeygen",
+        "client_type": 1,
+        "android_client_info": {
+          "package_name": "io.github.routerkeygen"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-8008640-7"
+          }
+        },
+        "cloud_messaging_service": {
+          "status": 1,
+          "apns_config": []
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "google_signin_service": {
+          "status": 1
+        },
+        "ads_service": {
+          "status": 2,
+          "test_banner_ad_unit_id": "ca-app-pub-3940256099942544/6300978111",
+          "test_interstitial_ad_unit_id": "ca-app-pub-3940256099942544/1033173712"
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:640176020187:android:f20199c625c2e4b1",
+        "client_id": "android:org.exobel.routerkeygen",
+        "client_type": 1,
+        "android_client_info": {
+          "package_name": "org.exobel.routerkeygen"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-8008640-7"
+          }
+        },
+        "cloud_messaging_service": {
+          "status": 1,
+          "apns_config": []
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "google_signin_service": {
+          "status": 1
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "client_info": [],
+  "ARTIFACT_VERSION": "1"
+}
