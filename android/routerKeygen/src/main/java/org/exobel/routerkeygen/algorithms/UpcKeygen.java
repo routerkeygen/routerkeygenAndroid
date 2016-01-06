@@ -5,7 +5,6 @@ import android.os.Parcelable;
 import android.util.Log;
 
 import org.exobel.routerkeygen.R;
-import java.util.ArrayList;
 import java.util.List;
 
 /*
@@ -35,8 +34,6 @@ public class UpcKeygen extends Keygen {
         System.loadLibrary("upc");
     }
 
-    private final List<UpcNativeTask> tasks = new ArrayList<>();
-
     public static final Parcelable.Creator<UpcKeygen> CREATOR = new Parcelable.Creator<UpcKeygen>() {
         public UpcKeygen createFromParcel(Parcel in) {
             return new UpcKeygen(in);
@@ -65,38 +62,23 @@ public class UpcKeygen extends Keygen {
     @Override
     public synchronized void setStopRequested(boolean stopRequested) {
         super.setStopRequested(stopRequested);
-        for (UpcNativeTask t : tasks) {
-            t.stopRequested = true;
-        }
     }
 
     @Override
     public List<String> getKeys() {
-        // No paralelization yet.
+        String[] results = null;
         try {
             Log.d(TAG, "Starting a new task for ssid: " + getSsidName());
-            final UpcNativeTask task = new UpcNativeTask(this, getSsidName().getBytes("US-ASCII"));
-            tasks.add(task);
-
-            task.start();
+            results = upcNative(getSsidName().getBytes("US-ASCII"));
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, "Exception in native computation", e);
+            setErrorCode(R.string.msg_err_native);
         }
 
-        for (UpcNativeTask t : tasks) {
-            try {
-                t.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                continue;
-            }
-            final String[] results = t.results;
-            if (t.error || results == null)
-                setErrorCode(R.string.msg_err_native);
-            if (isStopRequested())
-                return null;
-            for (String result : results) addPassword(result);
-        }
+        if (isStopRequested() || results == null)
+            return null;
+        for (String result : results)
+            addPassword(result);
         if (getResults().size() == 0)
             setErrorCode(R.string.msg_errnomatches);
         return getResults();
@@ -108,33 +90,4 @@ public class UpcKeygen extends Keygen {
      * @return
      */
     private native String[] upcNative(byte[] essid);
-
-    /**
-     * Computation thread.
-     */
-    public static class UpcNativeTask extends Thread {
-
-
-        private final UpcKeygen keygen;
-        private final byte[] routerESSID;
-        private boolean error = false;
-        private String[] results;
-        @SuppressWarnings("unused")
-        //This is read in the native code
-        private boolean stopRequested = false;
-
-        public UpcNativeTask(UpcKeygen keygen, byte[] routerESSID) {
-            this.keygen = keygen;
-            this.routerESSID = routerESSID;
-        }
-
-        @Override
-        public void run() {
-            try {
-                results = keygen.upcNative(routerESSID);
-            } catch (Exception e) {
-                error = true;
-            }
-        }
-    }
 }

@@ -1,12 +1,15 @@
 #include <android/log.h>
-
-#include <cstdlib>
-#include <string>
-#include <vector>
+#include <ctype.h>
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #include "upc_keys_wrapper.h"
 #include "upc_keys.h"
 #include "md5.h"
+
+#define MAX_PASS_CN 100
+#define PASS_LEN 9
 
 // Logging
 #define LOG_TAG "upc_keys"
@@ -20,15 +23,15 @@ JNIEXPORT jobjectArray JNICALL Java_org_exobel_routerkeygen_algorithms_UpcKeygen
   jobjectArray ret;
 
   // Get stopRequested - cancellation flag.
-  jclass cls = env->GetObjectClass(obj);
-  jfieldID fid_s = env->GetFieldID(cls, "stopRequested", "Z");
+  jclass cls = (*env)->GetObjectClass(env, obj);
+  jfieldID fid_s = (*env)->GetFieldID(env, cls, "stopRequested", "Z");
   if (fid_s == NULL) {
     return NULL; /* exception already thrown */
   }
-  unsigned char stop = env->GetBooleanField(obj, fid_s);
+  unsigned char stop = (*env)->GetBooleanField(env, obj, fid_s);
 
   // ESSID reading from parameter.
-  jbyte *e_native = env->GetByteArrayElements(ess, 0);
+  jbyte *e_native = (*env)->GetByteArrayElements(env, ess, 0);
   char * e_ssid = (char*) e_native;
 
   // Definitions.
@@ -39,12 +42,10 @@ JNIEXPORT jobjectArray JNICALL Java_org_exobel_routerkeygen_algorithms_UpcKeygen
   char pass[9], tmpstr[17];
   uint8_t h1[16], h2[16];
   uint32_t hv[4], w1, w2, i, cnt=0;
+  char pass_database[MAX_PASS_CN][PASS_LEN];
 
   target = strtoul(e_ssid + 3, NULL, 0);
-  IPRINTF("Computing UPC keys for essid %s, target %lu", e_ssid, (unsigned long)target);
-
-  // Resulting keys
-  std::vector<std::string> computed_keys;
+  IPRINTF("Computing UPC keys for essid [%s], target %lu", e_ssid, (unsigned long)target);
   unsigned long stop_ctr = 0;
 
   // Compute - from upc_keys.c
@@ -54,9 +55,9 @@ JNIEXPORT jobjectArray JNICALL Java_org_exobel_routerkeygen_algorithms_UpcKeygen
         for (buf[3] = 0; buf[3] <= MAX3; buf[3]++) {
           // Check cancellation signal.
           stop_ctr += 1;
-          if (stop_ctr > 10000){
+          if (stop_ctr > 5000){
             stop_ctr = 0;
-            stop = env->GetBooleanField(obj, fid_s);
+            stop = (*env)->GetBooleanField(env, obj, fid_s);
             if (stop) {
               break;
             }
@@ -94,21 +95,23 @@ JNIEXPORT jobjectArray JNICALL Java_org_exobel_routerkeygen_algorithms_UpcKeygen
           hash2pass(h2, pass);
           IPRINTF("  -> #%02d WPA2 phrase for '%s' = '%s'", cnt, serial, pass);
 
-          std::string cpp_pass(pass);
-          computed_keys.push_back(cpp_pass);
+          if (cnt < MAX_PASS_CN) {
+            memcpy(pass_database[cnt - 1], pass, PASS_LEN);
+          } else {
+            break;
+          }
         }
       }
     }
   }
 
   // Construct array of computed strings.
-  ret = (jobjectArray) env->NewObjectArray(computed_keys.size(), env->FindClass("java/lang/String"), 0);
-  i=0;
-  for(std::vector<std::string>::const_iterator iter = computed_keys.begin(); iter != computed_keys.end(); ++iter) {
-    env->SetObjectArrayElement(ret, i++, env->NewStringUTF(iter->c_str()));
+  ret = (jobjectArray) (*env)->NewObjectArray(env, cnt, (*env)->FindClass(env, "java/lang/String"), 0);
+  for(i=0; i<cnt; i++) {
+    (*env)->SetObjectArrayElement(env, ret, i, (*env)->NewStringUTF(env, pass_database[i]));
   }
 
-  env->ReleaseByteArrayElements(ess, e_native, 0);
+  (*env)->ReleaseByteArrayElements(env, ess, e_native, 0);
   return ret;
 }
 
