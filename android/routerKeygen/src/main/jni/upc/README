@@ -1,0 +1,11 @@
+UPC key generator
+-----------------
+
+JNI wrapper for http://haxx.in/upc_keys.c
+Use at your own risk and responsibility.
+
+Credit goes to blasty <peter@haxx.in> // 20151231
+
+Idea & implementation:
+ph4r05 (Dusan)
+miroc (Miro)
