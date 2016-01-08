@@ -42,6 +42,7 @@ import org.exobel.routerkeygen.algorithms.TeleTuKeygen;
 import org.exobel.routerkeygen.algorithms.TelseyKeygen;
 import org.exobel.routerkeygen.algorithms.ThomsonKeygen;
 import org.exobel.routerkeygen.algorithms.TplinkKeygen;
+import org.exobel.routerkeygen.algorithms.UpcKeygen;
 import org.exobel.routerkeygen.algorithms.VerizonKeygen;
 import org.exobel.routerkeygen.algorithms.WifimediaRKeygen;
 import org.exobel.routerkeygen.algorithms.Wlan2Keygen;
@@ -511,6 +512,10 @@ public class WirelessMatcher {
                     || mac.startsWith("C8:6C:87") || mac.startsWith("D0:AE:EC")
                     || mac.startsWith("00:19:15") || mac.startsWith("00:1A:2B"))
                 keygens.add(new ComtrendKeygen(ssid, mac));
+        }
+
+        if (ssid.matches("UPC[0-9]{5,8}")) {
+            keygens.add(new UpcKeygen(ssid, mac));
         }
 
         return keygens;
