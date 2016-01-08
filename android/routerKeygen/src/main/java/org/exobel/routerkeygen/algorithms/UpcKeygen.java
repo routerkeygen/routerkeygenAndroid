@@ -76,6 +76,9 @@ public class UpcKeygen extends Keygen {
      */
     public void onKeyComputed(String key){
         computedKeys.add(key);
+        if (monitor != null){
+            monitor.onKeyComputed();
+        }
     }
 
     /**
@@ -83,7 +86,14 @@ public class UpcKeygen extends Keygen {
      * @param progress 0..1 value. 0=0%, 1=100%
      */
     public void onProgressed(double progress){
+        if (monitor != null){
+            monitor.onKeygenProgressed(progress);
+        }
+    }
 
+    @Override
+    public boolean keygenSupportsProgress() {
+        return true;
     }
 
     @Override

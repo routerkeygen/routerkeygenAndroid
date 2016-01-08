@@ -46,6 +46,7 @@ public abstract class Keygen implements Parcelable {
     private final List<String> pwList;
     private boolean stopRequested = false;
     private int errorCode;
+    protected KeygenMonitor monitor;
 
     public Keygen(final String ssid, final String mac) {
         this.ssidName = ssid;
@@ -103,6 +104,14 @@ public abstract class Keygen implements Parcelable {
 
     abstract public List<String> getKeys();
 
+    /**
+     * True if keygen supports progress reporting.
+     * @return
+     */
+    public boolean keygenSupportsProgress(){
+        return false;
+    }
+
     public int getErrorCode() {
         return errorCode;
     }
@@ -113,6 +122,14 @@ public abstract class Keygen implements Parcelable {
 
     public int getSupportState() {
         return SUPPORTED;
+    }
+
+    public KeygenMonitor getMonitor() {
+        return monitor;
+    }
+
+    public void setMonitor(KeygenMonitor monitor) {
+        this.monitor = monitor;
     }
 
     public int describeContents() {
