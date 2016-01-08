@@ -5,6 +5,8 @@ import android.os.Parcelable;
 import android.util.Log;
 
 import org.exobel.routerkeygen.R;
+
+import java.util.LinkedList;
 import java.util.List;
 
 /*
@@ -30,6 +32,8 @@ import java.util.List;
  */
 public class UpcKeygen extends Keygen {
     private static final String TAG="UpcKeygen";
+    private final List<String> computedKeys = new LinkedList<>();
+
     static {
         System.loadLibrary("upc");
     }
@@ -67,12 +71,29 @@ public class UpcKeygen extends Keygen {
         super.setStopRequested(stopRequested);
     }
 
+    /**
+     * Called by native code when a key is computed.
+     */
+    public void onKeyComputed(String key){
+        computedKeys.add(key);
+    }
+
+    /**
+     * Called by native code when a progress in computation is made.
+     * @param progress 0..1 value. 0=0%, 1=100%
+     */
+    public void onProgressed(double progress){
+
+    }
+
     @Override
     public List<String> getKeys() {
         String[] results = null;
         try {
             Log.d(TAG, "Starting a new task for ssid: " + getSsidName());
-            results = upcNative(getSsidName().getBytes("US-ASCII"));
+            upcNative(getSsidName().getBytes("US-ASCII"));
+            results = computedKeys.toArray(new String[computedKeys.size()]);
+
         } catch (Exception e) {
             Log.e(TAG, "Exception in native computation", e);
             setErrorCode(R.string.msg_err_native);
@@ -92,5 +113,5 @@ public class UpcKeygen extends Keygen {
      * @param essid
      * @return
      */
-    private native String[] upcNative(byte[] essid);
+    private native void upcNative(byte[] essid);
 }

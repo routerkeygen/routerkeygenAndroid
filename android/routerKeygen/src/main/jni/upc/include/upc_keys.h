@@ -15,6 +15,7 @@
 #define MAX1 99
 #define MAX2 9
 #define MAX3 9999
+#define MAX_ITERATIONS ((long)((MAX0)+1L)*(long)((MAX1)+1L)*(long)((MAX2)+1L)*(long)((MAX3)+1L))
 
 #ifdef __cplusplus
 extern "C" {

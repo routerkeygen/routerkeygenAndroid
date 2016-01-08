@@ -8,27 +8,29 @@
 #include "upc_keys.h"
 #include "md5.h"
 
-#define MAX_PASS_CN 100
-#define PASS_LEN 9
-
 // Logging
 #define LOG_TAG "upc_keys"
 #define DPRINTF(...)  __android_log_print(ANDROID_LOG_DEBUG,LOG_TAG,__VA_ARGS__)
 #define IPRINTF(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
 #define EPRINTF(...)  __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
 
-JNIEXPORT jobjectArray JNICALL Java_org_exobel_routerkeygen_algorithms_UpcKeygen_upcNative
+JNIEXPORT void JNICALL Java_net_yolosec_upckeygen_algorithms_UpcKeygen_upcNative
         (JNIEnv * env, jobject obj, jbyteArray ess)
 {
-  jobjectArray ret;
-
   // Get stopRequested - cancellation flag.
   jclass cls = (*env)->GetObjectClass(env, obj);
   jfieldID fid_s = (*env)->GetFieldID(env, cls, "stopRequested", "Z");
   if (fid_s == NULL) {
-    return NULL; /* exception already thrown */
+    return; /* exception already thrown */
   }
   unsigned char stop = (*env)->GetBooleanField(env, obj, fid_s);
+
+  // Monitoring methods
+  jmethodID on_key_computed = (*env)->GetMethodID(env, cls, "onKeyComputed", "(Ljava/lang/String;)V");
+  jmethodID on_progressed = (*env)->GetMethodID(env, cls, "onProgressed", "(D)V");
+  if (on_key_computed == NULL || on_progressed == NULL){
+    return;
+  }
 
   // ESSID reading from parameter.
   jbyte *e_native = (*env)->GetByteArrayElements(env, ess, 0);
@@ -42,25 +44,29 @@ JNIEXPORT jobjectArray JNICALL Java_org_exobel_routerkeygen_algorithms_UpcKeygen
   char pass[9], tmpstr[17];
   uint8_t h1[16], h2[16];
   uint32_t hv[4], w1, w2, i, cnt=0;
-  char pass_database[MAX_PASS_CN][PASS_LEN];
 
   target = strtoul(e_ssid + 3, NULL, 0);
   IPRINTF("Computing UPC keys for essid [%s], target %lu", e_ssid, (unsigned long)target);
   unsigned long stop_ctr = 0;
+  unsigned long iter_ctr = 0;
 
   // Compute - from upc_keys.c
   for (buf[0] = 0; buf[0] <= MAX0; buf[0]++) {
     for (buf[1] = 0; buf[1] <= MAX1; buf[1]++) {
       for (buf[2] = 0; buf[2] <= MAX2; buf[2]++) {
         for (buf[3] = 0; buf[3] <= MAX3; buf[3]++) {
-          // Check cancellation signal.
+          // Check cancellation signal & progress monitoring.
           stop_ctr += 1;
-          if (stop_ctr > 5000){
+          iter_ctr += 1;
+          if (stop_ctr > (MAX_ITERATIONS/2000)){
             stop_ctr = 0;
             stop = (*env)->GetBooleanField(env, obj, fid_s);
             if (stop) {
               break;
             }
+
+            double current_progress = (double)iter_ctr / MAX_ITERATIONS;
+            (*env)->CallVoidMethod(env, obj, on_progressed, (jdouble)current_progress);
           }
 
           if (upc_generate_ssid(buf, MAGIC_24GHZ) != target && upc_generate_ssid(buf, MAGIC_5GHZ) != target) {
@@ -95,23 +101,12 @@ JNIEXPORT jobjectArray JNICALL Java_org_exobel_routerkeygen_algorithms_UpcKeygen
           hash2pass(h2, pass);
           IPRINTF("  -> #%02d WPA2 phrase for '%s' = '%s'", cnt, serial, pass);
 
-          if (cnt < MAX_PASS_CN) {
-            memcpy(pass_database[cnt - 1], pass, PASS_LEN);
-          } else {
-            break;
-          }
+          jstring jpass = (*env)->NewStringUTF(env, pass);
+          (*env)->CallVoidMethod(env, obj, on_key_computed, jpass);
+          (*env)->DeleteLocalRef(env, jpass);
         }
       }
     }
   }
-
-  // Construct array of computed strings.
-  ret = (jobjectArray) (*env)->NewObjectArray(env, cnt, (*env)->FindClass(env, "java/lang/String"), 0);
-  for(i=0; i<cnt; i++) {
-    (*env)->SetObjectArrayElement(env, ret, i, (*env)->NewStringUTF(env, pass_database[i]));
-  }
-
-  (*env)->ReleaseByteArrayElements(env, ess, e_native, 0);
-  return ret;
 }
 

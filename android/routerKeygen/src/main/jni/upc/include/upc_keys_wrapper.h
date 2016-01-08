@@ -18,7 +18,7 @@ extern "C" {
  * Method:    upcNative
  * Signature: ([B[BI)[Ljava/lang/String;
  */
-JNIEXPORT jobjectArray JNICALL Java_org_exobel_routerkeygen_algorithms_UpcKeygen_upcNative
+JNIEXPORT void JNICALL Java_org_exobel_routerkeygen_algorithms_UpcKeygen_upcNative
         (JNIEnv *, jobject, jbyteArray);
 
 #ifdef __cplusplus
