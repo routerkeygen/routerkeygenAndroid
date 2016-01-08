@@ -14,7 +14,7 @@
 #define IPRINTF(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
 #define EPRINTF(...)  __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
 
-JNIEXPORT void JNICALL Java_net_yolosec_upckeygen_algorithms_UpcKeygen_upcNative
+JNIEXPORT void JNICALL Java_org_exobel_routerkeygen_algorithms_UpcKeygen_upcNative
         (JNIEnv * env, jobject obj, jbyteArray ess)
 {
   // Get stopRequested - cancellation flag.
