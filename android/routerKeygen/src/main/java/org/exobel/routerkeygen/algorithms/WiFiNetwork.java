@@ -6,6 +6,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import com.farproc.wifi.connecter.Wifi;
+
 import org.exobel.routerkeygen.WirelessMatcher;
 
 import java.util.ArrayList;
@@ -33,6 +35,7 @@ public class WiFiNetwork implements Comparable<WiFiNetwork>, Parcelable {
 	final private String ssidName;
 	final private String macAddress;
 	final private int level;
+	final private int frequency;
 	final private String encryption;
 	private ScanResult scanResult;
 	private ArrayList<Keygen> keygens;
@@ -40,18 +43,24 @@ public class WiFiNetwork implements Comparable<WiFiNetwork>, Parcelable {
 	public WiFiNetwork(ScanResult scanResult, ZipInputStream magicInfo) {
 		this(scanResult.SSID, scanResult.BSSID,
 				WifiManager.calculateSignalLevel(scanResult.level, 4),
-                scanResult.capabilities, magicInfo);
+				scanResult.frequency, scanResult.capabilities, magicInfo);
         this.scanResult = scanResult;
 	}
 
 	public WiFiNetwork(final String ssid, final String mac, int level,
+					   String enc, ZipInputStream magicInfo){
+		this(ssid, mac, level, 0, enc, magicInfo);
+	}
+
+	public WiFiNetwork(final String ssid, final String mac, int level, int frequency,
 					   String enc, ZipInputStream magicInfo) {
 		this.ssidName = ssid;
 		this.macAddress = mac.toUpperCase(Locale.getDefault());
 		this.level = level;
+		this.frequency = frequency;
 		this.encryption = enc;
 		this.scanResult = null;
-		this.keygens = WirelessMatcher.getKeygen(ssidName, macAddress,
+		this.keygens = WirelessMatcher.getKeygen(ssidName, macAddress, frequency,
 				magicInfo);
 	}
 
@@ -66,6 +75,7 @@ public class WiFiNetwork implements Comparable<WiFiNetwork>, Parcelable {
 		else
 			encryption = OPEN;
 		level = in.readInt();
+		frequency = in.readInt();
 		keygens = new ArrayList<>();
 		in.readList(keygens, Keygen.class.getClassLoader());
 		if (in.readInt() == 1)
@@ -91,6 +101,10 @@ public class WiFiNetwork implements Comparable<WiFiNetwork>, Parcelable {
 
 	public String getSsidName() {
 		return ssidName;
+	}
+
+	public int getFrequency() {
+		return frequency;
 	}
 
 	public int getLevel() {
@@ -141,6 +155,7 @@ public class WiFiNetwork implements Comparable<WiFiNetwork>, Parcelable {
 		if (encryption != null)
 			dest.writeString(encryption);
 		dest.writeInt(level);
+		dest.writeInt(frequency);
 		dest.writeList(keygens);
 		dest.writeInt(scanResult != null ? 1 : 0);
 		if (scanResult != null)
@@ -160,7 +175,7 @@ public class WiFiNetwork implements Comparable<WiFiNetwork>, Parcelable {
     }
 
 	public void setKeygens(ZipInputStream magicInfo) {
-		this.keygens = WirelessMatcher.getKeygen(ssidName, macAddress,
+		this.keygens = WirelessMatcher.getKeygen(ssidName, macAddress, frequency,
 				magicInfo);
 	}
 }

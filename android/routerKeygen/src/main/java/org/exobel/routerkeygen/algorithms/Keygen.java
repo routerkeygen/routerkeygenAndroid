@@ -43,12 +43,18 @@ public abstract class Keygen implements Parcelable {
     };
     final private String ssidName;
     final private String macAddress;
+    final private int frequency;
     private final List<String> pwList;
     private boolean stopRequested = false;
     private int errorCode;
     protected KeygenMonitor monitor;
 
     public Keygen(final String ssid, final String mac) {
+        this(ssid, mac, 0);
+    }
+
+    public Keygen(final String ssid, final String mac, final int frequency) {
+        this.frequency = frequency;
         this.ssidName = ssid;
         this.macAddress = mac.replace(":", "").toUpperCase(Locale.getDefault());
         this.pwList = new ArrayList<>();
@@ -60,6 +66,7 @@ public abstract class Keygen implements Parcelable {
             macAddress = in.readString();
         else
             macAddress = "";
+        frequency = in.readInt();
         errorCode = in.readInt();
         stopRequested = in.readInt() == 1;
         pwList = in.createStringArrayList();
@@ -91,6 +98,10 @@ public abstract class Keygen implements Parcelable {
 
     String getSsidName() {
         return ssidName;
+    }
+
+    int getFrequency() {
+        return frequency;
     }
 
     void addPassword(final String key) {
@@ -141,6 +152,7 @@ public abstract class Keygen implements Parcelable {
         dest.writeInt(macAddress != null ? 1 : 0);
         if (macAddress != null)
             dest.writeString(macAddress);
+        dest.writeInt(frequency);
         dest.writeInt(errorCode);
         dest.writeInt(stopRequested ? 1 : 0);
         dest.writeStringList(pwList);

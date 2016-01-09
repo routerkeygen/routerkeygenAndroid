@@ -77,7 +77,7 @@ public class WirelessMatcher {
     private static String[] supportedOTE = null;
 
     public synchronized static ArrayList<Keygen> getKeygen(String ssid,
-                                                           String mac, ZipInputStream magicInfo) {
+                                                           String mac, int frequency, ZipInputStream magicInfo) {
         final ArrayList<Keygen> keygens = new ArrayList<>();
 
         if (mac.startsWith("00:19:C7") || mac.startsWith("18:80:F5") || mac.startsWith("A4:C7:DE")
@@ -515,7 +515,7 @@ public class WirelessMatcher {
         }
 
         if (ssid.matches("UPC[0-9]{5,8}")) {
-            keygens.add(new UpcKeygen(ssid, mac));
+            keygens.add(new UpcKeygen(ssid, mac, frequency));
         }
 
         return keygens;
