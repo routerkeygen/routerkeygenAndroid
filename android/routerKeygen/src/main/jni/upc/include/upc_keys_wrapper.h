@@ -19,7 +19,7 @@ extern "C" {
  * Signature: ([B[BI)[Ljava/lang/String;
  */
 JNIEXPORT void JNICALL Java_org_exobel_routerkeygen_algorithms_UpcKeygen_upcNative
-        (JNIEnv *, jobject, jbyteArray);
+        (JNIEnv *, jobject, jbyteArray, jboolean is5g);
 
 #ifdef __cplusplus
 }

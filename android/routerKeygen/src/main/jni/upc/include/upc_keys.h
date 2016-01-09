@@ -5,8 +5,8 @@
 #ifndef ANDROID_UPC_KEYS_H
 #define ANDROID_UPC_KEYS_H
 
-#define MAGIC_24GHZ 0xffd9da60
-#define MAGIC_5GHZ 0xff8d8f20
+#define MAGIC_24GHZ 0xff8d8f20
+#define MAGIC_5GHZ 0xffd9da60
 #define MAGIC0 0xb21642c9ll
 #define MAGIC1 0x68de3afll
 #define MAGIC2 0x6b5fca6bll

