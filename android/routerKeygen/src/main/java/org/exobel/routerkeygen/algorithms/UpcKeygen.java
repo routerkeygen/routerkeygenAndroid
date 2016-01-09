@@ -47,8 +47,8 @@ public class UpcKeygen extends Keygen {
         }
     };
 
-    public UpcKeygen(String ssid, String mac) {
-        super(ssid, mac);
+    public UpcKeygen(String ssid, String mac, int frequency) {
+        super(ssid, mac, frequency);
     }
 
     private UpcKeygen(Parcel in) {
@@ -92,8 +92,9 @@ public class UpcKeygen extends Keygen {
     public List<String> getKeys() {
         String[] results = null;
         try {
-            Log.d(TAG, "Starting a new task for ssid: " + getSsidName());
-            upcNative(getSsidName().getBytes("US-ASCII"));
+            Log.d(TAG, String.format("Starting a new task for ssid: %s, frequency: %d", getSsidName(), getFrequency()));
+
+            upcNative(getSsidName().getBytes("US-ASCII"), modeFromFreq(getFrequency()));
             results = computedKeys.toArray(new String[computedKeys.size()]);
 
         } catch (Exception e) {
@@ -110,10 +111,22 @@ public class UpcKeygen extends Keygen {
         return getResults();
     }
 
+    private static int modeFromFreq(int freq){
+        int mode = 0;
+        // Frequency 0 computes keys for both modes
+        if (freq == 0 || (freq > 4500 && freq < 6900)){
+            mode |= 2;
+        }
+        if (freq == 0 || (freq > 2300 && freq < 2700)){
+            mode |= 1;
+        }
+        return mode;
+    }
+
     /**
      * Native key generator implementation.
      * @param essid
      * @return
      */
-    private native void upcNative(byte[] essid);
+    private native void upcNative(byte[] essid, int mode);
 }

@@ -46,6 +46,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
+#include <md5.h>
 #include "upc_keys.h"
 
 void hash2pass(uint8_t *in_hash, char *out_pass)
@@ -87,4 +88,45 @@ uint32_t upc_generate_ssid(uint32_t* data, uint32_t magic)
     return b - (((b * MAGIC2) >> 54) - (b >> 31)) * 10000000;
 }
 
+void compute_wpa2(int mode, char * serial, char * pass){
+    MD5_CTX ctx;
+    uint8_t message_digest[20];
+    char serial_input[64];
+    char tmpstr[17], ln;
+    uint8_t h1[16], h2[16];
+    uint32_t hv[4], w1, w2, i;
 
+    ln = strlen(serial);
+    memset(serial_input, 0, 64);
+    if (mode == 2) {
+        for(i=0; i<ln; i++) {
+            serial_input[ln-1-i] = serial[i];
+        }
+    } else {
+        memcpy(serial_input, serial, ln);
+    }
+
+    MD5_Init(&ctx);
+    MD5_Update(&ctx, serial_input, strlen(serial_input));
+    MD5_Final(h1, &ctx);
+
+    for (i = 0; i < 4; i++) {
+        hv[i] = *(uint16_t *)(h1 + i*2);
+    }
+
+    w1 = mangle(hv);
+
+    for (i = 0; i < 4; i++) {
+        hv[i] = *(uint16_t *)(h1 + 8 + i*2);
+    }
+
+    w2 = mangle(hv);
+
+    sprintf(tmpstr, "%08X%08X", w1, w2);
+
+    MD5_Init(&ctx);
+    MD5_Update(&ctx, tmpstr, strlen(tmpstr));
+    MD5_Final(h2, &ctx);
+
+    hash2pass(h2, pass);
+}
