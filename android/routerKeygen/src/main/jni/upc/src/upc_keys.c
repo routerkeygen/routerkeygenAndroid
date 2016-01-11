@@ -1,4 +1,12 @@
 /*
+ * ----------------------------------------------------------------------------
+ * "THE BLASTY-WARE LICENSE" (Revision 1):
+ * <peter@haxx.in> wrote this file. As long as you retain this notice and don't
+ * sell my work you can do whatever you want with this stuff. If we meet some
+ * day, and you think this stuff is worth it, you can intoxicate me in return.
+ * ----------------------------------------------------------------------------
+ */
+/*
  * upc_keys.c -- WPA2 passphrase recovery tool for UPC%07d devices
  * ===============================================================
  * You'd think vendors would stop using weak algorithms that allow
@@ -6,21 +14,21 @@
  * purely the ESSID. Sadly, these days aren't over yet. We've seen
  * some excellent recent research by Novella/Meijer/Verdult [1][2]
  * lately which illustrates that these issues still exist in recent
- * devices/firmwares. I set out to dig up one of these algorithms 
- * and came up with this little tool. 
+ * devices/firmwares. I set out to dig up one of these algorithms
+ * and came up with this little tool.
  *
  * The attack is two-fold; in order to generate the single valid
  * WPA2 phrase for a given network we need to know the serialnumber
  * of the device.. which we don't have. Luckily there's a correlation
  * between the ESSID and serial number as well, so we can generate a
- * list of 'candidate' serial numbers (usually around ~20 or so) for 
+ * list of 'candidate' serial numbers (usually around ~20 or so) for
  * a given ESSID and generate the corresponding WPA2 phrase for each
  * serial. (This should take under a second on a reasonable system)
  *
  * Use at your own risk and responsibility. Do not complain if it
  * fails to recover some keys, there could very well be variations
  * out there I am not aware of. Do not contact me for support.
- * 
+ *
  * Cheerz to p00pf1ng3r for the code cleanup! *burp* ;-)
  * Hugs to all old & new friends who managed to make it down to 32c3! ykwya!
  *
@@ -29,12 +37,12 @@
  * Cya,
  * blasty <peter@haxx.in> // 20151231
  *
- * P.S. Reversing eCos and broadcom CFE sux
- * P.P.S. I don't think this is able to recover phrases for 5ghz networks
- * atm but I will look into fixing this soon once I find some time, someone
- * else can feel free to one up me as well. ;-)
+ * UPDATE 20160108: I added support for 5GHz networks. Specifying network
+ * type is mandatory now. But as a bonus you get less candidates. :-)
  *
- * $ gcc -O2 -o upc_keys upc_keys.c -lcrypto 
+ * P.S. Reversing eCos and broadcom CFE sux
+ *
+ * $ gcc -O2 -o upc_keys upc_keys.c -lcrypto
  *
  * References
  * [1] https://www.usenix.org/system/files/conference/woot15/woot15-paper-lorente.pdf
