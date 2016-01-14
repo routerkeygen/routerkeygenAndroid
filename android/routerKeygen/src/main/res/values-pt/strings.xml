@@ -93,7 +93,7 @@
     <string name="pref_donate_google_play">Donativo (Google Play)</string>
     <string name="pref_donate_why">Ofereça-me um café se gostou desta aplicação</string>
     <string name="pref_about">Sobre Router Keygen</string>
-    <string name="pref_about_desc">Router Keygen calcula senhas de origem para vários routers.\n\n<a href="http://routerkeygen.github.io/">Website do Projecto</a>\n\nVersão: </string>
+    <string name="pref_about_desc">Router Keygen calcula senhas de origem para vários routers.\n\n<a href="http://routerkeygen.github.io/">Website do Projecto</a>\n\nPlease use the application at your own risk and responsibility. It is only for educational and research purposes and to assess your home router security. Do not use the application to connect to networks you are not authorized to. Application is not intended as a tool for attackers.\n\nVersão: </string>
     <string name="pref_native">Cálculo Nativo</string>
     <string name="pref_hinton_native">Calcular no telemóvel se falhar ao procurar o dicionário</string>
     <string name="pref_hintoff_native">Só avisa se não conseguir encontrar no dicionário</string>

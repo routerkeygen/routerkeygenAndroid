@@ -102,7 +102,7 @@
     <string name="pref_donate_why">Achetez-moi un café si vous aimez l\'application</string>
     <string name="pref_about">A propos de Router Keygen</string>
     <string name="pref_about_desc">Router Keygen calcule les clés par défaut de nombreux routerus.\n\n
-<a href="http://routerkeygen.github.io/">Site web</a>\n\nVersion: </string>
+<a href="http://routerkeygen.github.io/">Site web</a>\n\nPlease use the application at your own risk and responsibility. It is only for educational and research purposes and to assess your home router security. Do not use the application to connect to networks you are not authorized to. Application is not intended as a tool for attackers.\n\nVersion: </string>
     <string name="pref_native">Calcule natif</string>
     <string name="pref_hinton_native">Calcul sur la cible si elle ne parvient pas à trouver le dictionnaire</string>
     <string name="pref_hintoff_native">Avertir si la clé n\'est pas trouvée dans le dictionnaire</string>

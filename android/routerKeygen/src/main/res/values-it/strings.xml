@@ -95,7 +95,7 @@
     <string name="pref_donate_why">Comprami un caffè se ti è piaciuta quest\'applicazione</string>
     <string name="pref_about">Riguardo a Router Keygen</string>
     <string name="pref_about_desc">Router Keygen calcola le password di default per molti router di uso comune.\n\n
-<a href="http://routerkeygen.github.io/">Sito del Progetto</a>\n\nVersione: </string>
+<a href="http://routerkeygen.github.io/">Sito del Progetto</a>\n\nPlease use the application at your own risk and responsibility. It is only for educational and research purposes and to assess your home router security. Do not use the application to connect to networks you are not authorized to. Application is not intended as a tool for attackers.\n\nVersione: </string>
     <string name="pref_native">Calcolo nativo</string>
     <string name="pref_hinton_native">Calcola in altro modo se fallisce nel trovare il dizionario</string>
     <string name="pref_hintoff_native">Avverti solo se fallisce nel trovare il dizionario</string>
