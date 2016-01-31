@@ -313,6 +313,8 @@ public class AutoConnectService extends Service implements onConnectionListener 
                 attempts++;
             }
 
+            lastTimeDisconnected = System.currentTimeMillis();
+            wifi.removeNetwork(currentNetworkId);
             tryingConnection();
             return;
         }
