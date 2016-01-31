@@ -222,7 +222,7 @@ public class AutoConnectService extends Service implements onConnectionListener 
             scanningStarted.set(true);
 
             // If attempt counter is too high, we are done here.
-            if (keys.size() >= attempts){
+            if (keys.size() <= attempts){
                 Log.e(TAG, "Attempt counter too big, stopping");
                 reenableAllHotspots();
                 mNotificationManager.notify(
