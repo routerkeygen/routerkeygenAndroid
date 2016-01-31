@@ -157,6 +157,7 @@ public class AutoConnectService extends Service implements onConnectionListener 
                                                 0,
                                                 false,
                                                 getDefaultPendingIntent(getApplicationContext())));
+                handler.postDelayed(tryAfterDisconnecting, DISCONNECT_WAITING_TIME);
                 cancelNotification = true;
             } else {
                 waitingToDisconnect.set(false);
@@ -192,6 +193,8 @@ public class AutoConnectService extends Service implements onConnectionListener 
                 // besides disconnecting, we clean any previous configuration
                 Wifi.cleanPreviousConfiguration(wifi, network, network.capabilities);
                 cancelNotification = true;
+                handler.postDelayed(tryAfterDisconnecting, DISCONNECT_WAITING_TIME);
+
                 return 1;
 
             } else {
@@ -207,6 +210,8 @@ public class AutoConnectService extends Service implements onConnectionListener 
                 return -1;
             }
         } else {
+            Log.d(TAG, "Not connected");
+            tryingConnection();
             return 0;
         }
     }
@@ -232,7 +237,6 @@ public class AutoConnectService extends Service implements onConnectionListener 
                                                 attempts,
                                                 false,
                                                 getDefaultPendingIntent(getApplicationContext())));
-                handler.postDelayed(tryAfterDisconnecting, DISCONNECT_WAITING_TIME);
                 cancelNotification = true;
             }
         } catch (Exception e) {
