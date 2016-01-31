@@ -307,7 +307,7 @@ public class AutoConnectService extends Service implements onConnectionListener 
         if (attempts != handshakeAttempt.get()){
             Log.w(TAG, "Handshaked password does not match the attempt");
             final int failedAttempts = sameHandshakeAttempts.incrementAndGet();
-            if (failedAttempts >= 2){
+            if (failedAttempts >= 8){
                 Log.w(TAG, "Too many missed handshakes, trying without it.");
                 sameHandshakeAttempts.set(0);
                 attempts++;
