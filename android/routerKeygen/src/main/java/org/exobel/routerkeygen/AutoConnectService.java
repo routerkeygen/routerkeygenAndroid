@@ -220,6 +220,21 @@ public class AutoConnectService extends Service implements onConnectionListener 
         currentNetworkId = -1;
         try {
             scanningStarted.set(true);
+
+            // If attempt counter is too high, we are done here.
+            if (keys.size() >= attempts){
+                Log.e(TAG, "Attempt counter too big, stopping");
+                reenableAllHotspots();
+                mNotificationManager.notify(
+                        UNIQUE_ID,
+                        NotificationUtils.getSimple(this,
+                                getString(R.string.msg_error),
+                                getString(R.string.msg_no_correct_keys)).build());
+                cancelNotification = false;
+                stopSelf();
+                return;
+            }
+
             currentNetworkId = Wifi.connectToNewNetwork(this, wifi, network, keys.get(attempts), mNumOpenNetworksKept);
             Log.d(AutoConnectManager.class.getSimpleName(), "Trying " + keys.get(attempts));
             if (currentNetworkId != -1) {
