@@ -317,29 +317,25 @@ public class AutoConnectService extends Service implements onConnectionListener 
         if (attempts != handshakeAttempt.get()){
             Log.w(TAG, "Handshaked password does not match the attempt");
             final int failedAttempts = sameHandshakeAttempts.incrementAndGet();
+
             if (failedAttempts >= 8){
                 Log.w(TAG, "Too many missed handshakes, trying without it.");
                 sameHandshakeAttempts.set(0);
-                attempts++;
+                attempts+=1;
             }
-            
+
+            if (failedAttempts >= 4) {
+                Log.w(TAG, "Too many missed handshakes, Reinit");
+                disconnectCurrent();
+                return;
+            }
+
             tryingConnection();
             return;
         }
 
         // Failed to connect, increase attempt ctr to move to next password
         attempts+=1;
-        if (attempts >= keys.size()) {
-            reenableAllHotspots();
-            mNotificationManager.notify(
-                    UNIQUE_ID,
-                    NotificationUtils.getSimple(this,
-                            getString(R.string.msg_error),
-                            getString(R.string.msg_no_correct_keys)).build());
-            cancelNotification = false;
-            stopSelf();
-            return;
-        }
         tryingConnection();
     }
 
