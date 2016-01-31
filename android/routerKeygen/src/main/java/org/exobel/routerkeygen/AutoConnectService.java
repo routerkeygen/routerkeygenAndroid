@@ -55,7 +55,7 @@ public class AutoConnectService extends Service implements onConnectionListener 
     private final static int DISCONNECT_WAITING_TIME = 10000;
     private final static String TAG = AutoConnectManager.class.getSimpleName();
 
-    private final static int FAILING_MINIMUM_TIME = 500;
+    private final static int FAILING_MINIMUM_TIME = 1500;
     private final int UNIQUE_ID = R.string.app_name
             + AutoConnectService.class.getName().hashCode();
     final private Binder mBinder = new LocalBinder();
@@ -303,6 +303,16 @@ public class AutoConnectService extends Service implements onConnectionListener 
         Log.d(TAG, String.format("onFailed, error: %s, handshaked attempt: %s, current attempt: %s",
                 supplicantError, handshakeAttempt.get(), attempts));
 
+        /* Some phone are very strange and report multiples failures */
+        if ((System.currentTimeMillis() - lastTimeDisconnected) < FAILING_MINIMUM_TIME) {
+            Log.d(TAG, "Ignoring signal");
+            handler.postDelayed(tryAfterDisconnecting, DISCONNECT_WAITING_TIME);
+            return;
+        }
+
+        lastTimeDisconnected = System.currentTimeMillis();
+        wifi.removeNetwork(currentNetworkId);
+
         // The password has to go through handshake phase.
         if (attempts != handshakeAttempt.get()){
             Log.w(TAG, "Handshaked password does not match the attempt");
@@ -312,24 +322,13 @@ public class AutoConnectService extends Service implements onConnectionListener 
                 sameHandshakeAttempts.set(0);
                 attempts++;
             }
-
-            lastTimeDisconnected = System.currentTimeMillis();
-            wifi.removeNetwork(currentNetworkId);
+            
             tryingConnection();
-            return;
-        }
-
-        /* Some phone are very strange and report multiples failures */
-        if ((System.currentTimeMillis() - lastTimeDisconnected) < FAILING_MINIMUM_TIME) {
-            Log.d(AutoConnectManager.class.getSimpleName(), "Ignoring signal");
             return;
         }
 
         // Failed to connect, increase attempt ctr to move to next password
         attempts+=1;
-
-        lastTimeDisconnected = System.currentTimeMillis();
-        wifi.removeNetwork(currentNetworkId);
         if (attempts >= keys.size()) {
             reenableAllHotspots();
             mNotificationManager.notify(
