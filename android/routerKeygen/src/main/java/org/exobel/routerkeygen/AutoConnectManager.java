@@ -43,8 +43,13 @@ public class AutoConnectManager extends BroadcastReceiver {
 				listener.onSuccessfulConection();
 				return;
 			}
+			if (state.equals(SupplicantState.FOUR_WAY_HANDSHAKE)) {
+				listener.onFourWayHandshake();
+				return;
+			}
 			if (state.equals(SupplicantState.DISCONNECTED)) {
 				listener.onFailedConnection();
+				return;
 			}
 		}
 
@@ -54,6 +59,8 @@ public class AutoConnectManager extends BroadcastReceiver {
 		void onFailedConnection();
 
 		void onSuccessfulConection();
+
+		void onFourWayHandshake();
 	}
 
 }

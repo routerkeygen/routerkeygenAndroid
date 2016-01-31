@@ -58,6 +58,7 @@ public class AutoConnectService extends Service implements onConnectionListener 
     private Handler handler;
     private ScanResult network;
     private List<String> keys;
+    private boolean registered = false;
     private int attempts = 0;
     private AutoConnectManager mReceiver;
     private WifiManager wifi;
@@ -162,15 +163,15 @@ public class AutoConnectService extends Service implements onConnectionListener 
     private void tryingConnection() {
         currentNetworkId = -1;
         try {
-            currentNetworkId = Wifi.connectToNewNetwork(this, wifi, network,
-                    keys.get(attempts++), mNumOpenNetworksKept);
-            Log.d(AutoConnectManager.class.getSimpleName(),
-                    "Trying " + keys.get(attempts - 1));
+            if (!registered){
+                registerReceiver(mReceiver, new IntentFilter(WifiManager.SUPPLICANT_STATE_CHANGED_ACTION));
+                registered = true;
+            }
+
+            currentNetworkId = Wifi.connectToNewNetwork(this, wifi, network, keys.get(attempts), mNumOpenNetworksKept);
+            Log.d(AutoConnectManager.class.getSimpleName(), "Trying " + keys.get(attempts));
             if (currentNetworkId != -1) {
                 lastTimeDisconnected = System.currentTimeMillis();
-                if (attempts == 1)// first try, we register the listener
-                    registerReceiver(mReceiver, new IntentFilter(
-                            WifiManager.SUPPLICANT_STATE_CHANGED_ACTION));
                 mNotificationManager
                         .notify(UNIQUE_ID,
                                 NotificationUtils
@@ -179,9 +180,9 @@ public class AutoConnectService extends Service implements onConnectionListener 
                                                 getString(R.string.app_name),
                                                 getString(
                                                         R.string.not_auto_connect_key_testing,
-                                                        keys.get(attempts - 1)),
+                                                        keys.get(attempts)),
                                                 keys.size(),
-                                                attempts,
+                                                attempts+1,
                                                 false,
                                                 getDefaultPendingIntent(getApplicationContext())));
                 cancelNotification = true;
@@ -209,7 +210,9 @@ public class AutoConnectService extends Service implements onConnectionListener 
             mNotificationManager.cancel(UNIQUE_ID);
         reenableAllHotspots();
         try {
-            unregisterReceiver(mReceiver);
+            if (registered) {
+                unregisterReceiver(mReceiver);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -236,6 +239,13 @@ public class AutoConnectService extends Service implements onConnectionListener 
             return;
         }
         tryingConnection();
+    }
+
+    @Override
+    public void onFourWayHandshake(){
+        // Trying the password.
+        Log.d(AutoConnectManager.class.getSimpleName(), "4Way handshake - Trying " + keys.get(attempts));
+        attempts+=1;
     }
 
     @Override
