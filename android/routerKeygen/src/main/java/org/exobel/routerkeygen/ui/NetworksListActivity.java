@@ -218,6 +218,11 @@ public class NetworksListActivity extends Activity implements
         super.onStop();
         try {
             unregisterReceiver(scanFinished);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
             unregisterReceiver(stateChanged);
         } catch (Exception e) {
             e.printStackTrace();
