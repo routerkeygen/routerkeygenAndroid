@@ -56,15 +56,24 @@ public class UpcKeygen extends Keygen {
         super(in);
     }
 
-    @Override
-    public int getSupportState() {
-        if (getSsidName().matches("UPC[0-9]{5,7}")) {
+    public static int getStaticSupportState(String ssid, String mac, int frequency){
+        ssid = ssid.trim();
+        if (ssid.matches("UPC[0-9]{7}")) {
             return SUPPORTED;
-        } else if (getSsidName().matches("UPC[0-9]{8}")) {
+        } else if (ssid.matches("UPC[0-9]{5,6}")) {
+            return UNLIKELY_SUPPORTED;
+        } else if (ssid.matches("UPC[0-9]{8}")) {
+            return UNLIKELY_SUPPORTED;
+        } else if (mac != null && (mac.startsWith("64:7C:34") || mac.toUpperCase().startsWith("647C34"))) {
             return UNLIKELY_SUPPORTED;
         }
 
         return UNSUPPORTED;
+    }
+
+    @Override
+    public int getSupportState() {
+        return getStaticSupportState(getSsidName(), getMacAddress(), getFrequency());
     }
 
     @Override
@@ -102,10 +111,12 @@ public class UpcKeygen extends Keygen {
         String[] results = null;
         try {
             final String targetSsid = getSsidName();
+            final String targetMac = getMacAddress();
+            final boolean is5G = getFrequency() > 5000;
             Log.d(TAG, String.format("Starting a new task for ssid: %s, frequency: %d", targetSsid, getFrequency()));
 
             // Ubee extension first, better matching.
-            final BigInteger macInt = new BigInteger(getMacAddress(), 16);
+            final BigInteger macInt = new BigInteger(targetMac, 16);
             final BigInteger macStart = macInt.subtract(BigInteger.valueOf(10));
             for(int i=0; i<20; i++){
                 final BigInteger curMac = macStart.add(BigInteger.valueOf(i));
@@ -118,8 +129,26 @@ public class UpcKeygen extends Keygen {
                 }
             }
 
-            final boolean is5G = getFrequency() > 5000;
-            upcNative(targetSsid.getBytes("US-ASCII"), is5G);
+            // Ubee extension - purely on mac address, received (-4, -3, -2, -1, -0, +1, +2) for 2.4 GHz
+            final String upperMac = targetMac.toUpperCase();
+            if (upperMac.startsWith("647C34")) {
+                final BigInteger macStart2 = macInt.subtract(BigInteger.valueOf(4));
+                for (int i = 0; i < 7; i++) {
+                    final BigInteger curMac = macStart2.add(BigInteger.valueOf(i));
+                    final String curPass = upcUbeePass(curMac.toByteArray());
+                    if (!computedKeys.contains(curPass)) {
+                        computedKeys.add(curPass);
+
+                        Log.v(TAG, String.format("Ubee attempt added, mac: %s, pass: %s", curMac.toString(16), curPass));
+                    }
+                }
+            }
+
+            // upc_keys.c attack.
+            if (targetSsid.startsWith("UPC")) {
+                upcNative(targetSsid.getBytes("US-ASCII"), is5G);
+            }
+
             results = computedKeys.toArray(new String[computedKeys.size()]);
 
         } catch (Exception e) {
