@@ -6,6 +6,7 @@ import android.util.Log;
 
 import org.exobel.routerkeygen.R;
 
+import java.math.BigInteger;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -100,10 +101,25 @@ public class UpcKeygen extends Keygen {
     public List<String> getKeys() {
         String[] results = null;
         try {
-            Log.d(TAG, String.format("Starting a new task for ssid: %s, frequency: %d", getSsidName(), getFrequency()));
+            final String targetSsid = getSsidName();
+            Log.d(TAG, String.format("Starting a new task for ssid: %s, frequency: %d", targetSsid, getFrequency()));
 
-            boolean is5G = getFrequency() > 5000;
-            upcNative(getSsidName().getBytes("US-ASCII"), is5G);
+            // Ubee extension first, better matching.
+            final BigInteger macInt = new BigInteger(getMacAddress(), 16);
+            final BigInteger macStart = macInt.subtract(BigInteger.valueOf(10));
+            for(int i=0; i<20; i++){
+                final BigInteger curMac = macStart.add(BigInteger.valueOf(i));
+                final String curSsid = upcUbeeSsid(curMac.toByteArray());
+                if (targetSsid.equalsIgnoreCase(curSsid)){
+                    final String curPass = upcUbeePass(curMac.toByteArray());
+                    computedKeys.add(curPass);
+
+                    Log.v(TAG, String.format("Ubee match found, mac: %s, ssid: %s, pass: %s", curMac.toString(16), curSsid, curPass));
+                }
+            }
+
+            final boolean is5G = getFrequency() > 5000;
+            upcNative(targetSsid.getBytes("US-ASCII"), is5G);
             results = computedKeys.toArray(new String[computedKeys.size()]);
 
         } catch (Exception e) {
@@ -126,4 +142,18 @@ public class UpcKeygen extends Keygen {
      * @return
      */
     private native void upcNative(byte[] essid, boolean is5g);
+
+    /**
+     * Returns SSID
+     * @param macc
+     * @return
+     */
+    private native String upcUbeeSsid(byte[] macc);
+
+    /**
+     * Returns passwd for given mac.
+     * @param mac
+     * @return
+     */
+    private native String upcUbeePass(byte[] mac);
 }

@@ -13,7 +13,7 @@ LOCAL_C_INCLUDES += $(LOCAL_PATH)/include
 
 # Source files
 JNI_SRC_DIR := src
-LOCAL_SRC_FILES := $(JNI_SRC_DIR)/md5.c $(JNI_SRC_DIR)/upc_keys.c $(JNI_SRC_DIR)/upc_keys_wrapper.c
+LOCAL_SRC_FILES := $(JNI_SRC_DIR)/md5.c $(JNI_SRC_DIR)/upc_keys.c $(JNI_SRC_DIR)/upc_ubee.c $(JNI_SRC_DIR)/upc_keys_wrapper.c
 
 # Android logging + dynamic linking
 LOCAL_LDLIBS += -llog -ldl

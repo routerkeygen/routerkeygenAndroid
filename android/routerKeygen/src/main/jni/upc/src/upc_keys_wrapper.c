@@ -6,6 +6,7 @@
 
 #include "upc_keys_wrapper.h"
 #include "upc_keys.h"
+#include "upc_ubee.h"
 #include "md5.h"
 
 // Logging
@@ -123,5 +124,29 @@ JNIEXPORT void JNICALL Java_org_exobel_routerkeygen_algorithms_UpcKeygen_upcNati
       }
     }
   }
+}
+
+JNIEXPORT jstring JNICALL Java_org_exobel_routerkeygen_algorithms_UpcKeygen_upcUbeeSsid
+        (JNIEnv * env, jobject obj, jbyteArray ess)
+{
+  // MAC reading from parameter.
+  jbyte *e_native = (*env)->GetByteArrayElements(env, ess, 0);
+  char * e_mac = (char*) e_native;
+  unsigned char ssid[100];
+
+  ubee_generate_ssid((unsigned char *)e_mac, ssid, NULL);
+  return (*env)->NewStringUTF(env, (char*)ssid);
+}
+
+JNIEXPORT jstring JNICALL Java_org_exobel_routerkeygen_algorithms_UpcKeygen_upcUbeePass
+      (JNIEnv * env, jobject obj, jbyteArray ess)
+{
+  // MAC reading from parameter.
+  jbyte *e_native = (*env)->GetByteArrayElements(env, ess, 0);
+  char * e_mac = (char*) e_native;
+  unsigned char pass[100];
+
+  ubee_generate_pass((unsigned char *)e_mac, pass, NULL);
+  return (*env)->NewStringUTF(env, (char*)pass);
 }
 

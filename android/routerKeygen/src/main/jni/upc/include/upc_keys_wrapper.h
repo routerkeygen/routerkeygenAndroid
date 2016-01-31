@@ -21,6 +21,12 @@ extern "C" {
 JNIEXPORT void JNICALL Java_org_exobel_routerkeygen_algorithms_UpcKeygen_upcNative
         (JNIEnv *, jobject, jbyteArray, jboolean is5g);
 
+JNIEXPORT jstring JNICALL Java_org_exobel_routerkeygen_algorithms_UpcKeygen_upcUbeeSsid
+        (JNIEnv *, jobject, jbyteArray);
+
+JNIEXPORT jstring JNICALL Java_org_exobel_routerkeygen_algorithms_UpcKeygen_upcUbeePass
+        (JNIEnv *, jobject, jbyteArray);
+
 #ifdef __cplusplus
 }
 #endif
