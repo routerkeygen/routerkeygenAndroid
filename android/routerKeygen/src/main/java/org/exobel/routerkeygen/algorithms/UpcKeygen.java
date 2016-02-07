@@ -6,6 +6,7 @@ import android.util.Log;
 
 import org.exobel.routerkeygen.R;
 
+import java.math.BigInteger;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -55,15 +56,24 @@ public class UpcKeygen extends Keygen {
         super(in);
     }
 
-    @Override
-    public int getSupportState() {
-        if (getSsidName().matches("UPC[0-9]{5,7}")) {
+    public static int getStaticSupportState(String ssid, String mac, int frequency){
+        ssid = ssid.trim();
+        if (ssid.matches("UPC[0-9]{7}")) {
             return SUPPORTED;
-        } else if (getSsidName().matches("UPC[0-9]{8}")) {
+        } else if (ssid.matches("UPC[0-9]{5,6}")) {
             return UNLIKELY_SUPPORTED;
+        } else if (ssid.matches("UPC[0-9]{8}")) {
+            return UNLIKELY_SUPPORTED;
+        } else if (mac != null && (mac.startsWith("64:7C:34") || mac.toUpperCase().startsWith("647C34"))) {
+            return UNSUPPORTED;
         }
 
         return UNSUPPORTED;
+    }
+
+    @Override
+    public int getSupportState() {
+        return getStaticSupportState(getSsidName(), getMacAddress(), getFrequency());
     }
 
     @Override
@@ -100,10 +110,15 @@ public class UpcKeygen extends Keygen {
     public List<String> getKeys() {
         String[] results = null;
         try {
-            Log.d(TAG, String.format("Starting a new task for ssid: %s, frequency: %d", getSsidName(), getFrequency()));
+            final String targetSsid = getSsidName();
+            final boolean is5G = getFrequency() > 5000;
+            Log.d(TAG, String.format("Starting a new task for ssid: %s, frequency: %d", targetSsid, getFrequency()));
 
-            boolean is5G = getFrequency() > 5000;
-            upcNative(getSsidName().getBytes("US-ASCII"), is5G);
+            // upc_keys.c attack.
+            if (targetSsid.startsWith("UPC")) {
+                upcNative(targetSsid.getBytes("US-ASCII"), is5G);
+            }
+
             results = computedKeys.toArray(new String[computedKeys.size()]);
 
         } catch (Exception e) {
