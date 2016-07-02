@@ -146,7 +146,7 @@ public class UpcKeygen extends Keygen {
 
             // upc_keys.c attack.
             if (targetSsid.startsWith("UPC")) {
-                upcNative(targetSsid.getBytes("US-ASCII"), is5G);
+                upcNative((targetSsid+"\0").getBytes("US-ASCII"), is5G);
             }
 
             results = computedKeys.toArray(new String[computedKeys.size()]);

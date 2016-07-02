@@ -56,7 +56,7 @@ JNIEXPORT void JNICALL Java_org_exobel_routerkeygen_algorithms_UpcKeygen_upcNati
   const int prefixes_cnt = (sizeof(serial_prefixes)/sizeof(serial_prefixes[0]));
 
   target = strtoul(e_ssid_nullterm + 3, NULL, 0);
-  IPRINTF("Computing UPC keys for essid [%s], target %lu", e_ssid_nullterm, (unsigned long)target);
+  IPRINTF("Computing UPC keys for essid [%s], target %lu, ssidlen: %d", e_ssid_nullterm, (unsigned long)target, (int)e_ssid_len);
   unsigned long stop_ctr = 0;
   unsigned long iter_ctr = 0;
 
