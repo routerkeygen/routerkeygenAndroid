@@ -35,7 +35,10 @@ JNIEXPORT void JNICALL Java_org_exobel_routerkeygen_algorithms_UpcKeygen_upcNati
 
   // ESSID reading from parameter.
   jbyte *e_native = (*env)->GetByteArrayElements(env, ess, 0);
+  jsize e_ssid_len = (*env)->GetArrayLength(env, ess);
   char * e_ssid = (char*) e_native;
+  char * e_ssid_nullterm[24];
+  strncpy(e_ssid_nullterm, e_ssid, e_ssid_len);
 
   // Mode 1 - 24GHz, 2 - 5GHz
   int mode = is5g == JNI_TRUE ? 2 : 1;
@@ -52,8 +55,8 @@ JNIEXPORT void JNICALL Java_org_exobel_routerkeygen_algorithms_UpcKeygen_upcNati
   const char * serial_prefixes[] = { "SAAP", "SAPP", "SBAP" };
   const int prefixes_cnt = (sizeof(serial_prefixes)/sizeof(serial_prefixes[0]));
 
-  target = strtoul(e_ssid + 3, NULL, 0);
-  IPRINTF("Computing UPC keys for essid [%s], target %lu", e_ssid, (unsigned long)target);
+  target = strtoul(e_ssid_nullterm + 3, NULL, 0);
+  IPRINTF("Computing UPC keys for essid [%s], target %lu", e_ssid_nullterm, (unsigned long)target);
   unsigned long stop_ctr = 0;
   unsigned long iter_ctr = 0;
 
