@@ -83,6 +83,7 @@ JNIEXPORT void JNICALL Java_org_exobel_routerkeygen_algorithms_UpcKeygen_upcNati
             continue;
 
           for(pidx=0; pidx < prefixes_cnt; ++pidx){
+            cnt++;
             sprintf(serial, "%s%d%02d%d%04d", serial_prefixes[pidx], buf[0], buf[1], buf[2], buf[3]);
             memset(serial_input, 0, 64);
 
