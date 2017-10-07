@@ -1,4 +1,4 @@
-#RouterKeygen for Android
+# RouterKeygen for Android
 
 Router Keygen generate default WPA/WEP keys for the following router:
 
@@ -35,7 +35,7 @@ Router Keygen generate default WPA/WEP keys for the following router:
 Router Keygen is open-source licensed under [GPL](http://www.gnu.org/copyleft/gpl.html).
 
 
-#Releases
+# Releases
 
 Get them from here:
 https://github.com/routerkeygen/routerkeygenAndroid/releases
