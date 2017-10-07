@@ -7,9 +7,10 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 public class CancelOperationActivity extends Activity {
-
+    private static final String TAG = "CancelOperationActivity";
     public static final String SERVICE_TO_TERMINATE = "terminateService";
     public static final String MESSAGE = "message";
 
@@ -17,7 +18,12 @@ public class CancelOperationActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_cancel_operation);
+        try {
+            setContentView(R.layout.activity_cancel_operation);
+        } catch(Throwable t){
+            Log.e(TAG, "Exception when setting content");
+        }
+
         if (getIntent().getStringExtra(SERVICE_TO_TERMINATE) == null)
             finish();
         else {

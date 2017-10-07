@@ -21,11 +21,14 @@ package org.exobel.routerkeygen;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.net.NetworkInfo;
 import android.net.wifi.SupplicantState;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.util.Log;
 
 public class AutoConnectManager extends BroadcastReceiver {
+	private static final String TAG = "AutoConnectManager";
 	private final onConnectionListener listener;
 
 	public AutoConnectManager(onConnectionListener listener) {
@@ -34,26 +37,52 @@ public class AutoConnectManager extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		SupplicantState state = intent
-				.getParcelableExtra(WifiManager.EXTRA_NEW_STATE);
-		if (state != null) {
+		final String action = intent.getAction();
+
+		if (WifiManager.NETWORK_STATE_CHANGED_ACTION.equals(action)){
+			final NetworkInfo networkInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
+			final String bssid = intent.getStringExtra(WifiManager.EXTRA_BSSID);
+			final WifiInfo wifiInfo = intent.getParcelableExtra(WifiManager.EXTRA_WIFI_INFO);
+			Log.d(TAG, String.format("NetworkChanged; NetworkInfo: %s, bssid: %s, wifiInfo: %s, supplicantState: %s",
+					networkInfo, bssid, wifiInfo, wifiInfo==null?"NULL":wifiInfo.getSupplicantState()));
+
+			listener.onNetworkChanged(networkInfo, bssid, wifiInfo);
+			return;
+		}
+
+		if (WifiManager.SUPPLICANT_STATE_CHANGED_ACTION.equals(action)) {
+			final SupplicantState state = intent.getParcelableExtra(WifiManager.EXTRA_NEW_STATE);
+			int supplicantError = intent.getIntExtra(WifiManager.EXTRA_SUPPLICANT_ERROR, -1);
+			if (state == null){
+				Log.w(TAG, "null state, error: " + supplicantError);
+				return;
+			}
+
 			if (BuildConfig.DEBUG)
 				Log.d(this.getClass().getSimpleName(), state.name());
 			if (state.equals(SupplicantState.COMPLETED)) {
-				listener.onSuccessfulConection();
+				listener.onSuccessfulConection(supplicantError);
+				return;
+			}
+			if (state.equals(SupplicantState.FOUR_WAY_HANDSHAKE)) {
+				listener.onFourWayHandshake(supplicantError);
 				return;
 			}
 			if (state.equals(SupplicantState.DISCONNECTED)) {
-				listener.onFailedConnection();
+				listener.onFailedConnection(supplicantError);
+				return;
 			}
 		}
-
 	}
 
 	public interface onConnectionListener {
-		void onFailedConnection();
+		void onFailedConnection(int supplicantError);
 
-		void onSuccessfulConection();
+		void onSuccessfulConection(int supplicantError);
+
+		void onFourWayHandshake(int supplicantError);
+
+		void onNetworkChanged(NetworkInfo networkInfo, String bssid, WifiInfo wifiInfo);
 	}
 
 }

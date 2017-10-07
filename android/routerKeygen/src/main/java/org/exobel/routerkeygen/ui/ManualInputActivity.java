@@ -27,7 +27,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-
 import com.google.android.gms.analytics.GoogleAnalytics;
 
 import org.exobel.routerkeygen.AdsUtils;
@@ -72,7 +71,6 @@ public class ManualInputActivity extends Activity implements
         //Stop the analytics tracking
         GoogleAnalytics.getInstance(this).reportActivityStop(this);
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

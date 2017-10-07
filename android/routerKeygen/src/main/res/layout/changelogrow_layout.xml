@@ -6,7 +6,7 @@
     android:layout_marginLeft="12dp"
     android:layout_marginStart="12dp"
     android:gravity="center_vertical"
-    android:minHeight="64dip"
+    android:minHeight="?android:attr/listPreferredItemHeightSmall"
     android:orientation="horizontal">
 
     <!-- ChangeLog Row [Bullet Point] You have to use the id="chg_textbullet" -->
@@ -16,8 +16,8 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_marginLeft="12dp"
-        android:layout_marginRight="2dp"
         android:layout_marginStart="12dp"
+        android:layout_marginRight="2dp"
         android:layout_marginEnd="2dp"
         android:gravity="center_vertical"
         android:text="@string/changelog_row_bulletpoint"
@@ -34,7 +34,7 @@
         android:layout_marginRight="5dp"
         android:layout_marginEnd="5dp"
         android:gravity="center_vertical"
-        android:minHeight="64dip"
+        android:minHeight="?android:attr/listPreferredItemHeightSmall"
         android:textAppearance="@android:style/TextAppearance.Small" />
 
 </LinearLayout>

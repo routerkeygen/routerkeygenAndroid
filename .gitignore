@@ -57,3 +57,4 @@ local.properties
 android/routerKeygen/src/main/libs
 android/routerKeygen/src/main/obj
 android/routerKeygen/RouterKeygen_v3.dic
+*.apk

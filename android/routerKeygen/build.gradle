@@ -1,11 +1,10 @@
 import org.apache.tools.ant.taskdefs.condition.Os
 
 apply plugin: 'com.android.application'
-apply plugin: 'com.google.gms.google-services'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    compileSdkVersion 26
+    buildToolsVersion '26.0.2'
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
@@ -15,8 +14,29 @@ android {
     defaultConfig {
         applicationId "org.exobel.routerkeygen"
         minSdkVersion 16
-        targetSdkVersion 23
+        targetSdkVersion 26
 
+    }
+    splits {
+
+        // Configures multiple APKs based on ABI.
+        abi {
+
+            // Enables building multiple APKs per ABI.
+            enable true
+
+            // By default all ABIs are included, so use reset() and include to specify that we only
+            // want APKs for x86, armeabi-v7a, and mips.
+
+            // Resets the list of ABIs that Gradle should create APKs for to none.
+            reset()
+
+            // Specifies a list of ABIs that Gradle should create APKs for.
+            include "x86", "armeabi", "arm64-v8a"
+
+            // Specifies that we do not want to also generate a universal APK that includes all ABIs.
+            universalApk false
+        }
     }
 
     buildTypes {
@@ -29,6 +49,15 @@ android {
     productFlavors {
         github {
             applicationId "org.exobel.routerkeygen"
+
+            splits {
+                // Configures multiple APKs based on ABI.
+                abi {
+                    // Enables building multiple APKs per ABI.
+                    enable false
+
+                }
+            }
         }
         googleplay {
             applicationId "io.github.routerkeygen"
@@ -63,9 +92,13 @@ android {
             jvmArgs '-XX:MaxPermSize=256m'
         }
     }
+
+    lintOptions {
+        abortOnError false
+    }
 }
 
-task copyResDirectoryToClasses(type: Copy){
+task copyResDirectoryToClasses(type: Copy) {
     from "${projectDir}/src/main/res"
     into "${buildDir}/intermediates/classes/test/github/debug/res"
 }
@@ -94,10 +127,8 @@ def getNdkBuildCmd() {
 
 dependencies {
     compile project(':aFileChooser')
-    compile 'com.android.support:support-v4:23.2.1'
-    compile 'com.google.android.gms:play-services:8.3.0'
-    compile 'com.google.android.gms:play-services-analytics:8.3.0'
+    compile(name: 'android-ad-sdk', ext: 'aar')
+    compile 'com.google.android.gms:play-services-analytics:11.0.4'
     compile 'ch.acra:acra:4.8.5'
     testCompile 'junit:junit:4.12'
-    compile project(':mm-ad-sdk')
 }

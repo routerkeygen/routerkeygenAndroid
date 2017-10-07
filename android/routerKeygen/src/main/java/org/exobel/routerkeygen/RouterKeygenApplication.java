@@ -51,33 +51,26 @@ public class RouterKeygenApplication extends Application {
         }
         try {
             UserData userData = new UserData().
-            setEthnicity(UserData.Ethnicity.HISPANIC);
+                    setEthnicity(UserData.Ethnicity.HISPANIC);
             MMSDK.setUserData(userData);
         } catch (Exception e) {
             e.printStackTrace();
         }
         if (BuildConfig.DEBUG) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
                 StrictMode
                         .setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
                                 .detectAll().penaltyLog().build());
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                    StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-                            .detectAll()
-                            .penaltyLog()
-                            .setClassInstanceLimit(
-                                    CancelOperationActivity.class, 2)
-                            .setClassInstanceLimit(NetworksListActivity.class,
-                                    2)
-                            .setClassInstanceLimit(NetworkActivity.class, 2)
-                            .setClassInstanceLimit(Preferences.class, 2)
-                            .build());
-                } else {
-                    StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-                            .detectLeakedSqlLiteObjects().penaltyLog().build());
+            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+                    .detectAll()
+                    .penaltyLog()
+                    .setClassInstanceLimit(
+                            CancelOperationActivity.class, 2)
+                    .setClassInstanceLimit(NetworksListActivity.class,
+                            2)
+                    .setClassInstanceLimit(NetworkActivity.class, 2)
+                    .setClassInstanceLimit(Preferences.class, 2)
+                    .build());
 
-                }
-            }
         }
     }
 }

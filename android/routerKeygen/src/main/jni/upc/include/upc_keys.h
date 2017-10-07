@@ -23,7 +23,6 @@ extern "C" {
 extern void hash2pass(uint8_t *in_hash, char *out_pass);
 extern uint32_t mangle(uint32_t *pp);
 extern uint32_t upc_generate_ssid(uint32_t* data, uint32_t magic);
-extern void compute_wpa2(int mode, char * serial, char * pass);
 #ifdef __cplusplus
 }
 #endif

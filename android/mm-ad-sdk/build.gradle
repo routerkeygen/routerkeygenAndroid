@@ -1,5 +1,0 @@
-configurations.create("default")
-artifacts.add("default", file('mm-ad-sdk.aar'))
-
-//Hack to get the tests running.
-task testClasses

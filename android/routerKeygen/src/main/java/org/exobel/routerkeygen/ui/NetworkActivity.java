@@ -54,8 +54,6 @@ public class NetworkActivity extends Activity {
                     .add(R.id.keygen_fragment, fragment).commit();
         }
     }
-
-
     @Override
     public void onStart() {
         super.onStart();
@@ -70,7 +68,6 @@ public class NetworkActivity extends Activity {
         //Stop the analytics tracking
         GoogleAnalytics.getInstance(this).reportActivityStop(this);
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

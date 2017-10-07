@@ -89,7 +89,7 @@ public class NetworksListActivity extends Activity implements
             mTwoPane = true;
             networkListFragment.setActivateOnItemClick(true);
         }
-        wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
         wifiState = wifi.getWifiState() == WifiManager.WIFI_STATE_ENABLED
                 || wifi.getWifiState() == WifiManager.WIFI_STATE_ENABLING;
@@ -169,7 +169,7 @@ public class NetworksListActivity extends Activity implements
             AdsUtils.displayStartupInterstitial(this);
         }
 
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
+        mSwipeRefreshLayout = findViewById(R.id.swiperefresh);
         mSwipeRefreshLayout.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
@@ -283,6 +283,11 @@ public class NetworksListActivity extends Activity implements
             //Stop the analytics tracking
             GoogleAnalytics.getInstance(this).reportActivityStop(this);
             unregisterReceiver(scanFinished);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
             unregisterReceiver(stateChanged);
         } catch (Exception e) {
             e.printStackTrace();

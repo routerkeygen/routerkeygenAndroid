@@ -16,12 +16,10 @@
    You should have received a copy of the GNU General Public License
    along with Router Keygen.  If not, see <http://www.gnu.org/licenses/>.
 -->
-
-
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="?android:attr/listPreferredItemHeight"
+    android:background="?android:attr/activatedBackgroundIndicator"
     android:baselineAligned="false"
     android:focusable="false"
     android:gravity="start|center_vertical"
@@ -44,29 +42,26 @@
             android:id="@+id/wifiName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ellipsize="marquee"
+            android:ellipsize="end"
             android:focusable="false"
-            android:marqueeRepeatLimit="marquee_forever"
+            android:maxLines="1"
             android:scrollHorizontally="true"
             android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/text_primary"
-            android:textIsSelectable="false"
             android:textSize="20sp" />
 
         <TextView
             android:id="@+id/wifiMAC"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ellipsize="marquee"
+            android:ellipsize="end"
             android:focusable="false"
-            android:marqueeRepeatLimit="marquee_forever"
             android:maxLines="1"
             android:scrollHorizontally="true"
             android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/text_secondary"
-            android:textIsSelectable="false" />
+            android:textColor="@color/text_secondary" />
     </LinearLayout>
 
     <LinearLayout
@@ -86,4 +81,5 @@
             android:focusable="false"
             android:src="@drawable/ic_wifi_lock_signal_1" />
     </LinearLayout>
+
 </LinearLayout>

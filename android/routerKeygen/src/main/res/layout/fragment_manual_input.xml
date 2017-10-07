@@ -41,7 +41,9 @@
             android:layout_below="@id/label_ssid"
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
             android:layout_marginRight="20dp"
+            android:layout_marginEnd="20dp"
             android:imeOptions="actionDone"
             android:inputType="textFilter"
             android:maxLines="1"
@@ -119,7 +121,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/label_bssid"
                 android:layout_toRightOf="@id/lb_input_mac_pair2"
-                android:layout_toEndOf="@id/lb_input_mac_pair2"
+                android:layout_toEndOf="@id/input_mac_pair2"
                 android:imeOptions="actionNext"
                 android:inputType="textFilter"
                 android:maxLength="2"
@@ -143,7 +145,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/label_bssid"
                 android:layout_toRightOf="@id/lb_input_mac_pair3"
-                android:layout_toEndOf="@id/lb_input_mac_pair3"
+                android:layout_toEndOf="@id/input_mac_pair3"
                 android:imeOptions="actionNext"
                 android:inputType="textFilter"
                 android:maxLength="2"
@@ -191,7 +193,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/label_bssid"
                 android:layout_toRightOf="@id/lb_input_mac_pair5"
-                android:layout_toEndOf="@id/input_mac_pair5"
+                android:layout_toEndOf="@id/lb_input_mac_pair5"
                 android:imeOptions="actionDone"
                 android:inputType="textFilter"
                 android:maxLength="2"
@@ -199,6 +201,7 @@
         </RelativeLayout>
 
         <LinearLayout
+            style="?android:attr/buttonBarStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -208,18 +211,20 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/bt_calc"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/bt_manual_calc" />
-
-            <Button
                 android:id="@+id/bt_cancel"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/bt_manual_cancel" />
+
+            <Button
+                android:id="@+id/bt_calc"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/bt_manual_calc" />
         </LinearLayout>
     </RelativeLayout>
 

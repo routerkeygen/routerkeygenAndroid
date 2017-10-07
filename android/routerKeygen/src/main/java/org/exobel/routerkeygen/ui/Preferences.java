@@ -19,7 +19,6 @@
 
 package org.exobel.routerkeygen.ui;
 
-import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.app.AlertDialog;
@@ -36,7 +35,6 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
@@ -109,7 +107,6 @@ public class Preferences extends PreferenceActivity {
     private static final int DIALOG_CHANGELOG = 1007;
     private LastVersion lastVersion;
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
@@ -138,7 +135,7 @@ public class Preferences extends PreferenceActivity {
 
                         // Don't complain about dictionary size if user is on a
                         // wifi connection
-                        if ((((WifiManager) getBaseContext().getSystemService(
+                        if ((((WifiManager) getBaseContext().getApplicationContext().getSystemService(
                                 Context.WIFI_SERVICE))).getConnectionInfo()
                                 .getSSID() != null) {
                             try {
@@ -233,11 +230,8 @@ public class Preferences extends PreferenceActivity {
 
                                 }
                             };
-                            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
-                                task.execute();
-                            } else {
-                                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                            }
+                            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
                             // Checking for updates every week
                             startService(new Intent(getApplicationContext(),
                                     UpdateCheckerService.class));
@@ -284,7 +278,6 @@ public class Preferences extends PreferenceActivity {
                         .getBoolean(R.bool.autoScanDefault)));
     }
 
-    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
@@ -451,7 +444,7 @@ public class Preferences extends PreferenceActivity {
                 LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 ChangeLogListView chgList = (ChangeLogListView) layoutInflater
                         .inflate(R.layout.dialog_changelog,
-                                (ViewGroup)this.getWindow().getDecorView().getRootView(), false);
+                                (ViewGroup) this.getWindow().getDecorView().getRootView(), false);
                 builder.setTitle(R.string.pref_changelog)
                         .setView(chgList)
                         .setPositiveButton(android.R.string.ok,
@@ -467,7 +460,6 @@ public class Preferences extends PreferenceActivity {
         return builder.create();
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void checkCurrentDictionary() throws FileNotFoundException {
         final String myDicFile = PreferenceManager.getDefaultSharedPreferences(
                 getBaseContext()).getString(dicLocalPref, null);
@@ -584,11 +576,7 @@ public class Preferences extends PreferenceActivity {
 
                 }
             };
-            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
-                task.execute();
-            } else {
-                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            }
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
