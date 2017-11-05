@@ -11,37 +11,16 @@ android {
 
     defaultConfig {
         applicationId "org.exobel.routerkeygen"
-        versionCode 1
+        versionCode 40
+        versionName "4.0.0"
         minSdkVersion 16
         targetSdkVersion 27
         multiDexEnabled false
-
-    }
-    splits {
-
-        // Configures multiple APKs based on ABI.
-        abi {
-
-            // Enables building multiple APKs per ABI.
-            enable true
-
-            // By default all ABIs are included, so use reset() and include to specify that we only
-            // want APKs for x86, armeabi-v7a, and mips.
-
-            // Resets the list of ABIs that Gradle should create APKs for to none.
-            reset()
-
-            // Specifies a list of ABIs that Gradle should create APKs for.
-            include "x86", "armeabi", "arm64-v8a"
-
-            // Specifies that we do not want to also generate a universal APK that includes all ABIs.
-            universalApk false
-        }
     }
 
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
@@ -50,15 +29,6 @@ android {
         github {
             dimension "tier"
             applicationId "org.exobel.routerkeygen"
-
-            splits {
-                // Configures multiple APKs based on ABI.
-                abi {
-                    // Enables building multiple APKs per ABI.
-                    enable false
-
-                }
-            }
         }
         googleplay {
             dimension "tier"

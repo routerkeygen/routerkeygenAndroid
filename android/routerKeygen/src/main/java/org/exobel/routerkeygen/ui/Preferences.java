@@ -98,9 +98,9 @@ public class Preferences extends PreferenceActivity {
     public final static String GOOGLE_PLAY_DOWNLOADER = "org.doublecheck.wifiscanner";
 
     public static final String PUB_DOWNLOAD = "https://github.com/routerkeygen/thomsonDicGenerator/releases/download/v3/RouterKeygen_v3.dic";
-    public static final String VERSION = "3.15.0";
+    public static final String VERSION = "4.0.0";
     private static final String PUB_DIC_CFV = "https://github.com/routerkeygen/thomsonDicGenerator/releases/download/v3/RKDictionary.cfv";
-    private static final String LAUNCH_DATE = "11/09/2015";
+    private static final String LAUNCH_DATE = "05/11/2017";
     private static final int DIALOG_ABOUT = 1001;
     private static final int DIALOG_ASK_DOWNLOAD = 1002;
     private static final int DIALOG_WAIT = 1003;
@@ -354,22 +354,10 @@ public class Preferences extends PreferenceActivity {
                                 getString(R.string.update_message,
                                         lastVersion.version))
                         .setNegativeButton(R.string.bt_close,
-                                new OnClickListener() {
-
-                                    public void onClick(DialogInterface dialog,
-                                                        int which) {
-                                        removeDialog(DIALOG_UPDATE_NEEDED);
-                                    }
-                                })
+                                (dialog, which) -> removeDialog(DIALOG_UPDATE_NEEDED))
                         .setPositiveButton(R.string.bt_website,
-                                new OnClickListener() {
-
-                                    public void onClick(DialogInterface dialog,
-                                                        int which) {
-                                        startActivity(new Intent(Intent.ACTION_VIEW)
-                                                .setData(Uri.parse(lastVersion.url)));
-                                    }
-                                });
+                                (dialog, which) -> startActivity(new Intent(Intent.ACTION_VIEW)
+                                        .setData(Uri.parse(lastVersion.url))));
                 break;
             }
             case DIALOG_WAIT: {
