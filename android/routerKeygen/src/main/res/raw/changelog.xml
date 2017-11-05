@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
 
+    <changelogversion changeDate="Nov 5,2017" versionName="4.0.0">
+        <changelogtext>[b]New![/b] Support for Android Oreo</changelogtext>
+        <changelogtext>[b]New![/b] UPC algorithm</changelogtext>
+    </changelogversion>
     <changelogversion changeDate="Sep 11,2015" versionName="3.15.0">
         <changelogtext>[b]New![/b] Alcatel Lucent algorithm</changelogtext>
         <changelogtext>[b]New![/b] Sitecom algorithm</changelogtext>
