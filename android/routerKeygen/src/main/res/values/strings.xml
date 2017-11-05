@@ -37,7 +37,7 @@
     <string name="msg_scanstarted">Scanning started</string>
     <string name="msg_wifienabling">Enabling Wifi</string>
     <string name="msg_results">Click on one of the keys to copy it.\nThen the Wifi Settings will open where you can test it.</string>
-    <string name="manual_mac_separator">:</string>
+    <string name="manual_mac_separator" translatable="false">:</string>
     <string name="not_auto_connect_waiting">Waiting for the current network to disconnect</string>
     <string name="not_auto_connect_key_testing">Testing <xliff:g id="key">%1$s</xliff:g></string>
     <string name="not_correct_key_testing"><xliff:g id="key">%1$s</xliff:g> is the correct key.</string>
@@ -157,6 +157,8 @@
     <string name="msg_auto_connect_running">The auto connect process is already running.</string>
     <string name="msg_auto_connect_warning">This feature doesn\'t work well with weak networks.</string>
     <string name="crash_toast_text">Routerkeygen has crashed. Please send an email.</string>
+    <string name="msg_nolocationpermission">No permission to scan the network. Please enable the location permission.</string>
+    <string name="open_app_settings">Open App Settings</string>
     <!-- FILE CHOOSER -->
     <string name="empty_directory">Empty Directory</string>
     <string name="storage_removed">Storage was removed or unmounted.</string>
@@ -176,8 +178,6 @@
         If you don't want a bulletpoint you can specify it in your changelog.xml
     -->
     <string name="changelog_row_bulletpoint" translatable="false">\u2022"</string>
-    <string name="msg_nolocationpermission">No permission to scan the network. Please enable the location permission.</string>
-    <string name="open_app_settings">Open App Settings</string>
     <!-- AUTOCOMPLETE SUPPORT -->
     <string-array name="supported_routers" translatable="false">
         <item>Alice-</item>

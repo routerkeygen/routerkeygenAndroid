@@ -38,7 +38,6 @@
     <string name="msg_scanstarted">Pesquisa iniciada</string>
     <string name="msg_wifienabling">Activando Wifi</string>
     <string name="msg_results">Seleccione uma das senhas para copiá-la.\nAs Preferências de Wifi irão abrir onde pode usá-la para teste.</string>
-    <string name="manual_mac_separator">:</string>
     <string name="not_auto_connect_waiting">A esperar pela disconecção da ligação atual</string>
     <string name="not_auto_connect_key_testing">A testar <xliff:g id="key">%1$s</xliff:g></string>
     <string name="not_correct_key_testing"><xliff:g id="key">%1$s</xliff:g> é a senha correta.</string>
@@ -176,6 +175,8 @@
          Use string with quotes if you want a space
     -->
     <string name="changelog_header_version">"Versão "</string>
+    <string name="msg_nolocationpermission">Não há permissão para procurar redes. Por favor, ative a permissão de localização.</string>
+    <string name="open_app_settings">Abrir configurações da aplicação</string>
     <!-- UNTRANSLATED -->
 
 </resources>

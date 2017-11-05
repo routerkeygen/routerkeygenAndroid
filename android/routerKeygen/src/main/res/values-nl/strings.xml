@@ -36,7 +36,6 @@
     <string name="msg_scanstarted">Bezig met scannen\u2026</string>
     <string name="msg_wifienabling">Wi-Fi inschakelen\u2026</string>
     <string name="msg_results">Tik op een wachtwoord om deze te kopiëren.\nDe Wi-Fi-instellingen worden hierna geopend zodat u het gekopiëerde wachtwoord kunt uitproberen.</string>
-    <string name="manual_mac_separator">:</string>
     <string name="not_auto_connect_waiting">Wachten op huidig netwerk om verbinding te verbreken</string>
     <string name="not_auto_connect_key_testing">Bezig met het testen van <xliff:g id="key">%1$s</xliff:g></string>
     <string name="not_correct_key_testing"><xliff:g id="key">%1$s</xliff:g> is het juiste wachtwoord</string>
@@ -172,6 +171,8 @@
          Use string with quotes if you want a space
     -->
     <string name="changelog_header_version">"Version "</string>
+    <string name="msg_nolocationpermission">Geen toestemming om het netwerk te scannen. Schakel de locatietoestemming in.</string>
+    <string name="open_app_settings">Open App-instellingen</string>
     <!--UNTRANSLATED-->
 
 </resources>

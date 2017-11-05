@@ -38,7 +38,6 @@
     <string name="msg_scanstarted">La scansione è iniziata</string>
     <string name="msg_wifienabling">Sto abilitando il Wifi</string>
     <string name="msg_results">Clicca su una delle chiavi per copiarla. Appariranno le opzioni del Wifi dove potrai usarla per fare dei test.</string>
-    <string name="manual_mac_separator">:</string>
     <string name="not_auto_connect_waiting">In attesa di disconnettersi dalla rete attuale</string>
     <string name="not_auto_connect_key_testing">Prova in corso <xliff:g id="key">%1$s</xliff:g></string>
     <string name="not_correct_key_testing"><xliff:g id="key">%1$s</xliff:g> è la chiave corretta.</string>
@@ -177,5 +176,7 @@
          Use string with quotes if you want a space
     -->
     <string name="changelog_header_version">"Versione "</string>
+    <string name="msg_nolocationpermission">Nessun permesso per eseguire la scansione della rete. Abilita l\'autorizzazione per la località.</string>
+    <string name="open_app_settings">Apri le impostazioni dell\'app</string>
 
 </resources>

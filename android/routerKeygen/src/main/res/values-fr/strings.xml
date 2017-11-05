@@ -39,7 +39,6 @@
     <string name="msg_scanstarted">Lancement du scan</string>
     <string name="msg_wifienabling">Activation du Wifi</string>
     <string name="msg_results">Cliquez sur l\'une des clés pour la copier.\npuis les paramètres Wifi seront ouvert où vous pouvez la tester.</string>
-    <string name="manual_mac_separator">:</string>
     <string name="not_auto_connect_waiting">Déconnexion du réseau courant en cours</string>
     <string name="not_auto_connect_key_testing">Essaie de : <xliff:g id="key">%1$s</xliff:g></string>
     <string name="not_correct_key_testing"><xliff:g id="key">%1$s</xliff:g> est la bonne clef.</string>
@@ -191,6 +190,8 @@
          Use string with quotes if you want a space
     -->
     <string name="changelog_header_version">"Version "</string>
+    <string name="open_app_settings">Ouvrir les paramètres de l\'application</string>
+    <string name="msg_nolocationpermission">Aucune autorisation pour scanner le réseau. Veuillez activer l\'autorisation de localisation.</string>
     <!--UNTRANSLATED-->
 
 </resources>
