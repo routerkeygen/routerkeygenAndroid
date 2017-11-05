@@ -19,21 +19,25 @@
 
 package org.exobel.routerkeygen.ui;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.format.DateUtils;
 import android.view.Menu;
@@ -55,6 +59,7 @@ import org.exobel.routerkeygen.algorithms.WiFiNetwork;
 public class NetworksListActivity extends Activity implements
         NetworksListFragment.OnItemSelectionListener, OnScanListener {
     private final static String LAST_DIALOG_TIME = "last_time";
+    private static final int MY_PERMISSIONS_ACCESS_COARSE_LOCATION = 1;
     private boolean mTwoPane;
     private NetworksListFragment networkListFragment;
     private WifiManager wifi;
@@ -65,6 +70,7 @@ public class NetworksListActivity extends Activity implements
     private final Handler mHandler = new Handler();
     private boolean wifiState;
     private boolean wifiOn;
+    private boolean scanPermission = true;
     private boolean autoScan;
     private boolean analyticsOptIn;
     private long autoScanInterval;
@@ -91,6 +97,7 @@ public class NetworksListActivity extends Activity implements
         }
         wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
+        assert wifi != null;
         wifiState = wifi.getWifiState() == WifiManager.WIFI_STATE_ENABLED
                 || wifi.getWifiState() == WifiManager.WIFI_STATE_ENABLING;
         scanFinished = new WifiScanReceiver(wifi, networkListFragment, this);
@@ -99,7 +106,6 @@ public class NetworksListActivity extends Activity implements
         final SharedPreferences mPrefs = PreferenceManager
                 .getDefaultSharedPreferences(this);
         welcomeScreenShown = mPrefs.getBoolean(Preferences.VERSION, false);
-
         final long timePassed = System.currentTimeMillis()
                 - mPrefs.getLong(LAST_DIALOG_TIME, 0);
         if (!welcomeScreenShown || (timePassed > DateUtils.WEEK_IN_MILLIS)) {
@@ -121,44 +127,33 @@ public class NetworksListActivity extends Activity implements
                         .setTitle(whatsNewTitle)
                         .setMessage(whatsNewText)
                         .setNegativeButton(R.string.bt_dont_donate,
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog,
-                                                        int which) {
-                                        dialog.dismiss();
-                                    }
-                                })
+                                (dialog, which) -> dialog.dismiss())
                         .setPositiveButton(R.string.bt_google_play,
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog,
-                                                        int which) {
-                                        try {
-                                            startActivity(new Intent(
-                                                    Intent.ACTION_VIEW,
-                                                    Uri.parse("market://details?id="
-                                                            + Preferences.GOOGLE_PLAY_DOWNLOADER)));
-                                        } catch (android.content.ActivityNotFoundException anfe) {
-                                            startActivity(new Intent(
-                                                    Intent.ACTION_VIEW,
-                                                    Uri.parse("http://play.google.com/store/apps/details?id="
-                                                            + Preferences.GOOGLE_PLAY_DOWNLOADER)));
-                                        }
-                                        Toast.makeText(getApplicationContext(),
-                                                R.string.msg_donation,
-                                                Toast.LENGTH_LONG).show();
-                                        dialog.dismiss();
+                                (dialog, which) -> {
+                                    try {
+                                        startActivity(new Intent(
+                                                Intent.ACTION_VIEW,
+                                                Uri.parse("market://details?id="
+                                                        + Preferences.GOOGLE_PLAY_DOWNLOADER)));
+                                    } catch (android.content.ActivityNotFoundException anfe) {
+                                        startActivity(new Intent(
+                                                Intent.ACTION_VIEW,
+                                                Uri.parse("http://play.google.com/store/apps/details?id="
+                                                        + Preferences.GOOGLE_PLAY_DOWNLOADER)));
                                     }
+                                    Toast.makeText(getApplicationContext(),
+                                            R.string.msg_donation,
+                                            Toast.LENGTH_LONG).show();
+                                    dialog.dismiss();
                                 });
                 if (BuildConfig.APPLICATION_ID.equals("org.exobel.routerkeygen")) {
                     initialDialog.setNeutralButton(R.string.bt_paypal,
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog,
-                                                    int which) {
-                                    final String donateLink = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=V3FFBTRTTV5DN";
-                                    Uri uri = Uri.parse(donateLink);
-                                    startActivity(new Intent(
-                                            Intent.ACTION_VIEW, uri));
-                                    dialog.dismiss();
-                                }
+                            (dialog, which) -> {
+                                final String donateLink = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=V3FFBTRTTV5DN";
+                                Uri uri = Uri.parse(donateLink);
+                                startActivity(new Intent(
+                                        Intent.ACTION_VIEW, uri));
+                                dialog.dismiss();
                             }).show();
                 } else {
                     initialDialog.show();
@@ -170,14 +165,7 @@ public class NetworksListActivity extends Activity implements
         }
 
         mSwipeRefreshLayout = findViewById(R.id.swiperefresh);
-        mSwipeRefreshLayout.setOnRefreshListener(
-                new SwipeRefreshLayout.OnRefreshListener() {
-                    @Override
-                    public void onRefresh() {
-                        scan();
-                    }
-                }
-        );
+        mSwipeRefreshLayout.setOnRefreshListener(this::scan);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.accent);
     }
 
@@ -221,6 +209,11 @@ public class NetworksListActivity extends Activity implements
                     startActivity(new Intent(this, ManualInputActivity.class));
                 }
             case R.id.wifi_scan:
+                if (!scanPermission) {
+                    Toast.makeText(this, R.string.msg_nolocationpermission, Toast.LENGTH_SHORT)
+                            .show();
+                    return true;
+                }
                 scan();
                 return true;
             case R.id.pref:
@@ -251,7 +244,6 @@ public class NetworksListActivity extends Activity implements
             }
         }
 
-        scan();
     }
 
     @Override
@@ -259,7 +251,41 @@ public class NetworksListActivity extends Activity implements
         super.onResume();
         getPrefs();
         GoogleAnalytics.getInstance(this).setAppOptOut(!analyticsOptIn);
-        if (autoScan) {
+
+        // Here, thisActivity is the current activity
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            scanPermission = false;
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION)) {
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+
+            } else {
+
+                // No explanation needed, we can request the permission.
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                        MY_PERMISSIONS_ACCESS_COARSE_LOCATION);
+
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        } else {
+            scanPermission = true;
+        }
+        if (!scanPermission) {
+            networkListFragment.setMessage(R.string.msg_nolocationpermission);
+            return;
+        }
+        scan();
+        if (autoScan && scanPermission) {
             mHandler.removeCallbacks(mAutoScanTask);
             mHandler.postDelayed(mAutoScanTask, autoScanInterval * 1000L);
         } else
@@ -294,9 +320,26 @@ public class NetworksListActivity extends Activity implements
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_ACCESS_COARSE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    scanPermission = true;
+                    scan();
+                }
+            }
+        }
+    }
+
     private void scan() {
         if (!wifiState && !wifiOn) {
             networkListFragment.setMessage(R.string.msg_nowifi);
+            return;
+        }
+        if (!scanPermission) {
             return;
         }
         registerReceiver(scanFinished, new IntentFilter(

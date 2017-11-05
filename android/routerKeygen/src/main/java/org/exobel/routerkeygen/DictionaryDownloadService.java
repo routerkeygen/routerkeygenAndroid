@@ -2,7 +2,6 @@ package org.exobel.routerkeygen;
 
 import android.annotation.TargetApi;
 import android.app.IntentService;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -29,7 +28,7 @@ public class DictionaryDownloadService extends IntentService {
     public final static String URL_DOWNLOAD = "org.exobel.routerkeygen.DictionaryDownloadService.URL_DOWNLOAD";
     private final static String DEFAULT_DIC_NAME = "RouterKeygen.dic";
 
-    private static final long MIN_TIME_BETWWEN_UPDATES = 500;
+    private static final long MIN_TIME_BETWWEN_UPDATES = 1000;
 
     private static final byte[] DICTIONARY_HASH = {(byte) 0x8c, (byte) 0xcf,
             0x2c, (byte) 0xb2, (byte) 0xe8, (byte) 0xda, (byte) 0x13,
@@ -144,15 +143,12 @@ public class DictionaryDownloadService extends IntentService {
                             CancelOperationActivity.MESSAGE,
                             getApplicationContext().getString(
                                     R.string.cancel_download))
-                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB)
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            Notification update = NotificationUtils.createProgressBar(this,
+                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            mNotificationManager.notify(UNIQUE_ID, NotificationUtils.createProgressBar(this,
                     getString(R.string.msg_dl_dlingdic), "", fileLen,
                     myProgress, false, PendingIntent.getActivity(
                             getApplicationContext(), 0, i,
-                            PendingIntent.FLAG_UPDATE_CURRENT));
-            mNotificationManager.notify(UNIQUE_ID, update);
+                            PendingIntent.FLAG_UPDATE_CURRENT)));
             long lastNotificationTime = System.currentTimeMillis();
             buf = new byte[1024 * 512];
             while (myProgress < fileLen) {
@@ -174,9 +170,11 @@ public class DictionaryDownloadService extends IntentService {
                     myProgress = fileLen;
                 }
                 if ((System.currentTimeMillis() - lastNotificationTime) > MIN_TIME_BETWWEN_UPDATES) {
-                    mNotificationManager.notify(UNIQUE_ID, NotificationUtils
-                            .updateProgressBar(update, fileLen, myProgress
-                            ));
+                    mNotificationManager.notify(UNIQUE_ID, NotificationUtils.createProgressBar(this,
+                            getString(R.string.msg_dl_dlingdic), "", fileLen,
+                            myProgress, false, PendingIntent.getActivity(
+                                    getApplicationContext(), 0, i,
+                                    PendingIntent.FLAG_UPDATE_CURRENT)));
                     lastNotificationTime = System.currentTimeMillis();
                 }
             }
@@ -203,7 +201,7 @@ public class DictionaryDownloadService extends IntentService {
                 cancelNotification = false;
                 return;
             }
-            if (renameFile(dicTemp, dicFile, true)) {
+            if (renameFile(dicTemp, dicFile)) {
                 new File(dicTemp).delete();
                 mNotificationManager.notify(
                         UNIQUE_ID,
@@ -273,7 +271,7 @@ public class DictionaryDownloadService extends IntentService {
         return true;
     }
 
-    private boolean renameFile(String file, String toFile, boolean saveOld) {
+    private boolean renameFile(String file, String toFile) {
 
         File toBeRenamed = new File(file);
         File newFile = new File(toFile);
@@ -282,8 +280,8 @@ public class DictionaryDownloadService extends IntentService {
                 || newFile.isDirectory())
             return true;
 
-        if (newFile.exists() && saveOld) {
-            if (renameFile(toFile, toFile + "_backup", true))
+        if (newFile.exists()) {
+            if (renameFile(toFile, toFile + "_backup"))
                 Toast.makeText(getBaseContext(),
                         R.string.pref_msg_err_backup_dic, Toast.LENGTH_SHORT)
                         .show();
@@ -293,8 +291,6 @@ public class DictionaryDownloadService extends IntentService {
         return !toBeRenamed.renameTo(newFile);
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
-    @SuppressWarnings("deprecation")
     private boolean noSpaceLeft(int fileLen) {
         // Checking if external storage has enough memory ...
         android.os.StatFs stat = new android.os.StatFs(Environment

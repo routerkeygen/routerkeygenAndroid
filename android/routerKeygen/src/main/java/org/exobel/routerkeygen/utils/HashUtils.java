@@ -16,9 +16,10 @@ public class HashUtils {
             MessageDigest md = MessageDigest.getInstance("MD5");
             InputStream is = new FileInputStream(dicFile);
             try {
-                is = new DigestInputStream(is, md);
-                while (is.read() != -1) {
-                }
+                DigestInputStream dis = new DigestInputStream(is, md);
+                byte[] buffer = new byte[1024];
+                while(dis.read(buffer, 0, buffer.length) != -1) ;
+                dis.close();
             } finally {
                 is.close();
             }

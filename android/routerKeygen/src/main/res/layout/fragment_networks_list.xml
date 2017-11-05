@@ -23,7 +23,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="vertical">
 
         <ProgressBar
             android:id="@+id/loading_spinner"
@@ -39,12 +40,20 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
+            android:paddingStart="10dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dip"
             android:paddingEnd="10dip"
             android:text="@string/msg_nowifidetected"
             android:textSize="20sp"
             android:visibility="gone" />
+        <Button
+            android:id="@+id/permissions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dip"
+            android:text="@string/open_app_settings"
+            android:visibility="gone"/>
     </LinearLayout>
 
 </RelativeLayout>

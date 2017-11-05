@@ -19,12 +19,16 @@
 
 package org.exobel.routerkeygen.ui;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v4.content.ContextCompat;
 import android.text.ClipboardManager;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -35,35 +39,42 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
+import org.exobel.routerkeygen.BuildConfig;
 import org.exobel.routerkeygen.R;
 import org.exobel.routerkeygen.WifiScanReceiver.OnScanListener;
 import org.exobel.routerkeygen.algorithms.WiFiNetwork;
 
-@SuppressWarnings("deprecation")
 public class NetworksListFragment extends Fragment implements
         OnScanListener, OnItemClickListener, MessagePublisher {
 
     private static final String STATE_ACTIVATED_POSITION = "activated_position";
     private static final String NETWORKS_FOUND = "network_found";
     private static final String MENU_VALUE = "menu_value";
+    private boolean scanPermission = true;
     private static final OnItemSelectionListener sDummyCallbacks = new OnItemSelectionListener() {
-        public void onItemSelected(WiFiNetwork id) {}
-        public void onItemSelected(String mac) {}
+        public void onItemSelected(WiFiNetwork id) {
+        }
+
+        public void onItemSelected(String mac) {
+        }
     };
     private OnItemSelectionListener mCallbacks = sDummyCallbacks;
     private int mActivatedPosition = ListView.INVALID_POSITION;
     private ListView listview;
+    private Button permissionButton;
     private WifiListAdapter wifiListAdapter;
     private View noNetworksMessage;
     private WiFiNetwork[] networksFound;
 
-    public NetworksListFragment() {}
+    public NetworksListFragment() {
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -71,7 +82,9 @@ public class NetworksListFragment extends Fragment implements
         super.onCreateView(inflater, container, savedInstanceState);
         RelativeLayout root = (RelativeLayout) inflater.inflate(
                 R.layout.fragment_networks_list, container, false);
-        listview = (ListView) root.findViewById(R.id.networks_list);
+        listview = root.findViewById(R.id.networks_list);
+        permissionButton = root.findViewById(R.id.permissions);
+        permissionButton.setOnClickListener(v -> startActivity(new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + BuildConfig.APPLICATION_ID))));
         wifiListAdapter = new WifiListAdapter(getActivity());
         listview.setAdapter(wifiListAdapter);
         noNetworksMessage = root.findViewById(R.id.message_group);
@@ -101,7 +114,11 @@ public class NetworksListFragment extends Fragment implements
             throw new IllegalStateException(
                     "Activity must implement fragment's callbacks.");
         }
-
+        if (ContextCompat.checkSelfPermission(activity,
+                Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            scanPermission = false;
+        }
         mCallbacks = (OnItemSelectionListener) activity;
     }
 
@@ -190,14 +207,15 @@ public class NetworksListFragment extends Fragment implements
 
     @Override
     public void setMessage(int message) {
-        noNetworksMessage.findViewById(R.id.loading_spinner).setVisibility(
-                View.GONE);
+        noNetworksMessage.findViewById(R.id.loading_spinner).setVisibility(View.GONE);
         listview.setVisibility(View.GONE);
-        TextView messageView = (TextView) noNetworksMessage
-                .findViewById(R.id.message);
+        TextView messageView = noNetworksMessage.findViewById(R.id.message);
         messageView.setVisibility(View.VISIBLE);
         messageView.setText(message);
         noNetworksMessage.setVisibility(View.VISIBLE);
+        if (message == R.string.msg_nolocationpermission) {
+            permissionButton.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -207,17 +225,21 @@ public class NetworksListFragment extends Fragment implements
             return;
         if (networks.length > 0) {
             noNetworksMessage.setVisibility(View.GONE);
+            permissionButton.setVisibility(View.GONE);
             wifiListAdapter.updateNetworks(networks);
             listview.setVisibility(View.VISIBLE);
         } else {
-            noNetworksMessage.findViewById(R.id.loading_spinner).setVisibility(
-                    View.GONE);
+            noNetworksMessage.findViewById(R.id.loading_spinner).setVisibility(View.GONE);
             listview.setVisibility(View.GONE);
             listview.setVisibility(View.GONE);
-            TextView messageView = (TextView) noNetworksMessage
-                    .findViewById(R.id.message);
+            TextView messageView = noNetworksMessage.findViewById(R.id.message);
             messageView.setVisibility(View.VISIBLE);
-            messageView.setText(R.string.msg_nowifidetected);
+            if (scanPermission) {
+                messageView.setText(R.string.msg_nowifidetected);
+            } else {
+                permissionButton.setVisibility(View.VISIBLE);
+                messageView.setText(R.string.msg_nolocationpermission);
+            }
             noNetworksMessage.setVisibility(View.VISIBLE);
         }
     }

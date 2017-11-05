@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 27
+    buildToolsVersion '27.0.0'
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -13,7 +13,8 @@ android {
         applicationId "org.exobel.routerkeygen"
         versionCode 1
         minSdkVersion 16
-        targetSdkVersion 26
+        targetSdkVersion 27
+        multiDexEnabled false
 
     }
     splits {
@@ -40,7 +41,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
@@ -166,9 +167,13 @@ def getNdkBuildCmd() {
 
 
 dependencies {
-    compile project(':aFileChooser')
-    compile(name: 'android-ad-sdk', ext: 'aar')
-    compile 'com.google.android.gms:play-services-analytics:11.4.2'
-    compile 'ch.acra:acra:4.9.0'
-    testCompile 'junit:junit:4.12'
+    implementation project(':aFileChooser')
+    implementation (name: 'android-ad-sdk', ext: 'aar')
+
+    implementation 'com.android.support:support-compat:27.0.0'
+    implementation 'com.android.support:support-core-ui:27.0.0'
+    implementation 'com.android.support:support-core-utils:27.0.0'
+    implementation ('com.google.android.gms:play-services-analytics:11.4.2', { exclude module: 'support-v4' })
+    implementation ('ch.acra:acra:4.9.0', { exclude module: 'support-v4' })
+    testImplementation 'junit:junit:4.12'
 }

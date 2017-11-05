@@ -19,6 +19,7 @@
 
 package org.exobel.routerkeygen.ui;
 
+import android.Manifest;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.app.AlertDialog;
@@ -30,6 +31,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -37,12 +39,13 @@ import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
-import android.preference.Preference;
-import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.ContextCompat;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -105,6 +108,7 @@ public class Preferences extends PreferenceActivity {
     private static final int DIALOG_ERROR = 1005;
     private static final int DIALOG_UPDATE_NEEDED = 1006;
     private static final int DIALOG_CHANGELOG = 1007;
+    private static final int MY_PERMISSIONS_WRITE_EXTERNAL_STORAGE = 1;
     private LastVersion lastVersion;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,40 +118,7 @@ public class Preferences extends PreferenceActivity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
         findPreference("download").setOnPreferenceClickListener(
-                new OnPreferenceClickListener() {
-                    public boolean onPreferenceClick(Preference preference) {
-                        if (isDictionaryServiceRunning()) {
-                            Toast.makeText(
-                                    getBaseContext(),
-                                    getString(R.string.pref_msg_download_running),
-                                    Toast.LENGTH_SHORT).show();
-                            return true;
-                        }
-                        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-                        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-                        if (netInfo == null
-                                || !netInfo.isConnectedOrConnecting()) {
-                            Toast.makeText(getBaseContext(),
-                                    getString(R.string.pref_msg_no_network),
-                                    Toast.LENGTH_SHORT).show();
-                            return true;
-                        }
-
-                        // Don't complain about dictionary size if user is on a
-                        // wifi connection
-                        if ((((WifiManager) getBaseContext().getApplicationContext().getSystemService(
-                                Context.WIFI_SERVICE))).getConnectionInfo()
-                                .getSSID() != null) {
-                            try {
-                                checkCurrentDictionary();
-                            } catch (FileNotFoundException e) {
-                                e.printStackTrace();
-                            }
-                        } else
-                            showDialog(DIALOG_ASK_DOWNLOAD);
-                        return true;
-                    }
-                });
+                preference -> fetchDictionary());
 
         boolean app_installed = AdsUtils.checkDonation(this);
         final PreferenceCategory mCategory = (PreferenceCategory) findPreference("2section");
@@ -157,23 +128,21 @@ public class Preferences extends PreferenceActivity {
             // link.
             mCategory.removePreference(findPreference("donate_paypal"));
             findPreference("donate_playstore").setOnPreferenceClickListener(
-                    new OnPreferenceClickListener() {
-                        public boolean onPreferenceClick(Preference preference) {
-                            try {
-                                startActivity(new Intent(Intent.ACTION_VIEW,
-                                        Uri.parse("market://details?id="
-                                                + GOOGLE_PLAY_DOWNLOADER)));
-                            } catch (android.content.ActivityNotFoundException anfe) {
-                                startActivity(new Intent(
-                                        Intent.ACTION_VIEW,
-                                        Uri.parse("http://play.google.com/store/apps/details?id="
-                                                + GOOGLE_PLAY_DOWNLOADER)));
-                            }
-                            Toast.makeText(getApplicationContext(),
-                                    R.string.msg_donation, Toast.LENGTH_LONG)
-                                    .show();
-                            return true;
+                    preference -> {
+                        try {
+                            startActivity(new Intent(Intent.ACTION_VIEW,
+                                    Uri.parse("market://details?id="
+                                            + GOOGLE_PLAY_DOWNLOADER)));
+                        } catch (android.content.ActivityNotFoundException anfe) {
+                            startActivity(new Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse("http://play.google.com/store/apps/details?id="
+                                            + GOOGLE_PLAY_DOWNLOADER)));
                         }
+                        Toast.makeText(getApplicationContext(),
+                                R.string.msg_donation, Toast.LENGTH_LONG)
+                                .show();
+                        return true;
                     });
         } else {
             // If you have the donate app installed no need to link to it.
@@ -183,14 +152,12 @@ public class Preferences extends PreferenceActivity {
                 mCategory.removePreference(findPreference("donate_paypal"));
             } else {
                 findPreference("donate_paypal").setOnPreferenceClickListener(
-                        new OnPreferenceClickListener() {
-                            public boolean onPreferenceClick(Preference preference) {
-                                final String donateLink = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=V3FFBTRTTV5DN";
-                                Uri uri = Uri.parse(donateLink);
-                                startActivity(new Intent(Intent.ACTION_VIEW, uri));
+                        preference -> {
+                            final String donateLink = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=V3FFBTRTTV5DN";
+                            Uri uri = Uri.parse(donateLink);
+                            startActivity(new Intent(Intent.ACTION_VIEW, uri));
 
-                                return true;
-                            }
+                            return true;
                         });
             }
         }
@@ -198,78 +165,68 @@ public class Preferences extends PreferenceActivity {
             mCategory.removePreference(findPreference("update"));
         } else {
             findPreference("update").setOnPreferenceClickListener(
-                    new OnPreferenceClickListener() {
-                        public boolean onPreferenceClick(Preference preference) {
-                            AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-                                protected void onPreExecute() {
-                                    showDialog(DIALOG_WAIT);
+                    preference -> {
+                        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+                            protected void onPreExecute() {
+                                showDialog(DIALOG_WAIT);
+                            }
+
+                            protected Void doInBackground(Void... params) {
+                                lastVersion = UpdateCheckerService
+                                        .getLatestVersion();
+                                return null;
+                            }
+
+                            protected void onPostExecute(Void result) {
+                                removeDialog(DIALOG_WAIT);
+                                if (isFinishing())
+                                    return;
+                                if (lastVersion == null) {
+                                    showDialog(DIALOG_ERROR);
+                                    return;
+                                }
+                                if (!Preferences.VERSION
+                                        .equals(lastVersion.version)) {
+                                    showDialog(DIALOG_UPDATE_NEEDED);
+                                } else {
+                                    Toast.makeText(Preferences.this,
+                                            R.string.msg_app_updated,
+                                            Toast.LENGTH_SHORT).show();
                                 }
 
-                                protected Void doInBackground(Void... params) {
-                                    lastVersion = UpdateCheckerService
-                                            .getLatestVersion();
-                                    return null;
-                                }
+                            }
+                        };
+                        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
-                                protected void onPostExecute(Void result) {
-                                    removeDialog(DIALOG_WAIT);
-                                    if (isFinishing())
-                                        return;
-                                    if (lastVersion == null) {
-                                        showDialog(DIALOG_ERROR);
-                                        return;
-                                    }
-                                    if (!Preferences.VERSION
-                                            .equals(lastVersion.version)) {
-                                        showDialog(DIALOG_UPDATE_NEEDED);
-                                    } else {
-                                        Toast.makeText(Preferences.this,
-                                                R.string.msg_app_updated,
-                                                Toast.LENGTH_SHORT).show();
-                                    }
-
-                                }
-                            };
-                            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-                            // Checking for updates every week
-                            startService(new Intent(getApplicationContext(),
-                                    UpdateCheckerService.class));
-                            return true;
-                        }
+                        // Checking for updates every week
+                        startService(new Intent(getApplicationContext(),
+                                UpdateCheckerService.class));
+                        return true;
                     });
         }
         findPreference("changelog").setOnPreferenceClickListener(
-                new OnPreferenceClickListener() {
-                    public boolean onPreferenceClick(Preference preference) {
-                        showDialog(DIALOG_CHANGELOG);
-                        return true;
-                    }
+                preference -> {
+                    showDialog(DIALOG_CHANGELOG);
+                    return true;
                 });
         findPreference("about").setOnPreferenceClickListener(
-                new OnPreferenceClickListener() {
-                    public boolean onPreferenceClick(Preference preference) {
-                        showDialog(DIALOG_ABOUT);
-                        return true;
-                    }
+                preference -> {
+                    showDialog(DIALOG_ABOUT);
+                    return true;
                 });
         findPreference(dicLocalPref).setOnPreferenceClickListener(
-                new OnPreferenceClickListener() {
-                    public boolean onPreferenceClick(Preference preference) {
-                        startActivityForResult(new Intent(
-                                getApplicationContext(),
-                                FileChooserActivity.class), 0);
-                        return true;
-                    }
+                preference -> {
+                    startActivityForResult(new Intent(
+                            getApplicationContext(),
+                            FileChooserActivity.class), 0);
+                    return true;
                 });
         final CheckBoxPreference autoScan = (CheckBoxPreference) findPreference("autoScan");
-        autoScan.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
-                findPreference("autoScanInterval").setEnabled(
-                        autoScan.isChecked());
-                return true;
+        autoScan.setOnPreferenceClickListener(preference -> {
+            findPreference("autoScanInterval").setEnabled(
+                    autoScan.isChecked());
+            return true;
 
-            }
         });
         SharedPreferences prefs = PreferenceManager
                 .getDefaultSharedPreferences(getBaseContext());
@@ -344,14 +301,14 @@ public class Preferences extends PreferenceActivity {
                 LayoutInflater inflater = (LayoutInflater) this
                         .getSystemService(LAYOUT_INFLATER_SERVICE);
                 View layout = inflater.inflate(R.layout.about_dialog,
-                        (ViewGroup) findViewById(R.id.tabhost));
-                TabHost tabs = (TabHost) layout.findViewById(R.id.tabhost);
+                        findViewById(R.id.tabhost));
+                TabHost tabs = layout.findViewById(R.id.tabhost);
                 tabs.setup();
                 TabSpec tspec1 = tabs.newTabSpec("about");
                 tspec1.setIndicator(getString(R.string.pref_about));
 
                 tspec1.setContent(R.id.text_about_scroll);
-                TextView text = ((TextView) layout.findViewById(R.id.text_about));
+                TextView text = layout.findViewById(R.id.text_about);
                 text.setMovementMethod(LinkMovementMethod.getInstance());
                 text.append(VERSION + "\n" + LAUNCH_DATE);
                 tabs.addTab(tspec1);
@@ -367,12 +324,7 @@ public class Preferences extends PreferenceActivity {
                 ((TextView) layout.findViewById(R.id.about_license))
                         .setMovementMethod(LinkMovementMethod.getInstance());
                 tabs.addTab(tspec3);
-                builder.setNeutralButton(R.string.bt_close, new OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        removeDialog(DIALOG_ABOUT);
-
-                    }
-                });
+                builder.setNeutralButton(R.string.bt_close, (dialog, which) -> removeDialog(DIALOG_ABOUT));
                 builder.setView(layout);
                 break;
             }
@@ -393,11 +345,7 @@ public class Preferences extends PreferenceActivity {
                 builder.setCancelable(false);
                 builder.setPositiveButton(android.R.string.yes, diOnClickListener);
                 builder.setNegativeButton(android.R.string.no,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                removeDialog(DIALOG_ASK_DOWNLOAD);
-                            }
-                        });
+                        (dialog, id1) -> removeDialog(DIALOG_ASK_DOWNLOAD));
                 break;
             }
             case DIALOG_UPDATE_NEEDED: {
@@ -580,4 +528,65 @@ public class Preferences extends PreferenceActivity {
         }
     }
 
+    private boolean fetchDictionary() {
+        if (isDictionaryServiceRunning()) {
+            Toast.makeText(
+                    getBaseContext(),
+                    getString(R.string.pref_msg_download_running),
+                    Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (netInfo == null
+                || !netInfo.isConnectedOrConnecting()) {
+            Toast.makeText(getBaseContext(),
+                    getString(R.string.pref_msg_no_network),
+                    Toast.LENGTH_SHORT).show();
+            return true;
+        }
+
+        // Here, thisActivity is the current activity
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    MY_PERMISSIONS_WRITE_EXTERNAL_STORAGE);
+            return true;
+        }
+
+        // Don't complain about dictionary size if user is on a
+        // wifi connection
+        if ((((WifiManager) getBaseContext().getApplicationContext().getSystemService(
+                Context.WIFI_SERVICE))).getConnectionInfo()
+                .getSSID() != null) {
+            try {
+                checkCurrentDictionary();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        } else
+            showDialog(DIALOG_ASK_DOWNLOAD);
+        return true;
+    }
+
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_WRITE_EXTERNAL_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    fetchDictionary();
+                } else {
+                    Toast.makeText(getBaseContext(),
+                            getString(R.string.msg_no_write_permissions),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
 }
