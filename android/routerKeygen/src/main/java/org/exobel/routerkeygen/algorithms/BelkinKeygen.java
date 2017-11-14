@@ -37,8 +37,11 @@ public class BelkinKeygen extends Keygen {
             return new BelkinKeygen[size];
         }
     };
-    private final static int[][] ORDERS = {{6, 2, 3, 8, 5, 1, 7, 4},
-            {1, 2, 3, 8, 5, 1, 7, 4}, {1, 2, 3, 8, 5, 6, 7, 4}};
+    private final static int[][] ORDERS = {
+            {6, 2, 3, 8, 5, 1, 7, 4},
+            {1, 2, 3, 8, 5, 1, 7, 4},
+            {1, 2, 3, 8, 5, 6, 7, 4},
+            {6, 2, 3, 8, 5, 6, 7, 4}};
     private final static String[] CHARSETS = {"024613578ACE9BDF",
             "944626378ace9bdf"};
 
