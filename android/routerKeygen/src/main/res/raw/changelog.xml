@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
 
+    <changelogversion changeDate="Nov 14,2017" versionName="4.0.1">
+        <changelogtext>Trying to fix scanning</changelogtext>
+        <changelogtext>Update belkin support</changelogtext>
+    </changelogversion>
     <changelogversion changeDate="Nov 5,2017" versionName="4.0.0">
         <changelogtext>[b]New![/b] Support for Android Oreo</changelogtext>
         <changelogtext>[b]New![/b] UPC algorithm</changelogtext>

@@ -11,8 +11,8 @@ android {
 
     defaultConfig {
         applicationId "org.exobel.routerkeygen"
-        versionCode 40
-        versionName "4.0.0"
+        versionCode 41
+        versionName "4.0.1"
         minSdkVersion 16
         targetSdkVersion 27
         multiDexEnabled false
