@@ -21,9 +21,9 @@ import com.millennialmedia.MMException;
 import java.lang.ref.WeakReference;
 
 public class AdsUtils {
-    private static final String BANNER_APID = "136973";
-    private static final String CONNECT_APID = "200804";
-    private static final String STARTUP_APID = "201332";
+    private static final String BANNER_APID = "bottom_banner";
+    private static final String CONNECT_APID = "connect";
+    private static final String STARTUP_APID = "startup";
     private static final String CONNECT_LAST_SHOWN_TIME = "CONNECT_LAST_SHOWN_TIME";
     private static final String STARTUP_LAST_SHOWN_TIME = "STARTUP_LAST_SHOWN_TIME";
     private static final String CONNECT_LAST_SHOWN_COUNT = "CONNECT_LAST_SHOWN_COUNT";
@@ -35,13 +35,12 @@ public class AdsUtils {
 
     public static void loadAdIfNeeded(final Activity activity) {
         final String TAG = activity.getLocalClassName();
-        final RelativeLayout adRelativeLayout = (RelativeLayout) activity
+        final RelativeLayout adRelativeLayout = activity
                 .findViewById(R.id.adBannerRelativeLayout);
         if (checkDonation(activity)) {
             adRelativeLayout.getLayoutParams().height = 0;
             return;
         }
-        MMSDK.initialize(activity);
         // Create the adView
         try {
             final InlineAd inlineAd = InlineAd.createInstance(BANNER_APID, adRelativeLayout);
@@ -125,7 +124,6 @@ public class AdsUtils {
         if (checkDonation(activity)) {
             return; // NO ADS!
         }
-        MMSDK.initialize(activity);
         final SharedPreferences mPrefs = PreferenceManager
                 .getDefaultSharedPreferences(activity);
         final SharedPreferences.Editor editor = mPrefs.edit();
