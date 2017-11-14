@@ -114,11 +114,7 @@ public class NetworksListFragment extends Fragment implements
             throw new IllegalStateException(
                     "Activity must implement fragment's callbacks.");
         }
-        if (ContextCompat.checkSelfPermission(activity,
-                Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            scanPermission = false;
-        }
+        updatePermission(activity);
         mCallbacks = (OnItemSelectionListener) activity;
     }
 
@@ -215,6 +211,21 @@ public class NetworksListFragment extends Fragment implements
         noNetworksMessage.setVisibility(View.VISIBLE);
         if (message == R.string.msg_nolocationpermission) {
             permissionButton.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void updatePermission(Activity activity) {
+        if (ContextCompat.checkSelfPermission(activity,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            scanPermission = false;
+        } else {
+            scanPermission = true;
+        }
+        if (networksFound == null && scanPermission && noNetworksMessage != null) {
+            noNetworksMessage.setVisibility(View.GONE);
+            permissionButton.setVisibility(View.GONE);
+            noNetworksMessage.findViewById(R.id.loading_spinner).setVisibility(View.VISIBLE);
         }
     }
 

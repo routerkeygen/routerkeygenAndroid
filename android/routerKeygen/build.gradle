@@ -140,10 +140,13 @@ dependencies {
     implementation project(':aFileChooser')
     implementation (name: 'android-ad-sdk', ext: 'aar')
 
-    implementation 'com.android.support:support-compat:27.0.0'
-    implementation 'com.android.support:support-core-ui:27.0.0'
-    implementation 'com.android.support:support-core-utils:27.0.0'
-    implementation ('com.google.android.gms:play-services-analytics:11.4.2', { exclude module: 'support-v4' })
+    implementation 'com.android.support:support-compat:27.0.1'
+    implementation 'com.android.support:support-core-ui:27.0.1'
+    implementation 'com.android.support:support-core-utils:27.0.1'
+    implementation 'com.android.support:support-fragment:27.0.1'
+
+    implementation ('com.google.android.gms:play-services-location:11.6.0', { exclude module: 'support-v4' })
+    implementation ('com.google.android.gms:play-services-analytics:11.6.0', { exclude module: 'support-v4' })
     implementation ('ch.acra:acra:4.9.0', { exclude module: 'support-v4' })
     testImplementation 'junit:junit:4.12'
 }
