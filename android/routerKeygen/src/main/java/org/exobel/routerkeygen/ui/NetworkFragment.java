@@ -43,7 +43,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -121,36 +120,34 @@ public class NetworkFragment extends Fragment {
                              Bundle savedInstanceState) {
         root = (ViewSwitcher) inflater.inflate(R.layout.fragment_network,
                 container, false);
-        messages = (TextView) root.findViewById(R.id.loading_text);
+        messages = root.findViewById(R.id.loading_text);
         final View autoConnect = root.findViewById(R.id.auto_connect);
         // Auto connect service unavailable for manual calculations
         if (wifiNetwork.getScanResult() == null)
             autoConnect.setVisibility(View.GONE);
         else {
             final int level = wifiNetwork.getLevel();
-            autoConnect.setOnClickListener(new OnClickListener() {
-                public void onClick(View v) {
-                    if (passwordList == null)
-                        return;
-                    if (isAutoConnectServiceRunning()) {
-                        Toast.makeText(getActivity(),
-                                R.string.msg_auto_connect_running,
-                                Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    if (level <= 1)
-                        Toast.makeText(getActivity(),
-                                R.string.msg_auto_connect_warning,
-                                Toast.LENGTH_SHORT).show();
-                    Intent i = new Intent(getActivity(),
-                            AutoConnectService.class);
-                    i.putStringArrayListExtra(AutoConnectService.KEY_LIST,
-                            (ArrayList<String>) passwordList);
-                    i.putExtra(AutoConnectService.SCAN_RESULT,
-                            wifiNetwork.getScanResult());
-                    getActivity().startService(i);
-                    AdsUtils.displayConnectInterstitial(getActivity());
+            autoConnect.setOnClickListener(v -> {
+                if (passwordList == null)
+                    return;
+                if (isAutoConnectServiceRunning()) {
+                    Toast.makeText(getActivity(),
+                            R.string.msg_auto_connect_running,
+                            Toast.LENGTH_SHORT).show();
+                    return;
                 }
+                if (level <= 1)
+                    Toast.makeText(getActivity(),
+                            R.string.msg_auto_connect_warning,
+                            Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(getActivity(),
+                        AutoConnectService.class);
+                i.putStringArrayListExtra(AutoConnectService.KEY_LIST,
+                        (ArrayList<String>) passwordList);
+                i.putExtra(AutoConnectService.SCAN_RESULT,
+                        wifiNetwork.getScanResult());
+                getActivity().startService(i);
+                AdsUtils.displayConnectInterstitial(getActivity());
             });
         }
         if (passwordList != null)
@@ -403,7 +400,7 @@ public class NetworkFragment extends Fragment {
         protected void onProgressUpdate(Integer... values) {
             if (getActivity() == null)
                 return;
-            for (int i = 0; i < values.length; i += 2) {
+            for (int i = 0; i < values.length; i += 2)
                 switch (values[i]) {
                     case SHOW_TOAST:
                         Toast.makeText(getActivity(), values[i + 1],
@@ -424,9 +421,9 @@ public class NetworkFragment extends Fragment {
 
                     case CHANGE_DETERMINATE: {
                         spinnerDeterminate = values[i + 1] > 0;
-                        final LinearLayout layout = (LinearLayout) root.findViewById(R.id.loading_view);
-                        final ProgressBar spinner = (ProgressBar) root.findViewById(R.id.loading_spinner);
-                        final ProgressBar progressBar = (ProgressBar) root.findViewById(R.id.loading_progress);
+                        final LinearLayout layout = root.findViewById(R.id.loading_view);
+                        final ProgressBar spinner = root.findViewById(R.id.loading_spinner);
+                        final ProgressBar progressBar = root.findViewById(R.id.loading_progress);
                         layout.setOrientation(spinnerDeterminate ? LinearLayout.VERTICAL : LinearLayout.HORIZONTAL);
                         spinner.setVisibility(spinnerDeterminate ? View.GONE : View.VISIBLE);
                         progressBar.setVisibility(spinnerDeterminate ? View.VISIBLE : View.GONE);
@@ -442,14 +439,13 @@ public class NetworkFragment extends Fragment {
 
                     case KEYGEN_PROGRESSED: {
                         if (spinnerDeterminate) {
-                            final ProgressBar spinner = (ProgressBar) root.findViewById(R.id.loading_progress);
+                            final ProgressBar spinner = root.findViewById(R.id.loading_progress);
                             spinner.setProgress(values[i + 1]);
                         }
                     }
                     break;
 
                 }
-            }
         }
 
         public void cancel() {

@@ -59,7 +59,6 @@ public class DictionaryDownloadService extends IntentService {
             mNotificationManager.cancel(UNIQUE_ID);
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     protected void onHandleIntent(Intent intent) {
         File myDicFile;

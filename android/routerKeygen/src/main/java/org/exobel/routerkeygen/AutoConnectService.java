@@ -18,10 +18,9 @@
  */
 package org.exobel.routerkeygen;
 
-import android.annotation.TargetApi;
+import android.app.IntentService;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -32,10 +31,8 @@ import android.net.wifi.SupplicantState;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
-import android.os.IBinder;
 import android.provider.Settings;
 import android.util.Log;
 
@@ -48,7 +45,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class AutoConnectService extends Service implements onConnectionListener {
+public class AutoConnectService extends IntentService implements onConnectionListener {
     public final static String SCAN_RESULT = "org.exobel.routerkeygen.SCAN_RESULT";
     public final static String KEY_LIST = "org.exobel.routerkeygen.KEY_LIST";
 
@@ -58,7 +55,6 @@ public class AutoConnectService extends Service implements onConnectionListener 
     private final static int FAILING_MINIMUM_TIME = 1500;
     private final int UNIQUE_ID = R.string.app_name
             + AutoConnectService.class.getName().hashCode();
-    final private Binder mBinder = new LocalBinder();
     private NotificationManager mNotificationManager;
     private Handler handler;
     private ScanResult network;
@@ -75,37 +71,33 @@ public class AutoConnectService extends Service implements onConnectionListener 
     private int currentNetworkId = -1;
     private boolean cancelNotification = true;
     private long lastTimeDisconnected = -1;
-    private final Runnable tryAfterDisconnecting = new Runnable() {
-        public void run() {
-            if (!scanningStarted.get()) {
-                Log.d(TAG, "Scanning still not started, fallback");
-                tryingConnection();
-            }
+    private final Runnable tryAfterDisconnecting = () -> {
+        if (!scanningStarted.get()) {
+            Log.d(TAG, "Scanning still not started, fallback");
+            tryingConnection();
         }
     };
+    public AutoConnectService() {
+        super("AutoConnectService");
+    }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+
     private static PendingIntent getDefaultPendingIntent(Context context) {
         final Intent i = new Intent(context, CancelOperationActivity.class)
                 .putExtra(CancelOperationActivity.SERVICE_TO_TERMINATE,
                         AutoConnectService.class.getName())
                 .putExtra(CancelOperationActivity.MESSAGE,
                         context.getString(R.string.cancel_auto_test))
-                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB)
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         return PendingIntent.getActivity(context, 0, i,
                 PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     @Override
-    public IBinder onBind(Intent intent) {
-        return mBinder;
-    }
-
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-    @SuppressWarnings("deprecation")
-    public void onCreate() {
+    protected void onHandleIntent(Intent intent) {
+        if (intent == null) {
+            return;
+        }
         handler = new Handler();
         wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -119,15 +111,6 @@ public class AutoConnectService extends Service implements onConnectionListener 
             mNumOpenNetworksKept = Settings.Global.getInt(getContentResolver(),
                     Settings.Global.WIFI_NUM_OPEN_NETWORKS_KEPT, 10);
 
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent == null) {
-            stopSelf();
-            return START_NOT_STICKY;
-        }
         attempts = 0;
         currentNetworkId = -1;
         network = intent.getParcelableExtra(SCAN_RESULT);
@@ -169,16 +152,16 @@ public class AutoConnectService extends Service implements onConnectionListener 
                                 .build());
                 cancelNotification = false;
                 stopSelf();
-                return START_NOT_STICKY;
+                return;
             }
         } else {
             Wifi.cleanPreviousConfiguration(wifi, network, network.capabilities);
             tryingConnection();
         }
-        return START_STICKY;
+        return;
     }
 
-    private int disconnectCurrent(){
+    private void disconnectCurrent(){
         final ConnectivityManager connManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
         final NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         if (!registered.get()){
@@ -195,8 +178,6 @@ public class AutoConnectService extends Service implements onConnectionListener 
                 cancelNotification = true;
                 handler.postDelayed(tryAfterDisconnecting, DISCONNECT_WAITING_TIME);
 
-                return 1;
-
             } else {
                 waitingToDisconnect.set(false);
                 mNotificationManager.notify(
@@ -207,12 +188,10 @@ public class AutoConnectService extends Service implements onConnectionListener 
                                 .build());
                 cancelNotification = false;
                 stopSelf();
-                return -1;
             }
         } else {
             Log.d(TAG, "Not connected");
             tryingConnection();
-            return 0;
         }
     }
 
@@ -413,16 +392,6 @@ public class AutoConnectService extends Service implements onConnectionListener 
             for (final WifiConfiguration config : configurations) {
                 wifi.enableNetwork(config.networkId, false);
             }
-        }
-    }
-
-    /**
-     * Class for clients to access. Because we know this service always runs in
-     * the same process as its clients, we don't need to deal with IPC.
-     */
-    private class LocalBinder extends Binder {
-        AutoConnectService getService() {
-            return AutoConnectService.this;
         }
     }
 }
