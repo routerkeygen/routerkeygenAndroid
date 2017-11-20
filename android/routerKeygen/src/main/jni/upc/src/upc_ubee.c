@@ -88,6 +88,8 @@ const char * profanities[] = {
               "WOOER",      "WOOSH",      "WOOZY",      "YOBBO",      "ZOOID",      "ZOOKS"
 };
 
+int ubee_enerate_profanity_free_pass(unsigned char * hash_buff, unsigned char const * new_pass);
+
 
 int ubee_generate_ssid(unsigned const char * mac, unsigned char * ssid, size_t * len)
 {
@@ -119,34 +121,6 @@ int ubee_generate_ssid(unsigned const char * mac, unsigned char * ssid, size_t *
     sprintf((char*)ssid, "UPC%d%d%d%d%d%d%d", h2[0]%10, h2[1]%10, h2[2]%10, h2[3]%10, h2[4]%10, h2[5]%10, h2[6]%10);
     if (len != NULL){
         *len = 10;
-    }
-
-    return 1;
-}
-
-int ubee_generate_pass(unsigned const char * mac, unsigned char * passwd, size_t * len)
-{
-    unsigned int i=0,p=0;
-    unsigned char hash_buff[100];
-
-    if (len != NULL && *len < 9){
-        return -1;
-    }
-
-    ubee_generate_pass_raw(mac, hash_buff, passwd);
-    for(i=0; i<PROFANITY_COUNT; i++){
-        if (strstr(passwd, profanities[i]) != NULL){
-            p=1;
-            break;
-        }
-    }
-
-    if (p>0){
-        ubee_enerate_profanity_free_pass(hash_buff, passwd);
-    }
-
-    if (len != NULL){
-        *len=8;
     }
 
     return 1;
@@ -192,6 +166,36 @@ int ubee_generate_pass_raw(unsigned const char * mac, unsigned char * hash_buff,
 
     return 0;
 }
+
+
+int ubee_generate_pass(unsigned const char * mac, unsigned char * passwd, size_t * len)
+{
+    unsigned int i=0,p=0;
+    unsigned char hash_buff[100];
+
+    if (len != NULL && *len < 9){
+        return -1;
+    }
+
+    ubee_generate_pass_raw(mac, hash_buff, passwd);
+    for(i=0; i<PROFANITY_COUNT; i++){
+        if (strstr((const char*)passwd, profanities[i]) != NULL){
+            p=1;
+            break;
+        }
+    }
+
+    if (p>0){
+        ubee_enerate_profanity_free_pass(hash_buff, passwd);
+    }
+
+    if (len != NULL){
+        *len=8;
+    }
+
+    return 1;
+}
+
 
 int ubee_enerate_profanity_free_pass(unsigned char * hash_buff, unsigned char const * new_pass)
 {

@@ -16,6 +16,16 @@ android {
         minSdkVersion 16
         targetSdkVersion 27
         multiDexEnabled false
+
+        externalNativeBuild {
+            ndkBuild {
+                // Passes an optional argument to ndk-build.
+                arguments "V=1"
+                // Specifies the ABI configurations of your native
+                // libraries Gradle should build and package with your APK.
+                abiFilters 'x86', 'armeabi', 'armeabi-v7a', 'arm64-v8a'
+            }
+        }
     }
 
     buildTypes {
@@ -36,43 +46,20 @@ android {
         }
     }
 
-    sourceSets.main {
-        jniLibs.srcDir 'src/main/libs' //set libs as .so's location instead of jniLibs
-        jni.srcDirs = [] //disable automatic ndk-build call with auto-generated Android.mk
-    }
 
-    // call regular ndk-build(.cmd) script from app directory
-    task ndkBuild(type: Exec) {
-        workingDir file('src/main')
-        commandLine getNdkBuildCmd()
-    }
-
-    tasks.withType(JavaCompile) {
-        compileTask -> compileTask.dependsOn ndkBuild
-    }
-
-    task cleanNative(type: Exec) {
-        workingDir file('src/main')
-        commandLine getNdkBuildCmd(), 'clean'
-    }
-
-    clean.dependsOn cleanNative
-
-    testOptions {
-        unitTests.all {
-            // All the usual Gradle options.
-            jvmArgs '-XX:MaxPermSize=256m'
-        }
-    }
 
     lintOptions {
         abortOnError false
     }
+    externalNativeBuild {
+        ndkBuild {
+            path 'src/main/jni/Android.mk'
+        }
+    }
 }
 
-
 // Map for the version code that gives each ABI a value.
-ext.abiCodes = ['arm64-v8a':1, armeabi:2, x86:3]
+ext.abiCodes = ['arm64-v8a': 1, 'armeabi': 2, x86: 3, 'armeabi-v7a': 4]
 
 // For per-density APKs, create a similar map like this:
 // ext.densityCodes = ['mdpi': 1, 'hdpi': 2, 'xhdpi': 3]
@@ -108,45 +95,22 @@ android.applicationVariants.all { variant ->
     }
 }
 
-task copyResDirectoryToClasses(type: Copy) {
-    from "${projectDir}/src/main/res"
-    into "${buildDir}/intermediates/classes/test/github/debug/res"
-}
-
-def getNdkDir() {
-    if (System.env.ANDROID_NDK_ROOT != null)
-        return System.env.ANDROID_NDK_ROOT
-
-    Properties properties = new Properties()
-    properties.load(project.rootProject.file('local.properties').newDataInputStream())
-    def ndkDir = properties.getProperty('ndk.dir', null)
-    if (ndkDir == null)
-        throw new FileNotFoundException("NDK location not found. Define location with ndk.dir in the local.properties file or with an ANDROID_NDK_ROOT environment variable.")
-
-    return ndkDir
-}
-
-def getNdkBuildCmd() {
-    def ndkBuild = getNdkDir() + File.separator + "ndk-build"
-    if (org.gradle.internal.os.OperatingSystem.current().isWindows()) {
-        ndkBuild += ".cmd"
-    }
-
-    return ndkBuild
-}
-
 
 dependencies {
     implementation project(':aFileChooser')
-    implementation (name: 'android-ad-sdk', ext: 'aar')
+    implementation(name: 'android-ad-sdk', ext: 'aar')
 
     implementation 'com.android.support:support-compat:27.0.1'
     implementation 'com.android.support:support-core-ui:27.0.1'
     implementation 'com.android.support:support-core-utils:27.0.1'
     implementation 'com.android.support:support-fragment:27.0.1'
 
-    implementation ('com.google.android.gms:play-services-location:11.6.0', { exclude module: 'support-v4' })
-    implementation ('com.google.android.gms:play-services-analytics:11.6.0', { exclude module: 'support-v4' })
-    implementation ('ch.acra:acra:4.9.0', { exclude module: 'support-v4' })
+    implementation('com.google.android.gms:play-services-location:11.6.0', {
+        exclude module: 'support-v4'
+    })
+    implementation('com.google.android.gms:play-services-analytics:11.6.0', {
+        exclude module: 'support-v4'
+    })
+    implementation('ch.acra:acra:4.9.0', { exclude module: 'support-v4' })
     testImplementation 'junit:junit:4.12'
 }
