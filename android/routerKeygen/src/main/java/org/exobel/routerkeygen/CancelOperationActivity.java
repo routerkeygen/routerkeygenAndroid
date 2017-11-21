@@ -42,28 +42,22 @@ public class CancelOperationActivity extends Activity {
             message = getString(android.R.string.cancel) + "?";
         builder.setTitle(R.string.app_name)
                 .setNegativeButton(android.R.string.no,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,
-                                                int which) {
-                                dialog.dismiss();
-                                finish();
-                            }
+                        (dialog, which) -> {
+                            dialog.dismiss();
+                            finish();
                         })
-                .setPositiveButton(android.R.string.yes, new OnClickListener() {
+                .setPositiveButton(android.R.string.yes, (dialog, which) -> {
 
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        dialog.dismiss();
-                        try {
-                            stopService(new Intent(getApplicationContext(),
-                                    Class.forName(getIntent().getStringExtra(
-                                            SERVICE_TO_TERMINATE))));
-                        } catch (ClassNotFoundException e) {
-                            e.printStackTrace();
-                        }
-
-                        finish();
+                    dialog.dismiss();
+                    try {
+                        stopService(new Intent(getApplicationContext(),
+                                Class.forName(getIntent().getStringExtra(
+                                        SERVICE_TO_TERMINATE))));
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
                     }
+
+                    finish();
                 }).setMessage(message);
         return builder.create();
     }

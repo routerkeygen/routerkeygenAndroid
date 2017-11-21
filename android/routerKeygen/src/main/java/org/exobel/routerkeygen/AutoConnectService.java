@@ -18,9 +18,10 @@
  */
 package org.exobel.routerkeygen;
 
-import android.app.IntentService;
+import android.annotation.TargetApi;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -31,8 +32,10 @@ import android.net.wifi.SupplicantState;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
+import android.os.IBinder;
 import android.provider.Settings;
 import android.util.Log;
 
@@ -45,7 +48,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class AutoConnectService extends IntentService implements onConnectionListener {
+public class AutoConnectService extends Service implements onConnectionListener {
     public final static String SCAN_RESULT = "org.exobel.routerkeygen.SCAN_RESULT";
     public final static String KEY_LIST = "org.exobel.routerkeygen.KEY_LIST";
 
@@ -55,6 +58,7 @@ public class AutoConnectService extends IntentService implements onConnectionLis
     private final static int FAILING_MINIMUM_TIME = 1500;
     private final int UNIQUE_ID = R.string.app_name
             + AutoConnectService.class.getName().hashCode();
+    final private Binder mBinder = new LocalBinder();
     private NotificationManager mNotificationManager;
     private Handler handler;
     private ScanResult network;
@@ -77,10 +81,6 @@ public class AutoConnectService extends IntentService implements onConnectionLis
             tryingConnection();
         }
     };
-    public AutoConnectService() {
-        super("AutoConnectService");
-    }
-
 
     private static PendingIntent getDefaultPendingIntent(Context context) {
         final Intent i = new Intent(context, CancelOperationActivity.class)
@@ -94,10 +94,13 @@ public class AutoConnectService extends IntentService implements onConnectionLis
     }
 
     @Override
-    protected void onHandleIntent(Intent intent) {
-        if (intent == null) {
-            return;
-        }
+    public IBinder onBind(Intent intent) {
+        return mBinder;
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    @SuppressWarnings("deprecation")
+    public void onCreate() {
         handler = new Handler();
         wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -111,13 +114,21 @@ public class AutoConnectService extends IntentService implements onConnectionLis
             mNumOpenNetworksKept = Settings.Global.getInt(getContentResolver(),
                     Settings.Global.WIFI_NUM_OPEN_NETWORKS_KEPT, 10);
 
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        if (intent == null) {
+            stopSelf();
+            return START_NOT_STICKY;
+        }
         attempts = 0;
         currentNetworkId = -1;
         network = intent.getParcelableExtra(SCAN_RESULT);
         keys = intent.getStringArrayListExtra(KEY_LIST);
         final ConnectivityManager connManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
         final NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        if (!registered.get()){
+        if (!registered.get()) {
             registerReceiver(mReceiver, new IntentFilter(WifiManager.SUPPLICANT_STATE_CHANGED_ACTION));
             registerReceiver(mReceiver, new IntentFilter(WifiManager.NETWORK_STATE_CHANGED_ACTION));
             registered.set(true);
@@ -152,19 +163,19 @@ public class AutoConnectService extends IntentService implements onConnectionLis
                                 .build());
                 cancelNotification = false;
                 stopSelf();
-                return;
+                return START_NOT_STICKY;
             }
         } else {
             Wifi.cleanPreviousConfiguration(wifi, network, network.capabilities);
             tryingConnection();
         }
-        return;
+        return START_STICKY;
     }
 
-    private void disconnectCurrent(){
+    private int disconnectCurrent() {
         final ConnectivityManager connManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
         final NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        if (!registered.get()){
+        if (!registered.get()) {
             registerReceiver(mReceiver, new IntentFilter(WifiManager.SUPPLICANT_STATE_CHANGED_ACTION));
             registerReceiver(mReceiver, new IntentFilter(WifiManager.NETWORK_STATE_CHANGED_ACTION));
             registered.set(true);
@@ -174,9 +185,11 @@ public class AutoConnectService extends IntentService implements onConnectionLis
             waitingToDisconnect.set(true);
             if (wifi.disconnect()) {
                 // besides disconnecting, we clean any previous configuration
-                Wifi.cleanPreviousConfiguration(wifi, network, network.capabilities);
+                new Thread(() -> Wifi.cleanPreviousConfiguration(wifi, network, network.capabilities)).start();
                 cancelNotification = true;
                 handler.postDelayed(tryAfterDisconnecting, DISCONNECT_WAITING_TIME);
+
+                return 1;
 
             } else {
                 waitingToDisconnect.set(false);
@@ -188,10 +201,12 @@ public class AutoConnectService extends IntentService implements onConnectionLis
                                 .build());
                 cancelNotification = false;
                 stopSelf();
+                return -1;
             }
         } else {
             Log.d(TAG, "Not connected");
             tryingConnection();
+            return 0;
         }
     }
 
@@ -201,7 +216,7 @@ public class AutoConnectService extends IntentService implements onConnectionLis
             scanningStarted.set(true);
 
             // If attempt counter is too high, we are done here.
-            if (keys.size() <= attempts){
+            if (keys.size() <= attempts) {
                 Log.e(TAG, "Attempt counter too big, stopping");
                 reenableAllHotspots();
                 mNotificationManager.notify(
@@ -214,7 +229,7 @@ public class AutoConnectService extends IntentService implements onConnectionLis
                 return;
             }
 
-            currentNetworkId = Wifi.connectToNewNetwork(this, wifi, network, keys.get(attempts), mNumOpenNetworksKept);
+            currentNetworkId = Wifi.connectToNewNetwork(wifi, network, keys.get(attempts), mNumOpenNetworksKept);
             Log.d(AutoConnectManager.class.getSimpleName(), "Trying " + keys.get(attempts));
             if (currentNetworkId != -1) {
                 lastTimeDisconnected = System.currentTimeMillis();
@@ -267,14 +282,14 @@ public class AutoConnectService extends IntentService implements onConnectionLis
 
     @Override
     public void onFailedConnection(int supplicantError) {
-        if (waitingToDisconnect.get()){
+        if (waitingToDisconnect.get()) {
             Log.d(TAG, "onFailed, as expected, start scan");
             waitingToDisconnect.set(false);
             tryingConnection();
             return;
         }
 
-        if (!scanningStarted.get()){
+        if (!scanningStarted.get()) {
             Log.d(TAG, "onFailed, not yet started");
             return;
         }
@@ -293,14 +308,14 @@ public class AutoConnectService extends IntentService implements onConnectionLis
         wifi.removeNetwork(currentNetworkId);
 
         // The password has to go through handshake phase.
-        if (attempts != handshakeAttempt.get()){
+        if (attempts != handshakeAttempt.get()) {
             Log.w(TAG, "Handshaked password does not match the attempt");
             final int failedAttempts = sameHandshakeAttempts.incrementAndGet();
 
             if (failedAttempts >= 8) {
                 Log.w(TAG, "Too many missed handshakes, trying without it.");
                 sameHandshakeAttempts.set(0);
-                attempts+=1;
+                attempts += 1;
 
             } else if (failedAttempts >= 4) {
                 Log.w(TAG, "Too many missed handshakes, Reinit");
@@ -313,12 +328,12 @@ public class AutoConnectService extends IntentService implements onConnectionLis
         }
 
         // Failed to connect, increase attempt ctr to move to next password
-        attempts+=1;
+        attempts += 1;
         tryingConnection();
     }
 
     @Override
-    public void onFourWayHandshake(int supplicantError){
+    public void onFourWayHandshake(int supplicantError) {
         handshakeAttempt.set(attempts);
         Log.d(AutoConnectManager.class.getSimpleName(),
                 String.format("4Way handshake - Trying %s, error: %s", keys.get(attempts), supplicantError));
@@ -326,10 +341,6 @@ public class AutoConnectService extends IntentService implements onConnectionLis
 
     @Override
     public void onNetworkChanged(NetworkInfo networkInfo, String bssid, WifiInfo wifiInfo) {
-        // If scanning not yet started, not interested in network change.
-        if (!scanningStarted.get()){
-            return;
-        }
     }
 
     @Override
@@ -340,20 +351,20 @@ public class AutoConnectService extends IntentService implements onConnectionLis
             return;
         }
 
-        if (waitingToDisconnect.get()){
+        if (waitingToDisconnect.get()) {
             Log.d(TAG, "onSuccess, but waiting to disconnect...");
             disconnectCurrent();
             return;
         }
 
-        final WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService (Context.WIFI_SERVICE);
+        final WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         final WifiInfo wifiInfo = wifiManager == null ? null : wifiManager.getConnectionInfo();
         final String connectedSsid = wifiInfo == null ? null : wifiInfo.getSSID();
         Log.d(TAG, String.format("onSuccess, connected to: %s, state: %s, error: %s",
-                connectedSsid, wifiInfo==null?"NULL":wifiInfo.getSupplicantState(), supplicantError));
+                connectedSsid, wifiInfo == null ? "NULL" : wifiInfo.getSupplicantState(), supplicantError));
 
         if (wifiInfo != null
-                && wifiInfo.getSupplicantState() != SupplicantState.COMPLETED){
+                && wifiInfo.getSupplicantState() != SupplicantState.COMPLETED) {
             Log.d(TAG, "Not really connected.");
             tryingConnection();
             return;
@@ -366,8 +377,7 @@ public class AutoConnectService extends IntentService implements onConnectionLis
                 && !StringUtils.isEmpty(network.SSID)
                 && !("0x").equals(connectedSsid)
                 && !network.SSID.equals(connectedSsid)
-                && !("\""+network.SSID+"\"").equals(connectedSsid))
-        {
+                && !("\"" + network.SSID + "\"").equals(connectedSsid)) {
             Log.d(TAG, String.format("Connected SSID does not match target, connected: %s target: %s", connectedSsid, network.SSID));
             disconnectCurrent();
             return;
@@ -392,6 +402,16 @@ public class AutoConnectService extends IntentService implements onConnectionLis
             for (final WifiConfiguration config : configurations) {
                 wifi.enableNetwork(config.networkId, false);
             }
+        }
+    }
+
+    /**
+     * Class for clients to access. Because we know this service always runs in
+     * the same process as its clients, we don't need to deal with IPC.
+     */
+    private class LocalBinder extends Binder {
+        AutoConnectService getService() {
+            return AutoConnectService.this;
         }
     }
 }

@@ -29,6 +29,7 @@ import android.content.Context;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -43,26 +44,6 @@ public class Wifi {
     private static final int MAX_PRIORITY = 99999;
 
     /**
-     * Change the password of an existing configured network and connect to it
-     *
-     * @param wifiMgr
-     * @param config
-     * @param newPassword
-     * @return
-     */
-    public static int changePasswordAndConnect(final Context ctx, final WifiManager wifiMgr, final WifiConfiguration config, final String newPassword, final int numOpenNetworksKept) {
-        ConfigSec.setupSecurity(config, ConfigSec.getWifiConfigurationSecurity(config), newPassword);
-        final int networkId = wifiMgr.updateNetwork(config);
-        if (networkId == -1) {
-            // Update failed.
-            return -1;
-        }
-        // Force the change to apply.
-        wifiMgr.disconnect();
-        return connectToConfiguredNetwork(ctx, wifiMgr, config, true);
-    }
-
-    /**
      * Configure a network, and connect to it.
      *
      * @param wifiMgr
@@ -70,7 +51,7 @@ public class Wifi {
      * @param password   Password for secure network or is ignored.
      * @return
      */
-    public static int connectToNewNetwork(final Context ctx, final WifiManager wifiMgr, final ScanResult scanResult, final String password, final int numOpenNetworksKept) {
+    public static int connectToNewNetwork(final WifiManager wifiMgr, final ScanResult scanResult, final String password, final int numOpenNetworksKept) {
         final String security = ConfigSec.getScanResultSecurity(scanResult);
 
         if (ConfigSec.isOpenNetwork(security)) {
@@ -103,19 +84,17 @@ public class Wifi {
             return -1;
         }
 
-        return connectToConfiguredNetwork(ctx, wifiMgr, config, true);
+        return connectToConfiguredNetwork(wifiMgr, config);
     }
 
     /**
      * Connect to a configured network.
      *
-     * @param ctx
-     * @param wifiManager
+     * @param wifiMgr
      * @param config
-     * @param reassociate
      * @return
      */
-    private static int connectToConfiguredNetwork(final Context ctx, final WifiManager wifiMgr, WifiConfiguration config, boolean reassociate) {
+    private static int connectToConfiguredNetwork(final WifiManager wifiMgr, WifiConfiguration config) {
         final String security = ConfigSec.getWifiConfigurationSecurity(config);
         int configId = config.networkId;
         int oldPri = config.priority;
@@ -159,8 +138,7 @@ public class Wifi {
             return -1;
         }
 
-        final boolean connect = reassociate ? wifiMgr.reassociate() : wifiMgr.reconnect();
-        if (!connect) {
+        if (!wifiMgr.reassociate()) {
             return -1;
         }
 
@@ -229,6 +207,10 @@ public class Wifi {
     }
 
     public static void cleanPreviousConfiguration(final WifiManager wifiMgr, final ScanResult hotspot, String hotspotSecurity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ) {
+            return; // we can't delete network above 6.0
+        }
+
         WifiConfiguration config;
         do {
             config = getWifiConfiguration(wifiMgr, hotspot, null);

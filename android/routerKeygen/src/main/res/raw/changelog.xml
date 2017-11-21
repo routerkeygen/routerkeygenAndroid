@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
 
-    <changelogversion changeDate="Nov 20,2017" versionName="4.0.2">
+    <changelogversion changeDate="Nov 27,2017" versionName="4.0.2">
         <changelogtext>Remove unused permissions</changelogtext>
         <changelogtext>Fix some auto connect problems</changelogtext>
     </changelogversion>
